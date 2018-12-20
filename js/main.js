@@ -507,22 +507,21 @@ function fetchInformation(language, lib) {
                 }
                 // Services
                 else if (data.services[i].type == "service") {
-                    if (!servicesAdded) {
-                        if(data.services[i].name === "Esteettömyyspalvelut") {
+                     if(data.services[i].name === "Esteettömyyspalvelut" || data.services[i].name === "Accessibility services") {
                             // Set accessibility added to true, this is used to display "Services" tab if other tabs are missing.
                             if(!accessibilityAdded) {
                                 accessibilityAdded = true;
                                 // Accessibility count is increased in the function.
                                 addItem(data.services[i], '#accessibilityItems');
                             }
-
                         }
                         else {
-                            serviceCount = serviceCount + 1;
-                            addItem(data.services[i], '#serviceItems');
+                            if (!servicesAdded) {
+                                serviceCount = serviceCount + 1;
+                                addItem(data.services[i], '#serviceItems');
+                            }
                         }
                     }
-                }
             }
         }
         // Show titles & counts if found.

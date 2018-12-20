@@ -60,7 +60,7 @@ var dict = {
     },
     "Induktiosilmukka": {
         fi: "Induktiosilmukka",
-        en: "Staff present",
+        en: "Induction loop",
     },
     "Suuren kirjasinkoon kokoelma": {
         fi: "Suuren kirjasinkoon kokoelma",
