@@ -59,15 +59,32 @@ function addItem(item, listElement) {
         }
         // Add price where available.
         if (item.price != null && item.price.length != 0) {
-            description = description + '<br><br>' + i18n.get("Hintatiedot") + ': ' +  item.price;
+            description = description + '<br><br>' + i18n.get("Hintatiedot") + ': ' + item.price;
         }
+        // If website is not null and contains stuff. Sometimes empty website is shown unless lenght is checked.
+        if ($(this).data('website') != null && $(this).data('website').length > 5) {
+            // Use _blank, because iframes don't like moving to new pages.
+            $("#linkToInfo").html('<p id="linkToInfo"><a target="_blank" href="' + $(this).data('website') +
+                '" class="external-link">' + i18n.get("Lisätietoja") + '</a></p>');
+        } else {
+            $("#linkToInfo").html('<p id="linkToInfo"></p>');
+        }
+
+        // Replace links from the description
+        if(description.indexOf("<a href=") !== -1) {
+            description = description.replace(/(<a href=")+/g, "LINKSTART");
+            description = description.replace(/(">)+/g, "URLEND");
+            description = description.replace(/(<\/a>)+/g, "LINKEND");
+        }
+
         // Add the item to a desired element.
-        $( listElement ).append('<li> ' +
+        $(listElement).append('<li> ' +
             '<a class="index-item" data-message="' + description + '" data-website="' + websiteLink + '" tabindex="0" href="#"' +
             'role="button" aria-expanded="false" aria-controls="' + name + '"' +
             'title="' + name + '">' + name + '</a></li>');
-        // If no description found, don't create the link
-    } else {
+    }
+    // If no description found, don't create the link
+    else {
         $( listElement ).append('<li> ' +
             name + '</li>');
     }
@@ -531,7 +548,16 @@ function fetchInformation(language, lib) {
 
                         // Set popup position & content, toggle visibility.
                         $("#infoPopup").css('transform', 'translate3d(' + posX + 'px,' + posY + 'px, 0px');
-                        $("#popoverContent").html('<p id="popoverContent">' + $(this).data('message') + '</p>');
+
+                        var popupText = $(this).data('message');
+                        // Check the description for links.
+                        if(popupText.indexOf("LINKSTART") !== -1) {
+                            popupText = popupText.replace(/(LINKSTART)+/g, '<a class="external-link" target="_blank" href="');
+                            popupText = popupText.replace(/(URLEND)+/g, '">');
+                            popupText = popupText.replace(/(LINKEND)+/g, '<\/a>');
+                        }
+
+                        $("#popoverContent").html('<p id="popoverContent">' + popupText + '</p>');
                         // If website is not null and contains stuff. Sometimes empty website is shown unless lenght is checked.
                         if ($(this).data('website') != null && $(this).data('website').length > 5) {
                             // Use _blank, because iframes don't like moving to new pages.
