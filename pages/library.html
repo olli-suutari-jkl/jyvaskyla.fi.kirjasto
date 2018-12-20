@@ -62,12 +62,6 @@
                 <div id="genericTransit"></div>
                 <div id="parkingDetails"></div>
               </section>
-              <section class="accessibility-details" style="display: none">
-                <h2 id="accessibilityTitle"></h2>
-                <div style="margin: 10px 0 10px 0" class="accessibility-images"></div>
-                <div id="accessibilityList"></div>
-                <div style="margin: 10px 0 10px 0" id="accessibilityDetails"></div>
-              </section>
             </div>
           </div><!-- col-lg-8 -->
           <nav class="details">
@@ -192,6 +186,19 @@
     <div class="row palvelut" style="display: none">
       <section class="container" id="libraryServices">
         <p id="servicesInfo"></p>
+        <!-- Accessibility -->
+        <div class="group" id="accessibility" style="display: none">
+          <h2 id="accessibilityTitle">
+            <span class="badge" id="accessibilityBadge"></span>
+          </h2>
+
+          <ul class="accessibility-details">
+            <div style="margin: 10px 0 10px 0" class="accessibility-images"></div>
+            <div id="accessibilityList"></div>
+            <div style="margin: 10px 0 10px 0" id="accessibilityDetails"></div>
+          </ul>
+
+        </div>
         <!-- Collections -->
         <div class="group" id="collection" style="display: none">
           <h2 id="collectionsTitle">

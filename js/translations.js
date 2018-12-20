@@ -59,7 +59,7 @@ var dict = {
         en: "Wheelchar ramp",
     },
     "Induktiosilmukka": {
-        fi: "Henkilökunta paikalla",
+        fi: "Induktiosilmukka",
         en: "Staff present",
     },
     "Suuren kirjasinkoon kokoelma": {

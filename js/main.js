@@ -41,53 +41,121 @@ function toggleFullScreen(target) {
 }
 
 // Function for adding a new palvelut item.
+// Define accessibility count here, define other counts later on.
+var accessibilityCount = 0;
+var accessibilityIsEmpty = true;
 function addItem(item, listElement) {
     var name = item.name;
     // Use "custom_name", where available.
     if (item.custom_name != null && item.custom_name.length != 0) {
         name = item.custom_name;
     }
-    // Add popup link if additional details are available.
-    if(item.short_description != null && item.short_description.length != 0) {
-        var description = item.short_description;
-        var websiteLink = item.website;
-        // Add "long" description where available.
-        if (item.description != null && item.description.length != 0) {
-            // Replace row splits with <br>
-            var longDescription = item.description.replace(/\r\n/g, "<br>");
-            description = description + '<br><br>' + longDescription;
+    if(item.name === "Esteettömyyspalvelut" && accessibilityIsEmpty) {
+        if (isEmpty($('#accessibilityDetails'))) {
+            // Description.
+            if (item.description != null && item.description.length != 0) {
+                accessibilityIsEmpty = false;
+                $(".accessibility-details").css("display", "block");
+                $("#accessibilityDetails").append('<p>' + item.description.replace(/(<a )+/g, '<a target="_blank" ') + '</p>');
+            }
         }
-        // Add price where available.
-        if (item.price != null && item.price.length != 0) {
-            description = description + '<br><br>' + i18n.get("Hintatiedot") + ': ' + item.price;
+        // List of values separated by "," in the short description.
+        if (item.short_description !== null && isEmpty($('#accessibility-images')) && isEmpty($('#accessibilityList'))) {
+            accessibilityIsEmpty = false;
+            $(".accessibility-details").css("display", "block");
+            var splittedValues = item.short_description.split(",");
+            $.each(splittedValues, function (index, value) {
+                accessibilityCount = accessibilityCount + 1;
+                if (value.toLocaleLowerCase().indexOf("esteetön sisäänpääsy") !== -1) {
+                    $(".accessibility-images").append(' <img alt="' + i18n.get("Esteetön sisäänpääsy") + '" src="../images/accessibility/Esteetön_kulku_saavutettavuus.png" /> ');
+                    $("#accessibilityList").append('<li>' + i18n.get("Esteetön sisäänpääsy") + '</li>');
+                }
+                else if (value.toLocaleLowerCase().indexOf("invapysäköinti") !== -1) {
+                    $(".accessibility-images").append(' <img alt="' + i18n.get("Invapysäköinti") + '" src="../images/accessibility/Esteetön_parkki.png" /> ');
+                    $("#accessibilityList").append('<li>' + i18n.get("Invapysäköinti") + '</li>');
+                }
+                else if (value.toLocaleLowerCase().indexOf("esteetön wc") !== -1) {
+                    $(".accessibility-images").append(' <img alt="' + i18n.get("Esteetön wc") + '" src="../images/accessibility/Esteetön_wc.png" /> ');
+                    $("#accessibilityList").append('<li>' + i18n.get("Esteetön wc") + '</li>');
+                }
+                else if (value.toLocaleLowerCase().indexOf("hissi") !== -1) {
+                    $(".accessibility-images").append(' <img alt="' + i18n.get("Hissi") + '" src="../images/accessibility/Esteetön_hissi.png" /> ');
+                    $("#accessibilityList").append('<li>' + i18n.get("Hissi") + '</li>');
+                }
+                else if (value.toLocaleLowerCase().indexOf("pyörätuoliluiska") !== -1) {
+                    $(".accessibility-images").append(' <img alt="' + i18n.get("Ramppi") + '" src="../images/accessibility/Esteetön_ramppi.png" /> ');
+                    $("#accessibilityList").append('<li>' + i18n.get("Ramppi") + '</li>');
+                }
+                else if (value.toLocaleLowerCase().indexOf("induktiosilmukka") !== -1) {
+                    $(".accessibility-images").append(' <img alt="' + i18n.get("Induktiosilmukka") + '" src="../images/accessibility/Esteetön_induktiosilmukka.png" /> ');
+                    $("#accessibilityList").append('<li>' + i18n.get("Induktiosilmukka") + '</li>');
+                }
+                else if (value.toLocaleLowerCase().indexOf("suuren kirjasinkoon kokoelma") !== -1) {
+                    $("#accessibilityList").append('<li>' + i18n.get("Suuren kirjasinkoon kokoelma") + '</li>');
+                }
+                else {
+                    if (value != null && value.length != 0) {
+                        $("#accessibilityList").append('<li>' + value + '</li>');
+                    }
+                }
+            });
         }
-        // If website is not null and contains stuff. Sometimes empty website is shown unless lenght is checked.
-        if ($(this).data('website') != null && $(this).data('website').length > 5) {
-            // Use _blank, because iframes don't like moving to new pages.
-            $("#linkToInfo").html('<p id="linkToInfo"><a target="_blank" href="' + $(this).data('website') +
-                '" class="external-link">' + i18n.get("Lisätietoja") + '</a></p>');
-        } else {
-            $("#linkToInfo").html('<p id="linkToInfo"></p>');
+        if (accessibilityCount != 0 || !accessibilityIsEmpty) {
+            $("#accessibility").css('display', 'block');
+            $("#accessibilityTitle").prepend(i18n.get("Saavutettavuus"));
+            if(accessibilityCount !== 0) {
+                $("#accessibilityBadge").append('(' + accessibilityCount + ')');
+            }
+            noServices = false;
         }
-
-        // Replace links from the description
-        if(description.indexOf("<a href=") !== -1) {
-            description = description.replace(/(<a href=")+/g, "LINKSTART");
-            description = description.replace(/(">)+/g, "URLEND");
-            description = description.replace(/(<\/a>)+/g, "LINKEND");
-        }
-
-        // Add the item to a desired element.
-        $(listElement).append('<li> ' +
-            '<a class="index-item" data-message="' + description + '" data-website="' + websiteLink + '" tabindex="0" href="#"' +
-            'role="button" aria-expanded="false" aria-controls="' + name + '"' +
-            'title="' + name + '">' + name + '</a></li>');
     }
-    // If no description found, don't create the link
     else {
-        $( listElement ).append('<li> ' +
-            name + '</li>');
+        // Add popup link if additional details are available.
+        if (item.short_description != null && item.short_description.length != 0) {
+
+            var description = item.short_description;
+            var websiteLink = item.website;
+            // Add "long" description where available.
+            if (item.description != null && item.description.length != 0) {
+                // Replace row splits with <br>
+                var longDescription = item.description.replace(/\r\n/g, "<br>");
+                description = description + '<br><br>' + longDescription;
+            }
+
+            // Replace links from the description
+            if (description.indexOf("<a href=") !== -1) {
+                description = description.replace(/(<a href=")+/g, "LINKSTART");
+                description = description.replace(/(">)+/g, "URLEND");
+                description = description.replace(/(<\/a>)+/g, "LINKEND");
+            }
+            // Add price where available.
+            if (item.price != null && item.price.length != 0) {
+                description = description + '<br><br>' + i18n.get("Hintatiedot") + ': ' + item.price;
+            }
+            // If website is not null and contains stuff. Sometimes empty website is shown unless lenght is checked.
+            if ($(this).data('website') != null && $(this).data('website').length > 5) {
+                // Use _blank, because iframes don't like moving to new pages.
+                $("#linkToInfo").html('<p id="linkToInfo"><a target="_blank" href="' + $(this).data('website') +
+                    '" class="external-link">' + i18n.get("Lisätietoja") + '</a></p>');
+            } else {
+                $("#linkToInfo").html('<p id="linkToInfo"></p>');
+            }
+
+
+            // Add the item to a desired element.
+            $(listElement).append('<li> ' +
+                '<a class="index-item" data-message="' + description + '" data-website="' + websiteLink + '" tabindex="0" href="#"' +
+                'role="button" aria-expanded="false" aria-controls="' + name + '"' +
+                'title="' + name + '">' + name + '</a></li>');
+        }
+        // If no description found, don't create the link
+        else {
+            $( listElement ).append('<li> ' +
+                name + '</li>');
+        }
     }
+
+
 }
 
 // Function for checking if element is empty.
@@ -112,7 +180,6 @@ function toggleInfoBox(delay) {
 var lon;
 var lat;
 // Used for hiding sections if null....
-var accessibilityIsEmpty = true;
 var transitIsEmpty = true;
 var descriptionIsEmpty = true;
 var transitAccessibilityTextSet = false;
@@ -227,59 +294,6 @@ function fetchInformation(language, lib) {
                 $("#triviaThead").css("display", "none");
             }
         }
-        // Accessibility details from extras.
-        data.extra.data.forEach(function (element) {
-            if (element.id == "saavutettavuus-info") {
-                if (isEmpty($('#accessibilityDetails'))) {
-                    if (element.value != null && element.value.length != 0) {
-                        accessibilityIsEmpty = false;
-                        $(".accessibility-details").css("display", "block");
-                        $("#accessibilityDetails").append('<p>' + element.value.replace(/(<a )+/g, '<a target="_blank" ') + '</p>');
-                    }
-                }
-            }
-            if (element.id == "saavutettavuus-palvelut") {
-                if (isEmpty($('#accessibility-images')) && isEmpty($('#accessibilityList'))) {
-                    accessibilityIsEmpty = false;
-                    $(".accessibility-details").css("display", "block");
-                    var splittedValues = element.value.split("\r\n");
-                    $.each(splittedValues, function (index, value) {
-                        if (value == "Esteetön sisäänpääsy") {
-                            $(".accessibility-images").append(' <img alt="' + i18n.get("Esteetön sisäänpääsy") + '" src="../images/accessibility/Esteetön_kulku_saavutettavuus.png" /> ');
-                            $("#accessibilityList").append('<li>' + i18n.get("Esteetön sisäänpääsy") + '</li>');
-                        }
-                        else if (value == "Invapysäköinti") {
-                            $(".accessibility-images").append(' <img alt="' + i18n.get("Invapysäköinti") + '" src="../images/accessibility/Esteetön_parkki.png" /> ');
-                            $("#accessibilityList").append('<li>' + i18n.get("Invapysäköinti") + '</li>');
-                        }
-                        else if (value == "Esteetön wc") {
-                            $(".accessibility-images").append(' <img alt="' + i18n.get("Esteetön wc") + '" src="../images/accessibility/Esteetön_wc.png" /> ');
-                            $("#accessibilityList").append('<li>' + i18n.get("Esteetön wc") + '</li>');
-                        }
-                        else if (value == "Hissi") {
-                            $(".accessibility-images").append(' <img alt="' + i18n.get("Hissi") + '" src="../images/accessibility/Esteetön_hissi.png" /> ');
-                            $("#accessibilityList").append('<li>' + i18n.get("Hissi") + '</li>');
-                        }
-                        else if (value == "Pyörätuoliluiska") {
-                            $(".accessibility-images").append(' <img alt="' + i18n.get("Ramppi") + '" src="../images/accessibility/Esteetön_ramppi.png" /> ');
-                            $("#accessibilityList").append('<li>' + i18n.get("Ramppi") + '</li>');
-                        }
-                        else if (value == "Induktiosilmukka") {
-                            $(".accessibility-images").append(' <img alt="' + i18n.get("Induktiosilmukka") + '" src="../images/accessibility/Esteetön_induktiosilmukka.png" /> ');
-                            $("#accessibilityList").append('<li>' + i18n.get("Induktiosilmukka") + '</li>');
-                        }
-                        else if (value == "Suuren kirjasinkoon kokoelma") {
-                            $("#accessibilityList").append('<li>' + i18n.get("Suuren kirjasinkoon kokoelma") + '</li>');
-                        }
-                        else {
-                            if (value != null && value.length != 0) {
-                                $("#accessibilityList").append('<li>' + value + '</li>');
-                            }
-                        }
-                    });
-                }
-            }
-        });
         if (!transitIsEmpty || !accessibilityIsEmpty) {
             // Display the UI Text based on if transit/accessibility details are available.
             if (!transitIsEmpty && !accessibilityIsEmpty && !transitAccessibilityTextSet ) {
@@ -447,10 +461,12 @@ function fetchInformation(language, lib) {
         var hardwareCount = 0;
         var roomCount = 0;
         var serviceCount = 0;
+        accessibilityCount = 0;
         var collectionsAdded = true;
         var hardwareAdded = true;
         var roomsAdded = true;
         var servicesAdded = true;
+        var accessibilityAdded = false;
         if (isEmpty($('#collectionItems'))) {
             collectionsAdded = false;
         }
@@ -462,6 +478,9 @@ function fetchInformation(language, lib) {
         }
         if (isEmpty($('#serviceItems'))) {
             servicesAdded = false;
+        }
+        if (isEmpty($('#accessibilityItems'))) {
+            accessibilityAdded = false;
         }
         for (var i = 0; i < data.services.length; i++) {
             // Collections
@@ -489,8 +508,19 @@ function fetchInformation(language, lib) {
                 // Services
                 else if (data.services[i].type == "service") {
                     if (!servicesAdded) {
-                        serviceCount = serviceCount + 1;
-                        addItem(data.services[i], '#serviceItems');
+                        if(data.services[i].name === "Esteettömyyspalvelut") {
+                            // Set accessibility added to true, this is used to display "Services" tab if other tabs are missing.
+                            if(!accessibilityAdded) {
+                                accessibilityAdded = true;
+                                // Accessibility count is increased in the function.
+                                addItem(data.services[i], '#accessibilityItems');
+                            }
+
+                        }
+                        else {
+                            serviceCount = serviceCount + 1;
+                            addItem(data.services[i], '#serviceItems');
+                        }
                     }
                 }
             }
@@ -520,7 +550,7 @@ function fetchInformation(language, lib) {
             $("#serviceBadge").append('(' + serviceCount + ')');
             noServices = false;
         }
-        if (!collectionsAdded || !hardwareAdded || !roomsAdded || !servicesAdded) {
+        if (!collectionsAdded || !hardwareAdded || !roomsAdded || !servicesAdded || !accessibilityAdded) {
             if (noServices) {
                 if (lang == "fi") {
                     //$('#servicesInfo').append(i18n.get("Ei palveluita"));
@@ -877,7 +907,6 @@ $(document).ready(function() {
     $('#navPalvelut').append(i18n.get("Palvelut"));
     $('#newsDescriptionToggle').append(i18n.get("Ajankohtaista ja esittely"));
     $('#transitTitle').append(i18n.get("Liikenneyhteydet"));
-    $('#accessibilityTitle').append(i18n.get("Saavutettavuus"));
     $('#socialMediaSr').append(i18n.get("Sosiaalinen media"));
     $('#scheludesSr').append(i18n.get("Aikataulut"));
     document.getElementById('expandSlider').title = i18n.get("Avaa tai sulje kokoruututila");
