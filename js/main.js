@@ -182,7 +182,7 @@ var lat;
 // Used for hiding sections if null....
 var transitIsEmpty = true;
 var descriptionIsEmpty = true;
-var transitAccessibilityTextSet = false;
+var transitDetailsTextSet = false;
 var isReFetching = false;
 var mapLoaded = false;
 var contactsIsEmpty = true;
@@ -190,8 +190,6 @@ var noServices = true;
 var indexItemClicked = false;
 // divClone & active tab are used with consortium.js
 var divClone = '';
-// Prevent duplicated defaultContact details in the list.
-var defaultContact = "";
 
 var jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + lang;
 function fetchInformation(language, lib) {
@@ -226,9 +224,9 @@ function fetchInformation(language, lib) {
                 $("#introContent").append(description);
                 descriptionIsEmpty = false;
             } else {
-                // If no description, display the transit & accessibility details (if hidden)
-                if ($("#transitAccessibilityMarker").hasClass("fa-eye") && language === "fi") {
-                    $("#transitAccessibilityToggle").click();
+                // If no description, display the transit details (if hidden)
+                if ($("#transitDetailsMarker").hasClass("fa-eye") && language === "fi") {
+                    $("#transitDetailsToggle").click();
                 }
             }
         }
@@ -236,11 +234,14 @@ function fetchInformation(language, lib) {
             if (data.extra.transit.transit_directions != null && data.extra.transit.transit_directions.length != 0) {
                 transitIsEmpty = false;
                 $('.transit-details').css('display', 'block');
+                $('#navYhteystiedot').css('display', 'block');
+
                 $('#genericTransit').append('<h4>' + i18n.get("Ohjeita liikenteeseen") + '</h4><p>' + data.extra.transit.transit_directions.replace(/(<a )+/g, '<a target="_blank" ') + '</p>')
             }
             if (data.extra.transit.buses != null && data.extra.transit.buses !== "") {
                 transitIsEmpty = false;
                 $('.transit-details').css('display', 'block');
+                $('#navYhteystiedot').css('display', 'block');
                 $('#genericTransit').append('<h4>' + i18n.get("Linja-autot") + ':</h4><p>' + data.extra.transit.buses + '</p>')
             }
         }
@@ -260,13 +261,6 @@ function fetchInformation(language, lib) {
             $('#buildingDetails').append('<tr id="triviaThead" class="thead-light" style="text-align: center;"> ' +
                 '<th colspan="3" >' + i18n.get("Tietoa kirjastosta") + '</th>' +
                 '</tr>');
-            if (data.address != null) {
-                if (data.address.street != null) {
-                    triviaIsEmpty = false;
-                    $("#buildingDetails").append('<tr><td><strong>' + i18n.get("Osoite") + ': </strong></td>' +
-                        '<td>' + data.address.street + ', ' + data.address.zipcode + ', ' + data.address.city + '</td></tr>');
-                }
-            }
             if (data.extra.founded != null) {
                 triviaIsEmpty = false;
                 $("#buildingDetails").append('<tr><td><strong>' + i18n.get("Perustamisvuosi") + ': </strong></td>' +
@@ -296,39 +290,14 @@ function fetchInformation(language, lib) {
                 $("#triviaThead").css("display", "none");
             }
         }
-        if (!transitIsEmpty || !accessibilityIsEmpty) {
-            // Display the UI Text based on if transit/accessibility details are available.
-            if (!transitIsEmpty && !accessibilityIsEmpty && !transitAccessibilityTextSet ) {
-                if(language === "fi") {
-                    $('#transitAccessibilityToggle').append(i18n.get("Liikenneyhteydet ja saavutettavuus"));
-                    transitAccessibilityTextSet = true;
-                }
-            }
-            else if (!transitIsEmpty && accessibilityIsEmpty && !transitAccessibilityTextSet) {
-                if(language === "fi") {
-                    $('#transitAccessibilityToggle').append(i18n.get("Liikenneyhteydet"));
-                    transitAccessibilityTextSet = true;
-                }
-            }
-            else if (!transitAccessibilityTextSet) {
-                if(language === "fi") {
-                    $('#transitAccessibilityToggle').append(i18n.get("Saavutettavuus"));
-                    transitAccessibilityTextSet = true;
-                }
-            }
-            $("#transitAccessibilityToggle").addClass("always-visible");
-            if (!descriptionIsEmpty) {
-                $("#newsDescriptionToggle").addClass("always-visible");
-            }
-        }
-        // Hide news/description toggler if no transit/accessibility details && not on mobile.
+        // Hide news/description toggler if no transit details && not on mobile.
         else if (lang === "fi" && $(window).width() < 500) {
             if (!descriptionIsEmpty) {
                 $("#newsDescriptionToggle").css("display", "block");
             }
         }
         // If no content is provided for the left collumn.
-        if (descriptionIsEmpty && transitIsEmpty && accessibilityIsEmpty && language === "fi") {
+        if (descriptionIsEmpty && language === "fi") {
             // Hide the content on left, make the sidebar 100% in width.
             $(".details").css("display", "none");
             $("#introductionSidebar").addClass("col-md-12");
@@ -344,7 +313,27 @@ function fetchInformation(language, lib) {
     /*
      Yhteystiedot
      */
+    var contactlist = [];
 
+    // IEC CRASHES:
+    //                         if (contactlist.findIndex(x => x.contact==data.phone_numbers[i].number) === -1){
+    // https://stackoverflow.com/questions/37698996/findindex-method-issue-with-internet-explorer
+    function checkIfNameExists(item) {
+        for (var i = 0; i < contactlist.length; ++i) {
+            if (contactlist[i].name == item) {
+                return true;
+            }
+        }
+        return false;
+    }
+    function checkIfContactExists(item) {
+        for (var i = 0; i < contactlist.length; ++i) {
+            if (contactlist[i].contact == item) {
+                return true;
+            }
+        }
+        return false;
+    }
     function fetchLocation() {
         $.getJSON(jsonp_url + "&with=mail_address", function (data) {
             if (data.address != null) {
@@ -357,8 +346,12 @@ function fetchInformation(language, lib) {
                 if (isEmpty($('#postalAddress'))) {
                     if (data.mail_address != null && data.mail_address.area != null) {
                         var boxNumber = '';
+                        // Use boxNumber, if null use address
                         if (data.mail_address.box_number !== null) {
                             boxNumber = 'PL ' + data.mail_address.box_number;
+                        }
+                        else {
+                            boxNumber = data.address.street;
                         }
                         // Generate postal address based on available data.
                         var postalString = '';
@@ -395,17 +388,10 @@ function fetchInformation(language, lib) {
                     lat = data.address.coordinates.lat;
                 }
             }
-            if (isEmpty($('#email'))) {
-                if (data.email != null && data.email.length !== 0) {
-                    contactsIsEmpty = false;
-                    if (defaultContact !== data.email) {
-                        //console.log(defaultContact + " - " +  data.email);
-                        defaultContact = data.email;
-                        $("#phoneNumbers").append('<tr>' +
-                            '<td>Oletussähköposti</td><td>' + data.email + '</td>' +
-                            '</tr>');
-                        $('#navYhteystiedot').css('display', 'block');
-                    }
+            if (data.email != null && data.email.length !== 0) {
+                contactsIsEmpty = false;
+                if(!checkIfContactExists(data.email)) {
+                    contactlist.push({name: i18n.get("Oletussähköposti"), contact: data.email});
                 }
             }
             // Show navigation if content.
@@ -416,24 +402,22 @@ function fetchInformation(language, lib) {
         });
     }
 
+
     function fetchContacts() {
         // Phone numbers.
-        if (isEmpty($('#phoneNumbers'))) {
+        if (isEmpty($('#contactsTbody'))) {
             $.getJSON(jsonp_url + "&with=phone_numbers", function (data) {
                 if(data.phone_numbers.length !== 0) {
                     for (var i = 0; i < data.phone_numbers.length; i++) {
-                        // This prevents the duplicated default contact.
-                        if (defaultContact !== data.phone_numbers[i].number ) {
-                            //console.log(defaultContact + " | " +  data.phone_numbers[i].number);
-                            $("#phoneNumbers").append('<tr>' +
-                                '<td>' + data.phone_numbers[i].name + '</td>' +
-                                '<td>' + data.phone_numbers[i].number + '</td>' +
-                                '</tr>');
+                        // Check if detail is unique.
+                        if(!checkIfContactExists(data.phone_numbers[i].number)) {
+                            contactlist.push({name: data.phone_numbers[i].name, contact: data.phone_numbers[i].number});
                         }
+
                     }
                 }
                 // Show navigation if content.
-                if (!isEmpty($('#phoneNumbers'))) {
+                if (!isEmpty($('#contactsTbody'))) {
                     $('#navEsittely').css('display', 'block');
                     $('#navYhteystiedot').css('display', 'block');
                 }
@@ -444,23 +428,14 @@ function fetchInformation(language, lib) {
             $.getJSON(jsonp_url + "&with=persons", function (data) {
                 if(data.persons.length !== 0) {
                     for (var i = 0; i < data.persons.length; i++) {
-                        var staffDetail = "";
-                        if (data.persons[i].first_name !== null) {
-                            staffDetail += '<td>' + data.persons[i].first_name + ' ' + data.persons[i].last_name;
-                        }
+                        var name = data.persons[i].first_name + ' ' + data.persons[i].last_name;
                         if (data.persons[i].job_title !== null) {
-                            staffDetail += ' – ' + data.persons[i].job_title + '</td>'
-                        } else {
-                            staffDetail += '</td>';
+                            name += ' – ' + data.persons[i].job_title;
                         }
-                        if (data.persons[i].email !== null) {
-                            staffDetail += '<td>' + data.persons[i].email + '</td>'
-                        } else {
-                            staffDetail += '<td></td>'
+                        // Check if name or detail is unique.
+                        if (!checkIfContactExists(data.persons[i].email) || !checkIfNameExists(name)){
+                            contactlist.push({name: name, contact: data.persons[i].email});
                         }
-                        $("#phoneNumbers").append('<tr>' +
-                            staffDetail +
-                            '</tr>');
                     }
                 }
                 // Show navigation if content.
@@ -472,11 +447,29 @@ function fetchInformation(language, lib) {
         }
     }
 
-    $.when( fetchLocation() ).then(
-        function() {
-            fetchContacts();
-        }
-    );
+    if(!isReFetching) {
+        $.when( fetchLocation() ).then(
+            function() {
+                fetchContacts();
+                $.when( fetchContacts() ).then(
+                    function() {
+                        // If no timeout, list is not always ready...
+                        setTimeout(function(){
+                            for (var i = 0; i < contactlist.length; i++) {
+                                $("#contactsTbody").append('<tr>' +
+                                    '<td>' + contactlist[i].name + '</td>' +
+                                    '<td>' + contactlist[i].contact + '</td>' +
+                                    '</tr>');
+
+                            }
+                        }, 350);
+                    }
+                );
+
+            }
+        );
+    }
+
 
     /*
      Palvelut
@@ -579,7 +572,7 @@ function fetchInformation(language, lib) {
                 if (lang == "fi") {
                     //$('#servicesInfo').append(i18n.get("Ei palveluita"));
                     // Hide the whole navigation if no contact details are listed either...
-                    if (contactsIsEmpty && isEmpty($('#staffMembers')) && isEmpty($('#phoneNumbers'))) {
+                    if (contactsIsEmpty && isEmpty($('#staffMembers')) && isEmpty($('#contactsTbody'))) {
                         $('.nav-pills').css('display', 'none');
                     }
                 }
@@ -633,8 +626,8 @@ function fetchInformation(language, lib) {
     // If lang is english, do this again with Finnish to add missing infos.
     if (language == "en") {
         setTimeout(function () {
-            fetchInformation("fi", lib);
             isReFetching = true;
+            fetchInformation("fi", lib);
             $("header").append('<small>Note: If information is missing in English, Finnish version is used where available.</small>');
         }, 400);
     }
@@ -753,32 +746,6 @@ function loadMap() {
 }
 
 function bindActions() {
-    $( "#transitAccessibilityToggle" ).on('click', function () {
-        setTimeout(function(){
-            // Scroll to navigation if not visible.
-            if(!checkVisible(document.getElementById('navEsittely'))) {
-                document.getElementById('navEsittely').scrollIntoView();
-            }
-        }, 501);
-        $('#transitAccessibilityMarker').toggleClass("fa-eye").toggleClass("fa-eye-slash");
-        $(".transit-accessibility").toggle(500);
-    });
-
-    // Hide/Show sections on mobile
-    $( "#newsDescriptionToggle" ).on('click', function () {
-        // Perform only if we are showing the information..
-        if($( "#newsDescriptionMarker" ).hasClass( "fa-eye" )) {
-            setTimeout(function(){
-                // Scroll to element if not visible or on mobile.
-                if(!checkVisible(document.getElementById('newsDescriptionToggle')) || $(window).width() < 500) {
-                    document.getElementById('newsDescriptionToggle').scrollIntoView();
-                }
-            }, 501);
-        }
-        $('#newsDescriptionMarker').toggleClass("fa-eye").toggleClass("fa-eye-slash");
-        $(".news-description").toggle(500);
-    });
-
     // Navigation events
     function navigateToDefault() {
         // Hide other sections & active nav styles.

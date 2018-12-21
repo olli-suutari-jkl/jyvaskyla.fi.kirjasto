@@ -142,6 +142,10 @@ var dict = {
         fi: "Sijainti",
         en: "Location",
     },
+    "Oletussähköposti": {
+        fi: "Oletussähköposti",
+        en: "Generic email",
+    },
     "Sähköposti": {
         fi: "Sähköposti",
         en: "Email",

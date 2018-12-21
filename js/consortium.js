@@ -20,13 +20,10 @@ function groupByCity(arr) {
 }
 
 function initSelect(items) {
-
     var placeholderText = "Hae nimellä...";
-
     if(lang === "en") {
         placeholderText = "Search by name...";
     }
-
     $(".library-select").select2({
         data: items,
         language: lang, // Global parameter from getParameters.js
@@ -150,32 +147,35 @@ $(document).ready(function() {
 
     $("#librarySelector").change(function(){
         if($(this).val() !== library) {
-            $("#pageContainer").replaceWith(divClone.clone()); // Restore main with a copy of divClone
-            // Reset variables.
-            accessibilityIsEmpty = true;
-            transitIsEmpty = true;
-            descriptionIsEmpty = true;
-            transitAccessibilityTextSet = false;
-            mapLoaded = false;
-            sliderNeedsToRestart = true;
-            contactsIsEmpty = true;
-            noServices = true;
-            indexItemClicked = false;
-            isReFetching = false;
-            // Set the global library parameter, so schedule switching won't mess things up.
-            library = $(this).val();
-            // Fetch data
-            getWeekSchelude(0, library);
-            fetchInformation(lang, $(this).val());
-            fetchImagesAndSocialMedia($(this).val());
-            // Re-bind navigation and other stuff.
-            bindActions();
-            bindScheduleKeyNavigation();
-            // Add swiping detection for schedules & sliderbox if available.
-            detectswipe("schedules", swipeNavigation);
-            if(document.getElementById("sliderBox") != null) {
-                detectswipe("sliderBox", swipeNavigation);
-            }
+
+            // If no timeout, list is not always ready...
+                $("#pageContainer").replaceWith(divClone.clone()); // Restore main with a copy of divClone
+                // Reset variables.
+                accessibilityIsEmpty = true;
+                transitIsEmpty = true;
+                descriptionIsEmpty = true;
+                transitDetailsTextSet = false;
+                mapLoaded = false;
+                sliderNeedsToRestart = true;
+                contactsIsEmpty = true;
+                noServices = true;
+                indexItemClicked = false;
+                isReFetching = false;
+                // Set the global library parameter, so schedule switching won't mess things up.
+                library = $(this).val();
+                // Fetch data
+                getWeekSchelude(0, library);
+                fetchInformation(lang, $(this).val());
+                fetchImagesAndSocialMedia($(this).val());
+                // Re-bind navigation and other stuff.
+                bindActions();
+                bindScheduleKeyNavigation();
+                // Add swiping detection for schedules & sliderbox if available.
+                detectswipe("schedules", swipeNavigation);
+                if(document.getElementById("sliderBox") != null) {
+                    detectswipe("sliderBox", swipeNavigation);
+                }
+
         }
 
     });

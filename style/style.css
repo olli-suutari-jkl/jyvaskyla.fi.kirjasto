@@ -118,7 +118,13 @@
 }
 
 #contactsMapCol {
-    height: 250px;
+    height: auto;
+}
+
+.transit-details {
+    margin-top: -0.8em;
+    padding-left: 1em;
+    padding-right: 1em;
 }
 
 /* Optimize slider/map sizes for mobile & tablets. */

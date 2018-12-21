@@ -50,25 +50,6 @@
       <div class="col-sm-12 col-md-7 col-lg-7 col-xl-8">
         <article>
           <div id="blockquote"></div>
-          <nav class="details">
-            <a id="transitAccessibilityToggle"href="#publicTransport" class="details-toggle" style="display: none"
-               role="button" aria-expanded="false" aria-controls="publicTransport">
-              <i id="transitAccessibilityMarker" class="visibility-marker fa fa-eye"></i> </a>
-          </nav>
-          <div class="transit-accessibility" style="display: none">
-            <div class="details-content" id="publicTransport">
-              <section class="transit-details" style="display: none;">
-                <h2 id="transitTitle"></h2>
-                <div id="genericTransit"></div>
-                <div id="parkingDetails"></div>
-              </section>
-            </div>
-          </div><!-- col-lg-8 -->
-          <nav class="details">
-            <a id="newsDescriptionToggle" href="#introduction" class="details-toggle" style="display: none"
-               role="button" aria-expanded="false" aria-controls="introContent">
-              <i id="newsDescriptionMarker" class="visibility-marker fa fa-eye-slash"></i> </a>
-          </nav>
           <div class="news-description" id="introduction">
             <div class="details-content" id="introContent">
             </div>
@@ -137,6 +118,14 @@
                   </tbody>
                 </table>
               </div>
+              <div class="transit-details" style="display: none">
+                <div class="details-content" id="publicTransport">
+                  <section class="transit-details" style="display: none;">
+                    <div id="genericTransit"></div>
+                    <div id="parkingDetails"></div>
+                  </section>
+                </div>
+              </div><!-- Transit -->
             </div>
             <!-- Map -->
             <div id="contactsMapCol" class="col-md-5">
@@ -157,7 +146,7 @@
                 <th id="contactDetailsTh"></th>
               </tr>
               </thead>
-              <tbody id="phoneNumbers">
+              <tbody id="contactsTbody">
               </tbody>
             </table>
           </div>
