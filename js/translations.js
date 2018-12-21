@@ -138,6 +138,10 @@ var dict = {
         fi: "Postiosoite",
         en: "Postal address",
     },
+    "Sijainti": {
+        fi: "Sijainti",
+        en: "Location",
+    },
     "Sähköposti": {
         fi: "Sähköposti",
         en: "Email",
@@ -169,6 +173,10 @@ var dict = {
     "Yhteystiedot": {
         fi: "Yhteystiedot",
         en: "Contact details",
+    },
+    "Yhteystieto": {
+        fi: "Yhteystieto",
+        en: "Details",
     },
     "Palvelun lisätiedot": {
         fi: "Palvelun mahdolliset lisätiedot avautuvat linkkiä painamalla.",

@@ -113,6 +113,14 @@
     }
 }
 
+#contactsFirstCol {
+    padding-top: 1em;
+}
+
+#contactsMapCol {
+    height: 250px;
+}
+
 /* Optimize slider/map sizes for mobile & tablets. */
 @media screen and (min-width: 590px) and (max-width: 768px) {
     .small-slider {

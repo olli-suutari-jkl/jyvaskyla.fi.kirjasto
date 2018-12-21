@@ -190,6 +190,8 @@ var noServices = true;
 var indexItemClicked = false;
 // divClone & active tab are used with consortium.js
 var divClone = '';
+// Prevent duplicated defaultContact details in the list.
+var defaultContact = "";
 
 var jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + lang;
 function fetchInformation(language, lib) {
@@ -342,117 +344,140 @@ function fetchInformation(language, lib) {
     /*
      Yhteystiedot
      */
-    // Generic details
-    $.getJSON(jsonp_url + "&with=mail_address", function (data) {
-        if (data.address != null) {
-            contactsIsEmpty = false;
-            if (isEmpty($('#streetAddress'))) {
-                if (data.address.street != null && data.address.zipcode != null && data.address.city != null) {
-                    $("#streetAddress").append(data.name + '<br>' + data.address.street + '<br>' + data.address.zipcode + ' ' + data.address.city);
+
+    function fetchLocation() {
+        $.getJSON(jsonp_url + "&with=mail_address", function (data) {
+            if (data.address != null) {
+                contactsIsEmpty = false;
+                if (isEmpty($('#streetAddress'))) {
+                    if (data.address.street != null && data.address.zipcode != null && data.address.city != null) {
+                        $("#streetAddress").append(data.name + '<br>' + data.address.street + '<br>' + data.address.zipcode + ' ' + data.address.city);
+                    }
                 }
-            }
-            if (isEmpty($('#postalAddress'))) {
-                if (data.mail_address != null) {
-                    var boxNumber = '';
-                    if (data.mail_address.box_number !== null) {
-                        boxNumber = 'PL ' + data.mail_address.box_number;
-                    }
-                    // Generate postal address based on available data.
-                    var postalString = '';
-                    if(data.name !== null && data.name.length !== 0) {
-                        postalString += data.name + '<br>';
-                    }
-                    if(boxNumber != null && boxNumber.length !== 0) {
-                        postalString += boxNumber + '<br>';
-                    }
-                    if(data.mail_address.zipcode !== null && data.mail_address.zipcode.length !== 0) {
-                        postalString += data.mail_address.zipcode + ' ';
-                    }
-                    if(data.mail_address.area !== null && data.mail_address.area.length !== 0) {
-                        postalString += data.mail_address.area;
-                    }
-                    if(postalString !== data.name + '<br>') {
-                        $("#postalAddress").append(postalString);
+                if (isEmpty($('#postalAddress'))) {
+                    if (data.mail_address != null && data.mail_address.area != null) {
+                        var boxNumber = '';
+                        if (data.mail_address.box_number !== null) {
+                            boxNumber = 'PL ' + data.mail_address.box_number;
+                        }
+                        // Generate postal address based on available data.
+                        var postalString = '';
+                        if(data.name !== null && data.name.length !== 0) {
+                            postalString += data.name + '<br>';
+                        }
+                        if(boxNumber != null && boxNumber.length !== 0) {
+                            postalString += boxNumber + '<br>';
+                        }
+                        if(data.mail_address.zipcode !== null && data.mail_address.zipcode.length !== 0) {
+                            postalString += data.mail_address.zipcode + ' ';
+                        }
+                        if(data.mail_address.area !== null && data.mail_address.area.length !== 0) {
+                            postalString += data.mail_address.area;
+                        }
+                        if(postalString !== data.name + '<br>') {
+                            $("#postalAddress").append(postalString);
+                        }
                     }
                     else {
+                        // If no postal address, hide header & increase map size.
+                        $("#contactsFirstCol").addClass( "col-md-5");
+                        $("#contactsFirstCol").removeClass( "col-md-7" );
+
+                        $("#contactsMapCol").addClass( "col-md-7");
+                        $("#contactsMapCol").removeClass( "col-md-5" );
                         $("#postalTh").css('display', 'none');
                     }
                 }
+                // Get coordinates to be used in loadMap function.
+                // Map coordinates (marker)
+                if (data.address.coordinates != null) {
+                    lon = data.address.coordinates.lon;
+                    lat = data.address.coordinates.lat;
+                }
             }
-            // Get coordinates to be used in loadMap function.
-            // Map coordinates (marker)
-            if (data.address.coordinates != null) {
-                lon = data.address.coordinates.lon;
-                lat = data.address.coordinates.lat;
-            }
-        }
-        if (isEmpty($('#email'))) {
-            if (data.email != null && data.email.length !== 0) {
-                contactsIsEmpty = false;
-                $("#email").append(data.email);
-            }
-            else {
-                $("#emailTh").css('display', 'none');
-            }
-        }
-        // Show navigation if content.
-        if (!contactsIsEmpty) {
-            $('#navEsittely').css('display', 'block');
-            $('#navYhteystiedot').css('display', 'block');
-        }
-    });
-    // Phone numbers.
-    if (isEmpty($('#phoneNumbers'))) {
-        $.getJSON(jsonp_url + "&with=phone_numbers", function (data) {
-            if(data.phone_numbers.length === 0) {
-                $('.phone-numbers').css('display', 'none');
-            }
-            else {
-                for (var i = 0; i < data.phone_numbers.length; i++) {
-                    $("#phoneNumbers").append('<tr>' +
-                        '<td>' + data.phone_numbers[i].name + '</td>' +
-                        '<td>' + data.phone_numbers[i].number + '</td>' +
-                        '</tr>');
+            if (isEmpty($('#email'))) {
+                if (data.email != null && data.email.length !== 0) {
+                    contactsIsEmpty = false;
+                    if (defaultContact !== data.email) {
+                        //console.log(defaultContact + " - " +  data.email);
+                        defaultContact = data.email;
+                        $("#phoneNumbers").append('<tr>' +
+                            '<td>Oletussähköposti</td><td>' + data.email + '</td>' +
+                            '</tr>');
+                        $('#navYhteystiedot').css('display', 'block');
+                    }
                 }
             }
             // Show navigation if content.
-            if (!isEmpty($('#phoneNumbers'))) {
+            if (!contactsIsEmpty) {
                 $('#navEsittely').css('display', 'block');
                 $('#navYhteystiedot').css('display', 'block');
             }
         });
     }
-    // Staff list
-    if (isEmpty($('#staffMembers'))) {
-        $.getJSON(jsonp_url + "&with=persons", function (data) {
-            // Hide staff if none found.
-            if(data.persons.length === 0) {
-                $('.staff').css('display', 'none');
-            }
-            else {
-                for (var i = 0; i < data.persons.length; i++) {
-                    var staffDetail = "";
-                    if(data.persons[i].first_name !== null) {
-                        staffDetail += '<td>' + data.persons[i].first_name + ' ' + data.persons[i].last_name + '</td>';
+
+    function fetchContacts() {
+        // Phone numbers.
+        if (isEmpty($('#phoneNumbers'))) {
+            $.getJSON(jsonp_url + "&with=phone_numbers", function (data) {
+                if(data.phone_numbers.length !== 0) {
+                    for (var i = 0; i < data.phone_numbers.length; i++) {
+                        // This prevents the duplicated default contact.
+                        if (defaultContact !== data.phone_numbers[i].number ) {
+                            //console.log(defaultContact + " | " +  data.phone_numbers[i].number);
+                            $("#phoneNumbers").append('<tr>' +
+                                '<td>' + data.phone_numbers[i].name + '</td>' +
+                                '<td>' + data.phone_numbers[i].number + '</td>' +
+                                '</tr>');
+                        }
                     }
-                    if(data.persons[i].job_title !== null) {
-                        staffDetail += '<td>' + data.persons[i].job_title + '</td>'
-                    }
-                    if(data.persons[i].email !== null) {
-                        staffDetail += '<td>' + data.persons[i].email + '</td>'
-                    }
-                    $("#staffMembers").append('<tr>' +
-                        staffDetail +
-                        '</tr>');
                 }
-            }
-            // Show navigation if content.
-            if (!isEmpty($('#staffMembers'))) {
-                $('#navEsittely').css('display', 'block');
-                $('#navYhteystiedot').css('display', 'block');
-            }
-        });
+                // Show navigation if content.
+                if (!isEmpty($('#phoneNumbers'))) {
+                    $('#navEsittely').css('display', 'block');
+                    $('#navYhteystiedot').css('display', 'block');
+                }
+            });
+        }
+        // Staff list
+        if (isEmpty($('#staffMembers'))) {
+            $.getJSON(jsonp_url + "&with=persons", function (data) {
+                if(data.persons.length !== 0) {
+                    for (var i = 0; i < data.persons.length; i++) {
+                        var staffDetail = "";
+                        if (data.persons[i].first_name !== null) {
+                            staffDetail += '<td>' + data.persons[i].first_name + ' ' + data.persons[i].last_name;
+                        }
+                        if (data.persons[i].job_title !== null) {
+                            staffDetail += ' – ' + data.persons[i].job_title + '</td>'
+                        } else {
+                            staffDetail += '</td>';
+                        }
+                        if (data.persons[i].email !== null) {
+                            staffDetail += '<td>' + data.persons[i].email + '</td>'
+                        } else {
+                            staffDetail += '<td></td>'
+                        }
+                        $("#phoneNumbers").append('<tr>' +
+                            staffDetail +
+                            '</tr>');
+                    }
+                }
+                // Show navigation if content.
+                if (!isEmpty($('#staffMembers'))) {
+                    $('#navEsittely').css('display', 'block');
+                    $('#navYhteystiedot').css('display', 'block');
+                }
+            });
+        }
     }
+
+    $.when( fetchLocation() ).then(
+        function() {
+            fetchContacts();
+        }
+    );
+
     /*
      Palvelut
     */
@@ -911,6 +936,7 @@ $(document).ready(function() {
     document.getElementById('expandSlider').title = i18n.get("Avaa tai sulje kokoruututila");
     // Yhteystiedot UI texts.
     document.getElementById('expandMap').title = i18n.get("Avaa tai sulje kokoruututila");
+    $('#locationTitle').append(i18n.get("Sijainti"));
     $('#contactsTitle').append(i18n.get("Yhteystiedot"));
     $('#addressTh').append(i18n.get("Osoite"));
     $('#postalTh').append(i18n.get("Postiosoite"));
@@ -923,7 +949,7 @@ $(document).ready(function() {
     $('#staffTitle').append(i18n.get("Henkilökunta"));
     $('#nameTh').append(i18n.get("Nimi"));
     $('#titleTh').append(i18n.get("Työnimike"));
-    $('#contactDetailsTh').append(i18n.get("Yhteystiedot"));
+    $('#contactDetailsTh').append(i18n.get("Yhteystieto"));
     // Services
     $('#servicesInfo').append(i18n.get("Palvelun lisätiedot"));
     $('#closeInfoBtn').append(i18n.get("Sulje"));
