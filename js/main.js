@@ -182,7 +182,6 @@ var lat;
 // Used for hiding sections if null....
 var transitIsEmpty = true;
 var descriptionIsEmpty = true;
-var transitDetailsTextSet = false;
 var isReFetching = false;
 var mapLoaded = false;
 var contactsIsEmpty = true;
@@ -223,11 +222,6 @@ function fetchInformation(language, lib) {
                 description = description.replace(/(<a )+/g, '<a target="_blank" ');
                 $("#introContent").append(description);
                 descriptionIsEmpty = false;
-            } else {
-                // If no description, display the transit details (if hidden)
-                if ($("#transitDetailsMarker").hasClass("fa-eye") && language === "fi") {
-                    $("#transitDetailsToggle").click();
-                }
             }
         }
         if (isEmpty($('#genericTransit'))) {
@@ -695,9 +689,9 @@ function fetchImagesAndSocialMedia(lib) {
     });
 
     // Social media links
-    $.getJSON(jsonp_url + "&with=link_groups", function (data) {
+    $.getJSON(jsonp_url + "&with=links", function (data) {
         // Loop the links of group category [0].
-        data.link_groups[0].links.forEach(function (element) {
+        data.links.forEach(function (element) {
             // Get url.
             var url = element.url;
             if (url.indexOf("facebook") !== -1) {
@@ -716,13 +710,7 @@ function fetchImagesAndSocialMedia(lib) {
     });
 }
 
-// Check if element is visible on screen. If this is not used, visibility togglers are lost on mobile when sections are shown.
-// https://stackoverflow.com/questions/5353934/check-if-element-is-visible-on-screen
-function checkVisible(elm) {
-    var rect = elm.getBoundingClientRect();
-    var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
-    return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
-}
+
 
 function loadMap() {
     var map = L.map('mapContainer').setView([lat, lon], 15.5);

@@ -109,7 +109,7 @@ $(document).ready(function() {
             for (var i=0; i<data.items.length; i++) {
                 // Ignore mobile libraries & other consortiums.
                 if(data.items[i].branch_type !== "mobile" && data.items[i].consortium == consortium) {
-                    libraryList.push({id: data.items[i].id, text: data.items[i].name});
+                    libraryList.push({id: data.items[i].id, text: data.items[i].name, coordinates: data.items[i].address.coordinates});
                 }
             }
             generateSelect();
@@ -122,7 +122,7 @@ $(document).ready(function() {
             for (var i=0; i<data.items.length; i++) {
                 // Ignore mobile libraries
                 if(data.items[i].branch_type !== "mobile") {
-                    libraryList.push({id: data.items[i].id, text: data.items[i].name});
+                    libraryList.push({id: data.items[i].id, text: data.items[i].name, coordinates: data.items[i].address.coordinates});
                 }
             }
             generateSelect();
@@ -134,7 +134,7 @@ $(document).ready(function() {
         $.getJSON("https://api.kirjastot.fi/v3/organisation?lang=" + lang + "&consortium=" + consortium + "&limit=500", function(data) {
             for (var i=0; i<data.items.length; i++) {
                 // Include mobile libraries in consortium listings...
-                libraryList.push({ id: data.items[i].id, text: data.items[i].name, city: data.items[i].city.toString()});
+                libraryList.push({ id: data.items[i].id, text: data.items[i].name, city: data.items[i].city.toString(), coordinates: data.items[i].address.coordinates});
                 /*
                 if(data.items[i].branch_type !== "mobile") {
 
@@ -147,14 +147,11 @@ $(document).ready(function() {
 
     $("#librarySelector").change(function(){
         if($(this).val() !== library) {
-
-            // If no timeout, list is not always ready...
-                $("#pageContainer").replaceWith(divClone.clone()); // Restore main with a copy of divClone
+             $("#pageContainer").replaceWith(divClone.clone()); // Restore main with a copy of divClone
                 // Reset variables.
                 accessibilityIsEmpty = true;
                 transitIsEmpty = true;
                 descriptionIsEmpty = true;
-                transitDetailsTextSet = false;
                 mapLoaded = false;
                 sliderNeedsToRestart = true;
                 contactsIsEmpty = true;
@@ -175,7 +172,6 @@ $(document).ready(function() {
                 if(document.getElementById("sliderBox") != null) {
                     detectswipe("sliderBox", swipeNavigation);
                 }
-
         }
 
     });
