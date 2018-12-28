@@ -142,6 +142,10 @@ var dict = {
         fi: "Sijainti",
         en: "Location",
     },
+    "Hae tiedot": {
+        fi: "Hae tiedot",
+        en: "Fetch details",
+    },
     "Oletussähköposti": {
         fi: "Oletussähköposti",
         en: "Generic email",
@@ -162,25 +166,25 @@ var dict = {
         fi: "Numero",
         en: "Number",
     },
-    "Henkilökunta": {
-        fi: "Henkilökunta",
-        en: "Staff",
-    },
     "Nimi": {
         fi: "Nimi",
         en: "Name",
-    },
-    "Työnimike": {
-        fi: "Työnimike",
-        en: "Title",
     },
     "Yhteystiedot": {
         fi: "Yhteystiedot",
         en: "Contact details",
     },
+    "Linkit ja yhteystiedot": {
+        fi: "Linkit ja yhteystiedot",
+        en: "Links and contact details",
+    },
     "Yhteystieto": {
         fi: "Yhteystieto",
         en: "Details",
+    },
+    "Ei yhteystietoja": {
+        fi: "Kirjasto ei ole lisännyt yhteystietoja.",
+        en: "Library has not listed any contact details.",
     },
     "Palvelun lisätiedot": {
         fi: "Palvelun mahdolliset lisätiedot avautuvat linkkiä painamalla.",
@@ -213,5 +217,9 @@ var dict = {
     "Sulje": {
         fi: "Sulje",
         en: "Close",
+    },
+    "Virheelliset aukioloajat": {
+        fi: "HUOM: Kirjastojen tiedot haetaan valtakunnallisesta kirjastohakemistosta, hakemiston tietojen haussa on tällä hetkellä ongelmia poikkeusaukiolojen hakemisessa ja tiedot eivät välttämättä pidä paikkaansa.",
+        en: "ATTENTION: Schedules are fetched via the national library database, there are ongoing problems with fetching holiday schedules. Libraries may be shown to be closed or open incorrectly during the holidays.",
     },
 };

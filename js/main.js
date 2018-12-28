@@ -163,6 +163,28 @@ function isEmpty( el ){
     return !$.trim(el.html())
 }
 
+
+var contactlist = [];
+// IEC CRASHES:
+//                         if (contactlist.findIndex(x => x.contact==data.phone_numbers[i].number) === -1){
+// https://stackoverflow.com/questions/37698996/findindex-method-issue-with-internet-explorer
+function checkIfNameExists(item) {
+    for (var i = 0; i < contactlist.length; ++i) {
+        if (contactlist[i].name == item) {
+            return true;
+        }
+    }
+    return false;
+}
+function checkIfContactExists(item) {
+    for (var i = 0; i < contactlist.length; ++i) {
+        if (contactlist[i].contact == item) {
+            return true;
+        }
+    }
+    return false;
+}
+
 var isInfoBoxVisible = false;
 // Togles the visibility of the popover modal.
 function toggleInfoBox(delay) {
@@ -307,28 +329,8 @@ function fetchInformation(language, lib) {
     /*
      Yhteystiedot
      */
-    var contactlist = [];
-
-    // IEC CRASHES:
-    //                         if (contactlist.findIndex(x => x.contact==data.phone_numbers[i].number) === -1){
-    // https://stackoverflow.com/questions/37698996/findindex-method-issue-with-internet-explorer
-    function checkIfNameExists(item) {
-        for (var i = 0; i < contactlist.length; ++i) {
-            if (contactlist[i].name == item) {
-                return true;
-            }
-        }
-        return false;
-    }
-    function checkIfContactExists(item) {
-        for (var i = 0; i < contactlist.length; ++i) {
-            if (contactlist[i].contact == item) {
-                return true;
-            }
-        }
-        return false;
-    }
     function fetchLocation() {
+        contactlist = [];
         $.getJSON(jsonp_url + "&with=mail_address", function (data) {
             if (data.address != null) {
                 contactsIsEmpty = false;
@@ -449,10 +451,20 @@ function fetchInformation(language, lib) {
                     function() {
                         // If no timeout, list is not always ready...
                         setTimeout(function(){
+
+                            if(contactlist.length === 0) {
+                                contactlist.push({name: i18n.get("Ei yhteystietoja"), contact: ""});
+
+                            }
+
                             for (var i = 0; i < contactlist.length; i++) {
+                                var contactDetail = "";
+                                if(contactlist[i].contact != null) {
+                                    contactDetail = contactlist[i].contact;
+                                }
                                 $("#contactsTbody").append('<tr>' +
                                     '<td>' + contactlist[i].name + '</td>' +
-                                    '<td>' + contactlist[i].contact + '</td>' +
+                                    '<td>' + contactDetail + '</td>' +
                                     '</tr>');
 
                             }
@@ -690,10 +702,20 @@ function fetchImagesAndSocialMedia(lib) {
 
     // Social media links
     $.getJSON(jsonp_url + "&with=links", function (data) {
+
+        if(data.links.length !== 0 ) {
+            $('#contactsTitle').append(i18n.get("Linkit ja yhteystiedot"));
+        } else {
+            $('#contactsTitle').append(i18n.get("Yhteystiedot"));
+        }
+
         // Loop the links of group category [0].
         data.links.forEach(function (element) {
             // Get url.
             var url = element.url;
+            if (url === null) {
+                return
+            }
             if (url.indexOf("facebook") !== -1) {
                 $(".some-links").append('<a target="_blank" ' +
                     'href="' + url + '" title="' + element.name + '"> <img src="../images/icons/facebook.svg" alt="' +
@@ -706,32 +728,89 @@ function fetchImagesAndSocialMedia(lib) {
                     i18n.get("Kirjaston") + ' Instagram"/>' +
                     '</a>');
             }
+            else {
+                // Add the link to the contact details listing
+                // https://stackoverflow.com/questions/41942690/removing-http-or-http-and-www/41942787
+                // Check if refurl contains url, when we remove http / www & ending from it.
+                if(url.indexOf(refUrl.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0]) === -1) {
+                    // Remove httml & www
+                    var prettyUrl = url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "");
+                    // Remove / and # from url if last characters
+                    if (prettyUrl.substring(prettyUrl.length-1) === "/" || prettyUrl.substring(prettyUrl.length-1) === "#") {
+                        prettyUrl = prettyUrl.substring(0, prettyUrl.length-1);
+                    }
+                    // Generate the link
+                    prettyUrl = '<a target="_blank" href="' + url + '">' + prettyUrl + '</a>';
+                    if(!checkIfContactExists(prettyUrl) && !checkIfNameExists(element.name)) {
+                        contactlist.unshift({name: element.name,
+                            contact: prettyUrl});
+                    }
+                }
+            }
+
         });
     });
 }
 
 
-
-function loadMap() {
+function loadMapWithLibraries() {
     var map = L.map('mapContainer').setView([lat, lon], 15.5);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
-    var greenIcon = L.icon({
-        // https://material.io/tools/icons/?style=baseline
-        iconUrl: '../images/icons/local_library.svg',
-        popupAnchor:  [-11, -5], // point from which the popup should open relative to the iconAnchor
-        iconSize:     [36, 36], // size of the icon
-    });
-    L.marker([lat, lon], {icon: greenIcon}).addTo(map)
-        .bindPopup(document.title)
-        .openPopup();
+
+    if(libraryList.length !== 0) {
+        var markerIcon = L.icon({
+            // https://material.io/tools/icons/?style=baseline
+            iconUrl: '../images/icons/local_library.svg',
+            popupAnchor:  [-10, -4], // point from which the popup should open relative to the iconAnchor
+            iconSize:     [28, 28], // size of the icon
+        });
+        for (var i = 0; i < libraryList.length; i++) {
+            var text = '<strong>' + libraryList[i].text + '</strong><br>' +
+                libraryList[i].street + ', <br>' + libraryList[i].zipcode + ', ' + libraryList[i].city +
+                '<br><button type="button" value="' + libraryList[i].id + '" class="map-library-changer btn btn-md btn-primary py-0 mb-3">' +
+                i18n.get("Hae tiedot") + '</button>';
+            if(libraryList[i].id == library) {
+                text = '<strong>' + libraryList[i].text + '</strong><br>' +
+                    libraryList[i].street + ', <br>' + libraryList[i].zipcode + ', ' + libraryList[i].city;
+            }
+            if (libraryList[i].coordinates != null) {
+                L.marker([libraryList[i].coordinates.lat, libraryList[i].coordinates.lon], {icon: markerIcon}).addTo(map)
+                    .bindPopup(text)
+                    .openPopup();
+            }
+        }
+    } else {
+        // Use larger icon for a single library pages.
+        var markerIcon = L.icon({
+            // https://material.io/tools/icons/?style=baseline
+            iconUrl: '../images/icons/local_library.svg',
+            popupAnchor:  [-11, -5], // point from which the popup should open relative to the iconAnchor
+            iconSize:     [42, 42], // size of the icon
+        });
+        L.marker([lat, lon], {icon: markerIcon}).addTo(map)
+            .bindPopup(document.title)
+            .openPopup();
+    }
+
     // add Wikimedia map styles to the map.
     L.tileLayer.provider('Wikimedia').addTo(map);
-    // Min/max zoom levels.
+    // Min/max zoom levels + default focus.
     map.options.minZoom = 6;
     map.options.maxZoom = 17.9;
+    map.setView([lat, lon], 15);
+
+    map.eachLayer(function (layer) {
+        if(layer._latlng !== undefined) {
+            if(layer._latlng.lat == lat) {
+                layer.fire('click');
+            }
+        }
+    });
 }
+
+
 
 function bindActions() {
     // Navigation events
@@ -772,7 +851,8 @@ function bindActions() {
         // Map zoom gets messed if the map is loaded before hiding the map div.
         if(!mapLoaded && lat != null) {
             setTimeout(function(){
-                loadMap();
+                //loadMap();
+                loadMapWithLibraries();
             }, 750);
             mapLoaded = true;
         }
@@ -834,7 +914,9 @@ function bindActions() {
         // If no timeout is used, map may not load correctly. If if clause is not inside the timeout, map won't be loaded if contacts is the default tab.
         setTimeout(function(){
             if(!mapLoaded && lat != null) {
-                loadMap();mapLoaded = true;
+                //loadMap();
+                loadMapWithLibraries();
+                mapLoaded = true;
             }
         }, 750);
 
@@ -892,7 +974,6 @@ $(document).ready(function() {
     // Yhteystiedot UI texts.
     document.getElementById('expandMap').title = i18n.get("Avaa tai sulje kokoruututila");
     $('#locationTitle').append(i18n.get("Sijainti"));
-    $('#contactsTitle').append(i18n.get("Yhteystiedot"));
     $('#addressTh').append(i18n.get("Osoite"));
     $('#postalTh').append(i18n.get("Postiosoite"));
     $('#emailTh').append(i18n.get("Sähköposti"));
@@ -933,4 +1014,9 @@ $(document).ready(function() {
     // Fetch details.
     fetchInformation(lang);
     fetchImagesAndSocialMedia(library);
+
+
+    $('#schedules').prepend('<p style="color: red">' + i18n.get("Virheelliset aukioloajat") + '</p>');
+
+
 }); // OnReady

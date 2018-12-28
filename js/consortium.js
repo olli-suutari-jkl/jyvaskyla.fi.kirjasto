@@ -76,10 +76,10 @@ function generateSelect() {
 
         $.when( asyncReplaceIdWithCity() ).then(
             function(){
-                $.when( libraryList = groupByCity(libraryList) ).then(
+                $.when( librariesGroupped = groupByCity(libraryList) ).then(
                     function() {
-                        for (var key in libraryList) {
-                            consortiumLibraries.push({text: key, children: libraryList[key]});
+                        for (var key in librariesGroupped) {
+                            consortiumLibraries.push({text: key, children: librariesGroupped[key]});
                         }
                         // Attach a done, fail, and progress handler for the asyncEvent
                         $.when( initSelect(consortiumLibraries) ).then(
@@ -102,6 +102,7 @@ function generateSelect() {
     }
 }
 
+
 $(document).ready(function() {
     // Fetch libraries of city, that belong to the same consortium
     if(consortium !== undefined && city !== undefined) {
@@ -109,7 +110,11 @@ $(document).ready(function() {
             for (var i=0; i<data.items.length; i++) {
                 // Ignore mobile libraries & other consortiums.
                 if(data.items[i].branch_type !== "mobile" && data.items[i].consortium == consortium) {
-                    libraryList.push({id: data.items[i].id, text: data.items[i].name, coordinates: data.items[i].address.coordinates});
+                    libraryList.push({id: data.items[i].id, text: data.items[i].name,
+                        city: data.items[i].city.toString(),
+                        street: data.items[i].address.street,
+                        zipcode: data.items[i].address.zipcode,
+                        coordinates: data.items[i].address.coordinates});
                 }
             }
             generateSelect();
@@ -122,7 +127,11 @@ $(document).ready(function() {
             for (var i=0; i<data.items.length; i++) {
                 // Ignore mobile libraries
                 if(data.items[i].branch_type !== "mobile") {
-                    libraryList.push({id: data.items[i].id, text: data.items[i].name, coordinates: data.items[i].address.coordinates});
+                    libraryList.push({id: data.items[i].id, text: data.items[i].name,
+                        city: data.items[i].city.toString(),
+                        street: data.items[i].address.street,
+                        zipcode: data.items[i].address.zipcode,
+                        coordinates: data.items[i].address.coordinates});
                 }
             }
             generateSelect();
@@ -134,7 +143,11 @@ $(document).ready(function() {
         $.getJSON("https://api.kirjastot.fi/v3/organisation?lang=" + lang + "&consortium=" + consortium + "&limit=500", function(data) {
             for (var i=0; i<data.items.length; i++) {
                 // Include mobile libraries in consortium listings...
-                libraryList.push({ id: data.items[i].id, text: data.items[i].name, city: data.items[i].city.toString(), coordinates: data.items[i].address.coordinates});
+                libraryList.push({ id: data.items[i].id, text: data.items[i].name,
+                    city: data.items[i].city.toString(),
+                    street: data.items[i].address.street,
+                    zipcode: data.items[i].address.zipcode,
+                    coordinates: data.items[i].address.coordinates});
                 /*
                 if(data.items[i].branch_type !== "mobile") {
 
@@ -173,6 +186,15 @@ $(document).ready(function() {
                     detectswipe("sliderBox", swipeNavigation);
                 }
         }
+    });
+
+
+    $(document).on('click', '.map-library-changer', function () {
+        // Trigger the library change.
+        $('.library-select').val($(this).val()).trigger('change');
 
     });
+
+
+
 }); // OnReady

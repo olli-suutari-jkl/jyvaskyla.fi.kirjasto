@@ -2,6 +2,7 @@
 
 #librarySelectorTitle {
     text-align: center;
+    font-size: 1.3em;
 }
 
 #librarySelectorContainer {
@@ -119,12 +120,17 @@
 
 #contactsMapCol {
     height: auto;
+    min-height: 260px;
+}
+
+.map-library-changer {
+    margin-top: 1em;
 }
 
 .transit-details {
     margin-top: -0.8em;
-    padding-left: 1em;
-    padding-right: 1em;
+    padding-left: 0.6em;
+    padding-right: 0.9em;
 }
 
 /* Optimize slider/map sizes for mobile & tablets. */
@@ -159,6 +165,17 @@
 /* Map borders, if not in fullscreen mode */
 .map-borders {
     border: 1px solid #026fcf;
+}
+
+.title-and-social-links {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 0.35em;
+}
+
+#contactsTitle {
+    margin-top: -0.08em;
 }
 
 /* Top right (full screen toggler) */
