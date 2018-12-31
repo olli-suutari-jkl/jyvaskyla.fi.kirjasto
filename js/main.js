@@ -704,9 +704,9 @@ function fetchImagesAndSocialMedia(lib) {
     $.getJSON(jsonp_url + "&with=links", function (data) {
 
         if(data.links.length !== 0 ) {
-            $('#contactsTitle').append(i18n.get("Linkit ja yhteystiedot"));
+            $('#contactsTitle').append('<span>' + i18n.get("Linkit ja yhteystiedot") + '</span>');
         } else {
-            $('#contactsTitle').append(i18n.get("Yhteystiedot"));
+            $('#contactsTitle').append('<span>' + i18n.get("Yhteystiedot") + '</span>');
         }
 
         // Loop the links of group category [0].

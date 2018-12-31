@@ -174,8 +174,23 @@
     margin-top: 0.35em;
 }
 
+#locationTitle i {
+    margin-right: 10px;
+}
+
 #contactsTitle {
-    margin-top: -0.08em;
+    margin-top: 1em;
+}
+
+/* This splits the title evenly on mobile instead of starting 2nd row at the icon */
+#contactsTitle span {
+    margin-left: 48px;
+    margin-top: -23px!important;
+    display: block;
+}
+
+.some-links a img{
+    margin-top: 10px; /* Using em would not add margin on mobile, where rows are splitted */
 }
 
 /* Top right (full screen toggler) */

@@ -47,8 +47,8 @@ function generateSelect() {
         return 0; //default return value (no sorting)
     });
 
-    // If we are fetching a consortium.
-    if(consortium !== undefined && city === undefined) {
+    // If we are fetching a consortium or a city.
+    if(consortium !== undefined || city !== undefined) {
         var consortiumLibraries = [];
         function asyncReplaceIdWithCity() {
             var citiesDeferred = jQuery.Deferred();
@@ -76,27 +76,30 @@ function generateSelect() {
 
         $.when( asyncReplaceIdWithCity() ).then(
             function(){
-                $.when( librariesGroupped = groupByCity(libraryList) ).then(
-                    function() {
-                        for (var key in librariesGroupped) {
-                            consortiumLibraries.push({text: key, children: librariesGroupped[key]});
-                        }
-                        // Attach a done, fail, and progress handler for the asyncEvent
-                        $.when( initSelect(consortiumLibraries) ).then(
-                            function() {
-                                setSelectDefault();
+                // Consortium listing
+                if(city === undefined) {
+                    $.when( librariesGroupped = groupByCity(libraryList) ).then(
+                        function() {
+                            for (var key in librariesGroupped) {
+                                consortiumLibraries.push({text: key, children: librariesGroupped[key]});
                             }
-                        );
-                    }
-                );
-            }
-        );
-    }
-    // Fetch libraries of city or libraries of city that belong to the same consortium.
-    else {
-        $.when( initSelect(libraryList) ).then(
-            function() {
-                setSelectDefault();
+                            // Attach a done, fail, and progress handler for the asyncEvent
+                            $.when( initSelect(consortiumLibraries) ).then(
+                                function() {
+                                    setSelectDefault();
+                                }
+                            );
+                        }
+                    );
+                }
+                // City listing
+                else {
+                    $.when( initSelect(libraryList) ).then(
+                        function() {
+                            setSelectDefault();
+                        }
+                    );
+                }
             }
         );
     }
