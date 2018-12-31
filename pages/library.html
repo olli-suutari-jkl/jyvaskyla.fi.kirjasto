@@ -43,7 +43,6 @@
       <nav class="nav nav-pills nav-library-page">
         <a id="navEsittely" class="nav-item nav-link active" style="display: none" href="#"></a>
         <a id="navYhteystiedot" class="nav-item nav-link" style="display: none" href="#"></a>
-        <a id="navPalvelut" class="nav-item nav-link" style="display: none" href="#"></a>
       </nav>
     </header>
     <div class="row esittely">
@@ -55,6 +54,33 @@
             </div>
           </div>
         </article>
+        <section id="libraryServices">
+          <!-- Accessibility -->
+          <div class="group" id="accessibility" style="display: none">
+            <h3 id="accessibilityTitle">
+              <span class="badge" id="accessibilityBadge"></span>
+            </h3>
+            <ul class="accessibility-details">
+              <div style="margin: 10px 0 10px 0" class="accessibility-images"></div>
+              <div id="accessibilityList"></div>
+              <div style="margin: 10px 0 10px 0" id="accessibilityDetails"></div>
+            </ul>
+          </div>
+          <!-- Rooms & collections -->
+          <div class="group" id="roomsAndCollections" style="display: none">
+            <h3 id="roomsAndCollectionsTitle">
+              <span class="badge" id="roomsAndCollectionsBadge"></span>
+            </h3>
+            <ul class="cols" id="roomsAndCollectionsItems"></ul>
+          </div>
+          <!-- Hardware &  Services-->
+          <div class="group" id="hardwareAndServices" style="display: none">
+            <h3 id="hardwareAndServicesTitle">
+              <span class="badge" id="hardwareAndServicesBadge"></span>
+            </h3>
+            <ul class="cols" id="hardwareAndServicesItems"></ul>
+          </div>
+        </section><!-- Palvelut -->
       </div><!-- col-lg-8 -->
       <div class="col-sm-12 col-md-5 col-lg-5 col-xl-4 order-2 sidebar" id="introductionSidebar">
         <!-- Scheludes -->
@@ -78,19 +104,22 @@
             </tbody>
           </table>
         </section>
-        <section id="sliderBox" class="small-slider">
-          <ul class="rslides"></ul>
-          <i id="expandSlider" class="fa fa-expand top-right" title="Toggle full-screen"></i>
-          <i class="top-left"><span id="currentSlide"></span></i>
-        </section>
-        <section class="building-details" style="margin-top: 25px;">
-          <table class="table table-sm table-responsive-sm">
-            <tbody id="buildingDetails">
-            </tbody>
-          </table>
-        </section>
+
+          <section id="sliderBox" class="small-slider">
+            <ul class="rslides"></ul>
+            <i id="expandSlider" class="fa fa-expand top-right" title="Toggle full-screen"></i>
+            <i class="top-left"><span id="currentSlide"></span></i>
+          </section>
+          <section class="building-details" style="margin-top: 25px;">
+            <table class="table table-sm table-responsive-sm">
+              <tbody id="buildingDetails">
+              </tbody>
+            </table>
+          </section>
       </div>
-    </div><!-- Esittely -->
+
+    </div>
+
     <!-- Yhteystiedot -->
     <div class="row yhteystiedot" id="pageContactInfo" style="display: none">
       <div class="col-sm-12">
@@ -155,50 +184,6 @@
         </section>
       </div>
     </div> <!-- Yhteystiedot -->
-    <div class="row palvelut" style="display: none">
-      <section class="container" id="libraryServices">
-        <p id="servicesInfo"></p>
-        <!-- Accessibility -->
-        <div class="group" id="accessibility" style="display: none">
-          <h2 id="accessibilityTitle">
-            <span class="badge" id="accessibilityBadge"></span>
-          </h2>
-          <ul class="accessibility-details">
-            <div style="margin: 10px 0 10px 0" class="accessibility-images"></div>
-            <div id="accessibilityList"></div>
-            <div style="margin: 10px 0 10px 0" id="accessibilityDetails"></div>
-          </ul>
-        </div>
-        <!-- Collections -->
-        <div class="group" id="collection" style="display: none">
-          <h2 id="collectionsTitle">
-            <span class="badge" id="collectionBadge"></span>
-          </h2>
-          <ul class="cols" id="collectionItems"></ul>
-        </div>
-        <!-- Hardware -->
-        <div class="group" id="hardware" style="display: none">
-          <h2 id="hardwareTitle">
-            <span class="badge" id="hardwareBadge"></span>
-          </h2>
-          <ul class="cols" id="hardwareItems"></ul>
-        </div>
-        <!-- Rooms -->
-        <div class="group" id="room" style="display: none">
-          <h2 id="roomTitle">
-            <span class="badge" id="roomBadge"></span>
-          </h2>
-          <ul class="cols" id="roomItems"></ul>
-        </div>
-        <!-- Services -->
-        <div class="group" id="service" style="display: none">
-          <h2 id="serviceTitle">
-            <span class="badge" id="serviceBadge"></span>
-          </h2>
-          <ul class="cols" id="serviceItems"></ul>
-        </div>
-      </section>
-    </div> <!-- Palvelut -->
   </main>
 </div> <!-- Container -->
 <!-- Popover modal for displaying service details -->

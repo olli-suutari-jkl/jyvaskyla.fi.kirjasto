@@ -1,8 +1,24 @@
 @charset "UTF-8";
 
+h3 {
+    font-size: 1.35em!important;
+}
+
+h4 {
+    font-size: 1.2em!important;
+}
+
+i {
+    font-size: 1em!important;
+}
+
+.cols li {
+    word-break: break-all!important;
+    padding-bottom: 5px;
+}
+
 #librarySelectorTitle {
     text-align: center;
-    font-size: 1.3em;
 }
 
 #librarySelectorContainer {
@@ -29,7 +45,6 @@
     .select2-container {
         width: 90%!important;
     }
-
 }
 /* If we wanted to style the placeholder of select2...
 :placeholder-shown {
@@ -303,10 +318,6 @@
 
 .no-js-notification {
     color: red;
-}
-
-#servicesInfo {
-    margin: 15px;
 }
 
 .nav-pills {
@@ -3411,33 +3422,20 @@ body {
     flex-grow: 1
 }
 
-@media (max-width:575.98px) {
+@media (max-width: 767px) {
     .cols {
         -webkit-column-count: 1;
         column-count: 1
     }
 }
 
-@media (min-width:576px) and (max-width:767.98px) {
+@media (min-width: 768px) {
     .cols {
         -webkit-column-count: 2;
         column-count: 2
     }
 }
 
-@media (min-width:768px) and (max-width:991.98px) {
-    .cols {
-        -webkit-column-count: 3;
-        column-count: 3
-    }
-}
-
-@media (min-width:992px) {
-    .cols {
-        -webkit-column-count: 4;
-        column-count: 4
-    }
-}
 
 ul.cols {
     list-style-type: none

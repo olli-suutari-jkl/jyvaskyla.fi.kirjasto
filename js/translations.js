@@ -190,17 +190,25 @@ var dict = {
         fi: "Palvelun mahdolliset lisätiedot avautuvat linkkiä painamalla.",
         en: "More details may be available by clicking the link(s).",
     },
-    "Kokoelmat": {
-        fi: "Kokoelmat",
-        en: "Collections",
+    "Laitteet ja palvelut": {
+        fi: "Laitteet ja palvelut",
+        en: "Hardware and services",
     },
     "Laitteisto": {
         fi: "Laitteisto",
         en: "Hardware",
     },
+    "Tilat ja kokoelmat": {
+        fi: "Tilat ja kokoelmat",
+        en: "Rooms and collections",
+    },
     "Tilat": {
         fi: "Tilat",
         en: "Rooms",
+    },
+    "Kokoelmat": {
+        fi: "Kokoelmat",
+        en: "Collections",
     },
     "Ei palveluita": {
         fi: "Kirjaston tietoihin ei ole lisätty palveluita.",

@@ -312,13 +312,6 @@ function fetchInformation(language, lib) {
                 $("#newsDescriptionToggle").css("display", "block");
             }
         }
-        // If no content is provided for the left collumn.
-        if (descriptionIsEmpty && language === "fi") {
-            // Hide the content on left, make the sidebar 100% in width.
-            $(".details").css("display", "none");
-            $("#introductionSidebar").addClass("col-md-12");
-            $("#introductionSidebar").removeClass("col-lg-5 col-xl-4 order-2 sidebar");
-        }
         // Update the title to match data.name.
         if(document.title !== data.name && !isReFetching) {
             if(data.name != null) {
@@ -485,48 +478,50 @@ function fetchInformation(language, lib) {
         var hardwareCount = 0;
         var roomCount = 0;
         var serviceCount = 0;
+        var collections = [];
+        var hardware = [];
+        var rooms = [];
+        var services = [];
         accessibilityCount = 0;
-        var collectionsAdded = true;
-        var hardwareAdded = true;
-        var roomsAdded = true;
-        var servicesAdded = true;
+        var roomsAndCollectionsAdded = true;
+        var hardwareAndServicesAdded = true;
         var accessibilityAdded = false;
         if (isEmpty($('#collectionItems'))) {
-            collectionsAdded = false;
+            roomsAndCollectionsAdded = false;
         }
-        if (isEmpty($('#hardwareItems'))) {
-            hardwareAdded = false;
+        if (isEmpty($('#roomsAndCollectionsItems'))) {
+            roomsAndCollectionsAdded = false;
         }
-        if (isEmpty($('#roomItems'))) {
-            roomsAdded = false;
-        }
-        if (isEmpty($('#serviceItems'))) {
-            servicesAdded = false;
+        if (isEmpty($('#hardwareAndServicesItems'))) {
+            hardwareAndServicesAdded = false;
         }
         if (isEmpty($('#accessibilityItems'))) {
             accessibilityAdded = false;
         }
+
         for (var i = 0; i < data.services.length; i++) {
             // Collections
             if (data.services[i].name != null && data.services[i].name.length != 0 || data.services[i].custom_name != null) {
                 if (data.services[i].type == "collection") {
-                    if (!collectionsAdded) {
+                    if (!roomsAndCollectionsAdded) {
                         collectionCount = collectionCount + 1;
-                        addItem(data.services[i], '#collectionItems');
-                    }
-                }
-                // Hardware
-                else if (data.services[i].type == "hardware") {
-                    if (!hardwareAdded) {
-                        hardwareCount = hardwareCount + 1;
-                        addItem(data.services[i], '#hardwareItems');
+                        collections.push(data.services[i]);
+                        roomCount = roomCount + 1;
                     }
                 }
                 // Rooms
                 else if (data.services[i].type == "room") {
-                    if (!roomsAdded) {
+                    if (!roomsAndCollectionsAdded) {
                         roomCount = roomCount + 1;
-                        addItem(data.services[i], '#roomItems');
+                        rooms.push(data.services[i]);
+                    }
+                }
+                // Hardware
+                else if (data.services[i].type == "hardware") {
+                    if (!hardwareAndServicesAdded) {
+                        hardwareCount = hardwareCount + 1;
+                        serviceCount = serviceCount + 1;
+                        hardware.push(data.services[i]);
                     }
                 }
                 // Services
@@ -540,40 +535,64 @@ function fetchInformation(language, lib) {
                             }
                         }
                         else {
-                            if (!servicesAdded) {
+                            if (!hardwareAndServicesAdded) {
                                 serviceCount = serviceCount + 1;
-                                addItem(data.services[i], '#serviceItems');
+                                services.push(data.services[i]);
                             }
                         }
                     }
             }
         }
-        // Show titles & counts if found.
-        if (collectionCount != 0) {
-            $("#collection").css('display', 'block');
-            $("#collectionsTitle").prepend(i18n.get("Kokoelmat"));
-            $("#collectionBadge").append('(' + collectionCount + ')');
-            noServices = false;
+
+        // Don't re-add items for english version re-run.
+        if(!isReFetching) {
+            // Generate list items... Do it here display them in the right order...
+            for (var x=0; x<rooms.length; x++) {
+                addItem(rooms[x], '#roomsAndCollectionsItems');
+            }
+            for (var x=0; x<collections.length; x++) {
+                addItem(collections[x], '#roomsAndCollectionsItems');
+            }
+            for (var x=0; x<hardware.length; x++) {
+                addItem(hardware[x], '#hardwareAndServicesItems');
+            }
+            for (var x=0; x<services.length; x++) {
+                addItem(services[x], '#hardwareAndServicesItems');
+            }
+
+            // Show titles & counts if found.
+            if (roomCount != 0 || collectionCount != 0) {
+                $("#roomsAndCollections").css('display', 'block');
+                if(roomCount != 0 && collectionCount != 0) {
+                    $("#roomsAndCollectionsTitle").prepend(i18n.get("Tilat ja kokoelmat"));
+                }
+                else if(roomCount != 0) {
+                    $("#roomsAndCollectionsTitle").prepend(i18n.get("Tilat"));
+                }
+                else {
+                    $("#roomsAndCollectionsTitle").prepend(i18n.get("Kokoelmat"));
+                }
+                $("#roomsAndCollectionsBadge").append('(' + roomCount + ')');
+                noServices = false;
+            }
+            if (serviceCount != 0 || hardwareCount != 0) {
+                $("#hardwareAndServices").css('display', 'block');
+                if(serviceCount != 0 && hardwareCount != 0) {
+                    $("#hardwareAndServicesTitle").prepend(i18n.get("Laitteet ja palvelut"));
+                }
+                else if(hardwareCount != 0) {
+                    $("#hardwareAndServicesTitle").prepend(i18n.get("Laitteisto"));
+                }
+                else {
+                    $("#hardwareAndServicesTitle").prepend(i18n.get("Palvelut"));
+                }
+                $("#hardwareAndServicesBadge").append('(' + serviceCount + ')');
+                noServices = false;
+            }
         }
-        if (hardwareCount != 0) {
-            $("#hardware").css('display', 'block');
-            $("#hardwareTitle").prepend(i18n.get("Laitteisto"));
-            $("#hardwareBadge").append('(' + hardwareCount + ')');
-            noServices = false;
-        }
-        if (roomCount != 0) {
-            $("#room").css('display', 'block');
-            $("#roomTitle").prepend(i18n.get("Tilat"));
-            $("#roomBadge").append('(' + roomCount + ')');
-            noServices = false;
-        }
-        if (serviceCount != 0) {
-            $("#service").css('display', 'block');
-            $("#serviceTitle").prepend(i18n.get("Palvelut"));
-            $("#serviceBadge").append('(' + serviceCount + ')');
-            noServices = false;
-        }
-        if (!collectionsAdded || !hardwareAdded || !roomsAdded || !servicesAdded || !accessibilityAdded) {
+
+
+        if (!roomsAndCollectionsAdded || !hardwareAndServicesAdded || !accessibilityAdded) {
             if (noServices) {
                 if (lang == "fi") {
                     //$('#servicesInfo').append(i18n.get("Ei palveluita"));
@@ -584,7 +603,6 @@ function fetchInformation(language, lib) {
                 }
             } else {
                 $('#navEsittely').css('display', 'block');
-                $('#navPalvelut').css('display', 'block');
                 // Add event listener for clicking links.
                 $(".index-item").on('click', function () {
                     if (!indexItemClicked) {
@@ -627,6 +645,16 @@ function fetchInformation(language, lib) {
                     }
                 });
             }
+            if(noServices) {
+                $('#libraryServices').css('display', 'none');
+                // If no content is provided for the left collumn.
+                if (descriptionIsEmpty && language === "fi") {
+                    // Hide the content on left, make the sidebar 100% in width.
+                    $(".details").css("display", "none");
+                    $("#introductionSidebar").addClass("col-md-12");
+                    $("#introductionSidebar").removeClass("col-lg-5 col-xl-4 order-2 sidebar");
+                }
+            }
         }
     }); // Palvelut
     // If lang is english, do this again with Finnish to add missing infos.
@@ -637,6 +665,7 @@ function fetchInformation(language, lib) {
             $("header").append('<small>Note: If information is missing in English, Finnish version is used where available.</small>');
         }, 400);
     }
+
 }
 
 function fetchImagesAndSocialMedia(lib) {
@@ -817,9 +846,7 @@ function bindActions() {
     function navigateToDefault() {
         // Hide other sections & active nav styles.
         $("#navYhteystiedot").removeClass( "active" );
-        $("#navPalvelut").removeClass( "active" );
         $(".yhteystiedot").hide(600);
-        $(".palvelut").hide(600);
         // Show selected section + add active to nav
         $("#navEsittely").addClass( "active" );
         $(".esittely").show(600);
@@ -837,9 +864,7 @@ function bindActions() {
     $( "#navYhteystiedot" ).on('click', function () {
         // Hide other sections & active nav styles.
         $("#navEsittely").removeClass( "active" );
-        $("#navPalvelut").removeClass( "active" );
         $(".esittely").hide(600);
-        $(".palvelut").hide(600);
         // Show selected section + add active to nav.
         $("#navYhteystiedot").addClass( "active" );
         $(".yhteystiedot").show(600);
@@ -857,19 +882,6 @@ function bindActions() {
             mapLoaded = true;
         }
     });
-    // When item link is clicked.
-    $( "#navPalvelut" ).on('click', function () {
-        // Hide other sections & active nav styles.
-        $("#navEsittely").removeClass( "active" );
-        $("#navYhteystiedot").removeClass( "active" );
-        $(".esittely").hide(600);
-        $(".yhteystiedot").hide(600);
-        // Show selected section + add active to nav.
-        $("#navPalvelut").addClass( "active" );
-        $(".palvelut").show(600);
-        activeTab = 2;
-    });
-
     // Activate arrow navigation when hovering over the navigation.
     $(".nav-pills").mouseenter(function () {
         if (!$(".nav-pills").hasClass('hovering')) {
@@ -883,6 +895,7 @@ function bindActions() {
             //$("#sliderForward").blur();
         }
     });
+
     $(".nav-pills").mouseleave(function () {
         if ($(".nav-pills").hasClass('hovering')) {
             $(".nav-pills").removeClass('hovering');
@@ -891,9 +904,7 @@ function bindActions() {
 
     if(activeTab === 0) {
         $("#navYhteystiedot").removeClass( "active" );
-        $("#navPalvelut").removeClass( "active" );
         $(".yhteystiedot").hide(0);
-        $(".palvelut").hide(0);
         // Show selected section + add active to nav.
         $("#navEsittely").addClass( "active" );
         $(".esittely").show(0);
@@ -905,9 +916,7 @@ function bindActions() {
 
     if(activeTab === 1) {
         $("#navEsittely").removeClass( "active" );
-        $("#navPalvelut").removeClass( "active" );
         $(".esittely").hide(0);
-        $(".palvelut").hide(0);
         // Show selected section + add active to nav.
         $("#navYhteystiedot").addClass( "active" );
         $(".yhteystiedot").show(0);
@@ -931,27 +940,6 @@ function bindActions() {
             }
         }, 100);
     }
-
-    if(activeTab === 2) {
-        // Hide other sections & active nav styles.
-        $("#navEsittely").removeClass( "active" );
-        $("#navYhteystiedot").removeClass( "active" );
-        $(".esittely").hide(0);
-        $(".yhteystiedot").hide(0);
-        // Show selected section + add active to nav.
-        $("#navPalvelut").addClass( "active" );
-        $(".palvelut").show(0);
-        // Hide infobox if visible.
-        if(isInfoBoxVisible) {
-            toggleInfoBox();
-        }
-        // Navigate to default after the timeout, if tab is empty.
-        setTimeout(function(){
-            if(noServices) {
-                navigateToDefault();
-            }
-        }, 100);
-    }
 }
 
 $(document).ready(function() {
@@ -965,7 +953,6 @@ $(document).ready(function() {
     }
     $('#navEsittely').append(i18n.get("Esittely"));
     $('#navYhteystiedot').append(i18n.get("Yhteystiedot"));
-    $('#navPalvelut').append(i18n.get("Palvelut"));
     $('#newsDescriptionToggle').append(i18n.get("Ajankohtaista ja esittely"));
     $('#transitTitle').append(i18n.get("Liikenneyhteydet"));
     $('#socialMediaSr').append(i18n.get("Sosiaalinen media"));
@@ -987,7 +974,6 @@ $(document).ready(function() {
     $('#titleTh').append(i18n.get("Työnimike"));
     $('#contactDetailsTh').append(i18n.get("Yhteystieto"));
     // Services
-    $('#servicesInfo').append(i18n.get("Palvelun lisätiedot"));
     $('#closeInfoBtn').append(i18n.get("Sulje"));
     // Apparently IOS does not support Full screen API:  https://github.com/googlevr/vrview/issues/112
     // Hide fullscreen toggler & increase slider/map sizes a bit on larger screens to compensate the lack of full screen.
@@ -1016,7 +1002,7 @@ $(document).ready(function() {
     fetchImagesAndSocialMedia(library);
 
 
-    $('#schedules').prepend('<p style="color: red">' + i18n.get("Virheelliset aukioloajat") + '</p>');
+    //$('#schedules').prepend('<p style="color: red">' + i18n.get("Virheelliset aukioloajat") + '</p>');
 
 
 }); // OnReady
