@@ -995,13 +995,14 @@ $(document).ready(function() {
             $('#contactsMapCol').css('height', '500px');
         }
     }
+
+    // Since the api is having problems with special schedules, add a notification. To be commented when fixed.
+    $('#schedules').prepend('<p style="color: red">' + i18n.get("Virheelliset aukioloajat") + '</p>');
+
     // Clone page, to be restored if library selector is used.
     divClone = $("#pageContainer").clone();
     // Fetch details.
     fetchInformation(lang);
     fetchImagesAndSocialMedia(library);
-
-    $('#schedules').prepend('<p style="color: red">' + i18n.get("Virheelliset aukioloajat") + '</p>');
-
 
 }); // OnReady
