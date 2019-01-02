@@ -770,13 +770,13 @@ function fetchImagesAndSocialMedia(lib) {
                     }
                 }
             }
-            // Mention links in title, if any are present.
-            if(linkCount !== 0 ) {
-                $('#contactsTitle').append('<span>' + i18n.get("Linkit ja yhteystiedot") + '</span>');
-            } else {
-                $('#contactsTitle').append('<span>' + i18n.get("Yhteystiedot") + '</span>');
-            }
         });
+        // Mention links in title, if any are present.
+        if(linkCount !== 0 ) {
+            $('#contactsTitle').append('<span>' + i18n.get("Linkit ja yhteystiedot") + '</span>');
+        } else {
+            $('#contactsTitle').append('<span>' + i18n.get("Yhteystiedot") + '</span>');
+        }
     });
 }
 
