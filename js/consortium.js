@@ -111,19 +111,21 @@ $(document).ready(function() {
     if(consortium !== undefined && city !== undefined) {
         $.getJSON("https://api.kirjastot.fi/v3/organisation?lang=" + lang + "&city.name=" + city, function(data) {
             for (var i=0; i<data.items.length; i++) {
-                // Ignore mobile libraries & other consortiums.
-                if(data.items[i].branch_type !== "mobile" && data.items[i].consortium == consortium) {
-                    libraryList.push({id: data.items[i].id, text: data.items[i].name,
-                        city: data.items[i].city.toString(),
-                        street: data.items[i].address.street,
-                        zipcode: data.items[i].address.zipcode,
-                        coordinates: data.items[i].address.coordinates});
+                // Due to a bug in the api, a test library cannot be deleted or hidden
+                if(data.items[i].id !== 86605) {
+                    // Ignore mobile libraries & other consortiums.
+                    if(data.items[i].branch_type !== "mobile" && data.items[i].consortium == consortium) {
+                        libraryList.push({id: data.items[i].id, text: data.items[i].name,
+                            city: data.items[i].city.toString(),
+                            street: data.items[i].address.street,
+                            zipcode: data.items[i].address.zipcode,
+                            coordinates: data.items[i].address.coordinates});
+                    }
                 }
             }
             generateSelect();
         });
     }
-
     // Fetch libraries of city
     else if(consortium === undefined && city !== undefined) {
         $.getJSON("https://api.kirjastot.fi/v3/organisation?lang=" + lang + "&city.name=" + city, function(data) {
@@ -140,22 +142,26 @@ $(document).ready(function() {
             generateSelect();
         });
     }
-
     // Fetch libraries of consortium
     else if(consortium !== undefined && city === undefined) {
         $.getJSON("https://api.kirjastot.fi/v3/organisation?lang=" + lang + "&consortium=" + consortium + "&limit=500", function(data) {
             for (var i=0; i<data.items.length; i++) {
-                // Include mobile libraries in consortium listings...
-                libraryList.push({ id: data.items[i].id, text: data.items[i].name,
-                    city: data.items[i].city.toString(),
-                    street: data.items[i].address.street,
-                    zipcode: data.items[i].address.zipcode,
-                    coordinates: data.items[i].address.coordinates});
-                /*
-                if(data.items[i].branch_type !== "mobile") {
+                // Due to a bug in the api, a test library cannot be deleted or hidden
+                if(data.items[i].id !== 86605) {
+                    // Include mobile libraries in consortium listings...
+                    libraryList.push({
+                        id: data.items[i].id, text: data.items[i].name,
+                        city: data.items[i].city.toString(),
+                        street: data.items[i].address.street,
+                        zipcode: data.items[i].address.zipcode,
+                        coordinates: data.items[i].address.coordinates
+                    });
+                    /*
+                    if(data.items[i].branch_type !== "mobile") {
 
+                    }
+                    */
                 }
-                */
             }
             generateSelect();
         });
@@ -191,13 +197,9 @@ $(document).ready(function() {
         }
     });
 
-
     $(document).on('click', '.map-library-changer', function () {
         // Trigger the library change.
         $('.library-select').val($(this).val()).trigger('change');
 
     });
-
-
-
 }); // OnReady

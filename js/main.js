@@ -559,7 +559,6 @@ function fetchInformation(language, lib) {
             for (var x=0; x<services.length; x++) {
                 addItem(services[x], '#hardwareAndServicesItems');
             }
-
             // Show titles & counts if found.
             if (roomCount != 0 || collectionCount != 0) {
                 $("#roomsAndCollections").css('display', 'block');
@@ -590,7 +589,6 @@ function fetchInformation(language, lib) {
                 noServices = false;
             }
         }
-
 
         if (!roomsAndCollectionsAdded || !hardwareAndServicesAdded || !accessibilityAdded) {
             if (noServices) {
@@ -731,15 +729,10 @@ function fetchImagesAndSocialMedia(lib) {
 
     // Social media links
     $.getJSON(jsonp_url + "&with=links", function (data) {
-
-        if(data.links.length !== 0 ) {
-            $('#contactsTitle').append('<span>' + i18n.get("Linkit ja yhteystiedot") + '</span>');
-        } else {
-            $('#contactsTitle').append('<span>' + i18n.get("Yhteystiedot") + '</span>');
-        }
-
+        var linkCount = 0;
         // Loop the links of group category [0].
         data.links.forEach(function (element) {
+            linkCount = linkCount +1;
             // Get url.
             var url = element.url;
             if (url === null) {
@@ -773,10 +766,16 @@ function fetchImagesAndSocialMedia(lib) {
                     if(!checkIfContactExists(prettyUrl) && !checkIfNameExists(element.name)) {
                         contactlist.unshift({name: element.name,
                             contact: prettyUrl});
+                        linkCount = linkCount +1;
                     }
                 }
             }
-
+            // Mention links in title, if any are present.
+            if(linkCount !== 0 ) {
+                $('#contactsTitle').append('<span>' + i18n.get("Linkit ja yhteystiedot") + '</span>');
+            } else {
+                $('#contactsTitle').append('<span>' + i18n.get("Yhteystiedot") + '</span>');
+            }
         });
     });
 }
