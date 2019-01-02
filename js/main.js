@@ -784,9 +784,7 @@ function fetchImagesAndSocialMedia(lib) {
 
 function loadMapWithLibraries() {
     var map = L.map('mapContainer').setView([lat, lon], 15.5);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
     if(libraryList.length !== 0) {
         var markerIcon = L.icon({
@@ -829,6 +827,8 @@ function loadMapWithLibraries() {
     map.options.minZoom = 6;
     map.options.maxZoom = 17.9;
     map.setView([lat, lon], 15);
+    // Set the contribution text.
+    $('.leaflet-control-attribution').html('<div class="leaflet-control-attribution leaflet-control">© <a target="_blank" href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors</div>')
 
     map.eachLayer(function (layer) {
         if(layer._latlng !== undefined) {
