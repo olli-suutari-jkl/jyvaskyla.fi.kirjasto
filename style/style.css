@@ -17,6 +17,27 @@ i {
     padding-bottom: 5px;
 }
 
+a[target=_blank]:not([href*="instagram"]):not([href*="facebook"]):after{
+    font-family: FontAwesome;
+    content: "\f08e";
+    font-size: 0.85em;
+    color: #026FCF;
+    padding-left: 5px;
+}
+
+.cols {
+    padding-left: 10px;
+    list-style-type: none;
+}
+
+#accessibilityList {
+    padding-left: 18px;
+}
+
+.accessibility-details {
+    padding-left: 10px;
+}
+
 #librarySelectorTitle {
     text-align: center;
 }
