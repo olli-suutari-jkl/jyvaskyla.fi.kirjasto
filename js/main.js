@@ -732,19 +732,20 @@ function fetchImagesAndSocialMedia(lib) {
         var linkCount = 0;
         // Loop the links of group category [0].
         data.links.forEach(function (element) {
-            linkCount = linkCount +1;
             // Get url.
             var url = element.url;
             if (url === null) {
                 return
             }
             if (url.indexOf("facebook") !== -1) {
+                linkCount = linkCount +1;
                 $(".some-links").append('<a target="_blank" ' +
                     'href="' + url + '" title="' + element.name + '"> <img src="../images/icons/facebook.svg" alt="' +
                     i18n.get("Kirjaston") + ' Facebook"/>' +
                     '</a>');
             }
             else if (url.indexOf("instagram") !== -1) {
+                linkCount = linkCount +1;
                 $(".some-links").append('<a target="_blank" ' +
                     'href="' + url + '" title="' + element.name + '"> <img src="../images/icons/instagram.svg" alt="' +
                     i18n.get("Kirjaston") + ' Instagram"/>' +
@@ -1000,8 +1001,7 @@ $(document).ready(function() {
     fetchInformation(lang);
     fetchImagesAndSocialMedia(library);
 
-
-    //$('#schedules').prepend('<p style="color: red">' + i18n.get("Virheelliset aukioloajat") + '</p>');
+    $('#schedules').prepend('<p style="color: red">' + i18n.get("Virheelliset aukioloajat") + '</p>');
 
 
 }); // OnReady

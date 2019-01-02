@@ -227,7 +227,7 @@ var dict = {
         en: "Close",
     },
     "Virheelliset aukioloajat": {
-        fi: "HUOM: Kirjastojen tiedot haetaan valtakunnallisesta kirjastohakemistosta, hakemiston tietojen haussa on tällä hetkellä ongelmia poikkeusaukiolojen hakemisessa ja tiedot eivät välttämättä pidä paikkaansa.",
+        fi: "HUOM: Kirjastojen tiedot haetaan valtakunnallisesta kirjastohakemistosta.  Poikkeusaukiolojen haussa on havaittu ongelmia, eivätkä tiedot pidä välttämättä  paikkaansa.",
         en: "ATTENTION: Schedules are fetched via the national library database, there are ongoing problems with fetching holiday schedules. Libraries may be shown to be closed or open incorrectly during the holidays.",
     },
 };
