@@ -801,6 +801,14 @@ function loadMapWithLibraries() {
             if(libraryList[i].id == library) {
                 text = '<strong>' + libraryList[i].text + '</strong><br>' +
                     libraryList[i].street + ', <br>' + libraryList[i].zipcode + ', ' + libraryList[i].city;
+                // Add a notification text about missing coordinates for map.
+                if(libraryList[i].coordinates === null) {
+                    $('#contactsMapCol').prepend('<div style="margin-top: 20px" id="toot">' + i18n.get("Huom") + '! ' + libraryList[i].text.toString() + i18n.get("Ei koordinaatteja") + '</div>');
+                    var container = document.getElementById('contactsMapCol');
+                    container.style.height = (container.offsetHeight + 70) + "px";
+                    var mapContainer = document.getElementById('mapContainer');
+                    mapContainer.style.height = (mapContainer.offsetHeight + -70) + "px";
+                }
             }
             if (libraryList[i].coordinates != null) {
                 L.marker([libraryList[i].coordinates.lat, libraryList[i].coordinates.lon], {icon: markerIcon}).addTo(map)
@@ -997,7 +1005,7 @@ $(document).ready(function() {
     }
 
     // Since the api is having problems with special schedules, add a notification. To be commented when fixed.
-    $('#schedules').prepend('<p style="color: red">' + i18n.get("Virheelliset aukioloajat") + '</p>');
+    //$('#schedules').prepend('<p style="color: red">' + i18n.get("Virheelliset aukioloajat") + '</p>');
 
     // Clone page, to be restored if library selector is used.
     divClone = $("#pageContainer").clone();

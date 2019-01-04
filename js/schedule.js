@@ -55,20 +55,24 @@ function getWeekSchelude(direction, lib) {
         weekCounter = 26;
         return;
     }
+    //  Date to be used in checking if descriptions are old...
+    var dateInSchedule;
+    // totalRows is used to dynamically adjust font sizes for info-screens.
+    var totalRows = 0;
     // Display week number.
     $( "#weekNumber" ).html( i18n.get("Viikko") + ' ' + moment().add(weekCounter, 'weeks').format('W'));
     $.getJSON("https://api.kirjastot.fi/v3/library/" + lib + "?lang=" + lang +
         "&with=schedules&period.start=" + weekCounter + "w&period.end=" + weekCounter + "w", function(data) {
         var date = moment().add(weekCounter, 'weeks');
-        begin = moment(date).startOf('week').isoWeekday(1);
+        dateInSchedule =  new Date();
+        dateInSchedule.setDate(dateInSchedule.getDate() + (weekCounter * 7));
+        var begin = moment(date).startOf('week').isoWeekday(1);
         // If lang == en, add 1 week. Otherwise last week will be shown... but why?
         if(lang == "en") {
             date = moment().add(weekCounter  + 1, 'weeks');
             begin = moment(date).startOf('week').isoWeekday(1);
         }
         var str = '';
-        // totalRows is used to dynamically adjust font sizes for info-screens.
-        var totalRows = 0;
         for (var i=0; i<7; i++) {
             // If today, add some colourful classes!
             var isTodayClass = '';
@@ -408,23 +412,6 @@ function getWeekSchelude(direction, lib) {
             begin.add(1, 'd');
         }
         $( "#weekSchelude" ).html( str );
-        /* Large schedules are used in iDiD info screens. */
-        if(largeSchedules) {
-            $(".library-schedules").removeClass('col-lg-4 col-xl-3 schedules-widget xxl-font xl-font m-font');
-            $('#schedules').addClass("large-schedules col-md-12");
-            // If less than 16 rows, apply the xxl font.
-            if(totalRows < 16) {
-                $(".library-schedules").addClass('xxl-font');
-            }
-            // If 24 rows or less, apply the xl font.
-            else if(totalRows <= 24) {
-                $(".library-schedules").addClass('xl-font');
-            }
-            // If more than 28 rows, change to 'medium' font.
-            else if(totalRows > 28) {
-                $(".library-schedules").addClass('m-font');
-            }
-        }
         // If document has no title, set it to Library name.
         if(document.title === '') {
             if(data.name != null) {
@@ -432,6 +419,110 @@ function getWeekSchelude(direction, lib) {
             }
         }
     });
+
+    // Get descriptions...
+    $.getJSON("https://api.kirjastot.fi/v3/period?organisation=" + lib + "&lang=" + lang, function(data) {
+        //console.log(data);
+        var genericDescription;
+        var holidayDescription;
+        var isHoliday = false;
+        // Timeout so schedule date can be fetched...
+        setTimeout(function(){
+            for (var i = 0; i < data.items.length; i++) {
+                // Collections
+                if (data.items[i].name != null) {
+                    // Generic description has no valid_until (null)
+                    if(data.items[i].valid_until === null) {
+                        if(data.items[i].description !== null) {
+                            genericDescription = data.items[i].description;
+                        }
+                    }
+                    // Display the holiday info if holiday is during the current week or within valid_from to valid_until...
+                    var beginsInSameWeek = moment(dateInSchedule).isSame(data.items[i].valid_from, 'week');
+                    var endsInSameWeek = moment(dateInSchedule).isSame(data.items[i].valid_until, 'week');
+                    var isInBetween = moment(dateInSchedule).isBetween(data.items[i].valid_from, data.items[i].valid_until);
+
+                    if(isInBetween || beginsInSameWeek || endsInSameWeek) {
+                        // Do not display the generic info, if current date is in between start/end of the holiday.
+                        if(isInBetween) {
+                            isHoliday = true;
+                        }
+                        // Set text for the holiday info if not null...
+                        if(data.items[i].description !== null) {
+                            holidayDescription = data.items[i].description;
+                        }
+                    }
+                }
+            }
+            // Show the info in the ui, if provided.
+            if(holidayDescription !== undefined && holidayDescription !== null && isHoliday) {
+                $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-text"><i class="fa fa-info-circle" > </i> '
+                    + holidayDescription + '</span>');
+                // Add rows for infoscreen font-size calculations...
+                if (holidayDescription.length < 40) {
+                    totalRows = totalRows +1;
+                }
+                else if (holidayDescription.length > 40 && holidayDescription.length < 90) {
+                    holidayDescription = splitString(holidayDescription);
+                    totalRows = totalRows +2;
+                }
+                else if(holidayDescription.length > 130 && holidayDescription.length < 170) {
+                    totalRows = totalRows +3;
+                }
+                else {
+                    totalRows = totalRows +4;
+                }
+            }
+            else if(!isHoliday && genericDescription !== undefined && genericDescription !== null) {
+                $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-text"><i class="fa fa-info-circle" > </i> '
+                    + genericDescription + '</span>');
+                // Add rows for infoscreen font-size calculations...
+                if (genericDescription.length < 40) {
+                    totalRows = totalRows +1;
+                }
+                else if (genericDescription.length > 40 && genericDescription.length < 90) {
+                    genericDescription = splitString(genericDescription);
+                    totalRows = totalRows +2;
+                }
+                else if(genericDescription.length > 130 && genericDescription.length < 170) {
+                    totalRows = totalRows +3;
+                }
+                else {
+                    totalRows = totalRows +4;
+                }
+            }
+            else {
+                $('#scheduleInfo').replaceWith('<span id="scheduleInfo" style="display: none" class="info-text"><i class="fa fa-info-circle" > </i></span>');
+            }
+            /* Large schedules are used in iDiD info screens. */
+            if(largeSchedules) {
+                $(".library-schedules").removeClass('col-lg-4 col-xl-3 schedules-widget xxl-font xl-font m-font');
+                $('#schedules').addClass("large-schedules col-md-12");
+                $('#scheduleInfo').addClass("large-schedules col-md-12");
+                // If less than 18 rows, apply the xxl font.
+                //console.log(totalRows + " rows ");
+                if(totalRows < 18) {
+                    //console.log("Use XXL-Font");
+                    $(".library-schedules").addClass('xxl-font');
+                    $("#scheduleInfo").addClass('xxl-font');
+                }
+                // If 26 rows or less, apply the xl font.
+                else if(totalRows < 27) {
+                    //console.log("Use XL-Font");
+                    $(".library-schedules").addClass('xl-font');
+                    $("#scheduleInfo").addClass('xl-font');
+                }
+                // If more than 26 rows, change to 'medium' font.
+                else if(totalRows > 26) {
+                    //console.log("Use M-Font");
+                    $(".library-schedules").addClass('m-font');
+                    $("#scheduleInfo").addClass('m-font');
+                }
+            }
+        }, 50);
+
+    });
+
 }
 
 function bindScheduleKeyNavigation() {

@@ -301,6 +301,10 @@ a[target=_blank]:not([href*="instagram"]):not([href*="facebook"]):after{
     text-align: center;
 }
 
+#scheduleInfo {
+    margin-bottom: 0.55em;
+}
+
 #weekNumber, .btn-arrow {
     font-weight: 600;
     font-size: 1.2em;
@@ -585,17 +589,34 @@ a[target=_blank]:not([href*="instagram"]):not([href*="facebook"]):after{
     font-size: 1.7em;
 }
 
+.large-schedules #scheduleInfo {
+    padding-left: 1.6em;
+    margin-top: -10px;
+}
+
+.large-schedules #scheduleInfo .fa-info-circle {
+    margin-right: 0.8em!important;
+}
+
 /* medium-font, used if schedule contains so many rows L-font would not fit well. */
-.m-font td,.m-font th{
-    font-size: 1.6em;
+.m-font td, .m-font th{
+    font-size: 1.9em;
 }
 
 .m-font .date-container, .m-font .day-name {
-    font-size: 1.5em;
+    font-size: 2em;
 }
 
 .m-font .main-schedule {
-    font-size: 1.4em;
+    font-size: 1.8em;
+}
+
+.m-font #scheduleInfo{
+    font-size: 1.75em;
+}
+
+.m-font #scheduleInfo {
+    font-size: 1.7em;
 }
 
 /* XL-font */
@@ -609,6 +630,10 @@ a[target=_blank]:not([href*="instagram"]):not([href*="facebook"]):after{
 
 .xl-font .main-schedule {
     font-size: 2.1em;
+}
+
+.xl-font #scheduleInfo {
+    font-size: 2em;
 }
 
 /* XXL-font */
@@ -625,6 +650,11 @@ a[target=_blank]:not([href*="instagram"]):not([href*="facebook"]):after{
     font-weight: 600;
     font-size: 2.8em;
 }
+
+.xxl-font #scheduleInfo {
+    font-size: 2.7em;
+}
+
 
 /*!
 Chosen, a Select Box Enhancer for jQuery and Prototype

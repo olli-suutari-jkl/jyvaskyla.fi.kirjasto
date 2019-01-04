@@ -226,6 +226,14 @@ var dict = {
         fi: "Sulje",
         en: "Close",
     },
+    "Huom": {
+        fi: "Huom",
+        en: "Note",
+    },
+    "Ei koordinaatteja": {
+        fi: ":lle ei ole syötetty koordinaatteja.",
+        en: "'s details do not include coordinates.",
+    },
     "Virheelliset aukioloajat": {
         fi: "HUOM: Kirjastojen tiedot haetaan valtakunnallisesta kirjastohakemistosta.  Poikkeusaukiolojen haussa on havaittu ongelmia, eivätkä tiedot pidä välttämättä  paikkaansa.",
         en: "ATTENTION: Schedules are fetched via the national library database, there are ongoing problems with fetching holiday schedules. Libraries may be shown to be closed or open incorrectly during the holidays.",
