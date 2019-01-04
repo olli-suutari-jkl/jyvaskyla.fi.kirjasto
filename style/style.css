@@ -203,6 +203,17 @@ a[target=_blank]:not([href*="instagram"]):not([href*="facebook"]):after{
     border: 1px solid #026fcf;
 }
 
+#noCoordinates {
+    margin-top: 20px;
+}
+
+@media screen and (max-width: 768px) {
+    /* Add padding to noCoordinates */
+    #noCoordinates {
+        padding-left: 1em;
+    }
+}
+
 .title-and-social-links {
     display: flex;
     width: 100%;
@@ -377,8 +388,8 @@ a[target=_blank]:not([href*="instagram"]):not([href*="facebook"]):after{
     background:rgba(0,0,0,0);
 }
 
-/* Scale down the schedules on widget & mobile */
 @media screen and (max-width: 500px) {
+    /* Scale down the schedules on widget & mobile */
     .library-schedules {
         zoom: 0.9;
         -moz-transform: scale(0.9);

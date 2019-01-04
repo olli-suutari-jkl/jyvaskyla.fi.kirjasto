@@ -46,6 +46,13 @@ function getWeekSchelude(direction, lib) {
     }
     // +1 or -1;
     weekCounter = weekCounter + direction;
+    var weekNumber = moment().add(weekCounter, 'weeks').format('W');
+    // As of 4.1.2019, the API does not return the schedule periods and their infos from
+    // 2018, thus limit going back to the last year, prevent going to the last year..
+    if(weekCounter < 0 && weekNumber == 52) {
+        weekCounter = 0;
+        return;
+    }
     // Do not allow going more than 10 weeks to the past or for more than 26 weeks.
     if(weekCounter < -10) {
         weekCounter = -10;
@@ -60,7 +67,7 @@ function getWeekSchelude(direction, lib) {
     // totalRows is used to dynamically adjust font sizes for info-screens.
     var totalRows = 0;
     // Display week number.
-    $( "#weekNumber" ).html( i18n.get("Viikko") + ' ' + moment().add(weekCounter, 'weeks').format('W'));
+    $( "#weekNumber" ).html( i18n.get("Viikko") + ' ' + weekNumber);
     $.getJSON("https://api.kirjastot.fi/v3/library/" + lib + "?lang=" + lang +
         "&with=schedules&period.start=" + weekCounter + "w&period.end=" + weekCounter + "w", function(data) {
         var date = moment().add(weekCounter, 'weeks');
@@ -422,7 +429,6 @@ function getWeekSchelude(direction, lib) {
 
     // Get descriptions...
     $.getJSON("https://api.kirjastot.fi/v3/period?organisation=" + lib + "&lang=" + lang, function(data) {
-        //console.log(data);
         var genericDescription;
         var holidayDescription;
         var isHoliday = false;
