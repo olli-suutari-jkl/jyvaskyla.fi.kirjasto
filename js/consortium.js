@@ -105,7 +105,6 @@ function generateSelect() {
     }
 }
 
-
 $(document).ready(function() {
     // Fetch libraries of city, that belong to the same consortium
     if(consortium !== undefined && city !== undefined) {

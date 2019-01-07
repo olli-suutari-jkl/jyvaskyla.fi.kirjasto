@@ -54,6 +54,3 @@ var activeTab = 0;
 if(refUrl.indexOf("yhteys") > -1 || refUrl.indexOf("contact") > -1) {
     activeTab = 1;
 }
-else if(refUrl.indexOf("palvelu") > -1 || refUrl.indexOf("service") > -1) {
-    activeTab = 2;
-}

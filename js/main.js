@@ -112,7 +112,6 @@ function addItem(item, listElement) {
     else {
         // Add popup link if additional details are available.
         if (item.short_description != null && item.short_description.length != 0) {
-
             var description = item.short_description;
             var websiteLink = item.website;
             // Add "long" description where available.
@@ -121,6 +120,8 @@ function addItem(item, listElement) {
                 var longDescription = item.description.replace(/\r\n/g, "<br>");
                 description = description + '<br><br>' + longDescription;
             }
+
+
 
             // Replace links from the description
             if (description.indexOf("<a href=") !== -1) {
@@ -140,8 +141,8 @@ function addItem(item, listElement) {
             } else {
                 $("#linkToInfo").html('<p id="linkToInfo"></p>');
             }
-
-
+            // Replace quotes from the description., they would break things...
+            description = description.replace(/["']/g, '&quot;')
             // Add the item to a desired element.
             $(listElement).append('<li> ' +
                 '<a class="index-item" data-message="' + description + '" data-website="' + websiteLink + '" tabindex="0" href="#"' +
@@ -154,8 +155,6 @@ function addItem(item, listElement) {
                 name + '</li>');
         }
     }
-
-
 }
 
 // Function for checking if element is empty.
@@ -433,7 +432,6 @@ function fetchInformation(language, lib) {
             });
         }
     }
-
     if(!isReFetching) {
         $.when( fetchLocation() ).then(
             function() {
@@ -445,9 +443,7 @@ function fetchInformation(language, lib) {
 
                             if(contactlist.length === 0) {
                                 contactlist.push({name: i18n.get("Ei yhteystietoja"), contact: ""});
-
                             }
-
                             for (var i = 0; i < contactlist.length; i++) {
                                 var contactDetail = "";
                                 if(contactlist[i].contact != null) {
@@ -457,7 +453,6 @@ function fetchInformation(language, lib) {
                                     '<td>' + contactlist[i].name + '</td>' +
                                     '<td>' + contactDetail + '</td>' +
                                     '</tr>');
-
                             }
                         }, 350);
                     }
@@ -851,13 +846,13 @@ function loadMapWithLibraries() {
 
 function bindActions() {
     // Navigation events
-    function navigateToDefault() {
+    function navigateToDefault(animationTime) {
         // Hide other sections & active nav styles.
         $("#navYhteystiedot").removeClass( "active" );
-        $(".yhteystiedot").hide(600);
+        $(".yhteystiedot").hide(animationTime);
         // Show selected section + add active to nav
         $("#navEsittely").addClass( "active" );
-        $(".esittely").show(600);
+        $(".esittely").show(animationTime);
         // Hide infobox if visible.
         if(isInfoBoxVisible) {
             toggleInfoBox();
@@ -865,17 +860,13 @@ function bindActions() {
         activeTab = 0;
     }
 
-    $( "#navEsittely" ).on('click', function () {
-        navigateToDefault();
-    });
-
-    $( "#navYhteystiedot" ).on('click', function () {
+    function navigateToContacts(animationTime) {
         // Hide other sections & active nav styles.
         $("#navEsittely").removeClass( "active" );
-        $(".esittely").hide(600);
+        $(".esittely").hide(animationTime);
         // Show selected section + add active to nav.
         $("#navYhteystiedot").addClass( "active" );
-        $(".yhteystiedot").show(600);
+        $(".yhteystiedot").show(animationTime);
         // Hide infobox if visible.
         if(isInfoBoxVisible) {
             toggleInfoBox();
@@ -885,10 +876,32 @@ function bindActions() {
         if(!mapLoaded && lat != null) {
             setTimeout(function(){
                 //loadMap();
-                loadMapWithLibraries();
+                $.when( loadMapWithLibraries() ).then(
+                    function() {
+                        adjustParentHeight();
+                    }
+                );
             }, 750);
             mapLoaded = true;
         }
+        else {
+            setTimeout(function() {
+                adjustParentHeight();
+            }, 601);
+
+        }
+    }
+
+    $( "#navEsittely" ).on('click', function () {
+        $.when( navigateToDefault(600) ).then(
+            function() {
+                adjustParentHeight();
+            }
+        );
+    });
+
+    $( "#navYhteystiedot" ).on('click', function () {
+        navigateToContacts(600);
     });
     // Activate arrow navigation when hovering over the navigation.
     $(".nav-pills").mouseenter(function () {
@@ -900,7 +913,6 @@ function bindActions() {
             setTimeout(function () {
                 $(".nav-pills").blur();
             }, 5);
-            //$("#sliderForward").blur();
         }
     });
 
@@ -910,45 +922,33 @@ function bindActions() {
         }
     });
 
+
     if(activeTab === 0) {
-        $("#navYhteystiedot").removeClass( "active" );
-        $(".yhteystiedot").hide(0);
-        // Show selected section + add active to nav.
-        $("#navEsittely").addClass( "active" );
-        $(".esittely").show(0);
-        // Hide infobox if visible.
-        if(isInfoBoxVisible) {
-            toggleInfoBox();
-        }
+        $.when( navigateToDefault(0) ).then(
+            function() {
+                adjustParentHeight();
+            }
+        );
     }
 
     if(activeTab === 1) {
-        $("#navEsittely").removeClass( "active" );
-        $(".esittely").hide(0);
-        // Show selected section + add active to nav.
-        $("#navYhteystiedot").addClass( "active" );
-        $(".yhteystiedot").show(0);
-        // If no timeout is used, map may not load correctly. If if clause is not inside the timeout, map won't be loaded if contacts is the default tab.
-        setTimeout(function(){
-            if(!mapLoaded && lat != null) {
-                //loadMap();
-                loadMapWithLibraries();
-                mapLoaded = true;
-            }
-        }, 750);
-
-        // Hide infobox if visible.
-        if(isInfoBoxVisible) {
-            toggleInfoBox();
-        }
-        // Navigate to default after the timeout, if tab is empty.
-        setTimeout(function(){
-            if(contactsIsEmpty) {
-                navigateToDefault();
-            }
-        }, 100);
+        navigateToContacts(0);
     }
 }
+
+function adjustParentHeight() {
+    setTimeout(function(){
+        try {
+            var height = 50;
+            height = height + document.getElementById("mainContainer").scrollHeight;
+            parent.postMessage(height, '*');
+        }
+        catch (e) {
+            console.log("iframe size adjustment failed: " + e);
+        }
+    }, 550);
+}
+
 
 $(document).ready(function() {
     bindActions();
@@ -1012,5 +1012,4 @@ $(document).ready(function() {
     // Fetch details.
     fetchInformation(lang);
     fetchImagesAndSocialMedia(library);
-
 }); // OnReady
