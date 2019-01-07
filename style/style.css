@@ -67,6 +67,11 @@ a[target=_blank]:not([href*="instagram"]):not([href*="facebook"]):after{
         width: 90%!important;
     }
 }
+
+.select2-container--default .select2-results>.select2-results__options{
+    max-height: 80vh!important;
+}
+
 /* If we wanted to style the placeholder of select2...
 :placeholder-shown {
 }*/
@@ -300,11 +305,6 @@ a[target=_blank]:not([href*="instagram"]):not([href*="facebook"]):after{
 
 .top-right:hover, .centered-left:hover, .centered-right:hover  {
     color: skyblue;
-}
-
-#popoverContent {
-    font-size: 0.9rem;
-    font-weight: 500;
 }
 
 .thead-light {
@@ -2210,9 +2210,8 @@ small {
     left: 0;
     z-index: 1060;
     display: block;
-    max-width: 276px;
+    max-width: 310px;
     font-family: Verdana, sans-serif;
-    font-style: normal;
     font-weight: 400;
     line-height: 1.5;
     text-align: left;
@@ -2225,12 +2224,24 @@ small {
     word-spacing: normal;
     white-space: normal;
     line-break: auto;
-    font-size: .875rem;
+    font-size: 0.95rem;
     word-wrap: break-word;
     background-color: #fff;
     background-clip: padding-box;
     border: 1px solid rgba(0, 0, 0, .2)
 }
+
+@media (min-width: 420px) {
+    .popover {
+        max-width: 400px;
+    }
+}
+
+#popoverContent {
+    font-size: 0.95rem;
+    font-weight: 400;
+}
+
 
 .popover .arrow {
     position: absolute;

@@ -120,9 +120,6 @@ function addItem(item, listElement) {
                 var longDescription = item.description.replace(/\r\n/g, "<br>");
                 description = description + '<br><br>' + longDescription;
             }
-
-
-
             // Replace links from the description
             if (description.indexOf("<a href=") !== -1) {
                 description = description.replace(/(<a href=")+/g, "LINKSTART");
