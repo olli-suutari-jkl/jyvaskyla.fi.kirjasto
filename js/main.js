@@ -599,14 +599,6 @@ function fetchInformation(language, lib) {
                         if (isInfoBoxVisible) {
                             toggleInfoBox(0);
                         }
-                        // Get element position
-                        var posX = $(this).offset().left,
-                            // Set top to be slightly under the element
-                            posY = $(this).offset().top + 20;
-
-
-                        // Set popup position & content, toggle visibility.
-                        $("#infoPopup").css('transform', 'translate3d(' + posX + 'px,' + posY + 'px, 0px');
 
                         var popupText = $(this).data('message');
                         // Check the description for links.
@@ -616,15 +608,49 @@ function fetchInformation(language, lib) {
                             popupText = popupText.replace(/(LINKEND)+/g, '<\/a>');
                         }
 
-                        $("#popoverContent").html('<p id="popoverContent">' + popupText + '</p>');
+                        $("#popoverContent").replaceWith('<div id="popoverContent"><p>' + popupText + '</p></div>');
                         // If website is not null and contains stuff. Sometimes empty website is shown unless lenght is checked.
                         if ($(this).data('website') != null && $(this).data('website').length > 5) {
                             // Use _blank, because iframes don't like moving to new pages.
-                            $("#linkToInfo").html('<p id="linkToInfo"><a target="_blank" href="' + $(this).data('website') +
+                            $("#linkToInfo").replaceWith('<p id="linkToInfo"><a target="_blank" href="' + $(this).data('website') +
                                 '" class="external-link">' + i18n.get("Lisätietoja") + '</a></p>');
                         } else {
-                            $("#linkToInfo").html('<p id="linkToInfo"></p>');
+                            $("#linkToInfo").replaceWith('<p id="linkToInfo"></p>');
                         }
+
+                        // Get element position
+                        var posX = $(this).offset().left,
+                            // Set top to be slightly under the element
+                            posY = $(this).offset().top + 20;
+
+                        // If longer popup texts, show the popup on top of the item, not below it.
+                        if(popupText.length > 75) {
+                            var heightOfPopover = $("#infoPopup").height() - 25;
+                            posX = $(this).offset().left,
+                                // Set top to be slightly under the element
+                                posY = $(this).offset().top + -heightOfPopover/2;
+                            $('#popoverArrow').css("display", "none");
+                            setTimeout(function () {
+                                // If more than 300px in height, adjust parent & scroll into view..
+                                if (document.getElementById("infoPopup").scrollHeight > 300) {
+                                    // Adjust iframe height, thus scaling if descriptions are long.
+                                    adjustParentHeight();
+                                    var element = document.getElementById('popoverContent');
+                                    // This checker does not really work in Iframes, since the height returns the height of the Iframe...
+                                    if ($(window).height() < 700) {
+                                        element.scrollIntoView({ block: 'start',  behavior: 'smooth' });
+                                    }
+                                    else {
+                                        element.scrollIntoView({ block: 'center',  behavior: 'smooth' });
+                                    }
+                                }
+                            }, 250);
+                        }
+                        else {
+                            $('#popoverArrow').css("display", "block");
+                        }
+                        // Set popup position & content, toggle visibility.
+                        $("#infoPopup").css('transform', 'translate3d(' + posX + 'px,' + posY + 'px, 0px');
                         toggleInfoBox(100);
                         // Add timeout. This prevents duplicated click events if we have changed library.
                         setTimeout(function(){
@@ -653,7 +679,6 @@ function fetchInformation(language, lib) {
             $("header").append('<small>Note: If information is missing in English, Finnish version is used where available.</small>');
         }, 400);
     }
-
 }
 
 function fetchImagesAndSocialMedia(lib) {
@@ -938,6 +963,13 @@ function adjustParentHeight() {
         try {
             var height = 50;
             height = height + document.getElementById("mainContainer").scrollHeight;
+            if(isInfoBoxVisible) {
+                var popoverHeight = document.getElementById("infoPopup").scrollHeight;
+                if(popoverHeight > 500) {
+                    popoverHeight = popoverHeight -450;
+                    height = height + popoverHeight;
+                }
+            }
             parent.postMessage(height, '*');
         }
         catch (e) {
