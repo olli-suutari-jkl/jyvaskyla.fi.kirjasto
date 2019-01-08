@@ -159,8 +159,9 @@ function isEmpty( el ){
     return !$.trim(el.html())
 }
 
-
 var contactlist = [];
+var numbersList = [];
+var staffList = [];
 // IEC CRASHES:
 //                         if (contactlist.findIndex(x => x.contact==data.phone_numbers[i].number) === -1){
 // https://stackoverflow.com/questions/37698996/findindex-method-issue-with-internet-explorer
@@ -318,7 +319,6 @@ function fetchInformation(language, lib) {
      Yhteystiedot
      */
     function fetchLocation() {
-        contactlist = [];
         $.getJSON(jsonp_url + "&with=mail_address", function (data) {
             if (data.address != null) {
                 contactsIsEmpty = false;
@@ -385,29 +385,50 @@ function fetchInformation(language, lib) {
         });
     }
 
-
-    function fetchContacts() {
-        // Phone numbers.
-        if (isEmpty($('#contactsTbody'))) {
+    function asyncFetchNumbers() {
+        var numbersDeferred = jQuery.Deferred();
+        setTimeout(function() {
+            var counter = 0;
             $.getJSON(jsonp_url + "&with=phone_numbers", function (data) {
                 if(data.phone_numbers.length !== 0) {
                     for (var i = 0; i < data.phone_numbers.length; i++) {
                         // Check if detail is unique.
                         if(!checkIfContactExists(data.phone_numbers[i].number)) {
-                            contactlist.push({name: data.phone_numbers[i].name, contact: data.phone_numbers[i].number});
+                            numbersList.push({name: data.phone_numbers[i].name, contact: data.phone_numbers[i].number});
                         }
-
+                        counter = counter +1;
+                    }
+                    // If we have looped all, set as resolved, thus moving on.
+                    if(counter === data.phone_numbers.length) {
+                        $.when(
+                            // Sort alphabetically. https://stackoverflow.com/questions/6712034/sort-array-by-firstname-alphabetically-in-javascript
+                            numbersList.sort(function(a, b){
+                                var nameA=a.name.toLowerCase(), nameB=b.name.toLowerCase();
+                                if (nameA < nameB) //sort string ascending
+                                    return -1;
+                                if (nameA > nameB)
+                                    return 1;
+                                return 0; //default return value (no sorting)
+                            })
+                        ).then  (
+                            numbersDeferred.resolve()
+                        );
                     }
                 }
-                // Show navigation if content.
-                if (!isEmpty($('#contactsTbody'))) {
-                    $('#navEsittely').css('display', 'block');
-                    $('#navYhteystiedot').css('display', 'block');
+                // Resolve, if no length.
+                else {
+                    numbersDeferred.resolve()
                 }
             });
-        }
-        // Staff list
-        if (isEmpty($('#staffMembers'))) {
+        }, 1 );
+        // Return the Promise so caller can't change the Deferred
+        return numbersDeferred.promise();
+    }
+
+    function asyncFetchStaff() {
+        var staffDeferred = jQuery.Deferred();
+        setTimeout(function() {
+            var counter = 0;
             $.getJSON(jsonp_url + "&with=persons", function (data) {
                 if(data.persons.length !== 0) {
                     for (var i = 0; i < data.persons.length; i++) {
@@ -417,44 +438,87 @@ function fetchInformation(language, lib) {
                         }
                         // Check if name or detail is unique.
                         if (!checkIfContactExists(data.persons[i].email) || !checkIfNameExists(name)){
-                            contactlist.push({name: name, contact: data.persons[i].email});
+                            staffList.push({name: name, contact: data.persons[i].email});
                         }
+                        counter = counter +1;
+                    }
+                    // If we have looped all, set as resolved, thus moving on.
+                    if(counter === data.persons.length) {
+                        // Sort alphabetically. https://stackoverflow.com/questions/6712034/sort-array-by-firstname-alphabetically-in-javascript
+                        $.when(
+                            staffList.sort(function(a, b){
+                            var nameA=a.name.toLowerCase(), nameB=b.name.toLowerCase();
+                            if (nameA < nameB) //sort string ascending
+                                return -1;
+                            if (nameA > nameB)
+                                return 1;
+                            return 0; //default return value (no sorting)
+                            })
+                        ).then  (
+                            staffDeferred.resolve()
+                        );
                     }
                 }
-                // Show navigation if content.
-                if (!isEmpty($('#staffMembers'))) {
-                    $('#navEsittely').css('display', 'block');
-                    $('#navYhteystiedot').css('display', 'block');
+                else {
+                    staffDeferred.resolve()
                 }
             });
+        }, 1 );
+        // Return the Promise so caller can't change the Deferred
+        return staffDeferred.promise();
+    }
+
+    function fetchContacts() {
+        if (isEmpty($('#contactsTbody'))) {
+            $.when( asyncFetchNumbers(), asyncFetchStaff() ).then  (
+                function() {
+                    if(contactlist.length === 0 && staffList.length === 0 && numbersList.length === 0) {
+                        contactlist.push({name: i18n.get("Ei yhteystietoja"), contact: ""});
+                    }
+                    for (var i = 0; i < contactlist.length; i++) {
+                        var contactDetail = "";
+                        if(contactlist[i].contact != null) {
+                            contactDetail = contactlist[i].contact;
+                        }
+                        $("#contactsTbody").append('<tr>' +
+                            '<td>' + contactlist[i].name + '</td>' +
+                            '<td>' + contactDetail + '</td>' +
+                            '</tr>');
+                    }
+                    for (var i = 0; i < staffList.length; i++) {
+                        var contactDetail = "";
+                        if(staffList[i].contact != null) {
+                            contactDetail = staffList[i].contact;
+                        }
+                        $("#contactsTbody").append('<tr>' +
+                            '<td>' + staffList[i].name + '</td>' +
+                            '<td>' + contactDetail + '</td>' +
+                            '</tr>');
+                    }
+                    for (var i = 0; i < numbersList.length; i++) {
+                        var contactDetail = "";
+                        if(numbersList[i].contact != null) {
+                            contactDetail = numbersList[i].contact;
+                        }
+                        $("#contactsTbody").append('<tr>' +
+                            '<td>' + numbersList[i].name + '</td>' +
+                            '<td>' + contactDetail + '</td>' +
+                            '</tr>');
+                    }
+                    // Show navigation if content.
+                    if (!isEmpty($('#contactsTbody'))) {
+                        $('#navEsittely').css('display', 'block');
+                        $('#navYhteystiedot').css('display', 'block');
+                    }
+                }
+            );
         }
     }
+
     if(!isReFetching) {
         $.when( fetchLocation() ).then(
             function() {
                 fetchContacts();
-                $.when( fetchContacts() ).then(
-                    function() {
-                        // If no timeout, list is not always ready...
-                        setTimeout(function(){
-
-                            if(contactlist.length === 0) {
-                                contactlist.push({name: i18n.get("Ei yhteystietoja"), contact: ""});
-                            }
-                            for (var i = 0; i < contactlist.length; i++) {
-                                var contactDetail = "";
-                                if(contactlist[i].contact != null) {
-                                    contactDetail = contactlist[i].contact;
-                                }
-                                $("#contactsTbody").append('<tr>' +
-                                    '<td>' + contactlist[i].name + '</td>' +
-                                    '<td>' + contactDetail + '</td>' +
-                                    '</tr>');
-                            }
-                        }, 350);
-                    }
-                );
-
             }
         );
     }
@@ -863,8 +927,6 @@ function loadMapWithLibraries() {
         }
     });
 }
-
-
 
 function bindActions() {
     // Navigation events

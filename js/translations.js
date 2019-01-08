@@ -147,7 +147,7 @@ var dict = {
         en: "Fetch details",
     },
     "Oletussähköposti": {
-        fi: "Oletussähköposti",
+        fi: "Yleinen sähköpostiosoite",
         en: "Generic email",
     },
     "Sähköposti": {

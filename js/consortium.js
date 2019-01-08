@@ -179,6 +179,9 @@ $(document).ready(function() {
                 noServices = true;
                 indexItemClicked = false;
                 isReFetching = false;
+                contactlist = [];
+                numbersList = [];
+                staffList = [];
                 // Set the global library parameter, so schedule switching won't mess things up.
                 library = $(this).val();
                 // Fetch data
