@@ -76,6 +76,8 @@ function generateSelect() {
 
         $.when( asyncReplaceIdWithCity() ).then(
             function(){
+                // Fetch library details, map is also generated during the process - it is important that we have already generated the list for map items.
+                fetchInformation(lang);
                 // Consortium listing
                 if(city === undefined) {
                     $.when( librariesGroupped = groupByCity(libraryList) ).then(
@@ -101,6 +103,7 @@ function generateSelect() {
                     );
                 }
             }
+
         );
     }
 }
@@ -179,6 +182,7 @@ $(document).ready(function() {
                 noServices = true;
                 indexItemClicked = false;
                 isReFetching = false;
+                map = L.map('mapContainer');
                 contactlist = [];
                 numbersList = [];
                 staffList = [];
@@ -187,7 +191,6 @@ $(document).ready(function() {
                 // Fetch data
                 getWeekSchelude(0, library);
                 fetchInformation(lang, $(this).val());
-                fetchImagesAndSocialMedia($(this).val());
                 // Re-bind navigation and other stuff.
                 bindActions();
                 bindScheduleKeyNavigation();

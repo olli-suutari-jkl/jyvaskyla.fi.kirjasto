@@ -159,29 +159,6 @@ function isEmpty( el ){
     return !$.trim(el.html())
 }
 
-var contactlist = [];
-var numbersList = [];
-var staffList = [];
-// IEC CRASHES:
-//                         if (contactlist.findIndex(x => x.contact==data.phone_numbers[i].number) === -1){
-// https://stackoverflow.com/questions/37698996/findindex-method-issue-with-internet-explorer
-function checkIfNameExists(item) {
-    for (var i = 0; i < contactlist.length; ++i) {
-        if (contactlist[i].name == item) {
-            return true;
-        }
-    }
-    return false;
-}
-function checkIfContactExists(item) {
-    for (var i = 0; i < contactlist.length; ++i) {
-        if (contactlist[i].contact == item) {
-            return true;
-        }
-    }
-    return false;
-}
-
 var isInfoBoxVisible = false;
 // Togles the visibility of the popover modal.
 function toggleInfoBox(delay) {
@@ -193,739 +170,6 @@ function toggleInfoBox(delay) {
         isInfoBoxVisible = true;
         $('#infoPopup').toggle(delay);
     }
-}
-
-// Map coordinates (marker)
-var lon;
-var lat;
-// Used for hiding sections if null....
-var transitIsEmpty = true;
-var descriptionIsEmpty = true;
-var isReFetching = false;
-var mapLoaded = false;
-var contactsIsEmpty = true;
-var noServices = true;
-var indexItemClicked = false;
-// divClone & active tab are used with consortium.js
-var divClone = '';
-
-var jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + lang;
-function fetchInformation(language, lib) {
-    if (lib === undefined) {
-        lib = library;
-    }
-    jsonp_url = "https://api.kirjastot.fi/v3/library/" + lib + "?lang=" + language;
-    // Generic details
-    $.getJSON(jsonp_url + "&with=extra", function (data) {
-        if ($("#blockquote").is(':empty')) {
-            if (data.extra.slogan !== null && data.extra.slogan.length !== 0) {
-                $("#blockquote").append(' <blockquote class="blockquote library-slogan">' + data.extra.slogan + '</blockquote>');
-            }
-        }
-        if (isEmpty($('#introContent'))) {
-            var description = data.extra.description;
-            if (description != null && description.length !== 0) {
-                // Turn bolded Ajankohtaista/Tervetuloa to <h2>
-                description = description.replace("<strong>Ajankohtaista</strong>", "<h2>Ajankohtaista</h2>");
-                description = description.replace("<p><h2>Ajankohtaista</h2></p>", "<h2>Ajankohtaista</h2>");
-                description = description.replace("<strong>Tervetuloa kirjastoon!</strong>", "<h2>Tervetuloa kirjastoon!</h2>");
-                description = description.replace("<p><h2>Tervetuloa kirjastoon!</h2></p>", "<h2>Tervetuloa kirjastoon!</h2>");
-                // Remove <br> and it's variations since everything is inside <p> anyways...
-                // https://stackoverflow.com/questions/4184272/remove-all-br-from-a-string
-                description = description.replace(/(<|&lt;)br\s*\/*(>|&gt;)/g, ' ');
-                // Remove multiple spaces
-                description = description.replace(/^(&nbsp;)+/g, '');
-                // Remove empty paragraphs
-                description = description.replace(/(<p>&nbsp;<\/p>)+/g, "");
-                // Add target="_blank" to links. Same url links would open inside Iframe, links to outside  wouldn't work.
-                description = description.replace(/(<a )+/g, '<a target="_blank" ');
-                $("#introContent").append(description);
-                descriptionIsEmpty = false;
-            }
-        }
-        if (isEmpty($('#genericTransit'))) {
-            if (data.extra.transit.transit_directions != null && data.extra.transit.transit_directions.length != 0) {
-                transitIsEmpty = false;
-                $('.transit-details').css('display', 'block');
-                $('#navYhteystiedot').css('display', 'block');
-                $('#genericTransit').append('<h4>' + i18n.get("Ohjeita liikenteeseen") + '</h4><p>' + data.extra.transit.transit_directions.replace(/(<a )+/g, '<a target="_blank" ') + '</p>')
-            }
-            if (data.extra.transit.buses != null && data.extra.transit.buses !== "") {
-                transitIsEmpty = false;
-                $('.transit-details').css('display', 'block');
-                $('#navYhteystiedot').css('display', 'block');
-                $('#genericTransit').append('<h4>' + i18n.get("Linja-autot") + ':</h4><p>' + data.extra.transit.buses + '</p>')
-            }
-        }
-        if (isEmpty($('#parkingDetails'))) {
-            if (data.extra.transit.parking_instructions != null && data.extra.transit.parking_instructions !== "") {
-                transitIsEmpty = false;
-                $('.transit-details').css('display', 'block');
-                // Replace row splits with <br>
-                var parking_instructions = data.extra.transit.parking_instructions.replace(/\r\n/g, "<br>");
-                $('#parkingDetails').append('<h4>' + i18n.get("Pysäköinti") + '</h4><p>' + parking_instructions + '</p>')
-            }
-        }
-        // Table "Rakennuksen tiedot".
-        var triviaIsEmpty = true;
-        if (isEmpty($('#buildingDetails'))) {
-            // If display none by default, colspan gets messed up.
-            $('#buildingDetails').append('<tr id="triviaThead" class="thead-light" style="text-align: center;"> ' +
-                '<th colspan="3" >' + i18n.get("Tietoa kirjastosta") + '</th>' +
-                '</tr>');
-            if (data.extra.founded != null) {
-                triviaIsEmpty = false;
-                $("#buildingDetails").append('<tr><td><strong>' + i18n.get("Perustamisvuosi") + ': </strong></td>' +
-                    '<td>' + data.extra.founded + '</td></tr>');
-            }
-            if (data.extra.building.building_name != null) {
-                triviaIsEmpty = false;
-                $("#buildingDetails").append('<tr><td><strong>' + i18n.get("Rakennus") + ': </strong></td>' +
-                    '<td>' + data.extra.building.building_name + '</td></tr>');
-            }
-            if (data.extra.building.construction_year != null && data.extra.building.construction_year != 0) {
-                triviaIsEmpty = false;
-                $("#buildingDetails").append('<tr><td><strong>' + i18n.get("Rakennettu") + ': </strong></td>' +
-                    '<td>' + data.extra.building.construction_year + '</td></tr>');
-            }
-            if (data.extra.building.building_architect != null) {
-                triviaIsEmpty = false;
-                $("#buildingDetails").append('<tr><td><strong>' + i18n.get("Arkkitehti") + ': </strong></td>' +
-                    '<td>' + data.extra.building.building_architect + '</td></tr>');
-            }
-            if (data.extra.building.interior_designer != null) {
-                triviaIsEmpty = false;
-                $("#buildingDetails").append('<tr><td><strong>' + i18n.get("Sisustus") + ': </strong></td>' +
-                    '<td>' + data.extra.building.interior_designer + '</td></tr>');
-            }
-            if (triviaIsEmpty) {
-                $("#triviaThead").css("display", "none");
-            }
-        }
-        // Hide news/description toggler if no transit details && not on mobile.
-        else if (lang === "fi" && $(window).width() < 500) {
-            if (!descriptionIsEmpty) {
-                $("#newsDescriptionToggle").css("display", "block");
-            }
-        }
-        // Update the title to match data.name.
-        if(document.title !== data.name && !isReFetching) {
-            if(data.name != null) {
-                document.title = data.name;
-            }
-        }
-    });
-    /*
-     Yhteystiedot
-     */
-    function fetchLocation() {
-        $.getJSON(jsonp_url + "&with=mail_address", function (data) {
-            if (data.address != null) {
-                contactsIsEmpty = false;
-                if (isEmpty($('#streetAddress'))) {
-                    if (data.address.street != null && data.address.zipcode != null && data.address.city != null) {
-                        $("#streetAddress").append(data.name + '<br>' + data.address.street + '<br>' + data.address.zipcode + ' ' + data.address.city);
-                    }
-                }
-                if (isEmpty($('#postalAddress'))) {
-                    if (data.mail_address != null && data.mail_address.area != null) {
-                        var boxNumber = '';
-                        // Use boxNumber, if null use address
-                        if (data.mail_address.box_number !== null) {
-                            boxNumber = 'PL ' + data.mail_address.box_number;
-                        }
-                        else {
-                            boxNumber = data.address.street;
-                        }
-                        // Generate postal address based on available data.
-                        var postalString = '';
-                        if(data.name !== null && data.name.length !== 0) {
-                            postalString += data.name + '<br>';
-                        }
-                        if(boxNumber != null && boxNumber.length !== 0) {
-                            postalString += boxNumber + '<br>';
-                        }
-                        if(data.mail_address.zipcode !== null && data.mail_address.zipcode.length !== 0) {
-                            postalString += data.mail_address.zipcode + ' ';
-                        }
-                        if(data.mail_address.area !== null && data.mail_address.area.length !== 0) {
-                            postalString += data.mail_address.area;
-                        }
-                        if(postalString !== data.name + '<br>') {
-                            $("#postalAddress").append(postalString);
-                        }
-                    }
-                    else {
-                        // If no postal address, hide header & increase map size.
-                        $("#contactsFirstCol").addClass( "col-md-5");
-                        $("#contactsFirstCol").removeClass( "col-md-7" );
-                        $("#contactsMapCol").addClass( "col-md-7");
-                        $("#contactsMapCol").removeClass( "col-md-5" );
-                        $("#postalTh").css('display', 'none');
-                    }
-                }
-                // Get coordinates to be used in loadMap function.
-                // Map coordinates (marker)
-                if (data.address.coordinates != null) {
-                    lon = data.address.coordinates.lon;
-                    lat = data.address.coordinates.lat;
-                }
-            }
-            if (data.email != null && data.email.length !== 0) {
-                contactsIsEmpty = false;
-                if(!checkIfContactExists(data.email)) {
-                    contactlist.push({name: i18n.get("Oletussähköposti"), contact: data.email});
-                }
-            }
-            // Show navigation if content.
-            if (!contactsIsEmpty) {
-                $('#navEsittely').css('display', 'block');
-                $('#navYhteystiedot').css('display', 'block');
-            }
-        });
-    }
-
-    function asyncFetchNumbers() {
-        var numbersDeferred = jQuery.Deferred();
-        setTimeout(function() {
-            var counter = 0;
-            $.getJSON(jsonp_url + "&with=phone_numbers", function (data) {
-                if(data.phone_numbers.length !== 0) {
-                    for (var i = 0; i < data.phone_numbers.length; i++) {
-                        // Check if detail is unique.
-                        if(!checkIfContactExists(data.phone_numbers[i].number)) {
-                            numbersList.push({name: data.phone_numbers[i].name, contact: data.phone_numbers[i].number});
-                        }
-                        counter = counter +1;
-                    }
-                    // If we have looped all, set as resolved, thus moving on.
-                    if(counter === data.phone_numbers.length) {
-                        $.when(
-                            // Sort alphabetically. https://stackoverflow.com/questions/6712034/sort-array-by-firstname-alphabetically-in-javascript
-                            numbersList.sort(function(a, b){
-                                var nameA=a.name.toLowerCase(), nameB=b.name.toLowerCase();
-                                if (nameA < nameB) //sort string ascending
-                                    return -1;
-                                if (nameA > nameB)
-                                    return 1;
-                                return 0; //default return value (no sorting)
-                            })
-                        ).then  (
-                            numbersDeferred.resolve()
-                        );
-                    }
-                }
-                // Resolve, if no length.
-                else {
-                    numbersDeferred.resolve()
-                }
-            });
-        }, 1 );
-        // Return the Promise so caller can't change the Deferred
-        return numbersDeferred.promise();
-    }
-
-    function asyncFetchStaff() {
-        var staffDeferred = jQuery.Deferred();
-        setTimeout(function() {
-            var counter = 0;
-            $.getJSON(jsonp_url + "&with=persons", function (data) {
-                if(data.persons.length !== 0) {
-                    for (var i = 0; i < data.persons.length; i++) {
-                        var name = data.persons[i].first_name + ' ' + data.persons[i].last_name;
-                        if (data.persons[i].job_title !== null) {
-                            name += ' – ' + data.persons[i].job_title;
-                        }
-                        // Check if name or detail is unique.
-                        if (!checkIfContactExists(data.persons[i].email) || !checkIfNameExists(name)){
-                            staffList.push({name: name, contact: data.persons[i].email});
-                        }
-                        counter = counter +1;
-                    }
-                    // If we have looped all, set as resolved, thus moving on.
-                    if(counter === data.persons.length) {
-                        // Sort alphabetically. https://stackoverflow.com/questions/6712034/sort-array-by-firstname-alphabetically-in-javascript
-                        $.when(
-                            staffList.sort(function(a, b){
-                            var nameA=a.name.toLowerCase(), nameB=b.name.toLowerCase();
-                            if (nameA < nameB) //sort string ascending
-                                return -1;
-                            if (nameA > nameB)
-                                return 1;
-                            return 0; //default return value (no sorting)
-                            })
-                        ).then  (
-                            staffDeferred.resolve()
-                        );
-                    }
-                }
-                else {
-                    staffDeferred.resolve()
-                }
-            });
-        }, 1 );
-        // Return the Promise so caller can't change the Deferred
-        return staffDeferred.promise();
-    }
-
-    function fetchContacts() {
-        if (isEmpty($('#contactsTbody'))) {
-            $.when( asyncFetchNumbers(), asyncFetchStaff() ).then  (
-                function() {
-                    if(contactlist.length === 0 && staffList.length === 0 && numbersList.length === 0) {
-                        contactlist.push({name: i18n.get("Ei yhteystietoja"), contact: ""});
-                    }
-                    for (var i = 0; i < contactlist.length; i++) {
-                        var contactDetail = "";
-                        if(contactlist[i].contact != null) {
-                            contactDetail = contactlist[i].contact;
-                        }
-                        $("#contactsTbody").append('<tr>' +
-                            '<td>' + contactlist[i].name + '</td>' +
-                            '<td>' + contactDetail + '</td>' +
-                            '</tr>');
-                    }
-                    for (var i = 0; i < staffList.length; i++) {
-                        var contactDetail = "";
-                        if(staffList[i].contact != null) {
-                            contactDetail = staffList[i].contact;
-                        }
-                        $("#contactsTbody").append('<tr>' +
-                            '<td>' + staffList[i].name + '</td>' +
-                            '<td>' + contactDetail + '</td>' +
-                            '</tr>');
-                    }
-                    for (var i = 0; i < numbersList.length; i++) {
-                        var contactDetail = "";
-                        if(numbersList[i].contact != null) {
-                            contactDetail = numbersList[i].contact;
-                        }
-                        $("#contactsTbody").append('<tr>' +
-                            '<td>' + numbersList[i].name + '</td>' +
-                            '<td>' + contactDetail + '</td>' +
-                            '</tr>');
-                    }
-                    // Show navigation if content.
-                    if (!isEmpty($('#contactsTbody'))) {
-                        $('#navEsittely').css('display', 'block');
-                        $('#navYhteystiedot').css('display', 'block');
-                    }
-                }
-            );
-        }
-    }
-
-    if(!isReFetching) {
-        $.when( fetchLocation() ).then(
-            function() {
-                fetchContacts();
-            }
-        );
-    }
-
-
-    /*
-     Palvelut
-    */
-    $.getJSON(jsonp_url + "&with=services", function (data) {
-        var collectionCount = 0;
-        var hardwareCount = 0;
-        var roomCount = 0;
-        var serviceCount = 0;
-        var collections = [];
-        var hardware = [];
-        var rooms = [];
-        var services = [];
-        accessibilityCount = 0;
-        var roomsAndCollectionsAdded = true;
-        var hardwareAndServicesAdded = true;
-        var accessibilityAdded = false;
-        if (isEmpty($('#collectionItems'))) {
-            roomsAndCollectionsAdded = false;
-        }
-        if (isEmpty($('#roomsAndCollectionsItems'))) {
-            roomsAndCollectionsAdded = false;
-        }
-        if (isEmpty($('#hardwareAndServicesItems'))) {
-            hardwareAndServicesAdded = false;
-        }
-        if (isEmpty($('#accessibilityItems'))) {
-            accessibilityAdded = false;
-        }
-
-        for (var i = 0; i < data.services.length; i++) {
-            // Collections
-            if (data.services[i].name != null && data.services[i].name.length != 0 || data.services[i].custom_name != null) {
-                if (data.services[i].type == "collection") {
-                    if (!roomsAndCollectionsAdded) {
-                        collectionCount = collectionCount + 1;
-                        collections.push(data.services[i]);
-                        roomCount = roomCount + 1;
-                    }
-                }
-                // Rooms
-                else if (data.services[i].type == "room") {
-                    if (!roomsAndCollectionsAdded) {
-                        roomCount = roomCount + 1;
-                        rooms.push(data.services[i]);
-                    }
-                }
-                // Hardware
-                else if (data.services[i].type == "hardware") {
-                    if (!hardwareAndServicesAdded) {
-                        hardwareCount = hardwareCount + 1;
-                        serviceCount = serviceCount + 1;
-                        hardware.push(data.services[i]);
-                    }
-                }
-                // Services
-                else if (data.services[i].type == "service") {
-                     if(data.services[i].name === "Esteettömyyspalvelut" || data.services[i].name === "Accessibility services") {
-                            // Set accessibility added to true, this is used to display "Services" tab if other tabs are missing.
-                            if(!accessibilityAdded) {
-                                accessibilityAdded = true;
-                                // Accessibility count is increased in the function.
-                                addItem(data.services[i], '#accessibilityItems');
-                            }
-                        }
-                        else {
-                            if (!hardwareAndServicesAdded) {
-                                serviceCount = serviceCount + 1;
-                                services.push(data.services[i]);
-                            }
-                        }
-                    }
-            }
-        }
-
-        // Don't re-add items for english version re-run.
-        if(!isReFetching) {
-            // Generate list items... Do it here display them in the right order...
-            for (var x=0; x<rooms.length; x++) {
-                addItem(rooms[x], '#roomsAndCollectionsItems');
-            }
-            for (var x=0; x<collections.length; x++) {
-                addItem(collections[x], '#roomsAndCollectionsItems');
-            }
-            for (var x=0; x<hardware.length; x++) {
-                addItem(hardware[x], '#hardwareAndServicesItems');
-            }
-            for (var x=0; x<services.length; x++) {
-                addItem(services[x], '#hardwareAndServicesItems');
-            }
-            // Show titles & counts if found.
-            if (roomCount != 0 || collectionCount != 0) {
-                $("#roomsAndCollections").css('display', 'block');
-                if(roomCount != 0 && collectionCount != 0) {
-                    $("#roomsAndCollectionsTitle").prepend(i18n.get("Tilat ja kokoelmat"));
-                }
-                else if(roomCount != 0) {
-                    $("#roomsAndCollectionsTitle").prepend(i18n.get("Tilat"));
-                }
-                else {
-                    $("#roomsAndCollectionsTitle").prepend(i18n.get("Kokoelmat"));
-                }
-                $("#roomsAndCollectionsBadge").append('(' + roomCount + ')');
-                noServices = false;
-            }
-            if (serviceCount != 0 || hardwareCount != 0) {
-                $("#hardwareAndServices").css('display', 'block');
-                if(serviceCount != 0 && hardwareCount != 0) {
-                    $("#hardwareAndServicesTitle").prepend(i18n.get("Laitteet ja palvelut"));
-                }
-                else if(hardwareCount != 0) {
-                    $("#hardwareAndServicesTitle").prepend(i18n.get("Laitteisto"));
-                }
-                else {
-                    $("#hardwareAndServicesTitle").prepend(i18n.get("Palvelut"));
-                }
-                $("#hardwareAndServicesBadge").append('(' + serviceCount + ')');
-                noServices = false;
-            }
-        }
-
-        if (!roomsAndCollectionsAdded || !hardwareAndServicesAdded || !accessibilityAdded) {
-            if (noServices) {
-                if (lang == "fi") {
-                    //$('#servicesInfo').append(i18n.get("Ei palveluita"));
-                    // Hide the whole navigation if no contact details are listed either...
-                    if (contactsIsEmpty && isEmpty($('#staffMembers')) && isEmpty($('#contactsTbody'))) {
-                        $('.nav-pills').css('display', 'none');
-                    }
-                }
-            } else {
-                $('#navEsittely').css('display', 'block');
-                // Add event listener for clicking links.
-                $(".index-item").on('click', function () {
-                    if (!indexItemClicked) {
-                        indexItemClicked = true;
-                        // If infobox already visible, hide it instantly to avoid wonky animations.
-                        if (isInfoBoxVisible) {
-                            toggleInfoBox(0);
-                        }
-
-                        var popupText = $(this).data('message');
-                        // Check the description for links.
-                        if(popupText.indexOf("LINKSTART") !== -1) {
-                            popupText = popupText.replace(/(LINKSTART)+/g, '<a class="external-link" target="_blank" href="');
-                            popupText = popupText.replace(/(URLEND)+/g, '">');
-                            popupText = popupText.replace(/(LINKEND)+/g, '<\/a>');
-                        }
-
-                        $("#popoverContent").replaceWith('<div id="popoverContent"><p>' + popupText + '</p></div>');
-                        // If website is not null and contains stuff. Sometimes empty website is shown unless lenght is checked.
-                        if ($(this).data('website') != null && $(this).data('website').length > 5) {
-                            // Use _blank, because iframes don't like moving to new pages.
-                            $("#linkToInfo").replaceWith('<p id="linkToInfo"><a target="_blank" href="' + $(this).data('website') +
-                                '" class="external-link">' + i18n.get("Lisätietoja") + '</a></p>');
-                        } else {
-                            $("#linkToInfo").replaceWith('<p id="linkToInfo"></p>');
-                        }
-
-                        // Get element position
-                        var posX = $(this).offset().left,
-                            // Set top to be slightly under the element
-                            posY = $(this).offset().top + 20;
-
-                        // If longer popup texts, show the popup on top of the item, not below it.
-                        if(popupText.length > 75) {
-                            var heightOfPopover = $("#infoPopup").height() - 25;
-                            posX = $(this).offset().left,
-                                // Set top to be slightly under the element
-                                posY = $(this).offset().top + -heightOfPopover/2;
-                            $('#popoverArrow').css("display", "none");
-                            setTimeout(function () {
-                                // If more than 300px in height, adjust parent & scroll into view..
-                                if (document.getElementById("infoPopup").scrollHeight > 300) {
-                                    // Adjust iframe height, thus scaling if descriptions are long.
-                                    adjustParentHeight();
-                                    var element = document.getElementById('popoverContent');
-                                    // This checker does not really work in Iframes, since the height returns the height of the Iframe...
-                                    if ($(window).height() < 700) {
-                                        element.scrollIntoView({ block: 'start',  behavior: 'smooth' });
-                                    }
-                                    else {
-                                        element.scrollIntoView({ block: 'center',  behavior: 'smooth' });
-                                    }
-                                }
-                            }, 250);
-                        }
-                        else {
-                            $('#popoverArrow').css("display", "block");
-                        }
-                        // Set popup position & content, toggle visibility.
-                        $("#infoPopup").css('transform', 'translate3d(' + posX + 'px,' + posY + 'px, 0px');
-                        toggleInfoBox(100);
-                        // Add timeout. This prevents duplicated click events if we have changed library.
-                        setTimeout(function(){
-                            indexItemClicked = false;
-                        }, 30);
-                    }
-                });
-            }
-            if(noServices) {
-                $('#libraryServices').css('display', 'none');
-                // If no content is provided for the left collumn.
-                if (descriptionIsEmpty && language === "fi") {
-                    // Hide the content on left, make the sidebar 100% in width.
-                    $(".details").css("display", "none");
-                    $("#introductionSidebar").addClass("col-md-12");
-                    $("#introductionSidebar").removeClass("col-lg-5 col-xl-4 order-2 sidebar");
-                }
-            }
-        }
-    }); // Palvelut
-    // If lang is english, do this again with Finnish to add missing infos.
-    if (language == "en") {
-        setTimeout(function () {
-            isReFetching = true;
-            fetchInformation("fi", lib);
-            $("header").append('<small>Note: If information is missing in English, Finnish version is used where available.</small>');
-        }, 400);
-    }
-}
-
-function fetchImagesAndSocialMedia(lib) {
-    // Images
-    if(lib !== undefined) {
-        jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + lang;
-    }
-    $.getJSON(jsonp_url + "&with=pictures", function (data) {
-        for (var i = 0; i < data.pictures.length; i++) {
-            var altCount = i + 1;
-            // Use medium image size, large scales smaller images a lot...
-            var altText = i18n.get("Kuva kirjastolta") + ' (' + altCount + '/' + data.pictures.length + ')';
-            $(".rslides").append('<li><img src="' + data.pictures[i].files.medium + '" alt="' + altText + '"></li>');
-        }
-        // If no pictures found, hide the slider...
-        if (data.pictures.length === 0) {
-            $('#sliderBox').css('display', 'none');
-        }
-        else {
-            $('#currentSlide').html(1);
-            $('.top-left').append('/' + data.pictures.length);
-            $(".rslides").responsiveSlides({
-                navContainer: "#sliderBox" // Selector: Where controls should be appended to, default is after the 'ul'
-            });
-            // Exit fullscreen if clicking the .rslides and not within 75px range from the center.
-            $('.rslides').on('click', function () {
-                if (!$("#sliderBox").hasClass("small-slider")) {
-                    var centerPos = $(window).scrollTop() + $(window).height() / 2;
-                    if (!(event.clientY >= centerPos - 75 && event.clientY <= centerPos + 75)) {
-                        toggleFullScreen("#sliderBox");
-                    }
-                }
-            });
-            // Ignore clicks on selected image && add hover class.
-            // We re-do this in responsiveslides.js every time the image is changed.
-            $(".rslides1_on").click(function (event) {
-                event.stopPropagation();
-                $("#sliderBox").addClass('hovering');
-            });
-            // Activate arrow navigation when hovering over the small slider.
-            $("#sliderBox").mouseenter(function () {
-                if (!$("#sliderBox").hasClass('hovering') && $("#sliderBox").hasClass("small-slider")) {
-                    // If element is never focused, navigation may not work.
-                    $("#sliderBox").addClass('hovering');
-                    $("#sliderForward").focus();
-                    // If we blur instantly, arrow navigation won't work unless something has been clicked in the document.
-                    setTimeout(function () {
-                        $("#sliderForward").blur();
-                    }, 5);
-                    //$("#sliderForward").blur();
-                }
-            });
-            $("#sliderBox").mouseleave(function () {
-                if ($("#sliderBox").hasClass('hovering') && $("#sliderBox").hasClass("small-slider")) {
-                    $("#sliderBox").removeClass('hovering');
-                }
-            });
-            $( "#expandSlider" ).on('click', function () {
-                toggleFullScreen('#sliderBox');
-            });
-        }
-    });
-
-    // Social media links
-    $.getJSON(jsonp_url + "&with=links", function (data) {
-        var linkCount = 0;
-        // Loop the links of group category [0].
-        data.links.forEach(function (element) {
-            // Get url.
-            var url = element.url;
-            if (url === null) {
-                return
-            }
-            if (url.indexOf("facebook") !== -1) {
-                linkCount = linkCount +1;
-                $(".some-links").append('<a target="_blank" ' +
-                    'href="' + url + '" title="' + element.name + '"> <img src="../images/icons/facebook.svg" alt="' +
-                    i18n.get("Kirjaston") + ' Facebook"/>' +
-                    '</a>');
-            }
-            else if (url.indexOf("instagram") !== -1) {
-                linkCount = linkCount +1;
-                $(".some-links").append('<a target="_blank" ' +
-                    'href="' + url + '" title="' + element.name + '"> <img src="../images/icons/instagram.svg" alt="' +
-                    i18n.get("Kirjaston") + ' Instagram"/>' +
-                    '</a>');
-            }
-            else {
-                // Add the link to the contact details listing
-                // https://stackoverflow.com/questions/41942690/removing-http-or-http-and-www/41942787
-                // Check if refurl contains url, when we remove http / www & ending from it.
-                if(url.indexOf(refUrl.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0]) === -1) {
-                    // Remove httml & www
-                    var prettyUrl = url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "");
-                    // Remove / and # from url if last characters
-                    if (prettyUrl.substring(prettyUrl.length-1) === "/" || prettyUrl.substring(prettyUrl.length-1) === "#") {
-                        prettyUrl = prettyUrl.substring(0, prettyUrl.length-1);
-                    }
-                    // Generate the link
-                    prettyUrl = '<a target="_blank" href="' + url + '">' + prettyUrl + '</a>';
-                    if(!checkIfContactExists(prettyUrl) && !checkIfNameExists(element.name)) {
-                        contactlist.unshift({name: element.name,
-                            contact: prettyUrl});
-                        linkCount = linkCount +1;
-                    }
-                }
-            }
-        });
-        // Mention links in title, if any are present.
-        if(linkCount !== 0 ) {
-            $('#contactsTitle').append('<span>' + i18n.get("Linkit ja yhteystiedot") + '</span>');
-        } else {
-            $('#contactsTitle').append('<span>' + i18n.get("Yhteystiedot") + '</span>');
-        }
-    });
-}
-
-
-function loadMapWithLibraries() {
-    var map = L.map('mapContainer').setView([lat, lon], 15.5);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-    if(libraryList.length !== 0) {
-        var markerIcon = L.icon({
-            // https://material.io/tools/icons/?style=baseline
-            iconUrl: '../images/icons/local_library.svg',
-            popupAnchor:  [-10, -4], // point from which the popup should open relative to the iconAnchor
-            iconSize:     [28, 28], // size of the icon
-        });
-        for (var i = 0; i < libraryList.length; i++) {
-            var text = '<strong>' + libraryList[i].text + '</strong><br>' +
-                libraryList[i].street + ', <br>' + libraryList[i].zipcode + ', ' + libraryList[i].city +
-                '<br><button type="button" value="' + libraryList[i].id + '" class="map-library-changer btn btn-md btn-primary py-0 mb-3">' +
-                i18n.get("Hae tiedot") + '</button>';
-            if(libraryList[i].id == library) {
-                text = '<strong>' + libraryList[i].text + '</strong><br>' +
-                    libraryList[i].street + ', <br>' + libraryList[i].zipcode + ', ' + libraryList[i].city;
-                // Add a notification text about missing coordinates for map.
-                if(libraryList[i].coordinates === null) {
-                    $('#contactsMapCol').prepend('<div id="noCoordinates">' + i18n.get("Huom") + '! ' + libraryList[i].text.toString() + i18n.get("Ei koordinaatteja") + '</div>');
-                    var container = document.getElementById('contactsMapCol');
-                    container.style.height = (container.offsetHeight + 70) + "px";
-                    var noCoordinatesHeight = $('#noCoordinates').height();
-                    noCoordinatesHeight = noCoordinatesHeight + 20; // Add margin.
-                    var mapContainer = document.getElementById('mapContainer');
-                    mapContainer.style.height = (mapContainer.offsetHeight + -noCoordinatesHeight) + "px";
-                }
-            }
-            if (libraryList[i].coordinates != null) {
-                L.marker([libraryList[i].coordinates.lat, libraryList[i].coordinates.lon], {icon: markerIcon}).addTo(map)
-                    .bindPopup(text)
-                    .openPopup();
-            }
-        }
-    } else {
-        // Use larger icon for a single library pages.
-        var markerIcon = L.icon({
-            // https://material.io/tools/icons/?style=baseline
-            iconUrl: '../images/icons/local_library.svg',
-            popupAnchor:  [-11, -5], // point from which the popup should open relative to the iconAnchor
-            iconSize:     [42, 42], // size of the icon
-        });
-        L.marker([lat, lon], {icon: markerIcon}).addTo(map)
-            .bindPopup(document.title)
-            .openPopup();
-    }
-
-    // add Wikimedia map styles to the map.
-    L.tileLayer.provider('Wikimedia').addTo(map);
-    // Min/max zoom levels + default focus.
-    map.options.minZoom = 6;
-    map.options.maxZoom = 17.9;
-    map.setView([lat, lon], 15);
-    // Set the contribution text.
-    $('.leaflet-control-attribution').html('<div class="leaflet-control-attribution leaflet-control">© <a target="_blank" href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors</div>')
-
-    map.eachLayer(function (layer) {
-        if(layer._latlng !== undefined) {
-            if(layer._latlng.lat == lat) {
-                layer.fire('click');
-            }
-        }
-    });
 }
 
 function bindActions() {
@@ -942,6 +186,7 @@ function bindActions() {
             toggleInfoBox();
         }
         activeTab = 0;
+        adjustParentHeight(animationTime);
     }
 
     function navigateToContacts(animationTime) {
@@ -955,33 +200,31 @@ function bindActions() {
         if(isInfoBoxVisible) {
             toggleInfoBox();
         }
-        activeTab = 1;
-        // Map zoom gets messed if the map is loaded before hiding the map div.
-        if(!mapLoaded && lat != null) {
-            setTimeout(function(){
-                //loadMap();
-                $.when( loadMapWithLibraries() ).then(
-                    function() {
-                        adjustParentHeight();
-                    }
-                );
-            }, 750);
-            mapLoaded = true;
-        }
-        else {
-            setTimeout(function() {
-                adjustParentHeight();
-            }, 601);
-
+        if(activeTab === 0) {
+            // If we are switching between tabs, adjust parent height.
+            adjustParentHeight(animationTime);
+            activeTab = 1;
+            // Map zoom gets messed if the map is loaded before hiding the map div.
+            if(!mapLoaded && lat != null) {
+                setTimeout(function(){
+                    // If we try to set view & open the popup in asyncLoadMap, things get messed.
+                    map.setView([lat, lon], 15);
+                    // Open popup
+                    map.eachLayer(function (layer) {
+                        if(layer._latlng !== undefined) {
+                            if(layer._latlng.lat == lat) {
+                                layer.fire('click');
+                            }
+                        }
+                    });
+                }, 600);
+                mapLoaded = true;
+            }
         }
     }
 
     $( "#navEsittely" ).on('click', function () {
-        $.when( navigateToDefault(600) ).then(
-            function() {
-                adjustParentHeight();
-            }
-        );
+        navigateToDefault(600);
     });
 
     $( "#navYhteystiedot" ).on('click', function () {
@@ -1006,21 +249,22 @@ function bindActions() {
         }
     });
 
-
+    /*
     if(activeTab === 0) {
         $.when( navigateToDefault(0) ).then(
             function() {
-                adjustParentHeight();
+                //adjustParentHeight();
             }
         );
-    }
+    }*/
 
     if(activeTab === 1) {
         navigateToContacts(0);
     }
 }
 
-function adjustParentHeight() {
+function adjustParentHeight(delay) {
+    delay = delay + 150;
     setTimeout(function(){
         try {
             var height = 50;
@@ -1037,15 +281,19 @@ function adjustParentHeight() {
         catch (e) {
             console.log("iframe size adjustment failed: " + e);
         }
-    }, 550);
+    }, delay);
 }
 
-
+// divClone & active tab are used with consortium.js
+var divClone = '';
+var map;
 $(document).ready(function() {
     bindActions();
     $( "#closeInfoBtn" ).on('click', function () {
         toggleInfoBox(200);
     });
+
+    map = L.map('mapContainer');
     // UI texts.
     if($('#librarySelectorTitle')) {
         $('#librarySelectorTitle').append(i18n.get("Kirjaston valinta"));
@@ -1100,7 +348,8 @@ $(document).ready(function() {
 
     // Clone page, to be restored if library selector is used.
     divClone = $("#pageContainer").clone();
-    // Fetch details.
-    fetchInformation(lang);
-    fetchImagesAndSocialMedia(library);
+    // Fetch details if not generating select for libraries, otherwise trigger this in consortium.js
+    if(consortium === undefined && city === undefined) {
+        fetchInformation(lang);
+    }
 }); // OnReady
