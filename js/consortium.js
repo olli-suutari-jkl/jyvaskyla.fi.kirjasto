@@ -74,7 +74,8 @@ function generateSelect() {
             return citiesDeferred.promise();
         }
 
-        $.when( asyncReplaceIdWithCity() ).then(
+        // Replace city ID:s with names and check refurl for library names.
+        $.when( asyncCheckUrlForKeskiLibrary(), asyncReplaceIdWithCity() ).then(
             function(){
                 // Fetch library details, map is also generated during the process - it is important that we have already generated the list for map items.
                 fetchInformation(lang);
@@ -170,7 +171,8 @@ $(document).ready(function() {
     }
 
     $("#librarySelector").change(function(){
-        if($(this).val() !== library) {
+        // Don't use !== as it won't match.
+        if($(this).val() != library) {
              $("#pageContainer").replaceWith(divClone.clone()); // Restore main with a copy of divClone
                 // Reset variables.
                 accessibilityIsEmpty = true;

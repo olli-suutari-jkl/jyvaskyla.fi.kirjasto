@@ -5,8 +5,6 @@ var descriptionIsEmpty = true;
 var isReFetching = false;
 var contactsIsEmpty = true;
 var noServices = true;
-// GenerateImages is used, because asyncFetchImages sometimes produces duplicated slide numbers othervwise. TO DO: FIX IT FELIX!
-var generateImagesHasRun = false;
 var indexItemClicked = false;
 var lon;
 var lat;
@@ -369,7 +367,6 @@ function generateImages(data) {
             }
         }
     }, 1 );
-    generateImagesHasRun = true;
     // Return the Promise so caller can't change the Deferred
     return imageListDeferred.promise();
 }
@@ -377,7 +374,6 @@ function generateImages(data) {
 function asyncFetchImages() {
     var imagesDeferred = jQuery.Deferred();
     setTimeout(function() {
-        if(!generateImagesHasRun) {
             $.getJSON(jsonp_url + "&with=pictures", function (data) {
                 // If no pictures found, hide the slider...
                 if (data.pictures.length === 0) {
@@ -433,11 +429,6 @@ function asyncFetchImages() {
                     }
                 );
             });
-        }
-        else {
-            imagesDeferred.resolve();
-        }
-
     }, 1 );
     // Return the Promise so caller can't change the Deferred
     return imagesDeferred.promise();
