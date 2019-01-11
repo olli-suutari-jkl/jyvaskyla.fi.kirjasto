@@ -181,6 +181,7 @@ $(document).ready(function() {
                 contactsIsEmpty = true;
                 noServices = true;
                 indexItemClicked = false;
+                generateImagesHasRun = false;
                 isReFetching = false;
                 map = L.map('mapContainer');
                 contactlist = [];
