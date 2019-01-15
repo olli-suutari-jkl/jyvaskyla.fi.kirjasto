@@ -118,7 +118,7 @@ function addItem(item, listElement) {
             if (item.description != null && item.description.length != 0) {
                 // Replace row splits with <br>
                 var longDescription = item.description.replace(/\r\n/g, "<br>");
-                description = description + '<br><br>' + longDescription;
+                description = '<p>' + description + '</p><p>' + longDescription + '</p>';
             }
             // Replace links from the description
             if (description.indexOf("<a href=") !== -1) {
@@ -128,7 +128,7 @@ function addItem(item, listElement) {
             }
             // Add price where available.
             if (item.price != null && item.price.length != 0) {
-                description = description + '<br><br>' + i18n.get("Hintatiedot") + ': ' + item.price;
+                description = description + '<p>' + i18n.get("Hintatiedot") + ': ' + item.price + '</p>';
             }
             // If website is not null and contains stuff. Sometimes empty website is shown unless lenght is checked.
             if ($(this).data('website') != null && $(this).data('website').length > 5) {
