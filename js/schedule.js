@@ -50,7 +50,7 @@ function getWeekSchelude(direction, lib) {
     // As of 4.1.2019, the API does not return the schedule periods and their infos from
     // 2018, thus limit going back to the last year, prevent going to the last year..
     if(weekCounter < 0 && weekNumber == 52) {
-        weekCounter = 0;
+        weekCounter = weekCounter +1;
         return;
     }
     // Do not allow going more than 10 weeks to the past or for more than 26 weeks.
@@ -617,71 +617,71 @@ function swipeNavigation(el,d) {
 }
 
 $(document).ready(function() {
-    // Scheludes.. Quick fix: add 450ms timeout, so library has time to change if changed via url.
-    setTimeout(function() {
+    // Trigger schedule fetching, if no library list, otherwise trigger in consortium.js
+    if(!isLibaryList) {
         getWeekSchelude(0, library);
-        // UI texts.
-        $('#scheludesSr').append(i18n.get("Aikataulut"));
-        bindScheduleKeyNavigation();
-        // Detect left/right on schedules or move backwards/forwards in slider if in fullscreen mode or when hovering small slider..
-        $(document).keydown(function(e) {
-            switch(e.which) {
-                case 37: // left
-                    if($(".library-schedules").hasClass("hovering")
-                        || $("#lastWeek").is(":focus") || $("#nextWeek").is(":focus")) {
-                        $("#lastWeek").focus();
-                        $("#lastWeek").click();
+    }
+    // UI texts.
+    $('#scheludesSr').append(i18n.get("Aikataulut"));
+    bindScheduleKeyNavigation();
+    // Detect left/right on schedules or move backwards/forwards in slider if in fullscreen mode or when hovering small slider..
+    $(document).keydown(function(e) {
+        switch(e.which) {
+            case 37: // left
+                if($(".library-schedules").hasClass("hovering")
+                    || $("#lastWeek").is(":focus") || $("#nextWeek").is(":focus")) {
+                    $("#lastWeek").focus();
+                    $("#lastWeek").click();
+                }
+                // Slider hovering is not really used with schedules, but it's better to do it here instead of adding another $(document).keydown(function(e) {
+                else if(!$("#sliderBox").hasClass("small-slider") || $("#sliderBox").hasClass("hovering")
+                    || $("#sliderPrevious").is(":focus") || $("#sliderForward").is(":focus")) {
+                    $("#sliderPrevious").focus();
+                    $("#sliderPrevious").click();
+                }
+                else if($(".nav-pills").hasClass("hovering")
+                    || $("#navEsittely").is(":focus") || $("#navYhteystiedot").is(":focus")|| $("#navPalvelut").is(":focus")) {
+                    if(activeTab === 1) {
+                        $("#navEsittely").focus();
+                        $("#navEsittely").click();
                     }
-                    // Slider hovering is not really used with schedules, but it's better to do it here instead of adding another $(document).keydown(function(e) {
-                    else if(!$("#sliderBox").hasClass("small-slider") || $("#sliderBox").hasClass("hovering")
-                        || $("#sliderPrevious").is(":focus") || $("#sliderForward").is(":focus")) {
-                        $("#sliderPrevious").focus();
-                        $("#sliderPrevious").click();
+                    else if(activeTab === 2) {
+                        $("#navYhteystiedot").focus();
+                        $("#navYhteystiedot").click();
                     }
-                    else if($(".nav-pills").hasClass("hovering")
-                        || $("#navEsittely").is(":focus") || $("#navYhteystiedot").is(":focus")|| $("#navPalvelut").is(":focus")) {
-                        if(activeTab === 1) {
-                            $("#navEsittely").focus();
-                            $("#navEsittely").click();
-                        }
-                        else if(activeTab === 2) {
-                            $("#navYhteystiedot").focus();
-                            $("#navYhteystiedot").click();
-                        }
+                }
+                break;
+            case 39: // right
+                if($(".library-schedules").hasClass("hovering")
+                    || $("#lastWeek").is(":focus") || $("#nextWeek").is(":focus")) {
+                    $("#nextWeek").focus();
+                    $("#nextWeek").click();
+                }
+                // Slider hovering is not really used with schedules, but it's better to do it here instead of adding another $(document).keydown(function(e) {
+                else if(!$("#sliderBox").hasClass("small-slider") || $("#sliderBox").hasClass("hovering")
+                    || $("#sliderPrevious").is(":focus") || $("#sliderForward").is(":focus")) {
+                    // Go to slide
+                    $("#sliderForward").focus();
+                    $("#sliderForward").click();
+                }
+                else if($(".nav-pills").hasClass("hovering")
+                    || $("#navEsittely").is(":focus") || $("#navYhteystiedot").is(":focus")|| $("#navPalvelut").is(":focus")) {
+                    if(activeTab === 0) {
+                        $("#navYhteystiedot").focus();
+                        $("#navYhteystiedot").click();
                     }
-                    break;
-                case 39: // right
-                    if($(".library-schedules").hasClass("hovering")
-                        || $("#lastWeek").is(":focus") || $("#nextWeek").is(":focus")) {
-                        $("#nextWeek").focus();
-                        $("#nextWeek").click();
+                    else if(activeTab === 1) {
+                        $("#navPalvelut").focus();
+                        $("#navPalvelut").click();
                     }
-                    // Slider hovering is not really used with schedules, but it's better to do it here instead of adding another $(document).keydown(function(e) {
-                    else if(!$("#sliderBox").hasClass("small-slider") || $("#sliderBox").hasClass("hovering")
-                        || $("#sliderPrevious").is(":focus") || $("#sliderForward").is(":focus")) {
-                        // Go to slide
-                        $("#sliderForward").focus();
-                        $("#sliderForward").click();
-                    }
-                    else if($(".nav-pills").hasClass("hovering")
-                        || $("#navEsittely").is(":focus") || $("#navYhteystiedot").is(":focus")|| $("#navPalvelut").is(":focus")) {
-                        if(activeTab === 0) {
-                            $("#navYhteystiedot").focus();
-                            $("#navYhteystiedot").click();
-                        }
-                        else if(activeTab === 1) {
-                            $("#navPalvelut").focus();
-                            $("#navPalvelut").click();
-                        }
-                    }
-                    break;
-                default: return; // exit this handler for other keys
-            }
-        });
-        // Add swiping detection for schedules & sliderbox if available.
-        detectswipe("schedules", swipeNavigation);
-        if(document.getElementById("sliderBox") != null) {
-            detectswipe("sliderBox", swipeNavigation);
+                }
+                break;
+            default: return; // exit this handler for other keys
         }
-    }, 450);
+    });
+    // Add swiping detection for schedules & sliderbox if available.
+    detectswipe("schedules", swipeNavigation);
+    if(document.getElementById("sliderBox") != null) {
+        detectswipe("sliderBox", swipeNavigation);
+    }
 }); // OnReady

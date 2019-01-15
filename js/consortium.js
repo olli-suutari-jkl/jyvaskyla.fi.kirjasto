@@ -77,6 +77,8 @@ function generateSelect() {
         // Replace city ID:s with names and check refurl for library names.
         $.when( asyncCheckUrlForKeskiLibrary(), asyncReplaceIdWithCity() ).then(
             function(){
+                // Trigger schedule fetching.
+                getWeekSchelude(0, library);
                 // Fetch library details, map is also generated during the process - it is important that we have already generated the list for map items.
                 fetchInformation(lang);
                 // Consortium listing
@@ -108,10 +110,12 @@ function generateSelect() {
         );
     }
 }
-
+// isLibraryList variable is used to determine when to load schedules.
+var isLibaryList = false;
 $(document).ready(function() {
     // Fetch libraries of city, that belong to the same consortium
     if(consortium !== undefined && city !== undefined) {
+        isLibaryList = true;
         $.getJSON("https://api.kirjastot.fi/v3/organisation?lang=" + lang + "&city.name=" + city, function(data) {
             for (var i=0; i<data.items.length; i++) {
                 // Due to a bug in the api, a test library cannot be deleted or hidden
@@ -131,6 +135,7 @@ $(document).ready(function() {
     }
     // Fetch libraries of city
     else if(consortium === undefined && city !== undefined) {
+        isLibaryList = true;
         $.getJSON("https://api.kirjastot.fi/v3/organisation?lang=" + lang + "&city.name=" + city, function(data) {
             for (var i=0; i<data.items.length; i++) {
                 // Ignore mobile libraries
@@ -147,6 +152,7 @@ $(document).ready(function() {
     }
     // Fetch libraries of consortium
     else if(consortium !== undefined && city === undefined) {
+        isLibaryList = true;
         $.getJSON("https://api.kirjastot.fi/v3/organisation?lang=" + lang + "&consortium=" + consortium + "&limit=500", function(data) {
             for (var i=0; i<data.items.length; i++) {
                 // Due to a bug in the api, a test library cannot be deleted or hidden

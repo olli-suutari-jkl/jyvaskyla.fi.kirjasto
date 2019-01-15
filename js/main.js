@@ -267,7 +267,7 @@ function adjustParentHeight(delay) {
     delay = delay + 150;
     setTimeout(function(){
         try {
-            var height = 50;
+            var height = 75;
             height = height + document.getElementById("mainContainer").scrollHeight;
             if(isInfoBoxVisible) {
                 var popoverHeight = document.getElementById("infoPopup").scrollHeight;
