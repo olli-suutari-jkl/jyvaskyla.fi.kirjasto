@@ -1,3 +1,6 @@
+// isLibraryList variable is used to determine when to load schedules.
+var isLibaryList = false;
+
 moment.locale(lang);
 var HHmmFormat = 'HH:mm';
 

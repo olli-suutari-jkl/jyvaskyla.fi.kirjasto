@@ -110,8 +110,7 @@ function generateSelect() {
         );
     }
 }
-// isLibraryList variable is used to determine when to load schedules.
-var isLibaryList = false;
+
 $(document).ready(function() {
     // Fetch libraries of city, that belong to the same consortium
     if(consortium !== undefined && city !== undefined) {
