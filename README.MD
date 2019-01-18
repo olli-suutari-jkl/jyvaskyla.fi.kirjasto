@@ -59,8 +59,6 @@ This increases the schedule font sizes dynamically to be used in a 1080 * 1920 i
 **Limitations:**  
 
 - Iframes must open links in new tab
-- No JS is allowed on jyvaskyla.fi, thus dynamically resizing the frames becomes a bit difficult (eg. https://www.willmaster.com/library/tutorials/auto-resize-iframe-when-content-size-changes.php)
-
 
 
 **TO DO**

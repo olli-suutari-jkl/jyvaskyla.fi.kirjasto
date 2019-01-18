@@ -1,5 +1,6 @@
 // Variables
 var jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + lang;
+var jsonpUrlV4 = "https://api.kirjastot.fi/v4/library/" + library + "?lang=" + lang;
 var transitIsEmpty = true;
 var descriptionIsEmpty = true;
 var isReFetching = false;
@@ -88,40 +89,39 @@ function asyncFetchGenericDetails() {
             }
             // Table
             var triviaIsEmpty = true;
-            if (isEmpty($('#buildingDetails'))) {
+            if (isEmpty($('#buildingDetails')) && !isReFetching) {
                 // If display none by default, colspan gets messed up.
-                $('#buildingDetails').append('<tr id="triviaThead" class="thead-light" style="text-align: center;"> ' +
-                    '<th colspan="3" >' + i18n.get("Tietoa kirjastosta") + '</th>' +
-                    '</tr>');
+                $('#triviaTitle').append( i18n.get("Tietoa kirjastosta"));
                 if (data.extra.founded != null) {
                     triviaIsEmpty = false;
-                    $("#buildingDetails").append('<tr><td><strong>' + i18n.get("Perustamisvuosi") + ': </strong></td>' +
+                    $("#triviaBody").append('<tr><td class="aligned-text"><strong>' + i18n.get("Perustamisvuosi") + ': </strong></td>' +
                         '<td>' + data.extra.founded + '</td></tr>');
                 }
                 if (data.extra.building.building_name != null) {
                     triviaIsEmpty = false;
-                    $("#buildingDetails").append('<tr><td><strong>' + i18n.get("Rakennus") + ': </strong></td>' +
+                    $("#triviaBody").append('<tr><td class="aligned-text"><strong>' + i18n.get("Rakennus") + ': </strong></td>' +
                         '<td>' + data.extra.building.building_name + '</td></tr>');
                 }
                 if (data.extra.building.construction_year != null && data.extra.building.construction_year != 0) {
                     triviaIsEmpty = false;
-                    $("#buildingDetails").append('<tr><td><strong>' + i18n.get("Rakennettu") + ': </strong></td>' +
+                    $("#triviaBody").append('<tr><td class="aligned-text"><strong>' + i18n.get("Rakennettu") + ': </strong></td>' +
                         '<td>' + data.extra.building.construction_year + '</td></tr>');
                 }
                 if (data.extra.building.building_architect != null) {
                     triviaIsEmpty = false;
-                    $("#buildingDetails").append('<tr><td><strong>' + i18n.get("Arkkitehti") + ': </strong></td>' +
+                    $("#triviaBody").append('<tr><td class="aligned-text"><strong>' + i18n.get("Arkkitehti") + ': </strong></td>' +
                         '<td>' + data.extra.building.building_architect + '</td></tr>');
                 }
                 if (data.extra.building.interior_designer != null) {
                     triviaIsEmpty = false;
-                    $("#buildingDetails").append('<tr><td><strong>' + i18n.get("Sisustus") + ': </strong></td>' +
+                    $("#triviaBody").append('<tr><td class="aligned-text"><strong>' + i18n.get("Sisustus") + ': </strong></td>' +
                         '<td>' + data.extra.building.interior_designer + '</td></tr>');
                 }
                 if (triviaIsEmpty) {
-                    $("#triviaThead").css("display", "none");
+                    $("#triviaTitle").css("display", "none");
                 }
             }
+
             // Hide news/description toggler if no transit details && not on mobile.
             else if (lang === "fi" && $(window).width() < 500) {
                 if (!descriptionIsEmpty) {
@@ -275,6 +275,15 @@ function asyncFetchServices() {
                             if (isInfoBoxVisible) {
                                 toggleInfoBox(0);
                             }
+                            // If website is not null and contains stuff. Sometimes empty website is shown unless lenght is checked.
+                            if ($(this).data('website') !== null && $(this).data('website') !== "undefined" && $(this).data('website').length > 5) {
+                                // Use _blank, because iframes don't like moving to new pages.
+                                $("#linkToInfo").replaceWith('<p id="linkToInfo"><a target="_blank" href="' + $(this).data('website') +
+                                    '" class="external-link">' + i18n.get("Lisätietoja") + '</a></p>');
+                            } else {
+                                $("#linkToInfo").replaceWith('<p id="linkToInfo"></p>');
+                            }
+
                             var popupText = $(this).data('message');
                             // Check the description for links.
                             if(popupText.indexOf("LINKSTART") !== -1) {
@@ -283,54 +292,67 @@ function asyncFetchServices() {
                                 popupText = popupText.replace(/(LINKEND)+/g, '<\/a>');
                             }
 
-                            $("#popoverContent").replaceWith('<div id="popoverContent"><p>' + popupText + '</p></div>');
-                            // If website is not null and contains stuff. Sometimes empty website is shown unless lenght is checked.
-                            if ($(this).data('website') != null && $(this).data('website').length > 5) {
-                                // Use _blank, because iframes don't like moving to new pages.
-                                $("#linkToInfo").replaceWith('<p id="linkToInfo"><a target="_blank" href="' + $(this).data('website') +
-                                    '" class="external-link">' + i18n.get("Lisätietoja") + '</a></p>');
-                            } else {
-                                $("#linkToInfo").replaceWith('<p id="linkToInfo"></p>');
-                            }
+                            popupText = popupText.replace(/(<|&lt;)br\s*\/*(>|&gt;)/g, ' ');
+                            // Remove multiple spaces
+                            popupText = popupText.replace(/^(&nbsp;)+/g, '');
+                            // Remove empty paragraphs
+                            popupText = popupText.replace(/(<p>&nbsp;<\/p>)+/g, "");
+                            popupText = popupText.replace(/(<p><\/p>)+/g, "");
+                            popupText = popupText.replace(/(<p>\s<\/p>)+/g, "");
 
-                            // Get element position
-                            var posX = $(this).offset().left,
-                                // Set top to be slightly under the element
-                                posY = $(this).offset().top + 20;
-
-                            // If longer popup texts, show the popup on top of the item, not below it.
-                            if(popupText.length > 75) {
-                                var heightOfPopover = $("#infoPopup").height() - 25;
-                                posX = $(this).offset().left,
-                                    // Set top to be slightly under the element
-                                    posY = $(this).offset().top + -heightOfPopover/2;
-                                $('#popoverArrow').css("display", "none");
-                                setTimeout(function () {
-                                    // If more than 300px in height, adjust parent & scroll into view..
-                                    if (document.getElementById("infoPopup").scrollHeight > 300) {
-                                        // Adjust iframe height, thus scaling if descriptions are long.
-                                        adjustParentHeight(250);
-                                        var element = document.getElementById('popoverContent');
-                                        // This checker does not really work in Iframes, since the height returns the height of the Iframe...
-                                        if ($(window).height() < 700) {
-                                            element.scrollIntoView({ block: 'start',  behavior: 'smooth' });
-                                        }
-                                        else {
-                                            element.scrollIntoView({ block: 'center',  behavior: 'smooth' });
-                                        }
-                                    }
-                                }, 250);
+                            if(popupText.length > 175) {
+                                $('#modal').addClass("modal-lg");
+                                $('#modal').css("text-align", "left");
                             }
                             else {
-                                $('#popoverArrow').css("display", "block");
+                                $('#modal').removeClass("modal-lg");
+                                $('#modal').css("text-align", "center");
                             }
-                            // Set popup position & content, toggle visibility.
-                            $("#infoPopup").css('transform', 'translate3d(' + posX + 'px,' + posY + 'px, 0px');
-                            toggleInfoBox(100);
+
+
+                            $("#modalContent").replaceWith('<div id="modalContent"><p>' + popupText + '</p></div>');
+
+
+                            // Check if text contains headers..
+                            if(popupText.indexOf("<h") !== -1) {
+                                $("#modalTitle").replaceWith('<h1 id="modalTitle" class="modal-title underlined-title">' +
+                                    $(this).data('name') + '</h1>');
+                            }
+                            else {
+                                $("#modalTitle").replaceWith('<h1 id="modalTitle" class="modal-title modal-title-small underlined-title">' +
+                                    $(this).data('name') + '</h1>');
+                            }
+
+                            // Check if text contains headers..
+                            if(popupText.indexOf("<h") !== -1) {
+                                console.log("LAARFG")
+                                $('#modalTitle').removeClass("modal-title-small");
+                            }
+                            else {
+                                $('#modalTitle').addClass("modal-title-small");
+                            }
+
+
+
+                            // Define these here, won't work inside  hide.bs.modal event.
+                            var offsetTop = $(this)[0].offsetTop;
+                            var offsetLeft = $(this)[0].offsetLeft;
+
+                            // Show modal, bind hiding event.
+                            $('#myModal').modal();
+
+
+
                             // Add timeout. This prevents duplicated click events if we have changed library.
-                            setTimeout(function(){
+                            setTimeout(function()
+                            {
+
+                                $('#myModal').on('hide.bs.modal', function (e) {
+                                    window.scrollTo(offsetLeft, offsetTop);
+                                });
                                 indexItemClicked = false;
-                            }, 30);
+                                //$('#myModal').modal('handleUpdate')
+                            }, 50);
                         }
                     });
                 }
@@ -340,6 +362,8 @@ function asyncFetchServices() {
                     if (descriptionIsEmpty && lang === "fi") {
                         // Hide the content on left, make the sidebar 100% in width.
                         $(".details").css("display", "none");
+                        $("#leftBar").css("display", "none");
+
                         $("#introductionSidebar").addClass("col-md-12");
                         $("#introductionSidebar").removeClass("col-lg-5 col-xl-4 order-2 sidebar");
                     }
@@ -351,6 +375,37 @@ function asyncFetchServices() {
     // Return the Promise so caller can't change the Deferred
     return servicesDeferred.promise();
 }
+
+function asyncFetchDepartments() {
+    var departmentsDeferred = jQuery.Deferred();
+    setTimeout(function() {
+        // https://stackoverflow.com/questions/309953/how-do-i-catch-jquery-getjson-or-ajax-with-datatype-set-to-jsonp-error-w
+        $.getJSON(jsonpUrlV4 + "&with=departments",
+            function(data){
+                var data = data.data.departments;
+                // If no pictures found, hide the slider...
+                if (data.length === 0) {
+                    departmentsDeferred.resolve()
+                }
+                else {
+                    for (var i = 0; i < data.length; i++) {
+                        // Collections
+                        addItem(data[i], '#roomsAndCollectionsItems');
+                    }
+                }
+            })
+            .fail(function(jqXHR, textStatus, errorThrown) {
+                    console.log("Fetching of departments failed: " + textStatus + ": " + errorThrown);
+            })
+            .always(function() {
+                departmentsDeferred.resolve();
+            });
+
+    }, 1 );
+    // Return the Promise so caller can't change the Deferred
+    return departmentsDeferred.promise();
+}
+
 
 function generateImages(data) {
     var imageListDeferred = jQuery.Deferred();
@@ -385,7 +440,7 @@ function asyncFetchImages() {
                         $('#currentSlide').html(1);
                         $('.top-left').append('/' + data.pictures.length);
                         //$('.top-left').replaceWith('<i class="top-left"><span id="currentSlide"></span></i>/' + data.pictures.length);
-
+-
                         $(".rslides").responsiveSlides({
                             navContainer: "#sliderBox" // Selector: Where controls should be appended to, default is after the 'ul'
                         });
@@ -817,14 +872,15 @@ function fetchInformation(language, lib) {
         lib = library; // Use default if none provided.
     }
     jsonp_url = "https://api.kirjastot.fi/v3/library/" + lib + "?lang=" + language;
+    jsonpUrlV4 = "https://api.kirjastot.fi/v4/library/" + lib + "?lang=" + language;
     // Fetch generic details.
     function triggerFetch() {
         var fetchDeferred = jQuery.Deferred();
         setTimeout(function() {
             if(!isReFetching) {
-                $.when( asyncFetchGenericDetails(), asyncFetchServices(), asyncFetchImages(), asyncFetchLinks(), asyncFetchLocation() ).then(
+                $.when( asyncFetchGenericDetails(), asyncFetchDepartments(), asyncFetchImages(), asyncFetchLinks(), asyncFetchLocation() ).then(
                     function() {
-                        $.when( asyncLoadMap(), generateContacts() ).then(
+                        $.when( asyncFetchServices(), asyncLoadMap(), generateContacts() ).then(
                             function() {
                                 fetchDeferred.resolve();
                             });
@@ -847,7 +903,7 @@ function fetchInformation(language, lib) {
                 setTimeout(function () {
                     isReFetching = true;
                     fetchInformation("fi", lib);
-                    $("header").append('<small>Note: If information is missing in English, Finnish version is used where available.</small>');
+                    $("header").append('<small class="en-notification">Note: If information is missing in English, Finnish version is used where available.</small>');
                 }, 400);
             }
             else {

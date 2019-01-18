@@ -1,0 +1,268 @@
+/* Use target page background */
+.schedules-container, .schedules-widget  {
+    background:rgba(0,0,0,0)!important;
+}
+
+@media screen and (max-width: 499px) {
+    #schedules {
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+        width: 100vmin;
+        align-content: center;
+    }
+
+    #scheduleInfo {
+        padding-left: 1em;
+        padding-right: 1em;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .table {
+        text-align: center;
+    }
+
+    .day-name {
+        text-align: left;
+    }
+}
+
+@media screen and (min-width: 500px) and (max-width: 768px) {
+        #schedules {
+            margin-left: -25px;
+            margin-right: -25px;
+        }
+}
+
+.day-name, .main-schedule {
+    font-weight: 600;
+}
+
+#schedules {
+    margin-bottom: 2.8em;
+}
+
+/* Navigation */
+#scheduleTitle {
+    text-align: center;
+    padding-bottom: 0.25em;
+    margin-bottom: 0.75em;
+}
+
+#lastWeek:focus, #nextWeek:focus {
+    border: solid 2px #025BA9;
+}
+
+.thead-light {
+    font-size: 1.2rem;
+    background: #EDF1F5;
+    text-align: center;
+}
+
+#scheduleInfo {
+    padding-right: 1em;
+    margin-bottom: 0.95em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#scheduleInfo i {
+    font-size: 1.45em!important;
+    margin-top: -5px!important;
+    margin-right: 0.8em!important;
+}
+
+#weekNumber, .btn-arrow {
+    font-weight: 600;
+}
+
+.btn-back {
+    float: left;
+    width: 30px;
+}
+
+.btn-next {
+    float: right;
+    width: 30px;
+}
+
+#weekNumber {
+    display: inline-block;
+}
+
+.info-text {
+    font-weight: 400;
+    padding-left: 7px;
+    display: flex;
+    white-space: normal;
+    text-align: left;
+}
+
+.schedules-weekly tr.time--sub td {
+    border-width: 0;
+    padding-top: 0;
+}
+
+.time--sub {
+    font-size: 0.93em;
+}
+
+/* Colors for openings. .today is overwritten if not closed. */
+.today {
+    background: #FCF8E3;
+}
+
+.is-open {
+    background: #D7F5CD;
+}
+
+.is-closed {
+    background: #F5DBD6;
+}
+
+.is-self-service {
+    background: #E1F7FA;
+}
+
+.fa-level-up, .fa-info-circle {
+    margin-right: 0.2em;
+}
+
+.fa-info-circle {
+    margin-top: 0.29em!important;
+    margin-right: 0.45em!important;
+}
+
+/* Large schedules are used for iDiD info screens */
+/*
+.large-schedules .fa-info-circle {
+    margin-top: 0.25em!important;
+}
+*/
+.large-schedules .info-row td {
+    padding-top: 0.05em!important;
+}
+
+.large-schedules .fa-level-up, .large-schedules .fa-info-circle {
+    margin-right: 0.4em;
+    margin-left: 0.15em;
+}
+
+.large-schedules .fa-level-up {
+    margin-left: 0.25em;
+}
+
+.large-schedules button {
+    display: none;
+}
+
+.large-schedules .thead-light {
+    display: none;
+}
+
+.large-schedules {
+    margin-top: 2%;
+}
+
+.large-schedules .closed {
+    padding-top: 0.4em;
+}
+
+.large-schedules .date-container {
+    width: 21%!important;
+    padding-left: 4%!important;
+}
+
+.large-schedules table {
+    border-bottom: 1px solid #DEE2E6;
+}
+
+.large-schedules td {
+    padding-bottom: 0.17em!important;
+}
+
+/* L-font (default) */
+.large-schedules td, .large-schedules th{
+    font-size: 1.9em;
+}
+
+.large-schedules .date-container, .large-schedules .day-name {
+    padding-top: 0.4em!important;
+    font-weight: 600;
+    font-size: 1.8em;
+}
+
+.large-schedules .main-schedule {
+    padding-top: 0.45em;
+    font-weight: 600;
+    font-size: 1.7em;
+}
+
+.large-schedules #scheduleInfo {
+    padding-left: 1.6em;
+    margin-top: -10px;
+}
+
+.large-schedules #scheduleInfo .fa-info-circle {
+    margin-right: 0.8em!important;
+    padding-top: 10px;
+}
+
+/* medium-font, used if schedule contains so many rows L-font would not fit well. */
+.m-font td, .m-font th{
+    font-size: 1.9em;
+}
+
+.m-font .date-container, .m-font .day-name {
+    font-size: 2em;
+}
+
+.m-font .main-schedule {
+    font-size: 1.8em;
+}
+
+.m-font #scheduleInfo{
+    font-size: 1.75em;
+}
+
+.m-font #scheduleInfo {
+    font-size: 1.7em;
+}
+
+/* XL-font */
+.xl-font td,.xl-font th{
+    font-size: 2.2em;
+}
+
+.xl-font .date-container, .xl-font .day-name {
+    font-size: 2.3em;
+}
+
+.xl-font .main-schedule {
+    font-size: 2.1em;
+}
+
+.xl-font #scheduleInfo {
+    font-size: 2em;
+}
+
+/* XXL-font */
+.xxl-font td,.xxl-font th{
+    font-size: 3em;
+}
+
+.xxl-font .date-container, .xxl-font .day-name {
+    font-size: 2.9em;
+}
+
+.xxl-font .main-schedule {
+    padding-top: 0.45em;
+    font-weight: 600;
+    font-size: 2.8em;
+}
+
+.xxl-font #scheduleInfo {
+    font-size: 2.7em;
+}

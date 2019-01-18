@@ -527,6 +527,9 @@ function getWeekSchelude(direction, lib) {
                     $(".library-schedules").addClass('m-font');
                     $("#scheduleInfo").addClass('m-font');
                 }
+            } else {
+                $('#scheduleTitle').html(i18n.get("Aukioloajat"));
+                $('#scheduleTitle').css('display', 'block');
             }
         }, 50);
 

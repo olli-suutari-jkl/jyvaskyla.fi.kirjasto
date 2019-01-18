@@ -111,8 +111,12 @@ function addItem(item, listElement) {
     }
     else {
         // Add popup link if additional details are available.
-        if (item.short_description != null && item.short_description.length != 0) {
-            var description = item.short_description;
+        if (item.short_description != null && item.short_description.length != 0 ||
+            item.description != null && item.description.length != 0) {
+            var description = "";
+            if (item.short_description != null && item.short_description.length != 0) {
+                description = item.short_description;
+            }
             var websiteLink = item.website;
             // Add "long" description where available.
             if (item.description != null && item.description.length != 0) {
@@ -142,7 +146,7 @@ function addItem(item, listElement) {
             description = description.replace(/["']/g, '&quot;')
             // Add the item to a desired element.
             $(listElement).append('<li> ' +
-                '<a class="index-item" data-message="' + description + '" data-website="' + websiteLink + '" tabindex="0" href="#"' +
+                '<a class="index-item" data-name="' + name + '"  data-message="' + description + '" data-website="' + websiteLink + '" tabindex="0" href="#"' +
                 'role="button" aria-expanded="false" aria-controls="' + name + '"' +
                 'title="' + name + '">' + name + '</a></li>');
         }
@@ -249,14 +253,14 @@ function bindActions() {
         }
     });
 
-    /*
+
     if(activeTab === 0) {
         $.when( navigateToDefault(0) ).then(
             function() {
                 //adjustParentHeight();
             }
         );
-    }*/
+    }
 
     if(activeTab === 1) {
         navigateToContacts(0);

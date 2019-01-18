@@ -74,6 +74,10 @@ var dict = {
         fi: "Sosiaalinen media",
         en: "Social media",
     },
+    "Aukioloajat": {
+        fi: "Aukioloajat",
+        en: "Scheludes",
+    },
     "Aikataulut": {
         fi: "Aikataulut",
         en: "Scheludes",
@@ -107,7 +111,7 @@ var dict = {
         en: "Toggle full-screen.",
     },
     "Tietoa kirjastosta": {
-        fi: "Tietoa kirjastosta",
+        fi: "Yleistietoa",
         en: "Trivia",
     },
     "Osoite": {
