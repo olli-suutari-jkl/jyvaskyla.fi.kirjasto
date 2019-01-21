@@ -134,21 +134,13 @@ function addItem(item, listElement) {
             if (item.price != null && item.price.length != 0) {
                 description = description + '<p>' + i18n.get("Hintatiedot") + ': ' + item.price + '</p>';
             }
-            // If website is not null and contains stuff. Sometimes empty website is shown unless lenght is checked.
-            if ($(this).data('website') != null && $(this).data('website').length > 5) {
-                // Use _blank, because iframes don't like moving to new pages.
-                $("#linkToInfo").html('<p id="linkToInfo"><a target="_blank" href="' + $(this).data('website') +
-                    '" class="external-link">' + i18n.get("Lisätietoja") + '</a></p>');
-            } else {
-                $("#linkToInfo").html('<p id="linkToInfo"></p>');
-            }
             // Replace quotes from the description., they would break things...
-            description = description.replace(/["']/g, '&quot;')
+            description = description.replace(/["']/g, '&quot;');
             // Add the item to a desired element.
             $(listElement).append('<li> ' +
                 '<a class="index-item" data-name="' + name + '"  data-message="' + description + '" data-website="' + websiteLink + '" tabindex="0" href="#"' +
-                'role="button" aria-expanded="false" aria-controls="' + name + '"' +
-                'title="' + name + '">' + name + '</a></li>');
+                ' role="button" aria-expanded="false" aria-controls="' + name + '"' +
+                ' title="' + name + '">' + name + '</a></li>');
         }
         // If no description found, don't create the link
         else {
@@ -300,7 +292,7 @@ $(document).ready(function() {
     map = L.map('mapContainer');
     // UI texts.
     if($('#librarySelectorTitle')) {
-        $('#librarySelectorTitle').append(i18n.get("Kirjaston valinta"));
+        $('#librarySelectorLabel').append(i18n.get("Kirjaston valinta"));
     }
     $('#navEsittely').append(i18n.get("Esittely"));
     $('#navYhteystiedot').append(i18n.get("Yhteystiedot"));

@@ -133,9 +133,20 @@ header {
     margin-bottom: 0.5em;
 }
 
-.nav-link.active {
+.nav-link {
+    font-size: 1.15em;
+    margin-right: 0.5em;
     font-weight: 700;
-    background-color: #595959
+}
+
+.nav-link.active {
+    color: black!important;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-bottom: 2px solid #026FCF;
+    background: none!important;
+    border-radius: unset!important;
+    display: inline;
 }
 
 .nav-link:hover {
@@ -185,14 +196,6 @@ header {
     text-align: center;
     font-size: 1.15em;
 }
-
-blockquote:before {
-    content: open-quote;
-}
-blockquote:after {
-    content: close-quote;
-}
-
 
 #introductionSidebar {
     padding-left: .1em;
@@ -477,6 +480,16 @@ ul.cols {
         border-top: 2px solid #026fcf;
         border-bottom: 2px solid #026fcf;
     }
+
+    .trivia-cell-title {
+        text-align: right!important;
+    }
+
+    .trivia-detail {
+        text-align: left;
+    }
+
+
 }
 
 #contactsMapCol {
@@ -486,7 +499,7 @@ ul.cols {
     min-height: 260px;
 }
 
-.aligned-text {
+.trivia-cell-title {
     text-align: center;
 }
 
@@ -498,13 +511,17 @@ ul.cols {
     }
 
     #sliderBox {
-        margin-left: calc(50% - 50vw);
+        /* If we do left -50vw, details are pulled slightly too much to the left
+        TO DO: Fix the cause. */
+        margin-left: calc(50% - 48.33vw);
         margin-right: calc(50% - 50vw);
         width: 100vmin;
+        border-left: none;
+        border-right: none;
     }
 
     .trivia-section {
-        margin-left: calc(50% - 50vw);
+        margin-left: calc(50% - 48.33vw);
         margin-right: calc(50% - 50vw);
         width: 100vmin;
     }
@@ -513,7 +530,7 @@ ul.cols {
         padding: 0 .5em;
     }
 
-    .aligned-text {
+    .trivia-cell-title {
         text-align: right;
     }
 
@@ -756,7 +773,8 @@ ul.cols {
 #modalContent img {
     border: 3px solid #026FCF;
     border-radius: 4px;
-    width: 65%;
+    max-width: 100%;
+    max-height: 350px;
     margin-bottom: 10px;
 }
 
@@ -779,3 +797,28 @@ ul.cols {
 .close:hover {
     color: #d83d1e;
 }
+
+/* Fix modal scrolling on Safari: https://stackoverflow.com/questions/44082430/in-ios-iframe-in-a-bootstrap-modal-can-not-scroll
+
+
+.modal {
+    -webkit-overflow-scrolling: auto!important;
+    overflow-y: auto !important;
+    overflow: hidden!important;
+    position: fixed!important;
+}
+
+.modal-open {
+    -webkit-overflow-scrolling: auto!important;
+    overflow-y: auto !important;
+    overflow-y: auto !important;
+    overflow: hidden!important;
+    position: fixed!important;
+}
+
+body {
+    width:100%!important;
+    padding:0!important;
+    margin:0!important;
+}
+*/

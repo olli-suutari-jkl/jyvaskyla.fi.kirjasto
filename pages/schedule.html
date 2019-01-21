@@ -24,19 +24,17 @@
       <h3 class="sr-only" id="scheludesSr"></h3>
       <span id="scheduleInfo" style="display: none" class="info-text"><i class="fa fa-info-circle" > </i></span>
       <table class="table table-sm">
-        <tr>
-          <thead class="thead-light">
-          <td colspan="3">
-            <button type="button" id="lastWeek" class="btn btn-sm btn-light btn-back btn-arrow" aria-hidden="true" onclick="getWeekSchelude(-1)">
-              ❮
-            </button>
-            <span id="weekNumber"></span>
-            <button type="button" id="nextWeek" class="btn btn-sm btn-light btn-next btn-arrow" aria-hidden="true" onclick="getWeekSchelude(1)">
-              ❯
-            </button>
-          </td>
-          </thead>
-        </tr>
+        <thead class="thead-light">
+        <td colspan="3">
+          <button type="button" id="lastWeek" class="btn btn-sm btn-light btn-back btn-arrow" aria-hidden="true" onclick="getWeekSchelude(-1)">
+            ❮
+          </button>
+          <span id="weekNumber"></span>
+          <button type="button" id="nextWeek" class="btn btn-sm btn-light btn-next btn-arrow" aria-hidden="true" onclick="getWeekSchelude(1)">
+            ❯
+          </button>
+        </td>
+        </thead>
         <tbody id="weekSchelude" class="schedules-weekly">
         </tbody>
       </table>

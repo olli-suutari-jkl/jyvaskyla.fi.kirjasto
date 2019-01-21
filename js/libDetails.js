@@ -94,28 +94,28 @@ function asyncFetchGenericDetails() {
                 $('#triviaTitle').append( i18n.get("Tietoa kirjastosta"));
                 if (data.extra.founded != null) {
                     triviaIsEmpty = false;
-                    $("#triviaBody").append('<tr><td class="aligned-text"><strong>' + i18n.get("Perustamisvuosi") + ': </strong></td>' +
-                        '<td>' + data.extra.founded + '</td></tr>');
+                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Perustamisvuosi") + ': </strong></td>' +
+                        '<td class="trivia-detail">' + data.extra.founded + '</td></tr>');
                 }
                 if (data.extra.building.building_name != null) {
                     triviaIsEmpty = false;
-                    $("#triviaBody").append('<tr><td class="aligned-text"><strong>' + i18n.get("Rakennus") + ': </strong></td>' +
-                        '<td>' + data.extra.building.building_name + '</td></tr>');
+                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Rakennus") + ': </strong></td>' +
+                        '<td class="trivia-detail">' + data.extra.building.building_name + '</td></tr>');
                 }
                 if (data.extra.building.construction_year != null && data.extra.building.construction_year != 0) {
                     triviaIsEmpty = false;
-                    $("#triviaBody").append('<tr><td class="aligned-text"><strong>' + i18n.get("Rakennettu") + ': </strong></td>' +
-                        '<td>' + data.extra.building.construction_year + '</td></tr>');
+                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Rakennettu") + ': </strong></td>' +
+                        '<td class="trivia-detail">' + data.extra.building.construction_year + '</td></tr>');
                 }
                 if (data.extra.building.building_architect != null) {
                     triviaIsEmpty = false;
-                    $("#triviaBody").append('<tr><td class="aligned-text"><strong>' + i18n.get("Arkkitehti") + ': </strong></td>' +
-                        '<td>' + data.extra.building.building_architect + '</td></tr>');
+                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Arkkitehti") + ': </strong></td>' +
+                        '<td class="trivia-detail">' + data.extra.building.building_architect + '</td></tr>');
                 }
                 if (data.extra.building.interior_designer != null) {
                     triviaIsEmpty = false;
-                    $("#triviaBody").append('<tr><td class="aligned-text"><strong>' + i18n.get("Sisustus") + ': </strong></td>' +
-                        '<td>' + data.extra.building.interior_designer + '</td></tr>');
+                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Sisustus") + ': </strong></td>' +
+                        '<td class="trivia-detail">' + data.extra.building.interior_designer + '</td></tr>');
                 }
                 if (triviaIsEmpty) {
                     $("#triviaTitle").css("display", "none");
@@ -141,6 +141,7 @@ function asyncFetchGenericDetails() {
     return genericDeferred.promise();
 }
 
+//var isSet = false;
 // Fetch services & generate the UI
 function asyncFetchServices() {
     var servicesDeferred = jQuery.Deferred();
@@ -325,7 +326,6 @@ function asyncFetchServices() {
 
                             // Check if text contains headers..
                             if(popupText.indexOf("<h") !== -1) {
-                                console.log("LAARFG")
                                 $('#modalTitle').removeClass("modal-title-small");
                             }
                             else {
@@ -333,10 +333,35 @@ function asyncFetchServices() {
                             }
 
 
-
                             // Define these here, won't work inside  hide.bs.modal event.
                             var offsetTop = $(this)[0].offsetTop;
                             var offsetLeft = $(this)[0].offsetLeft;
+
+
+                            /*
+                            if(!isSet) {
+                                isSet = true
+                                $('#myModal').on('show.bs.modal', function (e) {
+                                    var is_safari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+                                    if(is_safari || navigator.userAgent.match(/iPhone/i) ||
+                                        navigator.userAgent.match(/ipad/i) ||
+                                        navigator.userAgent.match(/iPod/i)) {
+                                        // block scroll for mobile;
+                                        // causes underlying page to jump to top;
+                                        // prevents scrolling on all screens
+
+                                        $('.modal-open').css('overflow', 'hidden');
+                                        $('.modal-open').css('position', 'fixed');
+                                        $('body.modal-open').css('overflow', 'hidden');
+                                        $('body.modal-open').css('position', 'fixed');
+                                        alert("IS IOS");
+
+                                    }
+                                });
+                            }
+                            */
+
+
 
                             // Show modal, bind hiding event.
                             $('#myModal').modal();
