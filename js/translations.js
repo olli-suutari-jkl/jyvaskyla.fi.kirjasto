@@ -98,6 +98,10 @@ var dict = {
         fi: "Lehtilukusali",
         en: "Magazine department",
     },
+    "Kuvia kirjastolta": {
+        fi: "Kuvia kirjastolta",
+        en: "Pictures from the library",
+    },
     "Kuva kirjastolta": {
         fi: "Kuva kirjastolta",
         en: "Picture from the library",

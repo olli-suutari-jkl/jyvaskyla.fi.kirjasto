@@ -454,7 +454,7 @@ ul.cols {
 }
 
 /* Styles for contact section fa */
-#pageContactInfo section h2 .fa {
+#pageContactInfo section .fa {
     margin-right: 0.35rem!important;
     color: #026FCF;
 }
@@ -710,6 +710,9 @@ ul.cols {
 #contactsTitle {
     display: flex;
     align-items: center;
+    font-size: 1.3em;
+    font-weight: 600;
+    border: none;
 }
 
 #contactsTitle i {

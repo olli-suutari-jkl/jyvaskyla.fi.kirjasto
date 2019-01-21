@@ -139,7 +139,7 @@ function addItem(item, listElement) {
             // Add the item to a desired element.
             $(listElement).append('<li> ' +
                 '<a class="index-item" data-name="' + name + '"  data-message="' + description + '" data-website="' + websiteLink + '" tabindex="0" href="#"' +
-                ' role="button" aria-expanded="false" aria-controls="' + name + '"' +
+                ' role="button" aria-expanded="false"' +
                 ' title="' + name + '">' + name + '</a></li>');
         }
         // If no description found, don't create the link
@@ -296,10 +296,9 @@ $(document).ready(function() {
     }
     $('#navEsittely').append(i18n.get("Esittely"));
     $('#navYhteystiedot').append(i18n.get("Yhteystiedot"));
-    $('#newsDescriptionToggle').append(i18n.get("Ajankohtaista ja esittely"));
     $('#transitTitle').append(i18n.get("Liikenneyhteydet"));
     $('#socialMediaSr').append(i18n.get("Sosiaalinen media"));
-    $('#scheludesSr').append(i18n.get("Aikataulut"));
+    $('#srPictures').append(i18n.get("Kuvia kirjastolta"));
     document.getElementById('expandSlider').title = i18n.get("Avaa tai sulje kokoruututila");
     // Yhteystiedot UI texts.
     document.getElementById('expandMap').title = i18n.get("Avaa tai sulje kokoruututila");
