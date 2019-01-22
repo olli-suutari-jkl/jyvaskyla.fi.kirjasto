@@ -22,7 +22,7 @@
         text-align: center;
     }
 
-    .day-name {
+    .day-name, .time--sub, .main-schedule {
         text-align: left;
     }
 }

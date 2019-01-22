@@ -454,7 +454,7 @@ ul.cols {
 }
 
 /* Styles for contact section fa */
-#pageContactInfo section .fa {
+#pageContactInfo section h2 .fa, #pageContactInfo section th .fa {
     margin-right: 0.35rem!important;
     color: #026FCF;
 }
@@ -825,3 +825,7 @@ body {
     margin:0!important;
 }
 */
+
+.modal-body {
+    -webkit-overflow-scrolling: touch!important;
+}

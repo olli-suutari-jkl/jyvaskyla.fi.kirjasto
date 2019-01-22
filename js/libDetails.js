@@ -371,7 +371,6 @@ function asyncFetchServices() {
                             // Add timeout. This prevents duplicated click events if we have changed library.
                             setTimeout(function()
                             {
-
                                 $('#myModal').on('hide.bs.modal', function (e) {
                                     window.scrollTo(offsetLeft, offsetTop);
                                 });
