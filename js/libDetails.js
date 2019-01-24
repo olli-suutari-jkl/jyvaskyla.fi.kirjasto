@@ -141,7 +141,6 @@ function asyncFetchGenericDetails() {
     return genericDeferred.promise();
 }
 
-//var isSet = false;
 // Fetch services & generate the UI
 function asyncFetchServices() {
     var servicesDeferred = jQuery.Deferred();
@@ -310,7 +309,6 @@ function asyncFetchServices() {
                                 $('#modal').css("text-align", "center");
                             }
 
-
                             $("#modalContent").replaceWith('<div id="modalContent"><p>' + popupText + '</p></div>');
 
 
@@ -333,50 +331,47 @@ function asyncFetchServices() {
                             }
 
 
+
+                            // Get element position
+                            //var posX = $(this).offset().left,
+                            var posY = $(this).offset().top;
+
                             // Define these here, won't work inside  hide.bs.modal event.
                             var offsetTop = $(this)[0].offsetTop;
                             var offsetLeft = $(this)[0].offsetLeft;
 
 
-                            /*
-                            if(!isSet) {
-                                isSet = true
-                                $('#myModal').on('show.bs.modal', function (e) {
-                                    var is_safari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-                                    if(is_safari || navigator.userAgent.match(/iPhone/i) ||
-                                        navigator.userAgent.match(/ipad/i) ||
-                                        navigator.userAgent.match(/iPod/i)) {
-                                        // block scroll for mobile;
-                                        // causes underlying page to jump to top;
-                                        // prevents scrolling on all screens
-
-                                        $('.modal-open').css('overflow', 'hidden');
-                                        $('.modal-open').css('position', 'fixed');
-                                        $('body.modal-open').css('overflow', 'hidden');
-                                        $('body.modal-open').css('position', 'fixed');
-                                        alert("IS IOS");
-
-                                    }
-                                });
-                            }
-                            */
-
-
-
-                            // Show modal, bind hiding event.
-                            $('#myModal').modal();
-
+                            // Use animate, $('#myModal').css('top', -posY); works pretty badly.
+                            $('#myModal').css({
+                                position: 'absolute',
+                                left: 0,
+                                top: posY-75
+                            }).animate();
 
 
                             // Add timeout. This prevents duplicated click events if we have changed library.
                             setTimeout(function()
                             {
+                                // Show modal, bind hiding event.
+                                $('#myModal').modal();
+                                isInfoBoxVisible = true;
+                            }, 50);
+
+
+                            // Add timeout. This prevents duplicated click events if we have changed library.
+                            setTimeout(function()
+                            {
+                                //$('.modal').css('overflow-y', 'scroll');
+                                adjustParentHeight();
+
                                 $('#myModal').on('hide.bs.modal', function (e) {
                                     window.scrollTo(offsetLeft, offsetTop);
+                                    adjustParentHeight();
+                                    isInfoBoxVisible = false
                                 });
                                 indexItemClicked = false;
                                 //$('#myModal').modal('handleUpdate')
-                            }, 50);
+                            }, 100);
                         }
                     });
                 }

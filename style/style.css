@@ -184,9 +184,8 @@ header {
     padding-top: 2em;
     padding-left: 1.5em;
     padding-right: 1.5em;
-    border-top: 0.0016rem solid #026fcf;
+    border-top: 1px solid #026fcf;
 }
-
 
 .blockquote {
     padding: 0 2rem;
@@ -613,11 +612,14 @@ ul.cols {
     padding-left: 2em;
 }
 
+#contactsFirstCol {
+    border-top: 1px solid #026fcf;
+}
+
 @media (min-width: 769px) {
     #contactsFirstCol {
         padding: 1.7rem 2.7rem;
         padding-top: 2.7rem;
-        border-top: 1px solid #026fcf;
         background: #EDEDE7;
     }
 
@@ -759,6 +761,20 @@ ul.cols {
     padding: 0 5em;
 }
 
+@media screen and (max-width: 499px) {
+
+
+    .modal-lg #modalContent {
+        margin-top: -1.3em;
+        padding-left: 2em;
+        padding-right: 2em;
+    }
+
+    #modalContent, #linkToInfo {
+        padding: 0 2em;
+    }
+}
+
 .modal-lg #linkToInfo {
     padding-left: 5em;
     padding-right: 5em;
@@ -801,30 +817,40 @@ ul.cols {
     color: #d83d1e;
 }
 
-/* Fix modal scrolling on Safari: https://stackoverflow.com/questions/44082430/in-ios-iframe-in-a-bootstrap-modal-can-not-scroll
+.modal-backdrop {
+    display: none !important;
+}
 
 
 .modal {
-    -webkit-overflow-scrolling: auto!important;
-    overflow-y: auto !important;
-    overflow: hidden!important;
-    position: fixed!important;
+    border-radius:10px;
 }
 
-.modal-open {
-    -webkit-overflow-scrolling: auto!important;
-    overflow-y: auto !important;
-    overflow-y: auto !important;
-    overflow: hidden!important;
-    position: fixed!important;
+#myModal {
+    height: auto!important;
+    max-height: 5500px!important;
+    z-index: 99999999!important;
+
 }
 
-body {
-    width:100%!important;
-    padding:0!important;
-    margin:0!important;
+#modalContentContainer {
+    max-height: 5500px;
+    /* Stylish bordrers: https://gist.github.com/chemicaloliver/1234670 */
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+    -webkit-background-clip: padding;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+
 }
-*/
+/* Fix modal being clipped from the bottom */
+html {
+    overflow-y: scroll!important;
+}
+
+/* Fix modal scrolling on Safari on iPads & iPhones: https://stackoverflow.com/questions/44082430/in-ios-iframe-in-a-bootstrap-modal-can-not-scroll TO DO: Still broken? */
 
 .modal-body {
     -webkit-overflow-scrolling: touch!important;
