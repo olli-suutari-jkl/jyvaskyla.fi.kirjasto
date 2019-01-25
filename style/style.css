@@ -763,7 +763,6 @@ ul.cols {
 
 @media screen and (max-width: 499px) {
 
-
     .modal-lg #modalContent {
         margin-top: -1.3em;
         padding-left: 2em;
@@ -805,6 +804,19 @@ ul.cols {
     font-size: 1.1em;
     justify-content: space-between;
     margin: -0.6em auto 0.35em;
+}
+
+
+/* Media query for IE 10-11. Since object-fit: contain; is not supported in IE, set width to avoid silly scaling in IE.
+   Also float schedule infos to left. */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    #closeModal {
+        display: block;
+        position: absolute;
+        left: 45%;
+        bottom: -25px;
+        margin-bottom: 35px;
+    }
 }
 
 /* Close button in the right corner */

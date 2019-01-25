@@ -336,18 +336,12 @@ function asyncFetchServices() {
                             //var posX = $(this).offset().left,
                             var posY = $(this).offset().top;
 
-                            // Define these here, won't work inside  hide.bs.modal event.
-                            var offsetTop = $(this)[0].offsetTop;
-                            var offsetLeft = $(this)[0].offsetLeft;
-
-
                             // Use animate, $('#myModal').css('top', -posY); works pretty badly.
                             $('#myModal').css({
                                 position: 'absolute',
                                 left: 0,
-                                top: posY-75
+                                top: posY-85
                             }).animate();
-
 
                             // Add timeout. This prevents duplicated click events if we have changed library.
                             setTimeout(function()
@@ -357,15 +351,12 @@ function asyncFetchServices() {
                                 isInfoBoxVisible = true;
                             }, 50);
 
-
                             // Add timeout. This prevents duplicated click events if we have changed library.
                             setTimeout(function()
                             {
                                 //$('.modal').css('overflow-y', 'scroll');
                                 adjustParentHeight();
-
                                 $('#myModal').on('hide.bs.modal', function (e) {
-                                    window.scrollTo(offsetLeft, offsetTop);
                                     adjustParentHeight();
                                     isInfoBoxVisible = false
                                 });

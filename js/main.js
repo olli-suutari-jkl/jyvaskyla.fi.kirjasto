@@ -268,7 +268,7 @@ function adjustParentHeight(delay) {
             if(isInfoBoxVisible) {
                 var popoverHeight = document.getElementById("modalContentContainer").scrollHeight;
                 if(popoverHeight > 500) {
-                    popoverHeight = popoverHeight -450;
+                    popoverHeight = popoverHeight -350;
                     height = height + (popoverHeight - popoverHeight/2);
                 }
             }
