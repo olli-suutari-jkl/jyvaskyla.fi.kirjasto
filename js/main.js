@@ -50,7 +50,7 @@ function addItem(item, listElement) {
     if (item.custom_name != null && item.custom_name.length != 0) {
         name = item.custom_name;
     }
-    if(item.name === "Esteettömyyspalvelut" && accessibilityIsEmpty) {
+    if(listElement === "#accessibilityItems" && accessibilityIsEmpty) {
         if (isEmpty($('#accessibilityDetails'))) {
             // Description.
             if (item.description != null && item.description.length != 0) {
@@ -60,10 +60,10 @@ function addItem(item, listElement) {
             }
         }
         // List of values separated by "," in the short description.
-        if (item.short_description !== null && isEmpty($('#accessibility-images')) && isEmpty($('#accessibilityList'))) {
+        if (item.shortDescription !== null && isEmpty($('#accessibility-images')) && isEmpty($('#accessibilityList'))) {
             accessibilityIsEmpty = false;
             $(".accessibility-details").css("display", "block");
-            var splittedValues = item.short_description.split(",");
+            var splittedValues = item.shortDescription.split(",");
             $.each(splittedValues, function (index, value) {
                 accessibilityCount = accessibilityCount + 1;
                 if (value.toLocaleLowerCase().indexOf("esteetön sisäänpääsy") !== -1) {
@@ -111,11 +111,11 @@ function addItem(item, listElement) {
     }
     else {
         // Add popup link if additional details are available.
-        if (item.short_description != null && item.short_description.length != 0 ||
+        if (item.shortDescription != null && item.shortDescription.length != 0 ||
             item.description != null && item.description.length != 0) {
             var description = "";
-            if (item.short_description != null && item.short_description.length != 0) {
-                description = item.short_description;
+            if (item.shortDescription != null && item.shortDescription.length != 0) {
+                description = item.shortDescription;
             }
             var websiteLink = item.website;
             // Add "long" description where available.
@@ -126,10 +126,16 @@ function addItem(item, listElement) {
             }
             // Replace links from the description
             if (description.indexOf("<a href=") !== -1) {
+                /* TO DO: Generate iframes from Google calendar links
+                var reFindUrls = new RegExp('"(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*")?');
+                var OK = reFindUrls.exec(description);
+                console.log(OK);
+                */
                 description = description.replace(/(<a href=")+/g, "LINKSTART");
                 description = description.replace(/(">)+/g, "URLEND");
                 description = description.replace(/(<\/a>)+/g, "LINKEND");
             }
+
             // Add price where available.
             if (item.price != null && item.price.length != 0) {
                 description = description + '<p>' + i18n.get("Hintatiedot") + ': ' + item.price + '</p>';

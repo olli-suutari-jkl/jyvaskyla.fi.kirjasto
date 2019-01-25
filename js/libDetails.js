@@ -140,15 +140,15 @@ function asyncFetchGenericDetails() {
     // Return the Promise so caller can't change the Deferred
     return genericDeferred.promise();
 }
-
+// CollectionCount is used with departments.
+var roomCount = 0;
 // Fetch services & generate the UI
 function asyncFetchServices() {
     var servicesDeferred = jQuery.Deferred();
     setTimeout(function() {
-        $.getJSON(jsonp_url + "&with=services", function (data) {
-            var collectionCount = 0;
+        $.getJSON(jsonpUrlV4 + "&with=services", function (data) {
             var hardwareCount = 0;
-            var roomCount = 0;
+            var collectionCount = 0;
             var serviceCount = 0;
             var collections = [];
             var hardware = [];
@@ -170,6 +170,7 @@ function asyncFetchServices() {
             if (isEmpty($('#accessibilityItems'))) {
                 accessibilityAdded = false;
             }
+            var data = data.data;
             for (var i = 0; i < data.services.length; i++) {
                 // Collections
                 if (data.services[i].name != null && data.services[i].name.length != 0 || data.services[i].custom_name != null) {
@@ -197,7 +198,7 @@ function asyncFetchServices() {
                     }
                     // Services
                     else if (data.services[i].type == "service") {
-                        if(data.services[i].name === "Esteettömyyspalvelut" || data.services[i].name === "Accessibility services") {
+                        if(data.services[i].name === "Saavutettavuus" || data.services[i].name === "Esteettömyyspalvelut" || data.services[i].name === "Accessibility services") {
                             // Set accessibility added to true, this is used to display "Services" tab if other tabs are missing.
                             if(!accessibilityAdded) {
                                 accessibilityAdded = true;
@@ -400,6 +401,7 @@ function asyncFetchDepartments() {
                 else {
                     for (var i = 0; i < data.length; i++) {
                         // Collections
+                        roomCount = roomCount +1;
                         addItem(data[i], '#roomsAndCollectionsItems');
                     }
                 }

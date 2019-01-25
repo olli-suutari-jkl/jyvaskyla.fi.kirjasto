@@ -243,6 +243,7 @@ $(document).ready(function() {
                 generateImagesHasRun = false;
                 isReFetching = false;
                 map = L.map('mapContainer');
+                roomCount = 0;
                 contactlist = [];
                 numbersList = [];
                 staffList = [];
