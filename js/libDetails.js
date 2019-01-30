@@ -352,7 +352,6 @@ function asyncFetchServices() {
                         // Hide the content on left, make the sidebar 100% in width.
                         $(".details").css("display", "none");
                         $("#leftBar").css("display", "none");
-
                         $("#introductionSidebar").addClass("col-md-12");
                         $("#introductionSidebar").removeClass("col-lg-5 col-xl-4 order-2 sidebar");
                     }
@@ -361,7 +360,7 @@ function asyncFetchServices() {
                 for (var i = 0; i < serviceNames.length; i++) {
                     var urlUnescapeSpaces = refUrl.replace(/%20/g, " ");
                     if(urlUnescapeSpaces.indexOf(serviceNames[i].toLowerCase()) > -1) {
-                        $("li").find(`[data-name='${serviceNames[i]}']`).click();
+                        $("li").find('[data-name="'+ serviceNames[i] +'"]').click();
                     }
                 }
             }
