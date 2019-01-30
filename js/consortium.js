@@ -240,7 +240,7 @@ $(document).ready(function() {
                 contactsIsEmpty = true;
                 noServices = true;
                 indexItemClicked = false;
-                generateImagesHasRun = false;
+                isInfoBoxVisible = false;
                 isReFetching = false;
                 map = L.map('mapContainer');
                 roomCount = 0;

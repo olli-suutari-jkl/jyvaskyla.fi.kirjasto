@@ -337,6 +337,7 @@ function asyncFetchServices() {
                                 // Bind closing event. If this is done before generating content, it doesn't work.
                                 if(!isModalCloseBinded) {
                                     $('#myModal').on('hide.bs.modal', function (e) {
+                                        isInfoBoxVisible = false;
                                         adjustParentHeight();
                                     });
                                     isModalCloseBinded = true
