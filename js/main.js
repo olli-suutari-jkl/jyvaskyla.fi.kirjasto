@@ -44,6 +44,7 @@ function toggleFullScreen(target) {
 // Define accessibility count here, define other counts later on.
 var accessibilityCount = 0;
 var accessibilityIsEmpty = true;
+var serviceNames = [];
 function addItem(item, listElement) {
     var name = item.name;
     // Use "custom_name", where available.
@@ -110,6 +111,8 @@ function addItem(item, listElement) {
         }
     }
     else {
+        // serviceNames list is used to navigate to the service via url.
+        serviceNames.push(name);
         // Add popup link if additional details are available.
         if (item.shortDescription != null && item.shortDescription.length != 0 ||
             item.description != null && item.description.length != 0) {

@@ -42,12 +42,12 @@ if(lang == undefined && library == undefined){
 var i18n = $('body').translate({lang: lang, t: dict}); // Use the correct language
 $("html").attr("lang", lang);
 
-// Get referrer url (Iframe parent). If Library name is set, use that as the default (checkForKeskiConsortium.js)
+// Get referrer url (Iframe parent). If Library name is set, use that as the default (checkForKeskiConsortium.js).
+// This is also used for navigating to service x by default.
 var refUrl = (window.location != window.parent.location)
     ? document.referrer
     : document.location.href;
 refUrl = refUrl.toLocaleLowerCase();
-
 // Navigate to contacts or services, if parameter is in the url.
 // Active tab: 0 = info, 1 = contact details, 3 = services.
 var activeTab = 0;

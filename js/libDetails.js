@@ -290,7 +290,6 @@ function asyncFetchServices() {
                             popupText = popupText.replace(/(<p>\s<\/p>)+/g, "");
 
                             // Check if large or small text/modal.
-                            console.log(popupText.length);
                             if(popupText.length > 200) {
                                 $('#modal').addClass("modal-lg");
                                 $('#modal').css("text-align", "left");
@@ -359,6 +358,12 @@ function asyncFetchServices() {
 
                         $("#introductionSidebar").addClass("col-md-12");
                         $("#introductionSidebar").removeClass("col-lg-5 col-xl-4 order-2 sidebar");
+                    }
+                }
+                // Loop services and check if refUrl contains one of them and click if so.
+                for (var i = 0; i < serviceNames.length; i++) {
+                    if(refUrl.indexOf(serviceNames[i]) > -1) {
+                        $("li").find(`[data-name='${serviceNames[i]}']`).click();
                     }
                 }
             }
