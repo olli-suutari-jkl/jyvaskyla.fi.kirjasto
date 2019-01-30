@@ -319,15 +319,12 @@ function asyncFetchServices() {
                                     $(this).data('name') + '</h1>');
                             }
 
-
-
                             // Use animate, $('#myModal').css('top', -posY); works pretty badly.
                             $('#myModal').css({
                                 position: 'absolute',
                                 left: 0,
                                 top: $(this).offset().top-85  // Element position -85,
                             }).animate();
-
 
                             // Show modal, bind hiding event.
                             $('#myModal').modal();
@@ -362,7 +359,7 @@ function asyncFetchServices() {
                 }
                 // Loop services and check if refUrl contains one of them and click if so.
                 for (var i = 0; i < serviceNames.length; i++) {
-                    if(refUrl.indexOf(serviceNames[i]) > -1) {
+                    if(refUrl.indexOf(serviceNames[i].toLowerCase()) > -1) {
                         $("li").find(`[data-name='${serviceNames[i]}']`).click();
                     }
                 }
