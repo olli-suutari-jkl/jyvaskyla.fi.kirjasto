@@ -359,7 +359,8 @@ function asyncFetchServices() {
                 }
                 // Loop services and check if refUrl contains one of them and click if so.
                 for (var i = 0; i < serviceNames.length; i++) {
-                    if(refUrl.indexOf(serviceNames[i].toLowerCase()) > -1) {
+                    var urlUnescapeSpaces = refUrl.replace(/%20/g, " ");
+                    if(urlUnescapeSpaces.indexOf(serviceNames[i].toLowerCase()) > -1) {
                         $("li").find(`[data-name='${serviceNames[i]}']`).click();
                     }
                 }
