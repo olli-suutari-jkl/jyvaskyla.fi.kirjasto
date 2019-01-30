@@ -230,6 +230,9 @@ $(document).ready(function() {
     $("#librarySelector").change(function(){
         // Don't use !== as it won't match.
         if($(this).val() != library) {
+            if (isInfoBoxVisible) {
+                toggleModal();
+            }
              $("#pageContainer").replaceWith(divClone.clone()); // Restore main with a copy of divClone
                 // Reset variables.
                 accessibilityIsEmpty = true;
@@ -239,9 +242,9 @@ $(document).ready(function() {
                 sliderNeedsToRestart = true;
                 contactsIsEmpty = true;
                 noServices = true;
-                indexItemClicked = false;
-                isInfoBoxVisible = false;
                 isReFetching = false;
+                isModalCloseBinded = false;
+                isServiceClickBinded = false;
                 map = L.map('mapContainer');
                 roomCount = 0;
                 contactlist = [];

@@ -762,7 +762,7 @@ html {
 }
 
 .modal-backdrop {
-    display: none !important;
+    background: rgba(0,0,0, 0)!important;
 }
 
 #myModal {

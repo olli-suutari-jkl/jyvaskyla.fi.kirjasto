@@ -190,7 +190,7 @@ function bindActions() {
         $(".esittely").show(animationTime);
         // Hide infobox if visible.
         if(isInfoBoxVisible) {
-            $('#myModal').hide();
+            toggleModal();
         }
         activeTab = 0;
         adjustParentHeight(animationTime);
@@ -205,7 +205,7 @@ function bindActions() {
         $(".yhteystiedot").show(animationTime);
         // Hide infobox if visible.
         if(isInfoBoxVisible) {
-            $('#myModal').hide();
+            toggleModal();
         }
         if(activeTab === 0) {
             // If we are switching between tabs, adjust parent height.
