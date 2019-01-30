@@ -115,7 +115,7 @@ function addItem(item, listElement) {
             item.description != null && item.description.length != 0) {
             var description = "";
             if (item.shortDescription != null && item.shortDescription.length != 0) {
-                description = item.shortDescription;
+                description = '<p>' + item.shortDescription + '</p>';
             }
             var websiteLink = item.website;
             // Add "long" description where available.
@@ -126,19 +126,34 @@ function addItem(item, listElement) {
             }
             // Replace links from the description
             if (description.indexOf("<a href=") !== -1) {
-                /* TO DO: Generate iframes from Google calendar links
-                var reFindUrls = new RegExp('"(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*")?');
-                var OK = reFindUrls.exec(description);
-                console.log(OK);
-                */
-                description = description.replace(/(<a href=")+/g, "LINKSTART");
-                description = description.replace(/(">)+/g, "URLEND");
-                description = description.replace(/(<\/a>)+/g, "LINKEND");
+                // Make all links external.
+                description = description.replace(/(<a href=")+/g, '<a class="external-link" target="_blank" href="');
+                // Generate iframes from links that contain "embed"
+                var linksAsIframes = [];
+                var reFindLinks = new RegExp(/<a\b[^>]*>(.*?)<\/a>/g);
+                var reFindLinksExec = reFindLinks.exec(description);
+                while (reFindLinksExec != null) {
+                    // If link contains "embed", turn it into iframe.
+                    if (description.indexOf("embed") !== -1) {
+                        // Find url
+                        var urlOfLink = new RegExp(/"(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?"/g).exec(reFindLinksExec[0]);
+                        // Generate iframe
+                        var iframeCode = '<iframe frameborder="0" height="500px" scrolling="no" src='  + urlOfLink[0] + ' width="100%"></iframe>';
+                        // Push to array
+                        linksAsIframes.push({position: reFindLinksExec[0], iframe: iframeCode});
+                    }
+                    // Loop all links.
+                    reFindLinksExec = reFindLinks.exec(description);
+                }
+                // Loop & add iframes from embedded links.
+                for (var i = 0; i < linksAsIframes.length; i++) {
+                    description = description.replace(linksAsIframes[i].position, linksAsIframes[i].iframe);
+                }
             }
 
             // Add price where available.
             if (item.price != null && item.price.length != 0) {
-                description = description + '<p>' + i18n.get("Hintatiedot") + ': ' + item.price + '</p>';
+                description = description + '<p><strong>' + i18n.get("Hintatiedot") + ':</strong> ' + item.price + '</p>';
             }
             // Replace quotes from the description., they would break things...
             description = description.replace(/["']/g, '&quot;');
@@ -161,19 +176,6 @@ function isEmpty( el ){
     return !$.trim(el.html())
 }
 
-var isInfoBoxVisible = false;
-// Togles the visibility of the popover modal.
-function toggleInfoBox(delay) {
-    if(isInfoBoxVisible) {
-        isInfoBoxVisible = false;
-        $('#infoPopup').toggle(delay);
-    }
-    else {
-        isInfoBoxVisible = true;
-        $('#infoPopup').toggle(delay);
-    }
-}
-
 function bindActions() {
     // Navigation events
     function navigateToDefault(animationTime) {
@@ -185,7 +187,7 @@ function bindActions() {
         $(".esittely").show(animationTime);
         // Hide infobox if visible.
         if(isInfoBoxVisible) {
-            toggleInfoBox();
+            $('#myModal').hide();
         }
         activeTab = 0;
         adjustParentHeight(animationTime);
@@ -200,7 +202,7 @@ function bindActions() {
         $(".yhteystiedot").show(animationTime);
         // Hide infobox if visible.
         if(isInfoBoxVisible) {
-            toggleInfoBox();
+            $('#myModal').hide();
         }
         if(activeTab === 0) {
             // If we are switching between tabs, adjust parent height.
@@ -274,8 +276,8 @@ function adjustParentHeight(delay) {
             if(isInfoBoxVisible) {
                 var popoverHeight = document.getElementById("modalContentContainer").scrollHeight;
                 if(popoverHeight > 500) {
-                    popoverHeight = popoverHeight -350;
-                    height = height + (popoverHeight - popoverHeight/2);
+                    popoverHeight = popoverHeight - 499;
+                    height = height + popoverHeight;
                 }
             }
             parent.postMessage(height, '*');

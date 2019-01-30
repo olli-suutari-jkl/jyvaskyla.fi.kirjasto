@@ -751,61 +751,41 @@ ul.cols {
 }
 
 /* Modal */
-.modal-lg #modalContent {
-    margin-top: -1.7em;
-    padding-left: 5em;
-    padding-right: 5em;
+/* Fix modal being clipped from the bottom */
+html {
+    overflow-y: scroll!important;
 }
 
-#modalContent, #linkToInfo {
-    padding: 0 5em;
+/* Fix modal scrolling on Safari on iPads & iPhones: https://stackoverflow.com/questions/44082430/in-ios-iframe-in-a-bootstrap-modal-can-not-scroll TO DO: Still broken? */
+.modal-body {
+    -webkit-overflow-scrolling: touch!important;
 }
 
-@media screen and (max-width: 499px) {
-
-    .modal-lg #modalContent {
-        margin-top: -1.3em;
-        padding-left: 2em;
-        padding-right: 2em;
-    }
-
-    #modalContent, #linkToInfo {
-        padding: 0 2em;
-    }
+.modal-backdrop {
+    display: none !important;
 }
 
-.modal-lg #linkToInfo {
-    padding-left: 5em;
-    padding-right: 5em;
-}
-
-#modalTitle {
-    margin-left: 1.5em;
-    margin-top: 0.8em;
-}
-
-.modal-title-small {
-    font-size: 1.3em;
-}
-
-#modalContent img {
-    border: 3px solid #026FCF;
-    border-radius: 4px;
-    max-width: 100%;
-    max-height: 350px;
-    margin-bottom: 10px;
-}
-
-.modal-header, .modal-footer {
-    border: none!important;
+#myModal {
+    height: auto!important;
+    max-height: 5500px!important;
+    z-index: 99999999!important;
 }
 
 #closeModal {
     font-size: 1.1em;
     justify-content: space-between;
-    margin: -0.6em auto 0.35em;
+    margin: -0.6em auto .6em;
 }
 
+/* Close button in the right corner of the modal */
+.close {
+    font-size: 1.85em;
+    color: #f7502e;
+}
+
+.close:hover {
+    color: #d83d1e;
+}
 
 /* Media query for IE 10-11. Since object-fit: contain; is not supported in IE, set width to avoid silly scaling in IE.
    Also float schedule infos to left. */
@@ -819,30 +799,28 @@ ul.cols {
     }
 }
 
-/* Close button in the right corner */
-.close {
-    font-size: 1.85em;
-    color: #f7502e;
+.modal-title-small {
+    font-size: 1.3em;
 }
 
-.close:hover {
-    color: #d83d1e;
+#modalContent img {
+    border: 3px solid #026FCF;
+    border-radius: 4px;
+    max-width: 100%;
+    max-height: 350px;
+    margin-bottom: 5px;
 }
 
-.modal-backdrop {
-    display: none !important;
+.modal-body iframe {
+    margin: 0.35em 0;
 }
 
+.modal-header, .modal-footer {
+    border: none!important;
+}
 
 .modal {
     border-radius:10px;
-}
-
-#myModal {
-    height: auto!important;
-    max-height: 5500px!important;
-    z-index: 99999999!important;
-
 }
 
 #modalContentContainer {
@@ -857,13 +835,50 @@ ul.cols {
     background-clip: padding-box;
 
 }
-/* Fix modal being clipped from the bottom */
-html {
-    overflow-y: scroll!important;
+
+#modalTitle {
+    margin-left: 1.5em;
+    margin-top: 0.8em;
 }
 
-/* Fix modal scrolling on Safari on iPads & iPhones: https://stackoverflow.com/questions/44082430/in-ios-iframe-in-a-bootstrap-modal-can-not-scroll TO DO: Still broken? */
+#modalContent {
+    margin-top: -.3em;
+    padding-left: 5em;
+    padding-right: 5em;
+}
 
-.modal-body {
-    -webkit-overflow-scrolling: touch!important;
+@media screen and (min-width: 500px) and (max-width: 768px) {
+    .modal-lg #modalContent {
+        margin-top: -.3em;
+        padding-left: 1em;
+        padding-right: 1em;
+    }
+
+    #modalTitle {
+        margin-left: 0.7em;
+    }
+}
+
+@media screen and (max-width: 499px) {
+    .modal, .modal-lg {
+        margin-left: calc(50% - 50vw) !important;
+        margin-right: calc(50% - 50vw) !important;
+        width: 100vmin !important;
+    }
+
+    #modalContent {
+        margin-top: -.1em;
+        padding-left: 0.3em;
+        padding-right: 0.3em;
+    }
+
+    #modalTitle {
+        margin-left: 0.2em;
+    }
+
+    .modal-body iframe {
+        margin-left: calc(50% - 46vw) !important;
+        margin-right: calc(50% - 45vw) !important;
+        width: 91vmin !important;
+    }
 }

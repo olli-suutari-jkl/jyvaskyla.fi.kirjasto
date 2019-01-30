@@ -7,6 +7,7 @@ var isReFetching = false;
 var contactsIsEmpty = true;
 var noServices = true;
 var indexItemClicked = false;
+var isInfoBoxVisible = false;
 var lon;
 var lat;
 var mapLoaded = false;
@@ -142,6 +143,8 @@ function asyncFetchGenericDetails() {
 }
 // CollectionCount is used with departments.
 var roomCount = 0;
+// Bind modal closing event only once.
+var isModalCloseBinded = false;
 // Fetch services & generate the UI
 function asyncFetchServices() {
     var servicesDeferred = jQuery.Deferred();
@@ -274,34 +277,21 @@ function asyncFetchServices() {
                             indexItemClicked = true;
                             // If infobox already visible, hide it instantly to avoid wonky animations.
                             if (isInfoBoxVisible) {
-                                toggleInfoBox(0);
-                            }
-                            // If website is not null and contains stuff. Sometimes empty website is shown unless lenght is checked.
-                            if ($(this).data('website') !== null && $(this).data('website') !== "undefined" && $(this).data('website').length > 5) {
-                                // Use _blank, because iframes don't like moving to new pages.
-                                $("#linkToInfo").replaceWith('<p id="linkToInfo"><a target="_blank" href="' + $(this).data('website') +
-                                    '" class="external-link">' + i18n.get("Lisätietoja") + '</a></p>');
-                            } else {
-                                $("#linkToInfo").replaceWith('<p id="linkToInfo"></p>');
+                                $('#myModal').hide();
                             }
 
                             var popupText = $(this).data('message');
-                            // Check the description for links.
-                            if(popupText.indexOf("LINKSTART") !== -1) {
-                                popupText = popupText.replace(/(LINKSTART)+/g, '<a class="external-link" target="_blank" href="');
-                                popupText = popupText.replace(/(URLEND)+/g, '">');
-                                popupText = popupText.replace(/(LINKEND)+/g, '<\/a>');
-                            }
-
-                            popupText = popupText.replace(/(<|&lt;)br\s*\/*(>|&gt;)/g, ' ');
                             // Remove multiple spaces
                             popupText = popupText.replace(/^(&nbsp;)+/g, '');
+                            // This would remove br from <br>*:  popupText = popupText.replace(/(<|&lt;)br\s*\/*(>|&gt;)/g, ' ');
                             // Remove empty paragraphs
                             popupText = popupText.replace(/(<p>&nbsp;<\/p>)+/g, "");
                             popupText = popupText.replace(/(<p><\/p>)+/g, "");
                             popupText = popupText.replace(/(<p>\s<\/p>)+/g, "");
 
-                            if(popupText.length > 175) {
+                            // Check if large or small text/modal.
+                            console.log(popupText.length);
+                            if(popupText.length > 200) {
                                 $('#modal').addClass("modal-lg");
                                 $('#modal').css("text-align", "left");
                             }
@@ -310,8 +300,15 @@ function asyncFetchServices() {
                                 $('#modal').css("text-align", "center");
                             }
 
-                            $("#modalContent").replaceWith('<div id="modalContent"><p>' + popupText + '</p></div>');
+                            // If website is not null and contains stuff. Sometimes empty website is shown unless lenght is checked.
+                            if ($(this).data('website') !== null && $(this).data('website') !== "undefined" &&
+                                $(this).data('website').length > 5) {
+                                // Use _blank, because iframes don't like moving to new pages.
+                                popupText = popupText + '<p id="linkToInfo"><a target="_blank" href="' + $(this).data('website') +
+                                    '" class="external-link">' + i18n.get("Lisätietoja") + '</a></p>';
+                            }
 
+                            $("#modalContent").replaceWith('<div id="modalContent">' + popupText + '</div>');
 
                             // Check if text contains headers..
                             if(popupText.indexOf("<h") !== -1) {
@@ -323,46 +320,31 @@ function asyncFetchServices() {
                                     $(this).data('name') + '</h1>');
                             }
 
-                            // Check if text contains headers..
-                            if(popupText.indexOf("<h") !== -1) {
-                                $('#modalTitle').removeClass("modal-title-small");
-                            }
-                            else {
-                                $('#modalTitle').addClass("modal-title-small");
-                            }
 
-
-
-                            // Get element position
-                            //var posX = $(this).offset().left,
-                            var posY = $(this).offset().top;
 
                             // Use animate, $('#myModal').css('top', -posY); works pretty badly.
                             $('#myModal').css({
                                 position: 'absolute',
                                 left: 0,
-                                top: posY-85
+                                top: $(this).offset().top-85  // Element position -85,
                             }).animate();
 
-                            // Add timeout. This prevents duplicated click events if we have changed library.
-                            setTimeout(function()
-                            {
-                                // Show modal, bind hiding event.
-                                $('#myModal').modal();
-                                isInfoBoxVisible = true;
-                            }, 50);
+
+                            // Show modal, bind hiding event.
+                            $('#myModal').modal();
+                            isInfoBoxVisible = true;
 
                             // Add timeout. This prevents duplicated click events if we have changed library.
-                            setTimeout(function()
-                            {
-                                //$('.modal').css('overflow-y', 'scroll');
+                            setTimeout(function() {
                                 adjustParentHeight();
-                                $('#myModal').on('hide.bs.modal', function (e) {
-                                    adjustParentHeight();
-                                    isInfoBoxVisible = false
-                                });
                                 indexItemClicked = false;
-                                //$('#myModal').modal('handleUpdate')
+                                // Bind closing event. If this is done before generating content, it doesn't work.
+                                if(!isModalCloseBinded) {
+                                    $('#myModal').on('hide.bs.modal', function (e) {
+                                        adjustParentHeight();
+                                    });
+                                    isModalCloseBinded = true
+                                }
                             }, 100);
                         }
                     });
