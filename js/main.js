@@ -270,7 +270,18 @@ function bindActions() {
     }
 }
 
+// Timer  is used to stop onresize event from firing after adjustment is done by triggering the function manually.
+var isAdjustingHeight = false;
+var clearTimer;
+function setAdjustingToFalse() {
+    clearTimer = setTimeout(function(){
+        isAdjustingHeight = false;
+    }, 1200);
+}
+
 function adjustParentHeight(delay) {
+    isAdjustingHeight = true;
+    clearTimeout(clearTimer);
     delay = delay + 150;
     setTimeout(function(){
         try {
@@ -278,12 +289,14 @@ function adjustParentHeight(delay) {
             height = height + document.getElementById("mainContainer").scrollHeight;
             if(isInfoBoxVisible) {
                 var popoverHeight = document.getElementById("modalContentContainer").scrollHeight;
-                if(popoverHeight > 500) {
-                    popoverHeight = popoverHeight - 499;
+                console.log(popoverHeight);
+                if(popoverHeight > 400) {
+                    popoverHeight = popoverHeight - 375;
                     height = height + popoverHeight;
                 }
             }
             parent.postMessage(height, '*');
+            setAdjustingToFalse();
         }
         catch (e) {
             console.log("iframe size adjustment failed: " + e);
@@ -357,5 +370,28 @@ $(document).ready(function() {
     // Fetch details if not generating select for libraries, otherwise trigger this in consortium.js
     if(consortium === undefined && city === undefined) {
         fetchInformation(lang);
+    }
+
+    // Add event listener for resizing the window, adjust parent when done so.
+    // https://stackoverflow.com/questions/5489946/jquery-how-to-wait-for-the-end-of-resize-event-and-only-then-perform-an-ac
+    var rtime;
+    var timeout = false;
+    var delta = 200;
+    $(window).resize(function() {
+        rtime = new Date();
+        if (timeout === false) {
+            timeout = true;
+            setTimeout(resizeend, delta);
+        }
+    });
+    function resizeend() {
+        if (new Date() - rtime < delta) {
+            setTimeout(resizeend, delta);
+        } else {
+            timeout = false;
+            if(!isAdjustingHeight) {
+                adjustParentHeight(1);
+            }
+        }
     }
 }); // OnReady

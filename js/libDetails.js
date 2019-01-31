@@ -149,7 +149,7 @@ var isModalCloseBinded = false;
 function hideModal() {
     isInfoBoxVisible = false;
     $('#myModal').modal('hide');
-    adjustParentHeight();
+    adjustParentHeight(50);
 }
 
 function toggleModal() {
@@ -174,11 +174,11 @@ function toggleModal() {
                 $('#myModal').on('hide.bs.modal', function (e) {
                     // calling hideModal here would result in a loop.
                     isInfoBoxVisible = false;
-                    adjustParentHeight();
+                    adjustParentHeight(50);
                 });
                 isModalCloseBinded = true;
             }
-            adjustParentHeight()
+            adjustParentHeight(50)
 
         }, 100);
     }
@@ -929,7 +929,7 @@ function fetchInformation(language, lib) {
                 }, 400);
             }
             else {
-                adjustParentHeight(250);
+                adjustParentHeight(200);
             }
         }
     );
