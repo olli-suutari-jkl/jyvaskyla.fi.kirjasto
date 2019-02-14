@@ -1,0 +1,733 @@
+.responsive-table {
+    overflow-x: auto
+}
+
+header {
+    margin-bottom: 0.5em;
+}
+
+.nav-link {
+    font-size: 1.15em;
+    margin-right: 0.5em;
+    font-weight: 700;
+}
+
+.nav-link.active {
+    color: black!important;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-bottom: 2px solid #026FCF;
+    background: none!important;
+    border-radius: unset!important;
+    display: inline;
+}
+
+.nav-link:hover {
+    background-color: rgba(0, 0, 0, .3)
+}
+
+.nav-pills .nav-link {
+    border-top-left-radius: .5rem;
+    border-top-right-radius: .5rem
+}
+
+.nav-pills {
+    width: 100% !important;
+    display: flex!important;
+    justify-content: center;
+    margin-bottom: 1.7em!important;
+}
+
+/* Scale down the navigation on smaller screens to fit one row */
+@media screen and (max-width: 350px) {
+    .nav-pills {
+        zoom: 0.76;
+        -moz-transform: scale(0.76);
+        min-width: 300px;
+    }
+}
+
+#mainContainer {
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+}
+
+
+.esittely {
+    padding-top: 2em;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+    border-top: 1px solid #026fcf;
+}
+
+.blockquote {
+    padding: 0 2rem;
+    margin-bottom: 1.4em;
+    font-style: oblique;
+    font-weight: 600;
+    text-align: center;
+    font-size: 1.15em;
+}
+
+#introductionSidebar {
+    padding-left: .1em;
+}
+
+
+@media screen and (min-width: 768px) {
+    #leftBar {
+        padding-right: 3em;
+        border-right:  solid #026fcf;
+        border-width: 0.0016rem;
+    }
+
+    .blockquote {
+        padding: 0 3.7em;
+    }
+
+    #introductionSidebar {
+        padding-left: 2.5em;
+    }
+}
+
+/* Service listings */
+.cols li {
+    word-break: break-all!important;
+    padding-bottom: 5px;
+}
+
+.cols {
+    padding-left: 10px;
+    list-style-type: none;
+}
+
+#accessibilityList {
+    padding-left: 18px;
+}
+
+.accessibility-details {
+    padding-left: 10px;
+}
+
+/* Image slider */
+.rslides {
+    position: relative;
+    list-style: none;
+    overflow: hidden;
+    width: 100%;
+    height: auto;
+    padding: 0;
+    margin: 0;
+}
+
+.rslides ul {
+    list-style-type: none;
+}
+
+.rslides li {
+    -webkit-backface-visibility: hidden;
+    position: absolute;
+    display: none;
+    left: 0;
+    top: 0;
+}
+
+.rslides {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    background: black;
+}
+
+.rslides img {
+    display: block;
+    object-position: 50% 50%;
+    /* default value: image is centered*/
+    object-fit: contain;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#sliderBox {
+    position: relative;
+    z-index: 99;
+}
+
+.small-slider {
+    height: 260px;
+    margin-left: -.75em;
+    margin-right: -.75em;
+}
+
+.small-slider .rslides {
+    border: solid 2px #025BA9;
+}
+
+.small-slider li {
+    transition: opacity 2s ease-in-out 0s!important;
+}
+
+/* Scale image width up to 150% on 'small' slider, thus cropping sides in order to fill vertically (eq. 16:9 images). */
+
+.small-slider img {
+    max-width: 150%;
+}
+
+.trivia-section {
+    margin-top: 2.2em;
+    width: 100%;
+}
+
+#triviaTitle {
+    text-align: center!important;
+    border-bottom: 2px solid #026FCF;
+    padding-bottom: .3em;
+    margin-bottom: .5em;
+}
+
+#triviaBody {
+    padding-top: 2.5em;
+}
+
+/* Media query for IE 10-11. Since object-fit: contain; is not supported in IE, set width to avoid silly scaling in IE.
+   Also float schedule infos to left. */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    .small-slider img {
+        width: 430px;
+    }
+    .info-text {
+        float: left;
+    }
+}
+
+/* Optimize slider/map sizes for mobile & tablets. */
+@media screen and (min-width: 590px) and (max-width: 768px) {
+    .small-slider {
+        height: 500px;
+    }
+    #contactsMapCol {
+        height: 400px;
+    }
+}
+
+@media screen and (max-width: 589px) {
+    .small-slider, #contactsMapCol {
+        height: 280px;
+    }
+}
+
+.details, #blockquote  {
+    margin-bottom: 0.75rem;
+}
+
+/* Navigation elements */
+.top-right {
+    position: absolute;
+    top: 7%;
+    right: 20px;
+    z-index: 9999;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+.top-right:hover {
+    cursor: pointer;
+}
+
+.top-left {
+    position: absolute;
+    top: 7%;
+    left: 20px;
+    z-index: 91;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+/* Note: centered left and right are about 25px too much to the left by default. */
+.centered-left {
+    position: absolute;
+    top: 50%;
+    left: 35px;
+    transform: translate(-50%, -50%);
+    z-index: 97;
+}
+
+.centered-right {
+    position: absolute;
+    top: 50%;
+    right: -5px;
+    transform: translate(-50%, -50%);
+    z-index: 96;
+}
+
+.top-right, .top-left, .centered-left, .centered-right {
+    /*  Fallback bg */
+    background-color: rgb(99, 99, 99);
+    /* RGBa with 0.45 opacity */
+    background-color: rgba(99, 99, 99, 0.45);
+    padding-left: 7px;
+    padding-right: 7px;
+    color: #fdfdfd;
+}
+
+.centered-left, .centered-right, .top-right {
+    font-size: 1.6em!important;
+}
+
+.top-right:hover, .centered-left:hover, .centered-right:hover  {
+    color: skyblue;
+}
+
+/* Service cols */
+.main>.row:last-child {
+    flex-grow: 1
+}
+
+@media (max-width: 767px) {
+    .cols {
+        -webkit-column-count: 1;
+        column-count: 1
+    }
+}
+
+@media (min-width: 768px) {
+    .cols {
+        -webkit-column-count: 2;
+        column-count: 2
+    }
+}
+
+@media (min-width: 700px) {
+    .select2-container {
+        width: 65%!important;
+    }
+}
+ul.cols {
+    list-style-type: none
+}
+
+#pageContactInfo .contact-details {
+    padding-left: 0.75rem;
+    align-content: center;
+}
+
+/* Styles for contact section fa */
+#pageContactInfo section h2 .fa, #pageContactInfo section th .fa {
+    margin-right: 0.35rem!important;
+    color: #026FCF;
+}
+
+#pageContactInfo {
+    padding: 0;
+    margin: 0;
+}
+
+/* Location */
+
+#locationRow {
+    margin-bottom: 3em;
+}
+@media screen and (min-width: 500px) and (max-width: 768px) {
+    #contactsMapCol {
+        margin-top: 1.5em;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #contactsMapCol {
+        border-top: 2px solid #026fcf;
+        border-bottom: 2px solid #026fcf;
+    }
+
+    .trivia-cell-title {
+        text-align: right!important;
+    }
+
+    .trivia-detail {
+        text-align: left;
+    }
+
+
+}
+
+#contactsMapCol {
+    padding: 0;
+    height: auto;
+    border-top: 1px solid #026fcf;
+    min-height: 260px;
+}
+
+.trivia-cell-title {
+    text-align: center;
+}
+
+@media screen and (max-width: 499px) {
+    #contactsMapCol {
+        border-top: 2px solid #026fcf;
+        border-bottom: 2px solid #026fcf;
+        margin-top: 1em;
+    }
+
+    #sliderBox {
+        /* If we do left -50vw, details are pulled slightly too much to the left
+        TO DO: Fix the cause. */
+        margin-left: calc(50% - 48.33vw);
+        margin-right: calc(50% - 50vw);
+        width: 100vmin;
+        border-left: none;
+        border-right: none;
+    }
+
+    .trivia-section {
+        margin-left: calc(50% - 48.33vw);
+        margin-right: calc(50% - 50vw);
+        width: 100vmin;
+    }
+
+    .blockquote {
+        padding: 0 .5em;
+    }
+
+    .trivia-cell-title {
+        text-align: right;
+    }
+
+}
+
+#contactsFirstCol {
+    padding-top: 1.6rem;
+    text-align: center;
+}
+
+#locationTitle {
+    text-align: center;
+    align-content: center;
+}
+
+#addressDetails {
+    margin-top: 1.5em;
+    margin-bottom: 1em;
+    display: flex;
+    flex-direction: row;
+}
+
+#streetAddress, #postalAddress {
+    width: 50%;
+}
+
+#triviaTable tr, #triviaTable td {
+    border: none;
+    padding: 0.5em;
+}
+
+.map-library-changer {
+    margin-top: 1em;
+}
+
+#mapContainer {
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+}
+
+#expandMap {
+    top: 1em;
+}
+
+#noCoordinates {
+    z-index: 999!important;
+    position: relative;
+    display: inline-block;
+    margin-left: 3.5em;
+    margin-top: 15px;
+    width: 230px;
+    font-weight: 600;
+    font-size: .95rem;
+    color: black;
+    text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+}
+
+#contactsFirstCol {
+    border-top: 1px solid #026fcf;
+}
+
+@media (min-width: 769px) {
+    #contactsFirstCol {
+        padding: 1.7rem 2.7rem;
+        padding-top: 2.7rem;
+        background: #EDEDE7;
+    }
+
+    #locationRow {
+        border: none;
+    }
+
+    #contactsMapCol {
+        border: 1px solid #026fcf;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+    }
+}
+
+
+#pageContactInfo section h2 i {
+    font-size: 0.85em;
+}
+
+/* Social media links */
+.some-links {
+    text-align: right;
+    align-content: center;
+    padding-right: 1em;
+}
+
+@media (max-width:979px) {
+    .some-links {
+        text-align: left;
+        align-content: flex-start;
+        float: left;
+    }
+    .container {
+        min-width: 100%!important;
+    }
+
+    #staffTable {
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+        width: 100vmin;
+    }
+
+    #locationRow {
+        margin-left: calc(50% - 50vw);
+        margin-right: calc(50% - 50vw);
+        width: 100vmin;
+    }
+
+    #locationDetails {
+        position: relative;
+
+    }
+
+}
+
+@media (min-width:989px) {
+    #mainContainer {
+        border: #026FCF solid 1px;
+        border-radius: 10px;
+        background: rgba(220, 221, 212, 0.15);
+        padding-top: 2em;
+        padding-bottom: 2.5em;
+        padding-left: 1em;
+        padding-right: 1em;
+        margin-top: 1.3em;
+        margin-bottom: 1.3em;
+    }
+}
+
+
+.some-links a {
+    margin-right: .5rem
+}
+
+.some-links a:hover {
+    opacity: .85
+}
+
+@media (min-width:769px) {
+    .some-links {
+        margin-top: -.5rem
+    }
+}
+
+/* This splits the title evenly on mobile instead of starting 2nd row at the icon */
+#contactsTitle {
+    display: flex;
+    align-items: center;
+    font-size: 1.3em;
+    font-weight: 600;
+    border: none;
+}
+
+#contactsTitle i {
+    padding-right: 0.3em!important;
+}
+
+.some-links a img{
+    margin-top: 10px; /* Using em would not add margin on mobile, where rows are splitted */
+}
+
+#contactsTable th {
+    padding-left: 2.95rem;
+    padding-top: 0.7em;
+    padding-bottom: 0.5em;
+}
+
+#contactsTable td {
+    padding: 0.85rem 2.95rem !important;
+}
+
+/* TO DO: Links and contacts title gets wrapped pretty early... FIX */
+.thead-default {
+    background-color: #EDEDE7;
+}
+
+.table-striped>tbody>tr:nth-child(even)>td,
+.table-striped>tbody>tr:nth-child(even)>th {
+    background-color: rgba(137, 137, 101, 0.08);
+}
+
+.table-striped>tbody>tr:nth-child(odd)>td,
+.table-striped>tbody>tr:nth-child(odd)>th {
+    background-color: rgba(137, 137, 101, 0.05);
+}
+
+/* Modal */
+/* Fix modal being clipped from the bottom */
+html {
+    overflow-y: scroll!important;
+}
+
+/* Fix modal scrolling on Safari on iPads & iPhones: https://stackoverflow.com/questions/44082430/in-ios-iframe-in-a-bootstrap-modal-can-not-scroll TO DO: Still broken? */
+.modal-body {
+    -webkit-overflow-scrolling: touch!important;
+}
+
+.modal-backdrop {
+    background: rgba(0,0,0, 0)!important;
+}
+
+#myModal {
+    height: auto!important;
+    max-height: 5500px!important;
+    z-index: 99999999!important;
+}
+
+#closeModal {
+    font-size: 1.1em;
+    justify-content: space-between;
+    margin: -0.6em auto .6em;
+}
+
+/* Close button in the right corner of the modal */
+.close {
+    font-size: 1.85em;
+    color: #f7502e;
+}
+
+.close:hover {
+    color: #d83d1e;
+}
+
+/* Media query for IE 10-11. Since object-fit: contain; is not supported in IE, set width to avoid silly scaling in IE.
+   Also float schedule infos to left. */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    #closeModal {
+        display: block;
+        position: absolute;
+        left: 45%;
+        bottom: -25px;
+        margin-bottom: 35px;
+    }
+}
+
+.modal-title-small {
+    font-size: 1.3em;
+}
+
+#modalContent img {
+    border: 3px solid #026FCF;
+    border-radius: 4px;
+    max-width: 100%;
+    max-height: 350px;
+    margin-bottom: 5px;
+}
+
+.modal-body iframe {
+    margin: 0.35em 0;
+}
+
+.modal-header, .modal-footer {
+    border: none!important;
+}
+
+.modal {
+    border-radius:10px;
+}
+
+#modalContentContainer {
+    max-height: 5500px;
+    /* Stylish bordrers: https://gist.github.com/chemicaloliver/1234670 */
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+    -webkit-background-clip: padding;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+
+}
+
+#modalTitle {
+    margin-left: 1.5em;
+    margin-top: 0.8em;
+}
+
+#modalContent {
+    margin-top: -.3em;
+    padding-left: 5em;
+    padding-right: 5em;
+}
+
+@media screen and (min-width: 500px) and (max-width: 768px) {
+    .modal-lg #modalContent {
+        margin-top: -.3em;
+        padding-left: 1em;
+        padding-right: 1em;
+    }
+
+    #modalTitle {
+        margin-left: 0.7em;
+    }
+}
+
+@media screen and (max-width: 499px) {
+    .modal, .modal-lg {
+        margin-left: calc(50% - 50vw) !important;
+        margin-right: calc(50% - 50vw) !important;
+        width: 100vmin !important;
+    }
+
+    #modalContent {
+        margin-top: -.1em;
+        padding-left: 0.3em;
+        padding-right: 0.3em;
+    }
+
+    #modalTitle {
+        margin-left: 0.2em;
+    }
+
+    .modal-body iframe {
+        margin-left: calc(50% - 46vw) !important;
+        margin-right: calc(50% - 45vw) !important;
+        width: 91vmin !important;
+    }
+}
+/* Homepage widget */
+#btnOpenLibryPage {
+    width: 100%;
+    padding: .75em;
+    font-size: 1.15em;
+}
+
+#homePageWidget {
+    max-width: 800px;
+    background:rgba(0,0,0,0)!important;
+}

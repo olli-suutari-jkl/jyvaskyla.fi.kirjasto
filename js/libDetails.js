@@ -6,6 +6,8 @@ var descriptionIsEmpty = true;
 var isReFetching = false;
 var contactsIsEmpty = true;
 var noServices = true;
+var noImages = true;
+var triviaIsEmpty = true;
 var isInfoBoxVisible = false;
 var lon;
 var lat;
@@ -32,7 +34,6 @@ function checkIfContactExists(array, item) {
     }
     return false;
 }
-
 /* Fetch generic details and generate the UI */
 function asyncFetchGenericDetails() {
     var genericDeferred = jQuery.Deferred();
@@ -64,31 +65,28 @@ function asyncFetchGenericDetails() {
                     descriptionIsEmpty = false;
                 }
             }
-            if (isEmpty($('#genericTransit'))) {
-                if (data.extra.transit.transit_directions != null && data.extra.transit.transit_directions.length != 0) {
-                    transitIsEmpty = false;
-                    $('.transit-details').css('display', 'block');
-                    $('#navYhteystiedot').css('display', 'block');
-                    $('#genericTransit').append('<h4>' + i18n.get("Ohjeita liikenteeseen") + '</h4><p>' + data.extra.transit.transit_directions.replace(/(<a )+/g, '<a target="_blank" ') + '</p>')
-                }
+            if (transitIsEmpty) {
                 if (data.extra.transit.buses != null && data.extra.transit.buses !== "") {
                     transitIsEmpty = false;
-                    $('.transit-details').css('display', 'block');
-                    $('#navYhteystiedot').css('display', 'block');
-                    $('#genericTransit').append('<h4>' + i18n.get("Linja-autot") + ':</h4><p>' + data.extra.transit.buses + '</p>')
+                    $('#transitBody').append('<p>' + i18n.get("Linja-autot") + ': ' + data.extra.transit.buses + '</p>')
                 }
-            }
-            if (isEmpty($('#parkingDetails'))) {
+                if (data.extra.transit.transit_directions != null && data.extra.transit.transit_directions.length != 0) {
+                    transitIsEmpty = false;
+                    $('#transitBody').append('<p>' + data.extra.transit.transit_directions.replace(/(<a )+/g, '<a target="_blank" ') + '</p>')
+                }
                 if (data.extra.transit.parking_instructions != null && data.extra.transit.parking_instructions !== "") {
                     transitIsEmpty = false;
-                    $('.transit-details').css('display', 'block');
                     // Replace row splits with <br>
                     var parking_instructions = data.extra.transit.parking_instructions.replace(/\r\n/g, "<br>");
-                    $('#parkingDetails').append('<h4>' + i18n.get("Pysäköinti") + '</h4><p>' + parking_instructions + '</p>')
+                    $('#transitBody').append('<p>' + parking_instructions + '</p>')
                 }
             }
+
+            if(!transitIsEmpty) {
+                $('#transitDetails').css('display', 'block');
+            }
+
             // Table
-            var triviaIsEmpty = true;
             if (isEmpty($('#buildingDetails')) && !isReFetching) {
                 // If display none by default, colspan gets messed up.
                 $('#triviaTitle').append( i18n.get("Tietoa kirjastosta"));
@@ -117,8 +115,8 @@ function asyncFetchGenericDetails() {
                     $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Sisustus") + ': </strong></td>' +
                         '<td class="trivia-detail">' + data.extra.building.interior_designer + '</td></tr>');
                 }
-                if (triviaIsEmpty) {
-                    $("#triviaTitle").css("display", "none");
+                if (!triviaIsEmpty) {
+                    $(".trivia-section").css("display", "block");
                 }
             }
 
@@ -145,11 +143,11 @@ var roomCount = 0;
 // Bind modal closing event only once.
 var isModalCloseBinded = false;
 // Fetch services & generate the UI
-
 function hideModal() {
     isInfoBoxVisible = false;
     $('#myModal').modal('hide');
     adjustParentHeight(50);
+    adjustParentUrl('', 'service');
 }
 
 function toggleModal() {
@@ -163,9 +161,7 @@ function toggleModal() {
         $(".modal-backdrop").on('click', function () {
             hideModal();
         });
-
         isInfoBoxVisible = true;
-
         // Add timeout. This prevents duplicated click events if we have changed library.
         setTimeout(function() {
             // Bind closing event. If this is done before generating content, it doesn't work.
@@ -175,6 +171,7 @@ function toggleModal() {
                     // calling hideModal here would result in a loop.
                     isInfoBoxVisible = false;
                     adjustParentHeight(50);
+                    adjustParentUrl('', 'service');
                 });
                 isModalCloseBinded = true;
             }
@@ -235,9 +232,10 @@ function bindServiceClicks() {
             left: 0,
             top: $(this).offset().top-85  // Element position -85,
         }).animate();
-
         // Show modal.
         toggleModal();
+        // Adjust parent url.
+        adjustParentUrl($(this).data('name'), "service");
     });
     isServiceClickBinded = true;
 }
@@ -356,37 +354,35 @@ function asyncFetchServices() {
                 $("#hardwareAndServicesBadge").append('(' + serviceCount + ')');
                 noServices = false;
             }
+            // Add event listener for clicking links.
+            bindServiceClicks();
             if (!roomsAndCollectionsAdded || !hardwareAndServicesAdded || !accessibilityAdded) {
-                if (noServices) {
-                    if (lang == "fi") {
-                        //$('#servicesInfo').append(i18n.get("Ei palveluita"));
-                        // Hide the whole navigation if no contact details are listed either...
-                        if (contactsIsEmpty && isEmpty($('#staffMembers')) && isEmpty($('#contactsTbody'))) {
-                            $('.nav-pills').css('display', 'none');
-                        }
-                    }
-                } else {
-                    $('#navEsittely').css('display', 'block');
-                    // Add event listener for clicking links.
-                    bindServiceClicks();
-                }
-                if(noServices) {
-                    $('#libraryServices').css('display', 'none');
-                    // If no content is provided for the left collumn.
-                    if (descriptionIsEmpty && lang === "fi") {
-                        // Hide the content on left, make the sidebar 100% in width.
-                        $(".details").css("display", "none");
-                        $("#leftBar").css("display", "none");
-                        $("#introductionSidebar").addClass("col-md-12");
-                        $("#introductionSidebar").removeClass("col-lg-5 col-xl-4 order-2 sidebar");
-                    }
-                }
+                // Loop services and check if refUrl contains one of them and click if so.
+                var urlUnescapeSpaces = refUrl.replace(/%20/g, " ");
+                urlUnescapeSpaces = refUrl.replace(/_/g, " ");
+                urlUnescapeSpaces = refUrl.replace(/-/g, " ");
+                urlUnescapeSpaces = urlUnescapeSpaces.replace(/\(/g, "");
+                urlUnescapeSpaces = urlUnescapeSpaces.replace(/\)/g, "");
                 // Loop services and check if refUrl contains one of them and click if so.
                 for (var i = 0; i < serviceNames.length; i++) {
-                    var urlUnescapeSpaces = refUrl.replace(/%20/g, " ");
-                    if(urlUnescapeSpaces.indexOf(serviceNames[i].toLowerCase()) > -1) {
+                    var escapedName = serviceNames[i].toLowerCase();
+                    escapedName = escapedName.replace(/ä/g, "a");
+                    escapedName = escapedName.replace(/ö/g, "o");
+                    escapedName = escapedName.replace(/\(/g, "");
+                    escapedName = escapedName.replace(/\)/g, "");
+                    escapedName = escapedName.replace(/_/g, " ");
+                    escapedName = escapedName.replace(/-/g, " ");
+                    if(urlUnescapeSpaces.indexOf(escapedName) > -1) {
                         $("li").find('[data-name="'+ serviceNames[i] +'"]').click();
                         isInfoBoxVisible = true;
+                        try {
+                            setTimeout(function(){
+                                parent.postMessage({value: $("#myModal").position().top -50, type: 'scroll'}, '*');
+                            }, 1300);
+                        }
+                        catch (e) {
+                            console.log("Parent url adjustment failed: " + e);
+                        }
                     }
                 }
             }
@@ -459,6 +455,7 @@ function asyncFetchImages() {
                 }
                 $.when( generateImages(data) ).then  (
                     function() {
+                        noImages = false;
                         $('#currentSlide').html(1);
                         $('.top-left').append('/' + data.pictures.length);
                         //$('.top-left').replaceWith('<i class="top-left"><span id="currentSlide"></span></i>/' + data.pictures.length);
@@ -519,7 +516,7 @@ function asyncFetchLocation() {
                 contactsIsEmpty = false;
                 if (isEmpty($('#streetAddress'))) {
                     if (data.address.street != null && data.address.zipcode != null && data.address.city != null) {
-                        $("#streetAddress").append(data.name + '<br>' + data.address.street + '<br>' + data.address.zipcode + ' ' + data.address.city);
+                        $("#streetAddress").append('<p><strong>' + i18n.get("Osoite") + '</strong><br>' + data.name + '<br>' + data.address.street + '<br>' + data.address.zipcode + ' ' + data.address.city + '</p>');
                     }
                 }
                 if (isEmpty($('#postalAddress'))) {
@@ -547,7 +544,7 @@ function asyncFetchLocation() {
                             postalString += data.mail_address.area;
                         }
                         if(postalString !== data.name + '<br>') {
-                            $("#postalAddress").append(postalString);
+                            $("#postalAddress").append('<p><strong>' + i18n.get("Postiosoite") + '</strong><br>' + postalString + '</p>');
                         }
                     }
                     else {
@@ -604,8 +601,8 @@ function asyncLoadMap() {
                 var markerIcon = L.icon({
                     // https://material.io/tools/icons/?style=baseline
                     iconUrl: '../images/icons/local_library.svg',
-                    popupAnchor:  [-9, -4], // point from which the popup should open relative to the iconAnchor
-                    iconSize:     [28, 28], // size of the icon
+                    popupAnchor:  [-8, -3], // point from which the popup should open relative to the iconAnchor
+                    iconSize:     [24, 24], // size of the icon
                 });
                 var counter = 0;
                 for (var i = 0; i < libraryList.length; i++) {
@@ -618,13 +615,8 @@ function asyncLoadMap() {
                             libraryList[i].street + ', <br>' + libraryList[i].zipcode + ', ' + libraryList[i].city;
                         // Add a notification text about missing coordinates for map.
                         if(libraryList[i].coordinates === null) {
-                            $('#contactsMapCol').prepend('<div id="noCoordinates">' + i18n.get("Huom") + '! ' + libraryList[i].text.toString() + i18n.get("Ei koordinaatteja") + '</div>');
-                            var container = document.getElementById('contactsMapCol');
-                            container.style.height = (container.offsetHeight + 70) + "px";
-                            var noCoordinatesHeight = $('#noCoordinates').height();
-                            noCoordinatesHeight = noCoordinatesHeight + 20; // Add margin.
-                            var mapContainer = document.getElementById('mapContainer');
-                            mapContainer.style.height = (mapContainer.offsetHeight + -noCoordinatesHeight) + "px";
+                            $('#mapContainer').append('<div id="noCoordinates">' + i18n.get("Huom") + '! ' +
+                                libraryList[i].text.toString() + i18n.get("Ei koordinaatteja") + '</div>');
                         }
                     }
                     if (libraryList[i].coordinates != null) {
@@ -657,11 +649,14 @@ function asyncLoadMap() {
     }
     $.when( addCoordinatesToMap() ).then(
         function() {
-
             // If we are in the contacts tab, set map view.
             if(activeTab === 1) {
                 // If we try to set view & open the popup in asyncLoadMap, things get messed.
-                map.setView([lat, lon], 15);
+                if(lat !== undefined) {
+                    map.setView([lat, lon], 15);
+                } else {
+                    map.setView(["62.750", "25.700"], 6);
+                }
                 // Open popup
                 map.eachLayer(function (layer) {
                     if(layer._latlng !== undefined) {
@@ -925,10 +920,26 @@ function fetchInformation(language, lib) {
                 setTimeout(function () {
                     isReFetching = true;
                     fetchInformation("fi", lib);
-                    $("header").append('<small class="en-notification">Note: If information is missing in English, Finnish version is used where available.</small>');
+                    $("header").append('<span class="en-notification">Note: If information is missing in English, Finnish version is used where available.</span>');
                 }, 400);
             }
             else {
+                if(noServices && language === "fi") {
+                    $('#libraryServices').css('display', 'none');
+                    // If no content is provided for the left collumn.
+                    if (descriptionIsEmpty) {
+                        // Hide the content on left, make the sidebar 100% in width.
+                        $(".details").css("display", "none");
+                        $("#leftBar").css("display", "none");
+                        $("#introductionSidebar").addClass("col-md-12");
+                        $("#introductionSidebar").removeClass("col-lg-5 col-xl-4 order-2 sidebar");
+                        if(isScheduleEmpty && noImages && triviaIsEmpty) {
+                            $("#introductionSidebar").append('<div id="noIntroContent"><h3>' +
+                                i18n.get("No content") + ' <i class="fa fa-frown-o"></i></h3></div>');
+
+                        }
+                    }
+                }
                 adjustParentHeight(200);
             }
         }

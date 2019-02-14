@@ -1,4 +1,5 @@
 var libraryList = [];
+var libName;
 // Group libraries by city.
 // https://stackoverflow.com/questions/46043262/split-array-with-objects-to-multiple-arrays-based-on-unique-combination
 function groupByCity(arr) {
@@ -86,6 +87,7 @@ function initSelect(items) {
 
 function setSelectDefault() {
     $('.library-select').val(library).trigger('change');
+    libName = $("#librarySelector option:selected").text();
 }
 
 function generateSelect() {
@@ -127,12 +129,14 @@ function generateSelect() {
         }
 
         // Replace city ID:s with names and check refurl for library names.
-        $.when( asyncCheckUrlForKeskiLibrary(), asyncReplaceIdWithCity() ).then(
+        $.when(asyncCheckUrlForKeskiLibrary(), asyncReplaceIdWithCity() ).then(
             function(){
                 // Trigger schedule fetching.
                 getWeekSchelude(0, library);
                 // Fetch library details, map is also generated during the process - it is important that we have already generated the list for map items.
-                fetchInformation(lang);
+                if(!homePage) {
+                    fetchInformation(lang);
+                }
                 // Consortium listing
                 if(city === undefined) {
                     $.when( librariesGroupped = groupByCity(libraryList) ).then(
@@ -230,14 +234,21 @@ $(document).ready(function() {
     $("#librarySelector").change(function(){
         // Don't use !== as it won't match.
         if($(this).val() != library) {
-            if (isInfoBoxVisible) {
-                toggleModal();
-            }
-             $("#pageContainer").replaceWith(divClone.clone()); // Restore main with a copy of divClone
+            // Set the global library parameter, so schedule switching won't mess things up.
+            library = $(this).val();
+            libName = $("#librarySelector option:selected").text();
+            if(!homePage) {
+                if (isInfoBoxVisible) {
+                    toggleModal();
+                }
+                $("#pageContainer").replaceWith(divClone.clone()); // Restore main with a copy of divClone
                 // Reset variables.
                 accessibilityIsEmpty = true;
                 transitIsEmpty = true;
                 descriptionIsEmpty = true;
+                isScheduleEmpty = true;
+                noImages = true;
+                triviaIsEmpty = true;
                 mapLoaded = false;
                 sliderNeedsToRestart = true;
                 contactsIsEmpty = true;
@@ -250,25 +261,32 @@ $(document).ready(function() {
                 contactlist = [];
                 numbersList = [];
                 staffList = [];
-                // Set the global library parameter, so schedule switching won't mess things up.
-                library = $(this).val();
-                // Fetch data
-                getWeekSchelude(0, library);
                 fetchInformation(lang, $(this).val());
                 // Re-bind navigation and other stuff.
                 bindActions();
-                bindScheduleKeyNavigation();
-                // Add swiping detection for schedules & sliderbox if available.
-                detectswipe("schedules", swipeNavigation);
                 if(document.getElementById("sliderBox") != null) {
                     detectswipe("sliderBox", swipeNavigation);
                 }
+                // Adjust parent url.
+                adjustParentUrl(libName, "library");
+            }
+
+            if(homePage) {
+                adjustHomePageHeight(50)
+            }
+
+            // Fetch data
+            getWeekSchelude(0, library);
+            bindScheduleKeyNavigation();
+            // Add swiping detection for schedules & sliderbox if available.
+            detectswipe("schedules", swipeNavigation);
         }
     });
 
     $(document).on('click', '.map-library-changer', function () {
         // Trigger the library change.
         $('.library-select').val($(this).val()).trigger('change');
-
     });
+
+
 }); // OnReady

@@ -11,7 +11,7 @@
         align-content: center;
     }
 
-    #scheduleInfo {
+    .info-span {
         padding-left: 1em;
         padding-right: 1em;
     }
@@ -59,7 +59,7 @@
     text-align: center;
 }
 
-#scheduleInfo {
+.info-span {
     padding-right: 1em;
     margin-bottom: 0.95em;
     display: flex;
@@ -68,7 +68,7 @@
 }
 
 
-#scheduleInfo i {
+.info-span i {
     font-size: 1.45em!important;
     margin-top: -5px!important;
     margin-right: 0.8em!important;
@@ -200,12 +200,12 @@
     font-size: 1.7em;
 }
 
-.large-schedules #scheduleInfo {
+.large-schedules .info-span {
     padding-left: 1.6em;
     margin-top: -10px;
 }
 
-.large-schedules #scheduleInfo .fa-info-circle {
+.large-schedules .info-span .fa-info-circle {
     margin-right: 0.8em!important;
     padding-top: 10px;
 }
@@ -223,11 +223,11 @@
     font-size: 1.8em;
 }
 
-.m-font #scheduleInfo{
+.m-font .info-span{
     font-size: 1.75em;
 }
 
-.m-font #scheduleInfo {
+.m-font .info-span {
     font-size: 1.7em;
 }
 
@@ -244,7 +244,7 @@
     font-size: 2.1em;
 }
 
-.xl-font #scheduleInfo {
+.xl-font .info-span {
     font-size: 2em;
 }
 
@@ -263,6 +263,6 @@
     font-size: 2.8em;
 }
 
-.xxl-font #scheduleInfo {
+.xxl-font .info-span {
     font-size: 2.7em;
 }

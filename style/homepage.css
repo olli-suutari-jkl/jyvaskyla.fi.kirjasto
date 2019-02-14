@@ -1,0 +1,19 @@
+.select2-container--default .select2-results>.select2-results__options{
+    max-height: 50vh!important;
+}
+
+/* Homepage widget */
+#btnOpenLibryPage {
+    width: 100%;
+    padding: .75em;
+    font-size: 1.15em;
+}
+
+#homePageWidget {
+    max-width: 800px;
+    background:rgba(0,0,0,0)!important;
+}
+
+.select-lite .select2-container {
+    width: 100%!important;
+}

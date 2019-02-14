@@ -9,16 +9,17 @@
   <!-- Prevent Edge from formatting schedule times as phone numbers. -->
   <meta name="format-detection" content="telephone=no">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <link rel="stylesheet" href="../style/lib/bootstrap.min.css">
   <link rel="stylesheet" href="../style/style.css">
+  <link rel="stylesheet" href="../style/library.css">
   <link rel="stylesheet" href="../style/schedule.css">
-  <link rel="stylesheet" href="../style/select2.css"/>
-  <link rel="stylesheet" href="../style/leaflet.css"/>
+  <link rel="stylesheet" href="../style/lib/select2.css"/>
+  <link rel="stylesheet" href="../style/lib/leaflet.css"/>
   <script src="../js/lib/jquery-3.3.1.min.js"></script>
   <script src="../js/lib/jquery.translate.js"></script>
   <script src="../js/translations.js"></script>
   <script src="../js/getParameters.js"></script>
-  <script src="../js/checkForKeskiConsortium.js"></script>
+  <script src="../js/checkUrlForLibrary.js"></script>
   <script src="../js/lib/moment.min.js"></script>
   <script src="../js/lib/moment-fi.js"></script>
   <script src="../js/lib/responsiveslides.js"></script>
@@ -30,8 +31,8 @@
   <script src="../js/libDetails.js"></script>
   <script src="../js/main.js"></script>
   <script src="../js/schedule.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+  <script src="../js/lib/popper.min.js"></script>
+  <script src="../js/lib/bootstrap.min.js"></script>
 </head>
 <body>
 <div id="mainContainer" class="container">
@@ -90,6 +91,7 @@
         <!-- Scheludes -->
         <section id="schedules" class="library-schedules">
           <h3 id="scheduleTitle" class="underlined-title" style="display: none"></h3>
+          <span id="specialInfo" style="display: none" class="info-text"><i class="fa fa-info-circle" > </i></span>
           <span id="scheduleInfo" style="display: none" class="info-text"><i class="fa fa-info-circle" > </i></span>
           <table class="table table-sm">
             <thead class="thead-light">
@@ -115,7 +117,7 @@
           <i id="expandSlider" class="fa fa-expand top-right" title="Toggle full-screen"></i>
           <i class="top-left"><span id="currentSlide"></span></i>
         </section>
-        <section class="trivia-section">
+        <section class="trivia-section" style="display: none">
           <h3 id="triviaTitle"></h3>
           <table id="triviaTable" class="table">
             <tbody id="triviaBody">
@@ -130,29 +132,14 @@
           <div id="locationRow" class="row">
             <div id="contactsFirstCol" class="col-md-7">
               <h2 id="locationTitle"><i class="fa fa-map-o" aria-hidden="true"></i> </h2>
-              <div class="responsive-table">
-                <table id="addressTable" class="table">
-                  <thead>
-                  <tr>
-                    <th id="addressTh"></th>
-                    <th id="postalTh"></th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr>
-                    <td id="streetAddress"></td>
-                    <td id="postalAddress"></td>
-                  </tr>
-                  </tbody>
-                </table>
+              <div id="addressDetails">
+                <h3 class="sr-only" id="srAddress"></h3>
+                <div id="streetAddress"></div>
+                <div id="postalAddress"></div>
               </div>
-              <div class="transit-details" style="display: none">
-                <div class="details-content" id="publicTransport">
-                  <section class="transit-details" style="display: none;">
-                    <div id="genericTransit"></div>
-                    <div id="parkingDetails"></div>
-                  </section>
-                </div>
+              <div id="transitDetails" class="transit-details" style="display: none;">
+                <h4 id="transitDetailsTitle"></h4>
+                <div id="transitBody"></div>
               </div><!-- Transit -->
             </div>
             <!-- Map -->

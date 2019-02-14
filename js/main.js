@@ -9,20 +9,20 @@ function toggleFullScreen(target) {
         $('#mapContainer').toggleClass("map-borders");
     }
     if (
-      document.fullscreenElement ||
-      document.webkitFullscreenElement ||
-      document.mozFullScreenElement ||
-      document.msFullscreenElement
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement
     ) {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      } else if (document.mozCancelFullScreen) {
-        document.mozCancelFullScreen();
-      } else if (document.webkitExitFullscreen) {
-        document.webkitExitFullscreen();
-      } else if (document.msExitFullscreen) {
-        document.msExitFullscreen();
-      }
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
     } else {
         element = $(target).get(0);
         if (element.requestFullscreen) {
@@ -192,8 +192,11 @@ function bindActions() {
         if(isInfoBoxVisible) {
             toggleModal();
         }
-        activeTab = 0;
-        adjustParentHeight(animationTime);
+        if(activeTab === 1) {
+            activeTab = 0;
+            adjustParentHeight(animationTime);
+            adjustParentUrl('', 'introduction');
+        }
     }
 
     function navigateToContacts(animationTime) {
@@ -208,14 +211,17 @@ function bindActions() {
             toggleModal();
         }
         if(activeTab === 0) {
-            // If we are switching between tabs, adjust parent height.
             adjustParentHeight(animationTime);
             activeTab = 1;
             // Map zoom gets messed if the map is loaded before hiding the map div.
-            if(!mapLoaded && lat != null) {
+            if(!mapLoaded) {
                 setTimeout(function(){
                     // If we try to set view & open the popup in asyncLoadMap, things get messed.
-                    map.setView([lat, lon], 15);
+                    if(lat !== undefined) {
+                        map.setView([lat, lon], 15);
+                    } else {
+                        map.setView(["62.750", "25.700"], 6);
+                    }
                     // Open popup
                     map.eachLayer(function (layer) {
                         if(layer._latlng !== undefined) {
@@ -227,6 +233,12 @@ function bindActions() {
                 }, 600);
                 mapLoaded = true;
             }
+        }
+        if(lang === "fi") {
+            adjustParentUrl('yhteystiedot', 'contact');
+        }
+        else {
+            adjustParentUrl('contacts', 'contact');
         }
     }
 
@@ -279,28 +291,109 @@ function setAdjustingToFalse() {
     }, 1200);
 }
 
+var height = 0;
 function adjustParentHeight(delay) {
-    isAdjustingHeight = true;
     clearTimeout(clearTimer);
+    isAdjustingHeight = true;
     delay = delay + 150;
     setTimeout(function(){
         try {
-            var height = 75;
-            height = height + document.getElementById("mainContainer").scrollHeight;
+            var newHeight = 75;
+            newHeight = newHeight + document.getElementById("mainContainer").scrollHeight;
             if(isInfoBoxVisible) {
                 var popoverHeight = document.getElementById("modalContentContainer").scrollHeight;
                 if(popoverHeight > 400) {
                     popoverHeight = popoverHeight - 375;
-                    height = height + popoverHeight;
+                    newHeight = newHeight + popoverHeight;
                 }
             }
-            parent.postMessage(height, '*');
+            if(newHeight !== height) {
+                // Old method, to be removed once updated script is available on jyvaskyla.fi
+                parent.postMessage(newHeight, '*');
+
+                parent.postMessage({value: newHeight, type: 'resize'}, '*');
+            }
+            height = newHeight;
             setAdjustingToFalse();
+
         }
         catch (e) {
             console.log("iframe size adjustment failed: " + e);
         }
     }, delay);
+}
+/* If iframe has no referrerpolicy="unsafe-url" attribute, FF private mode blocks url from passing to iframe.
+  https://gist.github.com/olli-suutari-jkl/8d6ccbc7d3c4e3b563bd5b7cbee095e2
+ */
+function adjustParentUrl(toAdd, type) {
+    /*
+    if(isFFPrivate) {
+        //return;
+    }*/
+    refUrl = refUrl.replace(/ /g, "-");
+    refUrl = refUrl.replace(/%20/g, "-");
+    refUrl = refUrl.replace(/\(/g, "");
+    refUrl = refUrl.replace(/\)/g, "");
+    refUrl = refUrl.toLowerCase();
+    toAdd = toAdd.toLowerCase();
+    toAdd = toAdd.replace(/ /g, "-");
+    toAdd = toAdd.replace(/ä/g, "a");
+    toAdd = toAdd.replace(/ö/g, "o");
+    toAdd = toAdd.replace(/\(/g, "");
+    toAdd = toAdd.replace(/\)/g, "");
+
+    // Remove item from url, if it already exists.
+    refUrl = refUrl.replace(new RegExp(toAdd,"i"), "");
+    // Check for services.
+    if(type !== "introduction" && type !== "contact") {
+        // Loop services and check if refUrl contains one of them, if so remove it.
+        for (var i = 0; i < serviceNames.length; i++) {
+            var serviceName = serviceNames[i].toLowerCase();
+            serviceName = serviceName.replace(/ /g, "-");
+            serviceName = serviceName.replace(/ /g, "-");
+            serviceName = serviceName.replace(/ä/g, "a");
+            serviceName = serviceName.replace(/ö/g, "o");
+            serviceName = serviceName.replace(/\(/g, "");
+            serviceName = serviceName.replace(/\)/g, "");
+            if(refUrl.indexOf(serviceName) > -1) {
+                refUrl = refUrl.replace(serviceName, "");
+            }
+        }
+    }
+    // Remove contacts from url if navigating to introduction.
+    if(type === "introduction") {
+        refUrl = refUrl.replace(/yhteystiedot/g, "");
+        refUrl = refUrl.replace(/contacts/g, "");
+    }
+    // Loop libraries and check if refUrl contains one of them, if so remove it.
+    if(type === "library") {
+        for (var i = 0; i < libraryList.length; i++) {
+            var libraryName = libraryList[i].text.toLowerCase();
+            libraryName = libraryName.replace(/ /g, "-");
+            libraryName = libraryName.replace(/ä/g, "a");
+            libraryName = libraryName.replace(/ö/g, "o");
+            libraryName = libraryName.replace(/\(/g, "");
+            libraryName = libraryName.replace(/\)/g, "");
+            if(refUrl.indexOf(libraryName.toLowerCase()) > -1) {
+                refUrl = refUrl.replace(
+                    new RegExp(libraryName,"i"), "");
+            }
+        }
+    }
+
+    if(toAdd !== ''){
+        refUrl = refUrl + "?" + toAdd;
+    }
+    // Remove duplicated ?
+    refUrl = refUrl.replace(/[?]{2,}/g, "?");
+    // Remove ? if last character.
+    refUrl = refUrl.replace(/\?$/, '');
+    try {
+        parent.postMessage({value: refUrl, type: 'url'}, '*');
+    }
+    catch (e) {
+        console.log("Parent url adjustment failed: " + e);
+    }
 }
 
 // divClone & active tab are used with consortium.js
@@ -326,9 +419,8 @@ $(document).ready(function() {
     // Yhteystiedot UI texts.
     document.getElementById('expandMap').title = i18n.get("Avaa tai sulje kokoruututila");
     $('#locationTitle').append(i18n.get("Sijainti"));
-    $('#addressTh').append(i18n.get("Osoite"));
-    $('#postalTh').append(i18n.get("Postiosoite"));
-    $('#emailTh').append(i18n.get("Sähköposti"));
+    $('#srAddress').append(i18n.get("Osoitetiedot"));
+    $('#transitDetailsTitle').append(i18n.get("Ohjeita liikenteeseen"));
     // Phone numbers
     $('#phonesTitle').append(i18n.get("Puhelinnumerot"));
     $('#sectionTh').append(i18n.get("Osasto"));
@@ -360,7 +452,6 @@ $(document).ready(function() {
             $('#contactsMapCol').css('height', '500px');
         }
     }
-
     // Since the api is having problems with special schedules, add a notification. To be commented when fixed.
     //$('#schedules').prepend('<p style="color: red">' + i18n.get("Virheelliset aukioloajat") + '</p>');
 
