@@ -492,6 +492,7 @@ function generateImages(data) {
             $(".rslides").append('<li><img src="' + data.pictures[i].files.medium + '" alt="' + altText + '"></li>');
             counter = counter +1;
             if(counter === data.pictures.length) {
+                console.log("DEFER:");
                 imageListDeferred.resolve();
             }
         }
@@ -504,6 +505,8 @@ function asyncFetchImages() {
     var imagesDeferred = jQuery.Deferred();
     setTimeout(function() {
             $.getJSON(jsonp_url + "&with=pictures", function (data) {
+                console.log("F: " + jsonp_url + "&with=pictures");
+                console.log(data);
                 // If no pictures found, hide the slider...
                 if (data.pictures.length === 0) {
                     $('#sliderBox').css('display', 'none');
@@ -609,6 +612,8 @@ function asyncFetchLocation() {
                         $("#contactsFirstCol").removeClass( "col-md-7" );
                         $("#contactsMapCol").addClass( "col-md-7");
                         $("#contactsMapCol").removeClass( "col-md-5" );
+                        $("#streetAddress").addClass( "col-md-12" );
+                        $("#streetAddress").removeClass( "col-md-6" );
                         $("#postalTh").css('display', 'none');
                     }
                 }

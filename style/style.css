@@ -147,15 +147,3 @@ a[target=_blank]:not([href*="instagram"]):not([href*="facebook"]):after{
     color: black;
     text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
-
-/* Homepage widget */
-#btnOpenLibryPage {
-    width: 100%;
-    padding: .75em;
-    font-size: 1.15em;
-}
-
-#homePageWidget {
-    max-width: 800px;
-    background:rgba(0,0,0,0)!important;
-}

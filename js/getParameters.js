@@ -27,10 +27,10 @@ if(getParamValue('large') === 'true') {
     largeSchedules = true;
 }
 // HomePage & libPageUrl are used in lite versions functions.
-if(getParamValue('homePage') === 'true') {
+libPageUrl = getParamValue('libPageUrl');
+if(libPageUrl !== undefined) {
     homePage = true;
 }
-libPageUrl = getParamValue('libPageUrl');
 
 /* Old method, to be removed */
 if(getParamValue('font') == 'l' || getParamValue('font') == 'xl') {

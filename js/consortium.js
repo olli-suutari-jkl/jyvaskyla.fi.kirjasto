@@ -132,7 +132,12 @@ function generateSelect() {
         $.when(asyncCheckUrlForKeskiLibrary(), asyncReplaceIdWithCity() ).then(
             function(){
                 // Trigger schedule fetching.
-                getWeekSchelude(0, library);
+                if(homePage) {
+                    getDaySchelude(0, library);
+                }
+                else {
+                    getWeekSchelude(0, library);
+                }
                 // Fetch library details, map is also generated during the process - it is important that we have already generated the list for map items.
                 if(!homePage) {
                     fetchInformation(lang);
@@ -272,11 +277,12 @@ $(document).ready(function() {
             }
 
             if(homePage) {
-                adjustHomePageHeight(50)
+                getDaySchelude(0, library);
+                adjustHomePageHeight(50);
             }
-
-            // Fetch data
-            getWeekSchelude(0, library);
+            else {
+                getWeekSchelude(0, library);
+            }
             bindScheduleKeyNavigation();
             // Add swiping detection for schedules & sliderbox if available.
             detectswipe("schedules", swipeNavigation);

@@ -4,7 +4,7 @@
 }
 
 @media screen and (max-width: 499px) {
-    #schedules {
+    .normal-schedules {
         margin-left: calc(50% - 48.33vw);
         margin-right: calc(50% - 50vw);
         width: 100vmin;
@@ -28,7 +28,7 @@
 }
 
 @media screen and (min-width: 500px) and (max-width: 768px) {
-        #schedules {
+        .normal-schedules {
             margin-left: -25px;
             margin-right: -25px;
         }
@@ -38,7 +38,7 @@
     font-weight: 600;
 }
 
-#schedules {
+.normal-schedules {
     margin-bottom: 2.8em;
 }
 
@@ -98,6 +98,7 @@
     display: flex;
     white-space: normal;
     text-align: left;
+    float: left;
 }
 
 .schedules-weekly tr.time--sub td {
