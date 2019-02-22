@@ -18,10 +18,12 @@ function getParamValue(paramName) {
             return pArr[1]; //return value
     }
 }
+
 library = getParamValue('lib');
 lang = getParamValue('lang');
 city = getParamValue('city');
 consortium = getParamValue('consortium');
+
 /* Large schedules are used in iDiD info screens. */
 if(getParamValue('large') === 'true') {
     largeSchedules = true;

@@ -150,34 +150,56 @@ function hideModal() {
     adjustParentUrl('', 'service');
 }
 
-function toggleModal() {
+var openOnLoad = false;
+function toggleModal(elementPosY) {
     if(isInfoBoxVisible) {
         hideModal();
     }
     else {
-        $('#myModal').modal('show');
-        // Re-bind backdrop event. This is destroyed when modal is hidden.
-        // Bind this, since the default event area is not full page in height.
-        $(".modal-backdrop").on('click', function () {
-            hideModal();
-        });
-        isInfoBoxVisible = true;
-        // Add timeout. This prevents duplicated click events if we have changed library.
-        setTimeout(function() {
-            // Bind closing event. If this is done before generating content, it doesn't work.
-            if(!isModalCloseBinded) {
-                // When clicking close buttons or outside that is not in .modal-backdrop
-                $('#myModal').on('hide.bs.modal', function (e) {
-                    // calling hideModal here would result in a loop.
-                    isInfoBoxVisible = false;
-                    adjustParentHeight(50);
-                    adjustParentUrl('', 'service');
-                });
-                isModalCloseBinded = true;
-            }
-            adjustParentHeight(50)
+        var delay = 0;
+        // If we are opening a service by navigating to it via url, delay so page can finish adjusting in peace.
+        if(openOnLoad) {
+            delay = 50;
+            openOnLoad = false;
+            try {
+                setTimeout(function(){
+                    parent.postMessage({value: $("#myModal").position().top -50, type: 'scroll'}, '*');
+                }, delay + 300);
 
-        }, 100);
+            }
+            catch (e) {
+                console.log("Parent position adjustment failed: " + e);
+            }
+        }
+        function showModal(delay) {
+            setTimeout(function() {
+                $('#myModal').modal('show');
+                // Re-bind backdrop event. This is destroyed when modal is hidden.
+                // Bind this, since the default event area is not full page in height.
+                $(".modal-backdrop").on('click', function () {
+                    hideModal();
+                });
+                isInfoBoxVisible = true;
+                // Add timeout. This prevents duplicated click events if we have changed library.
+                setTimeout(function() {
+                    // Bind closing event. If this is done before generating content, it doesn't work.
+                    if(!isModalCloseBinded) {
+                        // When clicking close buttons or outside that is not in .modal-backdrop
+                        $('#myModal').on('hide.bs.modal', function (e) {
+                            // calling hideModal here would result in a loop.
+                            isInfoBoxVisible = false;
+                            adjustParentHeight(50);
+                            adjustParentUrl('', 'service');
+                        });
+                        isModalCloseBinded = true;
+                    }
+                    adjustParentHeight(50, elementPosY)
+
+                }, 100);
+
+            }, delay);
+        }
+        showModal(delay);
     }
 }
 
@@ -186,7 +208,7 @@ function bindServiceClicks() {
     if(isServiceClickBinded) {
         return
     }
-    $(".index-item").on('click', function () {
+    $(".index-item").on('click', function (e) {
         var popupText = $(this).data('message');
         // Remove multiple spaces
         popupText = popupText.replace(/^(&nbsp;)+/g, '');
@@ -271,7 +293,6 @@ function bindServiceClicks() {
                 console.log("Parent position adjustment failed: " + e);
             }
         });
-
         // Check if text contains headers..
         if(popupText.indexOf("<h") !== -1) {
             $("#modalTitle").replaceWith('<h1 id="modalTitle" class="modal-title underlined-title">' +
@@ -281,7 +302,6 @@ function bindServiceClicks() {
             $("#modalTitle").replaceWith('<h1 id="modalTitle" class="modal-title modal-title-small underlined-title">' +
                 $(this).data('name') + '</h1>');
         }
-
         // Use animate, $('#myModal').css('top', -posY); works pretty badly.
         $('#myModal').css({
             position: 'absolute',
@@ -289,7 +309,15 @@ function bindServiceClicks() {
             top: $(this).offset().top-85  // Element position -85,
         }).animate();
         // Show modal.
-        toggleModal();
+        var offSet = e.pageY;
+        // If we trigger the click programmatically, e.pageY will be undefined...
+        if(offSet === undefined) {
+            offSet = e.target;
+            // OffsetTop is always about 200 px too little...
+            offSet = offSet.offsetTop + 200;
+        }
+        //console.log("e.pageY " + e.pageY + " | ta "  +offSet);
+        toggleModal(offSet);
         // Adjust parent url.
         adjustParentUrl($(this).data('name'), "service");
     });
@@ -420,6 +448,7 @@ function asyncFetchServices() {
                 urlUnescapeSpaces = urlUnescapeSpaces.replace(/\(/g, "");
                 urlUnescapeSpaces = urlUnescapeSpaces.replace(/\)/g, "");
                 // Loop services and check if refUrl contains one of them and click if so.
+                var toClick = "";
                 for (var i = 0; i < serviceNames.length; i++) {
                     var escapedName = serviceNames[i].toLowerCase();
                     escapedName = escapedName.replace(/ä/g, "a");
@@ -429,16 +458,11 @@ function asyncFetchServices() {
                     escapedName = escapedName.replace(/_/g, " ");
                     escapedName = escapedName.replace(/-/g, " ");
                     if(urlUnescapeSpaces.indexOf(escapedName) > -1) {
-                        $("li").find('[data-name="'+ serviceNames[i] +'"]').click();
-                        isInfoBoxVisible = true;
-                        try {
-                            setTimeout(function(){
-                                parent.postMessage({value: $("#myModal").position().top -50, type: 'scroll'}, '*');
-                            }, 1300);
-                        }
-                        catch (e) {
-                            console.log("Parent position adjustment failed: " + e);
-                        }
+                        toClick = serviceNames[i];
+                        setTimeout(function(){
+                            openOnLoad = true;
+                            $("li").find('[data-name="'+ toClick +'"]').click();
+                        }, 600);
                     }
                 }
             }
@@ -480,7 +504,6 @@ function asyncFetchDepartments() {
     return departmentsDeferred.promise();
 }
 
-
 function generateImages(data) {
     var imageListDeferred = jQuery.Deferred();
     var counter = 0;
@@ -492,7 +515,6 @@ function generateImages(data) {
             $(".rslides").append('<li><img src="' + data.pictures[i].files.medium + '" alt="' + altText + '"></li>');
             counter = counter +1;
             if(counter === data.pictures.length) {
-                console.log("DEFER:");
                 imageListDeferred.resolve();
             }
         }
@@ -505,8 +527,6 @@ function asyncFetchImages() {
     var imagesDeferred = jQuery.Deferred();
     setTimeout(function() {
             $.getJSON(jsonp_url + "&with=pictures", function (data) {
-                console.log("F: " + jsonp_url + "&with=pictures");
-                console.log(data);
                 // If no pictures found, hide the slider...
                 if (data.pictures.length === 0) {
                     $('#sliderBox').css('display', 'none');

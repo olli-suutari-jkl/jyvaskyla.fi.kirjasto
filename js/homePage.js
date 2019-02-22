@@ -37,7 +37,6 @@ function adjustHomePageHeight(delay, openSelect) {
             else {
                 newHeight = newHeight + document.getElementById("homePageWidget").scrollHeight;
             }
-            console.log("newHeight " + newHeight)
             if(newHeight !== height) {
                 parent.postMessage({value: newHeight, type: 'resize'}, '*');
             }
@@ -187,8 +186,6 @@ function getDaySchelude(direction, lib) {
     // Use &pretty: https://github.com/libraries-fi/kirkanta-api/issues/3
     $.getJSON("https://api.kirjastot.fi/v4/schedules?library=" + lib + "&lang=" + lang +
         "&period.start=" + weekCounter + "d&period.end=" + weekCounter + "d&refs=period&limit=5000&pretty", function (data) {
-        console.log("https://api.kirjastot.fi/v4/schedules?library=" + lib + "&lang=" + lang +
-            "&period.start=" + weekCounter + "d&period.end=" + weekCounter + "d&refs=period&limit=5000&pretty");
         if (data.items.length === 0) {
             //$('#schedules').css('display', 'none');
             $("#weekSchelude").replaceWith('<tbody id="weekSchelude" class="schedules-weekly">' + "<tr><td></td></tr>");

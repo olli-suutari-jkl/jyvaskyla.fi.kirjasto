@@ -38,18 +38,18 @@ i {
 }
 
 a {
-    color: #0b62c1;
+    color: @links;
 }
 
 a:hover {
-    color: #0050a8;
+    color: @linksHover;
 }
 
 a[target=_blank]:not([href*="instagram"]):not([href*="facebook"]):after{
     font-family: "FontAwesome";
     content: "\f08e";
     font-size: 0.85em;
-    color: #026FCF;
+    color: @linksExternal;
     padding-left: 5px;
 }
 
@@ -117,7 +117,7 @@ a[target=_blank]:not([href*="instagram"]):not([href*="facebook"]):after{
 .underlined-title {
     padding-left: 1.2rem;
     padding-right: 1.2rem;
-    border-bottom: 2px solid #026FCF;
+    border-bottom: 2px solid @primary;
     display: inline;
 }
 
