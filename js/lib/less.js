@@ -5057,7 +5057,9 @@
           var f = b ? e(b) : {};
           // Object.assign(c, d, f); would crash IE 11, fix this with a polyfill.
           // See: https://github.com/less/less.js/issues/3321
-          if (navigator.appName == 'Microsoft Internet Explorer' ||  !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv:11/)) || (typeof $.browser !== "undefined" && $.browser.msie == 1)) {
+          // Polyfill from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments
+          // Use this check instead of "if (typeof Object.assign != 'function') {..." since that would crash IE.
+          if (!("assign" in Object)) {
            // Must be writable: true, enumerable: false, configurable: true
            Object.defineProperty(Object, "assign", {
             //var varArgs = c, d, f;
