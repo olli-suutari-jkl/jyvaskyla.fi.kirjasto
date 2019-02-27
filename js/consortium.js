@@ -76,12 +76,23 @@ function initSelect(items) {
     if(lang === "en") {
         placeholderText = "Search by name...";
     }
-    $(".library-select").select2({
-        data: items,
-        language: lang, // Global parameter from getParameters.js
-        searchInputPlaceholder: placeholderText,
-        matcher: modelMatcher
-    });
+    // If we use placeholder in IE, select always has focus and opens automatically.
+    // https://stackoverflow.com/questions/29293452/ie-select2-always-gets-the-focus
+    if (navigator.appName == 'Microsoft Internet Explorer' ||  !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv:11/)) || (typeof $.browser !== "undefined" && $.browser.msie == 1)) {
+        $(".library-select").select2({
+            data: items,
+            language: lang, // Global parameter from getParameters.js
+            matcher: modelMatcher
+        });
+    }
+    else {
+        $(".library-select").select2({
+            data: items,
+            language: lang, // Global parameter from getParameters.js
+            searchInputPlaceholder: placeholderText,
+            matcher: modelMatcher
+        });
+    }
     $('#librarySelectorContainer').addClass("always-visible");
 }
 

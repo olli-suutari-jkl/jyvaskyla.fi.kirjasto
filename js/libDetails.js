@@ -535,50 +535,52 @@ function asyncFetchImages() {
                 $.when( generateImages(data) ).then  (
                     function() {
                         noImages = false;
-                        $('#currentSlide').html(1);
-                        $('.top-left').append('/' + data.pictures.length);
-                        //$('.top-left').replaceWith('<i class="top-left"><span id="currentSlide"></span></i>/' + data.pictures.length);
--
-                        $(".rslides").responsiveSlides({
-                            navContainer: "#sliderBox" // Selector: Where controls should be appended to, default is after the 'ul'
-                        });
-                        // Exit fullscreen if clicking the .rslides and not within 75px range from the center.
-                        $('.rslides').on('click', function () {
-                            if (!$("#sliderBox").hasClass("small-slider")) {
-                                var centerPos = $(window).scrollTop() + $(window).height() / 2;
-                                if (!(event.clientY >= centerPos - 75 && event.clientY <= centerPos + 75)) {
-                                    toggleFullScreen("#sliderBox");
+                        setTimeout(function() {
+                            $('#currentSlide').html(1);
+                            $('.top-left').append('/' + data.pictures.length);
+                            //$('.top-left').replaceWith('<i class="top-left"><span id="currentSlide"></span></i>/' + data.pictures.length);
+                            -
+                                $(".rslides").responsiveSlides({
+                                    navContainer: "#sliderBox" // Selector: Where controls should be appended to, default is after the 'ul'
+                                });
+                            // Exit fullscreen if clicking the .rslides and not within 75px range from the center.
+                            $('.rslides').on('click', function () {
+                                if (!$("#sliderBox").hasClass("small-slider")) {
+                                    var centerPos = $(window).scrollTop() + $(window).height() / 2;
+                                    if (!(event.clientY >= centerPos - 75 && event.clientY <= centerPos + 75)) {
+                                        toggleFullScreen("#sliderBox");
+                                    }
                                 }
-                            }
-                        });
-                        // Ignore clicks on selected image && add hover class.
-                        // We re-do this in responsiveslides.js every time the image is changed.
-                        $(".rslides1_on").click(function (event) {
-                            event.stopPropagation();
-                            $("#sliderBox").addClass('hovering');
-                        });
-                        // Activate arrow navigation when hovering over the small slider.
-                        $("#sliderBox").mouseenter(function () {
-                            if (!$("#sliderBox").hasClass('hovering') && $("#sliderBox").hasClass("small-slider")) {
-                                // If element is never focused, navigation may not work.
+                            });
+                            // Ignore clicks on selected image && add hover class.
+                            // We re-do this in responsiveslides.js every time the image is changed.
+                            $(".rslides1_on").click(function (event) {
+                                event.stopPropagation();
                                 $("#sliderBox").addClass('hovering');
-                                $("#sliderForward").focus();
-                                // If we blur instantly, arrow navigation won't work unless something has been clicked in the document.
-                                setTimeout(function () {
-                                    $("#sliderForward").blur();
-                                }, 5);
-                                //$("#sliderForward").blur();
-                            }
-                        });
-                        $("#sliderBox").mouseleave(function () {
-                            if ($("#sliderBox").hasClass('hovering') && $("#sliderBox").hasClass("small-slider")) {
-                                $("#sliderBox").removeClass('hovering');
-                            }
-                        });
-                        $( "#expandSlider" ).on('click', function () {
-                            toggleFullScreen('#sliderBox');
-                        });
-                        imagesDeferred.resolve()
+                            });
+                            // Activate arrow navigation when hovering over the small slider.
+                            $("#sliderBox").mouseenter(function () {
+                                if (!$("#sliderBox").hasClass('hovering') && $("#sliderBox").hasClass("small-slider")) {
+                                    // If element is never focused, navigation may not work.
+                                    $("#sliderBox").addClass('hovering');
+                                    $("#sliderForward").focus();
+                                    // If we blur instantly, arrow navigation won't work unless something has been clicked in the document.
+                                    setTimeout(function () {
+                                        $("#sliderForward").blur();
+                                    }, 5);
+                                    //$("#sliderForward").blur();
+                                }
+                            });
+                            $("#sliderBox").mouseleave(function () {
+                                if ($("#sliderBox").hasClass('hovering') && $("#sliderBox").hasClass("small-slider")) {
+                                    $("#sliderBox").removeClass('hovering');
+                                }
+                            });
+                            $( "#expandSlider" ).on('click', function () {
+                                toggleFullScreen('#sliderBox');
+                            });
+                            imagesDeferred.resolve()
+                        }, 250 );
                     }
                 );
             });
