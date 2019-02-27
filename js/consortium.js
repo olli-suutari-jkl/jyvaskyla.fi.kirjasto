@@ -176,7 +176,7 @@ $(document).ready(function() {
     // Fetch libraries of city, that belong to the same consortium
     if(consortium !== undefined && city !== undefined) {
         isLibaryList = true;
-        $.getJSON("https://api.kirjastot.fi/v3/organisation?lang=" + lang + "&city.name=" + city, function(data) {
+        $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + lang + "&city.name=" + city + "&limit=1500", function(data) {
             for (var i=0; i<data.items.length; i++) {
                 // Ignore mobile libraries & other consortiums.
                 if(data.items[i].branch_type !== "mobile" && data.items[i].consortium == consortium) {
@@ -193,8 +193,7 @@ $(document).ready(function() {
     // Fetch libraries of city
     else if(consortium === undefined && city !== undefined) {
         isLibaryList = true;
-        $.getJSON("https://api.kirjastot.fi/v3/organisation?lang=" + lang + "&city.name=" + city, function(data) {
-
+        $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + lang + "&city.name=" + city, function(data) {
             for (var i=0; i<data.items.length; i++) {
                 // Ignore mobile libraries
                 if(data.items[i].branch_type !== "mobile") {
