@@ -178,16 +178,13 @@ $(document).ready(function() {
         isLibaryList = true;
         $.getJSON("https://api.kirjastot.fi/v3/organisation?lang=" + lang + "&city.name=" + city, function(data) {
             for (var i=0; i<data.items.length; i++) {
-                // Due to a bug in the api, a test library cannot be deleted or hidden
-                if(data.items[i].id !== 86605) {
-                    // Ignore mobile libraries & other consortiums.
-                    if(data.items[i].branch_type !== "mobile" && data.items[i].consortium == consortium) {
-                        libraryList.push({id: data.items[i].id, text: data.items[i].name,
-                            city: data.items[i].city.toString(),
-                            street: data.items[i].address.street,
-                            zipcode: data.items[i].address.zipcode,
-                            coordinates: data.items[i].address.coordinates});
-                    }
+                // Ignore mobile libraries & other consortiums.
+                if(data.items[i].branch_type !== "mobile" && data.items[i].consortium == consortium) {
+                    libraryList.push({id: data.items[i].id, text: data.items[i].name,
+                        city: data.items[i].city.toString(),
+                        street: data.items[i].address.street,
+                        zipcode: data.items[i].address.zipcode,
+                        coordinates: data.items[i].coordinates});
                 }
             }
             generateSelect();
@@ -197,6 +194,7 @@ $(document).ready(function() {
     else if(consortium === undefined && city !== undefined) {
         isLibaryList = true;
         $.getJSON("https://api.kirjastot.fi/v3/organisation?lang=" + lang + "&city.name=" + city, function(data) {
+
             for (var i=0; i<data.items.length; i++) {
                 // Ignore mobile libraries
                 if(data.items[i].branch_type !== "mobile") {
@@ -204,7 +202,7 @@ $(document).ready(function() {
                         city: data.items[i].city.toString(),
                         street: data.items[i].address.street,
                         zipcode: data.items[i].address.zipcode,
-                        coordinates: data.items[i].address.coordinates});
+                        coordinates: data.items[i].coordinates});
                 }
             }
             generateSelect();
@@ -213,24 +211,21 @@ $(document).ready(function() {
     // Fetch libraries of consortium
     else if(consortium !== undefined && city === undefined) {
         isLibaryList = true;
-        $.getJSON("https://api.kirjastot.fi/v3/organisation?lang=" + lang + "&consortium=" + consortium + "&limit=500", function(data) {
+        $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + lang + "&consortium=" + consortium + "&limit=1500", function(data) {
             for (var i=0; i<data.items.length; i++) {
-                // Due to a bug in the api, a test library cannot be deleted or hidden
-                if(data.items[i].id !== 86605) {
-                    // Include mobile libraries in consortium listings...
-                    libraryList.push({
-                        id: data.items[i].id, text: data.items[i].name,
-                        city: data.items[i].city.toString(),
-                        street: data.items[i].address.street,
-                        zipcode: data.items[i].address.zipcode,
-                        coordinates: data.items[i].address.coordinates
-                    });
-                    /*
-                    if(data.items[i].branch_type !== "mobile") {
+                // Include mobile libraries in consortium listings...
+                libraryList.push({
+                    id: data.items[i].id, text: data.items[i].name,
+                    city: data.items[i].city.toString(),
+                    street: data.items[i].address.street,
+                    zipcode: data.items[i].address.zipcode,
+                    coordinates: data.items[i].coordinates
+                });
+                /*
+                if(data.items[i].branch_type !== "mobile") {
 
-                    }
-                    */
                 }
+                */
             }
             generateSelect();
         });

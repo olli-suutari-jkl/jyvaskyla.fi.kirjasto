@@ -190,9 +190,13 @@ var dict = {
         fi: "Yhteystiedot",
         en: "Contact details",
     },
-    "Linkit ja yhteystiedot": {
-        fi: "Linkit ja yhteystiedot",
-        en: "Links and contact details",
+    "Kontaktit": {
+        fi: "Kontaktit",
+        en: "Contacts",
+    },
+    "Linkit ja kontaktit": {
+        fi: "Linkit ja kontaktit",
+        en: "Links and contacts",
     },
     "Yhteystieto": {
         fi: "Yhteystieto",

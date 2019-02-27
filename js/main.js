@@ -223,7 +223,7 @@ function bindActions() {
                 setTimeout(function(){
                     // If we try to set view & open the popup in asyncLoadMap, things get messed.
                     if(lat !== undefined) {
-                        map.setView([lat, lon], 15);
+                        map.setView([lat, lon], 13.5);
                     } else {
                         map.setView(["62.750", "25.700"], 6);
                     }

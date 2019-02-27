@@ -364,6 +364,7 @@ function getDaySchelude(direction, lib) {
                 document.title = data.name;
             }
         }
+        adjustHomePageHeight();
         $('#scheduleTitle').html(i18n.get("Aukioloajat"));
         $('#scheduleTitle').css('display', 'block');
     });

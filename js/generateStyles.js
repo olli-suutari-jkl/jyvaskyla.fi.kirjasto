@@ -17,14 +17,13 @@ var primary = getParamValue('primary');
 var links = getParamValue('links');
 var linksHover = getParamValue('linksHover');
 var linksExternal = getParamValue('linksExternal');
-
+var btnHover =  getParamValue('btnHover');
 if(primary === undefined){
     primary = "#026FCF";
 }
 else {
     primary = "#" + primary;
 }
-
 if(links === undefined){
     links = "#0b62c1";
 }
@@ -45,22 +44,27 @@ if(linksExternal === undefined){
 else {
     linksExternal = "#" + linksExternal;
 }
+if(btnHover === undefined){
+    btnHover = primary;
+}
+else {
+    btnHover = "#" + btnHover;
+}
 
 // Generate lessVariables.
 primary = "@primary: " + primary + "; ";
 links = "@links: " + links + "; ";
 linksHover = "@linksHover: " + linksHover + "; ";
 linksExternal = "@linksExternal: " + linksExternal + "; ";
-var lessVariables = primary + links + linksHover + linksExternal;
+btnHover = "@btnHover: " + btnHover + "; ";
+var lessVariables = primary + links + linksHover + linksExternal + btnHover;
 
+// Read less stylesheet, generate .css and add it to header.
 var styleCssXml = new XMLHttpRequest();
 styleCssXml.open('GET', '../style/style.less');
 styleCssXml.onreadystatechange = function() {
-    //console.log(styleCssXml.responseText);
     less.render(lessVariables + styleCssXml.responseText)
         .then(function(output) {
-            //console.log(output.css)
-            //console.log(output.css);
             addCssToDocument(output.css);
         });
 };
@@ -77,7 +81,7 @@ libraryCssXml.onreadystatechange = function() {
         });
 };
 libraryCssXml.send();
-
+// HomePage stylings.
 if(homePage) {
     var homePageCssXml = new XMLHttpRequest();
     homePageCssXml.open('GET', '../style/homepage.less');

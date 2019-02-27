@@ -5055,10 +5055,10 @@
           var d = e(a);
           c._defaults = d;
           var f = b ? e(b) : {};
-          // Object.assign(c, d, f); would crash IE 11, fix this with a polyfill.
-          // See: https://github.com/less/less.js/issues/3321
-          // Polyfill from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments
-          // Use this check instead of "if (typeof Object.assign != 'function') {..." since that would crash IE.
+          /* Object.assign(c, d, f); would crash IE 11, fix this with a polyfill.
+          See: https://github.com/less/less.js/issues/3321
+          Polyfill from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/arguments
+          Use this check instead of "if (typeof Object.assign != 'function') {..." since that would crash IE. */
           if (!("assign" in Object)) {
            // Must be writable: true, enumerable: false, configurable: true
            Object.defineProperty(Object, "assign", {
