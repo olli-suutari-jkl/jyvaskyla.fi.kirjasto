@@ -66,6 +66,31 @@ function asyncFetchGenericDetails() {
                 }
             }
             if (transitIsEmpty) {
+                var coordinates = data.address.coordinates;
+                var cityName = data.address.city;
+                if(coordinates != null && data.address.street != null && cityName != null) {
+                    transitIsEmpty = false;
+                    var linkToTransitInfo = data.address.street + ", "  + data.address.city +
+                        "::" + coordinates.lat + ", "  + coordinates.lon ;
+
+                    var infoText = i18n.get("Reittiopas ja julkinen liikenne");
+
+                    linkToTransitInfo = "https://opas.matka.fi/reitti/POS/" + linkToTransitInfo;
+                    linkToTransitInfo = encodeURI(linkToTransitInfo);
+                    // Matka.fi does not support all cities for public transport details, see: https://www.traficom.fi/fi/asioi-kanssamme/reittiopas
+                    if(cityName !== "Jyväskylä") {
+                        linkToTransitInfo = "https://www.google.com";
+                        if(lang === "fi") {
+                            linkToTransitInfo = "https://www.google.fi"
+                        }
+                        linkToTransitInfo = linkToTransitInfo + "/maps/dir//";
+                        linkToTransitInfo = linkToTransitInfo + data.address.street + ", "  + data.address.zipcode +
+                            ", " + data.address.city + "/@" + coordinates.lat + ", "  + coordinates.lon + ", 15z/";
+                        infoText = i18n.get("Reittiopas");
+                    }
+                    $('#transitBody').append('<p><a target="_blank" href="' + linkToTransitInfo + '">' + infoText + '</a></p>')
+                }
+
                 if (data.extra.transit.buses != null && data.extra.transit.buses !== "") {
                     transitIsEmpty = false;
                     $('#transitBody').append('<p>' + i18n.get("Linja-autot") + ': ' + data.extra.transit.buses + '</p>')
@@ -81,7 +106,6 @@ function asyncFetchGenericDetails() {
                     $('#transitBody').append('<p>' + parking_instructions + '</p>')
                 }
             }
-
             if(!transitIsEmpty) {
                 $('#transitDetails').css('display', 'block');
             }
