@@ -130,6 +130,7 @@ function getWeekSchelude(direction, lib) {
             isScheduleEmpty = true;
             return;
         }
+        isScheduleEmpty = false;
         var date = moment().add(weekCounter, 'weeks');
         dateInSchedule = new Date();
         dateInSchedule.setDate(dateInSchedule.getDate() + (weekCounter * 7));
