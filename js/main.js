@@ -382,8 +382,18 @@ function adjustParentUrl(toAdd, type) {
     }
     // Loop libraries and check if refUrl contains one of them, if so remove it.
     if(type === "library") {
-        // Remove everything from url after ?.
-        refUrl = refUrl.replace(/\?(.*)/g, "");
+        for (var i = 0; i < libraryList.length; i++) {
+            var libraryName = libraryList[i].text.toLowerCase();
+            libraryName = libraryName.replace(/ /g, "-");
+            libraryName = libraryName.replace(/ä/g, "a");
+            libraryName = libraryName.replace(/ö/g, "o");
+            libraryName = libraryName.replace(/\(/g, "");
+            libraryName = libraryName.replace(/\)/g, "");
+            if(refUrl.indexOf(libraryName.toLowerCase()) > -1) {
+                refUrl = refUrl.replace(
+                    new RegExp(libraryName,"i"), "");
+            }
+        }
     }
     if(toAdd !== ''){
         refUrl = refUrl + "?" + toAdd;
