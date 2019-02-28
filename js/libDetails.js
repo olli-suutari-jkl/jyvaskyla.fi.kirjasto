@@ -780,11 +780,13 @@ function asyncLoadMap() {
     return mapDeferred.promise();
 }
 
+var noLinks = true;
 function asyncFetchLinks() {
     var linksDeferred = jQuery.Deferred();
     setTimeout(function() {
         // Social media links
         $.getJSON(jsonp_url + "&with=links", function (data) {
+            noLinks = true;
             var linkCount = 0;
             // Loop the links of group category [0].
             var loopCounter = 0;
@@ -836,9 +838,7 @@ function asyncFetchLinks() {
                 if(loopCounter === data.links.length) {
                     // Mention links in title, if any are present.
                     if(linkCount !== 0 ) {
-                        $('#contactsTitle').append('<span>' + i18n.get("Linkit ja kontaktit") + '</span>');
-                    } else {
-                        $('#contactsTitle').append('<span>' + i18n.get("Kontaktit") + '</span>');
+                        noLinks = false;
                     }
                     linksDeferred.resolve();
                 }
@@ -1003,6 +1003,12 @@ function fetchInformation(language, lib) {
             if(!isReFetching) {
                 $.when( asyncFetchGenericDetails(), asyncFetchDepartments(), asyncFetchImages(), asyncFetchLinks(), asyncFetchLocation() ).then(
                     function() {
+                        // Generate links & contacts text based on if links were found or not.
+                        if(!noLinks) {
+                            $('#contactsTitle').append('<span>' + i18n.get("Linkit ja kontaktit") + '</span>');
+                        } else {
+                            $('#contactsTitle').append('<span>' + i18n.get("Kontaktit") + '</span>');
+                        }
                         $.when( asyncFetchServices(), asyncLoadMap(), generateContacts() ).then(
                             function() {
                                 fetchDeferred.resolve();
