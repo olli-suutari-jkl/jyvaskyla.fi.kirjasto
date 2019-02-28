@@ -210,8 +210,12 @@ function getWeekSchelude(direction, lib) {
                     if (dayEnd === '' || isBefore(dayEnd, to)) {
                         dayEnd = to;
                     }
-                    // If staff is present.
-                    if (time.staff) {
+                    /* https://api.kirjastot.fi/: Each entry in times contains a status field:
+                    0 means the library is temporarily closed during the day.
+                    1 means the library is open and has staff.
+                    2 means the library is in self-service mode (no staff).
+                    */
+                    if (time.status === 1) {
                         staffPresentStart = from;
                         staffPresentEnd = to;
                         // Store the row as a variable.

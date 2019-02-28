@@ -418,7 +418,6 @@ $(document).ready(function() {
     $( "#closeInfoBtn" ).on('click', function () {
         toggleInfoBox(200);
     });
-
     map = L.map('mapContainer');
     // UI texts.
     if($('#librarySelectorTitle')) {

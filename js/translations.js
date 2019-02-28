@@ -87,6 +87,10 @@ var dict = {
         fi: "Aukioloajat",
         en: "Scheludes",
     },
+    "Ei aukioloaikoja": {
+        fi: "Toimipisteen tietoihin ei ole syötetty aukioloaikatietoja valitulle päivälle.",
+        en: "The library has not entered schedules for the selected day.",
+    },
     "Aikataulut": {
         fi: "Aikataulut",
         en: "Scheludes",
@@ -272,8 +276,8 @@ var dict = {
         en: "Note: You are using  Private Browsing mode of Firefox. This prevents the page address from being transmitted to the application which shows the details of the library, thus navigation to a specific library or service by url does not work.",
     },
     "No content": {
-        fi: "Toimipisteellä ei valitettavasti ole kuvausta, kuvia tai aukioloaikatietoja.<br>Voit auttaa tilanteen korjaamisessa antamalla kirjastollesi palautetta.<br>Lisätietoja saattaa löytyä kirjaston kunnan kotisivuilta.",
-        en: "Unfortunately this Library has no description, photos or schedules.<br>You can help fixing this by giving feedback to your library.<br>Additional details may be available at the muncipals website.",
+        fi: 'Toimipisteellä ei valitettavasti ole kuvausta, kuvia tai aukioloaikatietoja.<br>Voit auttaa tilanteen korjaamisessa antamalla kirjastollesi palautetta.<br>Lisätietoja voi löytyä "Yhteystiedot" -välilehdeltä. ',
+        en: 'Unfortunately this Library has no description, photos or schedules.<br>You can help fixing this by giving feedback to your library.<br>Additional details may be available at the "Contact details".',
     },
     "Open library page": {
         fi: "Siirry kirjaston tietoihin",

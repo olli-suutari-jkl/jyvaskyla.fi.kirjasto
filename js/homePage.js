@@ -24,14 +24,14 @@ function setAdjustingToFalse() {
 }
 
 var height = 0;
-function adjustHomePageHeight(delay, openSelect) {
+function adjustHomePageHeight(delay) {
     clearTimeout(clearTimer);
     isAdjustingHeight = true;
     delay = delay + 150;
     setTimeout(function(){
         try {
             var newHeight = 15;
-            if(openSelect) {
+            if(selectIsOpen) {
                 newHeight = 650;
             }
             else {
@@ -50,6 +50,7 @@ function adjustHomePageHeight(delay, openSelect) {
     }, delay);
 }
 
+var selectIsOpen = false;
 $(document).ready(function() {
     $("#btnOpenLibryPage").append(i18n.get("Open library page"));
     adjustHomePageHeight(500);
@@ -61,9 +62,11 @@ $(document).ready(function() {
         moveParentToLibraryUrl(libName);
     });
     $('#librarySelector').on('select2:open', function (e) {
-        adjustHomePageHeight(0, true);
+        selectIsOpen = true;
+        adjustHomePageHeight(0);
     });
     $('#librarySelector').on('select2:close', function (e) {
+        selectIsOpen = false;
         adjustHomePageHeight(0);
     });
 
@@ -191,7 +194,7 @@ function getDaySchelude(direction, lib) {
             $("#weekSchelude").replaceWith('<tbody id="weekSchelude" class="schedules-weekly">' + "<tr><td></td></tr>");
             $('#dayInfo').replaceWith('<span id="dayInfo" style="display: none" class="info-text"><i class="fa fa-info-circle" > </i></span>');
             $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-span info-text"><i class="fa fa-info-circle" > </i> '
-                + i18n.get("Suljettu") + '</span>');
+                + i18n.get("Ei aukioloaikoja") + '</span>');
             return;
         }
         var date = moment().add(weekCounter, 'weeks');
@@ -267,7 +270,7 @@ function getDaySchelude(direction, lib) {
                         dayEnd = to;
                     }
                     // If staff is present.
-                    if (time.staff) {
+                    if (time.status === 1) {
                         staffPresentStart = from;
                         staffPresentEnd = to;
                         // Store the row as a variable.
@@ -364,7 +367,7 @@ function getDaySchelude(direction, lib) {
                 document.title = data.name;
             }
         }
-        adjustHomePageHeight();
+        adjustHomePageHeight(0);
         $('#scheduleTitle').html(i18n.get("Aukioloajat"));
         $('#scheduleTitle').css('display', 'block');
     });

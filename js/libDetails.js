@@ -74,7 +74,6 @@ function asyncFetchGenericDetails() {
                         "::" + coordinates.lat + ", "  + coordinates.lon ;
 
                     var infoText = i18n.get("Reittiopas ja julkinen liikenne");
-
                     linkToTransitInfo = "https://opas.matka.fi/reitti/POS/" + linkToTransitInfo;
                     linkToTransitInfo = encodeURI(linkToTransitInfo);
                     // Matka.fi does not support all cities for public transport details, see: https://www.traficom.fi/fi/asioi-kanssamme/reittiopas
@@ -90,7 +89,6 @@ function asyncFetchGenericDetails() {
                     }
                     $('#transitBody').append('<p><a target="_blank" href="' + linkToTransitInfo + '">' + infoText + '</a></p>')
                 }
-
                 if (data.extra.transit.buses != null && data.extra.transit.buses !== "") {
                     transitIsEmpty = false;
                     $('#transitBody').append('<p>' + i18n.get("Linja-autot") + ': ' + data.extra.transit.buses + '</p>')
