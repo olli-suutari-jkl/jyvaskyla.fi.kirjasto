@@ -1,7 +1,7 @@
 // Variables
 var jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + lang;
 var jsonpUrlV4 = "https://api.kirjastot.fi/v4/library/" + library + "?lang=" + lang +
-    "&with=pictures,services,departments,mailAddress,links,phoneNumbers,primaryContactInfo,transitInfo&limit=2500&pretty";
+    "&with=pictures,services,departments,mailAddress,links,phoneNumbers,primaryContactInfo,transitInfo&limit=1500";
 var transitIsEmpty = true;
 var descriptionIsEmpty = true;
 var isReFetching = false;
@@ -48,7 +48,6 @@ function checkIfContactExists(array, item) {
     }
     return false;
 }
-
 /* Fetch things via v4 api, expect persons & building details */
 function asyncFetchV4Data() {
     var genericDeferred = jQuery.Deferred();
@@ -77,7 +76,6 @@ function asyncFetchV4Data() {
     // Return the Promise so caller can't change the Deferred
     return genericDeferred.promise();
 }
-
 /* Fetch things via v4 api, expect persons & building details */
 function asyncGenerateGenericDetails() {
     var genericDeferred = jQuery.Deferred();
@@ -1023,7 +1021,7 @@ function fetchInformation(language, lib) {
     }
     jsonp_url = "https://api.kirjastot.fi/v3/library/" + lib + "?lang=" + language;
     jsonpUrlV4 = "https://api.kirjastot.fi/v4/library/" + lib + "?lang=" + language +
-        "&with=pictures,services,departments,mailAddress,links,phoneNumbers,primaryContactInfo,transitInfo&limit=1500&pretty";
+        "&with=pictures,services,departments,mailAddress,links,phoneNumbers,primaryContactInfo,transitInfo&limit=1500";
     // Fetch generic details.
     function triggerFetch() {
         var fetchDeferred = jQuery.Deferred();
