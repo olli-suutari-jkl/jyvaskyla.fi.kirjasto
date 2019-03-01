@@ -1,6 +1,7 @@
 // Variables
 var jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + lang;
-var jsonpUrlV4 = "https://api.kirjastot.fi/v4/library/" + library + "?lang=" + lang;
+var jsonpUrlV4 = "https://api.kirjastot.fi/v4/library/" + library + "?lang=" + lang +
+    "&with=pictures,services,departments,mailAddress,links,phoneNumbers,primaryContactInfo,transitInfo&limit=2500&pretty";
 var transitIsEmpty = true;
 var descriptionIsEmpty = true;
 var isReFetching = false;
@@ -9,12 +10,25 @@ var noServices = true;
 var noImages = true;
 var triviaIsEmpty = true;
 var isInfoBoxVisible = false;
+var mapLoaded = false;
+var address = null;
+var mailAddress = null;
+var coordinates = null;
+var departments = null;
+var links = null;
+var phoneNumbers = null;
+var pictures = null;
+var arrayOfServices = null;
+var slogan = null;
+var email = null;
+var description = null;
+var transitInfo = null;
 var lon;
 var lat;
-var mapLoaded = false;
 var contactlist = [];
 var numbersList = [];
 var staffList = [];
+
 /* Functions for checking if name or contact detail exists in arrays with keys "name" and "contact".
    IEC CRASHES: if (contactlist.findIndex(x => x.contact==data.phoneNumbers[i].number) === -1){
    https://stackoverflow.com/questions/37698996/findindex-method-issue-with-internet-explorer */
@@ -34,81 +48,126 @@ function checkIfContactExists(array, item) {
     }
     return false;
 }
+
+/* Fetch things via v4 api, expect persons & building details */
+function asyncFetchV4Data() {
+    var genericDeferred = jQuery.Deferred();
+    setTimeout(function() {
+        $.getJSON(jsonpUrlV4, function (data) {
+            var data = data.data;
+            address = data.address;
+            mailAddress = data.mailAddress;
+            coordinates = data.coordinates;
+            departments = data.departments;
+            links = data.links;
+            phoneNumbers = data.phoneNumbers;
+            pictures = data.pictures;
+            arrayOfServices = data.services;
+            slogan = data.slogan;
+            // libName is undefined if on a standalone lib page.
+            if(libName === undefined) {
+                libName = data.name;
+            }
+            email = data.primaryContactInfo.email.email;
+            description = data.description;
+            transitInfo = data.transitInfo;
+            genericDeferred.resolve()
+        });
+    }, 1 );
+    // Return the Promise so caller can't change the Deferred
+    return genericDeferred.promise();
+}
+
+/* Fetch things via v4 api, expect persons & building details */
+function asyncGenerateGenericDetails() {
+    var genericDeferred = jQuery.Deferred();
+    setTimeout(function() {
+        if ($("#blockquote").is(':empty')) {
+            if (slogan !== null && slogan.length !== 0) {
+                $("#blockquote").append(' <blockquote class="blockquote library-slogan">' + slogan + '</blockquote>');
+            }
+        }
+        if (isEmpty($('#introContent'))) {
+            if (description != null && description.length !== 0) {
+                // Turn bolded Ajankohtaista/Tervetuloa to <h2>
+                description = description.replace("<strong>Ajankohtaista</strong>", "<h2>Ajankohtaista</h2>");
+                description = description.replace("<p><h2>Ajankohtaista</h2></p>", "<h2>Ajankohtaista</h2>");
+                description = description.replace("<strong>Tervetuloa kirjastoon!</strong>", "<h2>Tervetuloa kirjastoon!</h2>");
+                description = description.replace("<p><h2>Tervetuloa kirjastoon!</h2></p>", "<h2>Tervetuloa kirjastoon!</h2>");
+                // Remove <br> and it's variations since everything is inside <p> anyways...
+                // https://stackoverflow.com/questions/4184272/remove-all-br-from-a-string
+                description = description.replace(/(<|&lt;)br\s*\/*(>|&gt;)/g, ' ');
+                // Remove multiple spaces
+                description = description.replace(/^(&nbsp;)+/g, '');
+                // Remove empty paragraphs
+                description = description.replace(/(<p>&nbsp;<\/p>)+/g, "");
+                // Add target="_blank" to links. Same url links would open inside Iframe, links to outside  wouldn't work.
+                description = description.replace(/(<a )+/g, '<a target="_blank" ');
+                $("#introContent").append(description);
+                descriptionIsEmpty = false;
+            }
+        }
+        // Transit details
+        if (transitIsEmpty) {
+            var cityName = address.city;
+            if(coordinates != null && address.street != null && cityName != null) {
+                transitIsEmpty = false;
+                var linkToTransitInfo = address.street + ", "  + address.city +
+                    "::" + coordinates.lat + ", "  + coordinates.lon ;
+
+                var infoText = i18n.get("Reittiopas ja julkinen liikenne");
+                linkToTransitInfo = "https://opas.matka.fi/reitti/POS/" + linkToTransitInfo;
+                linkToTransitInfo = encodeURI(linkToTransitInfo);
+                // Matka.fi does not support all cities for public transport details, see: https://www.traficom.fi/fi/asioi-kanssamme/reittiopas
+                if(cityName !== "Jyväskylä") {
+                    linkToTransitInfo = "https://www.google.com";
+                    if(lang === "fi") {
+                        linkToTransitInfo = "https://www.google.fi"
+                    }
+                    linkToTransitInfo = linkToTransitInfo + "/maps/dir//";
+                    linkToTransitInfo = linkToTransitInfo + address.street + ", "  + address.zipcode +
+                        ", " + address.city + "/@" + coordinates.lat + ", "  + coordinates.lon + ", 15z/";
+                    infoText = i18n.get("Reittiopas");
+                }
+                $('#transitBody').append('<p><a target="_blank" href="' + linkToTransitInfo + '">' + infoText + '</a></p>')
+            }
+            if (transitInfo.buses != null && transitInfo.buses !== "") {
+                transitIsEmpty = false;
+                $('#transitBody').append('<p>' + i18n.get("Linja-autot") + ': ' + transitInfo.buses + '</p>')
+            }
+            if (transitInfo.directions != null && transitInfo.directions.length != 0) {
+                transitIsEmpty = false;
+                $('#transitBody').append('<p>' + transitInfo.directions.replace(/(<a )+/g, '<a target="_blank" ') + '</p>')
+            }
+            if (transitInfo.parking != null && transitInfo.parking !== "") {
+                transitIsEmpty = false;
+                // Replace row splits with <br>
+                var parking = transitInfo.parking.replace(/\r\n/g, "<br>");
+                $('#transitBody').append('<p>' + parking + '</p>')
+            }
+        }
+        if(!transitIsEmpty) {
+            $('#transitDetails').css('display', 'block');
+        }
+        // Update the title to match data.name.
+        if(document.title !== libName && !isReFetching) {
+            if(libName != null) {
+                document.title = libName;
+            }
+        }
+        genericDeferred.resolve();
+    }, 1 );
+    // Return the Promise so caller can't change the Deferred
+    return genericDeferred.promise();
+}
+
+
 /* Fetch generic details and generate the UI */
-function asyncFetchGenericDetails() {
+function asyncFetchBuildingDetails() {
     var genericDeferred = jQuery.Deferred();
     setTimeout(function() {
         // Use v3 api since v4 does not have buildingDetails yet. https://github.com/libraries-fi/kirkanta-api/issues/5
         $.getJSON(jsonp_url + "&with=extra", function (data) {
-            if ($("#blockquote").is(':empty')) {
-                if (data.extra.slogan !== null && data.extra.slogan.length !== 0) {
-                    $("#blockquote").append(' <blockquote class="blockquote library-slogan">' + data.extra.slogan + '</blockquote>');
-                }
-            }
-            if (isEmpty($('#introContent'))) {
-                var description = data.extra.description;
-                if (description != null && description.length !== 0) {
-                    // Turn bolded Ajankohtaista/Tervetuloa to <h2>
-                    description = description.replace("<strong>Ajankohtaista</strong>", "<h2>Ajankohtaista</h2>");
-                    description = description.replace("<p><h2>Ajankohtaista</h2></p>", "<h2>Ajankohtaista</h2>");
-                    description = description.replace("<strong>Tervetuloa kirjastoon!</strong>", "<h2>Tervetuloa kirjastoon!</h2>");
-                    description = description.replace("<p><h2>Tervetuloa kirjastoon!</h2></p>", "<h2>Tervetuloa kirjastoon!</h2>");
-                    // Remove <br> and it's variations since everything is inside <p> anyways...
-                    // https://stackoverflow.com/questions/4184272/remove-all-br-from-a-string
-                    description = description.replace(/(<|&lt;)br\s*\/*(>|&gt;)/g, ' ');
-                    // Remove multiple spaces
-                    description = description.replace(/^(&nbsp;)+/g, '');
-                    // Remove empty paragraphs
-                    description = description.replace(/(<p>&nbsp;<\/p>)+/g, "");
-                    // Add target="_blank" to links. Same url links would open inside Iframe, links to outside  wouldn't work.
-                    description = description.replace(/(<a )+/g, '<a target="_blank" ');
-                    $("#introContent").append(description);
-                    descriptionIsEmpty = false;
-                }
-            }
-            if (transitIsEmpty) {
-                var coordinates = data.address.coordinates; // data.address.coordinates is correct here.
-                var cityName = data.address.city;
-                if(coordinates != null && data.address.street != null && cityName != null) {
-                    transitIsEmpty = false;
-                    var linkToTransitInfo = data.address.street + ", "  + data.address.city +
-                        "::" + coordinates.lat + ", "  + coordinates.lon ;
-
-                    var infoText = i18n.get("Reittiopas ja julkinen liikenne");
-                    linkToTransitInfo = "https://opas.matka.fi/reitti/POS/" + linkToTransitInfo;
-                    linkToTransitInfo = encodeURI(linkToTransitInfo);
-                    // Matka.fi does not support all cities for public transport details, see: https://www.traficom.fi/fi/asioi-kanssamme/reittiopas
-                    if(cityName !== "Jyväskylä") {
-                        linkToTransitInfo = "https://www.google.com";
-                        if(lang === "fi") {
-                            linkToTransitInfo = "https://www.google.fi"
-                        }
-                        linkToTransitInfo = linkToTransitInfo + "/maps/dir//";
-                        linkToTransitInfo = linkToTransitInfo + data.address.street + ", "  + data.address.zipcode +
-                            ", " + data.address.city + "/@" + coordinates.lat + ", "  + coordinates.lon + ", 15z/";
-                        infoText = i18n.get("Reittiopas");
-                    }
-                    $('#transitBody').append('<p><a target="_blank" href="' + linkToTransitInfo + '">' + infoText + '</a></p>')
-                }
-                if (data.extra.transit.buses != null && data.extra.transit.buses !== "") {
-                    transitIsEmpty = false;
-                    $('#transitBody').append('<p>' + i18n.get("Linja-autot") + ': ' + data.extra.transit.buses + '</p>')
-                }
-                if (data.extra.transit.transit_directions != null && data.extra.transit.transit_directions.length != 0) {
-                    transitIsEmpty = false;
-                    $('#transitBody').append('<p>' + data.extra.transit.transit_directions.replace(/(<a )+/g, '<a target="_blank" ') + '</p>')
-                }
-                if (data.extra.transit.parking_instructions != null && data.extra.transit.parking_instructions !== "") {
-                    transitIsEmpty = false;
-                    // Replace row splits with <br>
-                    var parking_instructions = data.extra.transit.parking_instructions.replace(/\r\n/g, "<br>");
-                    $('#transitBody').append('<p>' + parking_instructions + '</p>')
-                }
-            }
-            if(!transitIsEmpty) {
-                $('#transitDetails').css('display', 'block');
-            }
-
             // Table
             if (isEmpty($('#buildingDetails')) && !isReFetching) {
                 // If display none by default, colspan gets messed up.
@@ -140,19 +199,6 @@ function asyncFetchGenericDetails() {
                 }
                 if (!triviaIsEmpty) {
                     $(".trivia-section").css("display", "block");
-                }
-            }
-
-            // Hide news/description toggler if no transit details && not on mobile.
-            else if (lang === "fi" && $(window).width() < 500) {
-                if (!descriptionIsEmpty) {
-                    $("#newsDescriptionToggle").css("display", "block");
-                }
-            }
-            // Update the title to match data.name.
-            if(document.title !== data.name && !isReFetching) {
-                if(data.name != null) {
-                    document.title = data.name;
                 }
             }
             genericDeferred.resolve()
@@ -350,147 +396,144 @@ function bindServiceClicks() {
 function asyncFetchServices() {
     var servicesDeferred = jQuery.Deferred();
     setTimeout(function() {
-        $.getJSON(jsonpUrlV4 + "&with=services", function (data) {
-            var hardwareCount = 0;
-            var collectionCount = 0;
-            var serviceCount = 0;
-            var collections = [];
-            var hardware = [];
-            var rooms = [];
-            var services = [];
-            accessibilityCount = 0;
-            var roomsAndCollectionsAdded = true;
-            var hardwareAndServicesAdded = true;
-            var accessibilityAdded = false;
-            if (isEmpty($('#collectionItems'))) {
-                roomsAndCollectionsAdded = false;
-            }
-            if (isEmpty($('#roomsAndCollectionsItems'))) {
-                roomsAndCollectionsAdded = false;
-            }
-            if (isEmpty($('#hardwareAndServicesItems'))) {
-                hardwareAndServicesAdded = false;
-            }
-            if (isEmpty($('#accessibilityItems'))) {
-                accessibilityAdded = false;
-            }
-            var data = data.data;
-            for (var i = 0; i < data.services.length; i++) {
-                // Collections
-                if (data.services[i].name != null && data.services[i].name.length != 0 || data.services[i].custom_name != null) {
-                    if (data.services[i].type == "collection") {
-                        if (!roomsAndCollectionsAdded) {
-                            collectionCount = collectionCount + 1;
-                            collections.push(data.services[i]);
-                            roomCount = roomCount + 1;
+        var hardwareCount = 0;
+        var collectionCount = 0;
+        var serviceCount = 0;
+        var collections = [];
+        var hardware = [];
+        var rooms = [];
+        var services = [];
+        accessibilityCount = 0;
+        var roomsAndCollectionsAdded = true;
+        var hardwareAndServicesAdded = true;
+        var accessibilityAdded = false;
+        if (isEmpty($('#collectionItems'))) {
+            roomsAndCollectionsAdded = false;
+        }
+        if (isEmpty($('#roomsAndCollectionsItems'))) {
+            roomsAndCollectionsAdded = false;
+        }
+        if (isEmpty($('#hardwareAndServicesItems'))) {
+            hardwareAndServicesAdded = false;
+        }
+        if (isEmpty($('#accessibilityItems'))) {
+            accessibilityAdded = false;
+        }
+        for (var i = 0; i < arrayOfServices.length; i++) {
+            // Collections
+            if (arrayOfServices[i].name != null && arrayOfServices[i].name.length != 0 || arrayOfServices[i].standardName != null) {
+                if (arrayOfServices[i].type == "collection") {
+                    if (!roomsAndCollectionsAdded) {
+                        collectionCount = collectionCount + 1;
+                        collections.push(arrayOfServices[i]);
+                        roomCount = roomCount + 1;
+                    }
+                }
+                // Rooms
+                else if (arrayOfServices[i].type == "room") {
+                    if (!roomsAndCollectionsAdded) {
+                        roomCount = roomCount + 1;
+                        rooms.push(arrayOfServices[i]);
+                    }
+                }
+                // Hardware
+                else if (arrayOfServices[i].type == "hardware") {
+                    if (!hardwareAndServicesAdded) {
+                        hardwareCount = hardwareCount + 1;
+                        serviceCount = serviceCount + 1;
+                        hardware.push(arrayOfServices[i]);
+                    }
+                }
+                // Services
+                else if (arrayOfServices[i].type == "service") {
+                    if(arrayOfServices[i].name === "Saavutettavuus" || arrayOfServices[i].name === "Esteettömyyspalvelut" || arrayOfServices[i].name === "Accessibility services") {
+                        // Set accessibility added to true, this is used to display "Services" tab if other tabs are missing.
+                        if(!accessibilityAdded) {
+                            accessibilityAdded = true;
+                            // Accessibility count is increased in the function.
+                            addItem(arrayOfServices[i], '#accessibilityItems');
                         }
                     }
-                    // Rooms
-                    else if (data.services[i].type == "room") {
-                        if (!roomsAndCollectionsAdded) {
-                            roomCount = roomCount + 1;
-                            rooms.push(data.services[i]);
-                        }
-                    }
-                    // Hardware
-                    else if (data.services[i].type == "hardware") {
+                    else {
                         if (!hardwareAndServicesAdded) {
-                            hardwareCount = hardwareCount + 1;
                             serviceCount = serviceCount + 1;
-                            hardware.push(data.services[i]);
-                        }
-                    }
-                    // Services
-                    else if (data.services[i].type == "service") {
-                        if(data.services[i].name === "Saavutettavuus" || data.services[i].name === "Esteettömyyspalvelut" || data.services[i].name === "Accessibility services") {
-                            // Set accessibility added to true, this is used to display "Services" tab if other tabs are missing.
-                            if(!accessibilityAdded) {
-                                accessibilityAdded = true;
-                                // Accessibility count is increased in the function.
-                                addItem(data.services[i], '#accessibilityItems');
-                            }
-                        }
-                        else {
-                            if (!hardwareAndServicesAdded) {
-                                serviceCount = serviceCount + 1;
-                                services.push(data.services[i]);
-                            }
+                            services.push(arrayOfServices[i]);
                         }
                     }
                 }
             }
-            // Generate list items... Do it here display them in the right order...
-            for (var x=0; x<rooms.length; x++) {
-                addItem(rooms[x], '#roomsAndCollectionsItems');
+        }
+        // Generate list items... Do it here display them in the right order...
+        for (var x=0; x<rooms.length; x++) {
+            addItem(rooms[x], '#roomsAndCollectionsItems');
+        }
+        for (var x=0; x<collections.length; x++) {
+            addItem(collections[x], '#roomsAndCollectionsItems');
+        }
+        for (var x=0; x<hardware.length; x++) {
+            addItem(hardware[x], '#hardwareAndServicesItems');
+        }
+        for (var x=0; x<services.length; x++) {
+            addItem(services[x], '#hardwareAndServicesItems');
+        }
+        // Show titles & counts if found.
+        if (roomCount != 0 || collectionCount != 0) {
+            $("#roomsAndCollections").css('display', 'block');
+            if(roomCount != 0 && collectionCount != 0) {
+                $("#roomsAndCollectionsTitle").prepend(i18n.get("Tilat ja kokoelmat"));
             }
-            for (var x=0; x<collections.length; x++) {
-                addItem(collections[x], '#roomsAndCollectionsItems');
+            else if(roomCount != 0) {
+                $("#roomsAndCollectionsTitle").prepend(i18n.get("Tilat"));
             }
-            for (var x=0; x<hardware.length; x++) {
-                addItem(hardware[x], '#hardwareAndServicesItems');
+            else {
+                $("#roomsAndCollectionsTitle").prepend(i18n.get("Kokoelmat"));
             }
-            for (var x=0; x<services.length; x++) {
-                addItem(services[x], '#hardwareAndServicesItems');
+            $("#roomsAndCollectionsBadge").append('(' + roomCount + ')');
+            noServices = false;
+        }
+        if (serviceCount != 0 || hardwareCount != 0) {
+            $("#hardwareAndServices").css('display', 'block');
+            if(serviceCount != 0 && hardwareCount != 0) {
+                $("#hardwareAndServicesTitle").prepend(i18n.get("Laitteet ja palvelut"));
             }
-            // Show titles & counts if found.
-            if (roomCount != 0 || collectionCount != 0) {
-                $("#roomsAndCollections").css('display', 'block');
-                if(roomCount != 0 && collectionCount != 0) {
-                    $("#roomsAndCollectionsTitle").prepend(i18n.get("Tilat ja kokoelmat"));
-                }
-                else if(roomCount != 0) {
-                    $("#roomsAndCollectionsTitle").prepend(i18n.get("Tilat"));
-                }
-                else {
-                    $("#roomsAndCollectionsTitle").prepend(i18n.get("Kokoelmat"));
-                }
-                $("#roomsAndCollectionsBadge").append('(' + roomCount + ')');
-                noServices = false;
+            else if(hardwareCount != 0) {
+                $("#hardwareAndServicesTitle").prepend(i18n.get("Laitteisto"));
             }
-            if (serviceCount != 0 || hardwareCount != 0) {
-                $("#hardwareAndServices").css('display', 'block');
-                if(serviceCount != 0 && hardwareCount != 0) {
-                    $("#hardwareAndServicesTitle").prepend(i18n.get("Laitteet ja palvelut"));
-                }
-                else if(hardwareCount != 0) {
-                    $("#hardwareAndServicesTitle").prepend(i18n.get("Laitteisto"));
-                }
-                else {
-                    $("#hardwareAndServicesTitle").prepend(i18n.get("Palvelut"));
-                }
-                $("#hardwareAndServicesBadge").append('(' + serviceCount + ')');
-                noServices = false;
+            else {
+                $("#hardwareAndServicesTitle").prepend(i18n.get("Palvelut"));
             }
-            // Add event listener for clicking links.
-            bindServiceClicks();
-            if (!roomsAndCollectionsAdded || !hardwareAndServicesAdded || !accessibilityAdded) {
-                // Loop services and check if refUrl contains one of them and click if so.
-                var urlUnescapeSpaces = refUrl.replace(/%20/g, " ");
-                urlUnescapeSpaces = refUrl.replace(/_/g, " ");
-                urlUnescapeSpaces = refUrl.replace(/-/g, " ");
-                urlUnescapeSpaces = urlUnescapeSpaces.replace(/\(/g, "");
-                urlUnescapeSpaces = urlUnescapeSpaces.replace(/\)/g, "");
-                // Loop services and check if refUrl contains one of them and click if so.
-                var toClick = "";
-                for (var i = 0; i < serviceNames.length; i++) {
-                    var escapedName = serviceNames[i].toLowerCase();
-                    escapedName = escapedName.replace(/ä/g, "a");
-                    escapedName = escapedName.replace(/ö/g, "o");
-                    escapedName = escapedName.replace(/\(/g, "");
-                    escapedName = escapedName.replace(/\)/g, "");
-                    escapedName = escapedName.replace(/_/g, " ");
-                    escapedName = escapedName.replace(/-/g, " ");
-                    if(urlUnescapeSpaces.indexOf(escapedName) > -1) {
-                        toClick = serviceNames[i];
-                        setTimeout(function(){
-                            openOnLoad = true;
-                            $("li").find('[data-name="'+ toClick +'"]').click();
-                        }, 600);
-                    }
+            $("#hardwareAndServicesBadge").append('(' + serviceCount + ')');
+            noServices = false;
+        }
+        // Add event listener for clicking links.
+        bindServiceClicks();
+        if (!roomsAndCollectionsAdded || !hardwareAndServicesAdded || !accessibilityAdded) {
+            // Loop services and check if refUrl contains one of them and click if so.
+            var urlUnescapeSpaces = refUrl.replace(/%20/g, " ");
+            urlUnescapeSpaces = refUrl.replace(/_/g, " ");
+            urlUnescapeSpaces = refUrl.replace(/-/g, " ");
+            urlUnescapeSpaces = urlUnescapeSpaces.replace(/\(/g, "");
+            urlUnescapeSpaces = urlUnescapeSpaces.replace(/\)/g, "");
+            // Loop services and check if refUrl contains one of them and click if so.
+            var toClick = "";
+            for (var i = 0; i < serviceNames.length; i++) {
+                var escapedName = serviceNames[i].toLowerCase();
+                escapedName = escapedName.replace(/ä/g, "a");
+                escapedName = escapedName.replace(/ö/g, "o");
+                escapedName = escapedName.replace(/\(/g, "");
+                escapedName = escapedName.replace(/\)/g, "");
+                escapedName = escapedName.replace(/_/g, " ");
+                escapedName = escapedName.replace(/-/g, " ");
+                if(urlUnescapeSpaces.indexOf(escapedName) > -1) {
+                    toClick = serviceNames[i];
+                    setTimeout(function(){
+                        openOnLoad = true;
+                        $("li").find('[data-name="'+ toClick +'"]').click();
+                    }, 600);
                 }
             }
-            servicesDeferred.resolve();
-        }); // Palvelut
+        }
+        servicesDeferred.resolve();
     }, 1 );
     // Return the Promise so caller can't change the Deferred
     return servicesDeferred.promise();
@@ -499,28 +542,18 @@ function asyncFetchServices() {
 function asyncFetchDepartments() {
     var departmentsDeferred = jQuery.Deferred();
     setTimeout(function() {
-        // https://stackoverflow.com/questions/309953/how-do-i-catch-jquery-getjson-or-ajax-with-datatype-set-to-jsonp-error-w
-        $.getJSON(jsonpUrlV4 + "&with=departments&limit=500",
-            function(data){
-                var data = data.data.departments;
-                // If no pictures found, hide the slider...
-                if (data.length === 0) {
-                    departmentsDeferred.resolve()
-                }
-                else {
-                    for (var i = 0; i < data.length; i++) {
-                        // Collections
-                        roomCount = roomCount +1;
-                        addItem(data[i], '#roomsAndCollectionsItems');
-                    }
-                }
-            })
-            .fail(function(jqXHR, textStatus, errorThrown) {
-                    console.log("Fetching of departments failed: " + textStatus + ": " + errorThrown);
-            })
-            .always(function() {
-                departmentsDeferred.resolve();
-            });
+        // If no pictures found, hide the slider...
+        if (departments.length === 0) {
+            departmentsDeferred.resolve();
+        }
+        else {
+            for (var i = 0; i < departments.length; i++) {
+                // Collections
+                roomCount = roomCount +1;
+                addItem(departments[i], '#roomsAndCollectionsItems');
+            }
+            departmentsDeferred.resolve();
+        }
 
     }, 1 );
     // Return the Promise so caller can't change the Deferred
@@ -531,13 +564,13 @@ function generateImages(data) {
     var imageListDeferred = jQuery.Deferred();
     var counter = 0;
     setTimeout(function() {
-        for (var i = 0; i < data.pictures.length; i++) {
+        for (var i = 0; i < pictures.length; i++) {
             var altCount = i + 1;
             // Use medium image size, large scales smaller images a lot...
-            var altText = i18n.get("Kuva kirjastolta") + ' (' + altCount + '/' + data.pictures.length + ')';
-            $(".rslides").append('<li><img src="' + data.pictures[i].files.medium.url + '" alt="' + altText + '"></li>');
+            var altText = i18n.get("Kuva kirjastolta") + ' (' + altCount + '/' + pictures.length + ')';
+            $(".rslides").append('<li><img src="' + pictures[i].files.medium.url + '" alt="' + altText + '"></li>');
             counter = counter +1;
-            if(counter === data.pictures.length) {
+            if(counter === data.length) {
                 imageListDeferred.resolve();
             }
         }
@@ -549,19 +582,17 @@ function generateImages(data) {
 function asyncFetchImages() {
     var imagesDeferred = jQuery.Deferred();
     setTimeout(function() {
-            $.getJSON(jsonpUrlV4 + "&with=pictures", function (data) {
-                var data = data.data;
                 // If no pictures found, hide the slider...
-                if (data.pictures.length === 0) {
+                if (pictures.length === 0) {
                     $('#sliderBox').css('display', 'none');
                     imagesDeferred.resolve();
                 }
-                $.when( generateImages(data) ).then  (
+                $.when( generateImages(pictures) ).then  (
                     function() {
                         noImages = false;
                         setTimeout(function() {
                             $('#currentSlide').html(1);
-                            $('.top-left').append('/' + data.pictures.length);
+                            $('.top-left').append('/' + pictures.length);
                             //$('.top-left').replaceWith('<i class="top-left"><span id="currentSlide"></span></i>/' + data.pictures.length);
                             -
                                 $(".rslides").responsiveSlides({
@@ -607,7 +638,6 @@ function asyncFetchImages() {
                         }, 250 );
                     }
                 );
-            });
     }, 1 );
     // Return the Promise so caller can't change the Deferred
     return imagesDeferred.promise();
@@ -616,40 +646,38 @@ function asyncFetchImages() {
 function asyncFetchLocation() {
     var locationDeferred = jQuery.Deferred();
     setTimeout(function() {
-        $.getJSON(jsonpUrlV4 + "&with=mailAddress", function (data) {
-            var data = data.data;
-            if (data.address != null) {
+            if (address != null) {
                 contactsIsEmpty = false;
                 if (isEmpty($('#streetAddress'))) {
-                    if (data.address.street != null && data.address.zipcode != null && data.address.city != null) {
-                        $("#streetAddress").append('<p><strong>' + i18n.get("Osoite") + '</strong><br>' + data.name + '<br>' + data.address.street + '<br>' + data.address.zipcode + ' ' + data.address.city + '</p>');
+                    if (address.street != null && address.zipcode != null && address.city != null) {
+                        $("#streetAddress").append('<p><strong>' + i18n.get("Osoite") + '</strong><br>' + libName + '<br>' + address.street + '<br>' + address.zipcode + ' ' + address.city + '</p>');
                     }
                 }
                 if (isEmpty($('#postalAddress'))) {
-                    if (data.mailAddress != null && data.mailAddress.area != null) {
+                    if (mailAddress != null && mailAddress.area != null) {
                         var boxNumber = '';
                         // Use boxNumber, if null use address
-                        if (data.mailAddress.boxNumber !== null) {
-                            boxNumber = 'PL ' + data.mailAddress.boxNumber;
+                        if (mailAddress.boxNumber !== null) {
+                            boxNumber = 'PL ' + mailAddress.boxNumber;
                         }
                         else {
-                            boxNumber = data.address.street;
+                            boxNumber = address.street;
                         }
                         // Generate postal address based on available data.
                         var postalString = '';
-                        if(data.name !== null && data.name.length !== 0) {
-                            postalString += data.name + '<br>';
+                        if(libName !== null && libName.length !== 0) {
+                            postalString += libName + '<br>';
                         }
                         if(boxNumber != null && boxNumber.length !== 0) {
                             postalString += boxNumber + '<br>';
                         }
-                        if(data.mailAddress.zipcode !== null && data.mailAddress.zipcode.length !== 0) {
-                            postalString += data.mailAddress.zipcode + ' ';
+                        if(mailAddress.zipcode !== null && mailAddress.zipcode.length !== 0) {
+                            postalString += mailAddress.zipcode + ' ';
                         }
-                        if(data.mailAddress.area !== null && data.mailAddress.area.length !== 0) {
-                            postalString += data.mailAddress.area;
+                        if(mailAddress.area !== null && mailAddress.area.length !== 0) {
+                            postalString += mailAddress.area;
                         }
-                        if(postalString !== data.name + '<br>') {
+                        if(postalString !== libName + '<br>') {
                             $("#postalAddress").append('<p><strong>' + i18n.get("Postiosoite") + '</strong><br>' + postalString + '</p>');
                         }
                     }
@@ -667,15 +695,15 @@ function asyncFetchLocation() {
                 }
                 // Get coordinates to be used in loadMap function.
                 // Map coordinates (marker)
-                if (data.coordinates != null) {
-                    lon = data.coordinates.lon;
-                    lat = data.coordinates.lat;
+                if (coordinates != null) {
+                    lon = coordinates.lon;
+                    lat = coordinates.lat;
                 }
             }
-            if (data.email != null && data.email.length !== 0) {
+            if (email != null && email.length !== 0) {
                 contactsIsEmpty = false;
-                if(!checkIfContactExists(contactlist, data.email)) {
-                    contactlist.push({name: i18n.get("Oletussähköposti"), contact: data.email});
+                if(!checkIfContactExists(contactlist, email)) {
+                    contactlist.push({name: i18n.get("Oletussähköposti"), contact: email});
                 }
             }
             // Show navigation if content.
@@ -684,7 +712,6 @@ function asyncFetchLocation() {
                 $('#navYhteystiedot').css('display', 'block');
             }
             locationDeferred.resolve();
-        });
     }, 1 );
     // Return the Promise so caller can't change the Deferred
     return locationDeferred.promise();
@@ -702,7 +729,7 @@ function asyncLoadMap() {
         map.options.minZoom = 6;
         map.options.maxZoom = 17.9;
         // Set the contribution text.
-        $('.leaflet-control-attribution').replaceWith('<div class="leaflet-control-attribution leaflet-control">© <a target="_blank" href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors</div>');
+        $('.leaflet-control-attribution').replaceWith('<div class="leaflet-control-attribution leaflet-control">© <a target="_blank" href="https://www.openstreetmap.org/copyright">OpenStreetMap</a></div>');
         function addCoordinatesToMap() {
             var addCoordinatesDeferred = jQuery.Deferred();
             setTimeout(function() {
@@ -788,16 +815,14 @@ function asyncFetchLinks() {
     var linksDeferred = jQuery.Deferred();
     setTimeout(function() {
         // Social media links
-        $.getJSON(jsonpUrlV4 + "&with=links", function (data) {
-            var data = data.data;
             noLinks = true;
             var linkCount = 0;
             // Loop the links of group category [0].
             var loopCounter = 0;
-            if(data.links.length === 0) {
+            if(links.length === 0) {
                 linksDeferred.resolve();
             }
-            data.links.forEach(function (element) {
+            links.forEach(function (element) {
                 // Get url.
                 var url = element.url;
                 if (url === null) {
@@ -839,7 +864,7 @@ function asyncFetchLinks() {
                     }
                 }
                 loopCounter = loopCounter +1;
-                if(loopCounter === data.links.length) {
+                if(loopCounter === links.length) {
                     // Mention links in title, if any are present.
                     if(linkCount !== 0 ) {
                         noLinks = false;
@@ -847,7 +872,6 @@ function asyncFetchLinks() {
                     linksDeferred.resolve();
                 }
             });
-        });
     }, 1 );
     // Return the Promise so caller can't change the Deferred
     return linksDeferred.promise();
@@ -857,19 +881,16 @@ function asyncFetchNumbers() {
     var numbersDeferred = jQuery.Deferred();
     setTimeout(function() {
         var counter = 0;
-        $.getJSON(jsonpUrlV4 + "&with=phoneNumbers", function (data) {
-            var data = data.data;
-            console.log(data);
-            if(data.phoneNumbers.length !== 0) {
-                for (var i = 0; i < data.phoneNumbers.length; i++) {
+            if(phoneNumbers.length !== 0) {
+                for (var i = 0; i < phoneNumbers.length; i++) {
                     // Check if detail is unique.
-                    if(!checkIfContactExists(numbersList, data.phoneNumbers[i].number)) {
-                        numbersList.push({name: data.phoneNumbers[i].name, contact: data.phoneNumbers[i].number});
+                    if(!checkIfContactExists(numbersList, phoneNumbers[i].number)) {
+                        numbersList.push({name: phoneNumbers[i].name, contact: phoneNumbers[i].number});
                     }
                     counter = counter +1;
                 }
                 // If we have looped all, set as resolved, thus moving on.
-                if(counter === data.phoneNumbers.length) {
+                if(counter === phoneNumbers.length) {
                     $.when(
                         // Sort alphabetically. https://stackoverflow.com/questions/6712034/sort-array-by-firstname-alphabetically-in-javascript
                         numbersList.sort(function(a, b){
@@ -886,10 +907,9 @@ function asyncFetchNumbers() {
                 }
             }
             // Resolve, if no length.
-            else if(data.phoneNumbers === undefined || data.phoneNumbers.length === 0) {
+            else if(phoneNumbers === undefined || phoneNumbers.length === 0) {
                 numbersDeferred.resolve()
             }
-        });
     }, 1 );
     // Return the Promise so caller can't change the Deferred
     return numbersDeferred.promise();
@@ -1002,28 +1022,32 @@ function fetchInformation(language, lib) {
         lib = library; // Use default if none provided.
     }
     jsonp_url = "https://api.kirjastot.fi/v3/library/" + lib + "?lang=" + language;
-    jsonpUrlV4 = "https://api.kirjastot.fi/v4/library/" + lib + "?lang=" + language;
+    jsonpUrlV4 = "https://api.kirjastot.fi/v4/library/" + lib + "?lang=" + language +
+        "&with=pictures,services,departments,mailAddress,links,phoneNumbers,primaryContactInfo,transitInfo&limit=1500&pretty";
     // Fetch generic details.
     function triggerFetch() {
         var fetchDeferred = jQuery.Deferred();
         setTimeout(function() {
             if(!isReFetching) {
-                $.when( asyncFetchGenericDetails(), asyncFetchDepartments(), asyncFetchImages(), asyncFetchLinks(), asyncFetchLocation() ).then(
+                $.when( asyncFetchBuildingDetails(), asyncFetchV4Data() ).then(
                     function() {
-                        // Generate links & contacts text based on if links were found or not.
-                        if(!noLinks) {
-                            $('#contactsTitle').append('<span>' + i18n.get("Linkit ja kontaktit") + '</span>');
-                        } else {
-                            $('#contactsTitle').append('<span>' + i18n.get("Kontaktit") + '</span>');
-                        }
-                        $.when( asyncFetchServices(), asyncLoadMap(), generateContacts() ).then(
+                        $.when( asyncGenerateGenericDetails(), asyncFetchDepartments(), asyncFetchImages(), asyncFetchLinks(), asyncFetchLocation()).then(
                             function() {
-                                fetchDeferred.resolve();
+                                $.when( asyncFetchServices(), asyncLoadMap(), generateContacts()  ).then(
+                                    function() {
+                                        // Generate links & contacts text based on if links were found or not.
+                                        if(!noLinks) {
+                                            $('#contactsTitle').append('<span>' + i18n.get("Linkit ja kontaktit") + '</span>');
+                                        } else {
+                                            $('#contactsTitle').append('<span>' + i18n.get("Kontaktit") + '</span>');
+                                        }
+                                        fetchDeferred.resolve();
+                                    });
                             });
                     });
             }
             else {
-                $.when( asyncFetchGenericDetails() ).then(
+                $.when( asyncGenerateGenericDetails() ).then(
                 function() {
                     fetchDeferred.resolve();
                 });

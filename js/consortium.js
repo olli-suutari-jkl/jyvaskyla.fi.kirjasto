@@ -278,6 +278,17 @@ $(document).ready(function() {
                 isModalCloseBinded = false;
                 isServiceClickBinded = false;
                 map = L.map('mapContainer');
+                mailAddress = null;
+                coordinates = null;
+                departments = null;
+                links = null;
+                phoneNumbers = null;
+                pictures = null;
+                arrayOfServices = null;
+                slogan = null;
+                email = null;
+                description = null;
+                transitInfo = null;
                 roomCount = 0;
                 contactlist = [];
                 numbersList = [];

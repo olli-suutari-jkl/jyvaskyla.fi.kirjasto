@@ -46,10 +46,10 @@ var accessibilityCount = 0;
 var accessibilityIsEmpty = true;
 var serviceNames = [];
 function addItem(item, listElement) {
-    var name = item.name;
-    // Use "custom_name", where available.
-    if (item.custom_name != null && item.custom_name.length != 0) {
-        name = item.custom_name;
+    var name = item.standardName;
+    // Use "Custom name", where available.
+    if (item.name != null && item.name.length != 0) {
+        name = item.name;
     }
     if(listElement === "#accessibilityItems" && accessibilityIsEmpty) {
         if (isEmpty($('#accessibilityDetails'))) {
