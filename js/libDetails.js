@@ -66,7 +66,7 @@ function asyncFetchGenericDetails() {
                 }
             }
             if (transitIsEmpty) {
-                var coordinates = data.address.coordinates;
+                var coordinates = data.address.coordinates; // data.address.coordinates is correct here.
                 var cityName = data.address.city;
                 if(coordinates != null && data.address.street != null && cityName != null) {
                     transitIsEmpty = false;
@@ -665,9 +665,9 @@ function asyncFetchLocation() {
                 }
                 // Get coordinates to be used in loadMap function.
                 // Map coordinates (marker)
-                if (data.address.coordinates != null) {
-                    lon = data.address.coordinates.lon;
-                    lat = data.address.coordinates.lat;
+                if (data.coordinates != null) {
+                    lon = data.coordinates.lon;
+                    lat = data.coordinates.lat;
                 }
             }
             if (data.email != null && data.email.length !== 0) {
@@ -786,7 +786,8 @@ function asyncFetchLinks() {
     var linksDeferred = jQuery.Deferred();
     setTimeout(function() {
         // Social media links
-        $.getJSON(jsonp_url + "&with=links", function (data) {
+        $.getJSON(jsonpUrlV4 + "&with=links", function (data) {
+            var data = data.data;
             noLinks = true;
             var linkCount = 0;
             // Loop the links of group category [0].
