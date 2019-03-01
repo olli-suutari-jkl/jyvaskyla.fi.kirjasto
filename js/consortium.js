@@ -118,28 +118,27 @@ function generateSelect() {
         function asyncReplaceIdWithCity() {
             var citiesDeferred = jQuery.Deferred();
             setTimeout(function() {
-                var counter = 0;
-                // Replace City ID's with city names. TO DO: Optimize, 50 items loop 2500 times.
                 try {
-                    for (var x=0; x<libraryList.length; x++) {
-
-                        /* THIS CRASHES THINGS, COMMENT FOR NOW.
-                        $.getJSON("https://api.kirjastot.fi/v3/city/" + libraryList[x].city + "?lang=fi", function(data) {
-                            for (var i = 0; i < libraryList.length; i++) {
-                                if (libraryList[i].city == data.id.toString()) {
-                                    libraryList[i].city = data.name;
+                    // Fetch names of all cities in kirkanta.
+                    $.getJSON("https://api.kirjastot.fi/v3/city?lang=fi&limit=1500", function(data) {
+                        var counter = 0;
+                        for (var i = 0; i < data.items.length; i++) {
+                            // Check if libraryList contains the ID.
+                            for (var x=0; x<libraryList.length; x++) {
+                                if (libraryList[x].city == data.items[i].id.toString()) {
+                                    // Replace the id with city name.
+                                    libraryList[x].city = data.items[i].name;
                                 }
-                            } */
-                        counter = counter + 1;
-                        // If we have looped all of the libraries, set as resolved, thus moving on.
-                        if (counter === libraryList.length) {
-                            citiesDeferred.resolve();
+                            }
+                            counter = counter +1;
+                            if(counter === data.items.length) {
+                                citiesDeferred.resolve();
+                            }
                         }
-                    }
-                        //});
+                    });
                 }
                 catch (e) {
-                    alert(e);
+                    console.log("Error in fetching cities: " + e);
                 }
 
             }, 1 );
@@ -148,7 +147,7 @@ function generateSelect() {
         }
 
         // Replace city ID:s with names and check refurl for library names.
-        $.when(asyncCheckUrlForKeskiLibrary(), asyncReplaceIdWithCity() ).then(
+        $.when(asyncCheckUrlForKeskiLibrary(), asyncReplaceIdWithCity()).then(
             function(){
                 // Trigger schedule fetching.
                 if(homePage) {
@@ -185,9 +184,7 @@ function generateSelect() {
                         }
                     );
                 }
-            }
-
-        );
+            });
     }
 }
 
@@ -275,7 +272,6 @@ $(document).ready(function() {
                 noImages = true;
                 triviaIsEmpty = true;
                 mapLoaded = false;
-                sliderNeedsToRestart = true;
                 contactsIsEmpty = true;
                 noServices = true;
                 isReFetching = false;
@@ -295,7 +291,6 @@ $(document).ready(function() {
                 // Adjust parent url.
                 adjustParentUrl(libName, "library");
             }
-
             if(homePage) {
                 getDaySchelude(0, library);
                 adjustHomePageHeight(50);
@@ -308,11 +303,8 @@ $(document).ready(function() {
             detectswipe("schedules", swipeNavigation);
         }
     });
-
     $(document).on('click', '.map-library-changer', function () {
         // Trigger the library change.
         $('.library-select').val($(this).val()).trigger('change');
     });
-
-
 }); // OnReady
