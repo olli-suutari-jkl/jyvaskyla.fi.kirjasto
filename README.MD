@@ -1,27 +1,16 @@
-**About**
+## **About**
 
-This repository contains pages (published as GitHub pages) to be implemented as iframes for libraries of Jyvaskyla on jyvaskyla.fi/kirjasto
+This repository contains pages (published as GitHub pages) to be implemented as iframes.
 
-Library data is pulled from the kirkanta-api: https://github.com/libraries-fi/kirkanta-api and the UI is heavily inspired by kirjastohakemisto.fi https://github.com/libraries-fi/kirjastohakemisto
+Library data is pulled from the kirkanta-api: https://github.com/libraries-fi/kirkanta-api and the UI is loosely inspired by kirjastohakemisto.fi https://github.com/libraries-fi/kirjastohakemisto
 
-Since the api does not support fetching accessibility details, they are fetched from ”Lisätiedot” fields instead. Example: https://imgur.com/a/Nr7EpfU
+This implementation is currently used in Jyvaskyla: https://www.jyvaskyla.fi/kirjasto/kirjastot + standalone schedules in info-screens & https://www.jyvaskyla.fi/kirjasto/kirjastot/omatoimikirjastot.
 
-**saavutettavuus-info** – Accessibility description, this may contain HTML or just text. 
+### **Usage scenarios**
 
-**saavutettavuus-palvelut** – the accessibility listing and icons, one  item per row.
+**For examples:** see pages/examples
 
-Currently the following saavutettavuus-palvelut are shown as accessibility icons and translated to English:
-
-- Esteetön sisäänpääsy
-- Invapysäköinti
--  Esteetön wc
--  Hissi
--  Induktiosilmukka
--  Suuren kirjasinkoon kokoelma  (only translation, no icon)
-
-Other rows are displayed in the list as they are.
-
-**If city/consortium parameters are provided, Library selector will be shown** according to those parameters (mobile libraries are ignored). Following listings are supported:
+If city/consortium parameters are provided, Library selector will be shown** according to those parameters (mobile libraries are ignored). Following listings are supported:
 A) Libraries of city, that belong to the same consortium ([https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?city=jyväskylä&lib=85159&consortium=2113&lang=fi)](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?city=jyväskylä&lib=85159&consortium=2113&lang=fi) 
 B) Libraries of city ([https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?city=jyväskylä&lib=85159&lang=fi)](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?city=jyväskylä&lib=85159&lang=fi)
 C) Libraries of consortium  ([https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85159&consortium=2113&lang=fi)](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85159&consortium=2113&lang=fi)
@@ -30,40 +19,57 @@ Large schedules for info screens can be used with the &large=true parameter, eq.
 https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/schedule.html?lib=85160&lang=fi&large=true
 This increases the schedule font sizes dynamically to be used in a 1080 * 1920 info screens.
 
+### **Features**
 
+In addition to the basic features, this implementation has some extras, some of which are described in the following table in no particular order.
 
-**Library list**
-
-| ID        	|     Alias     | URL  | On jyvaskyla.fi | Iframe |
-| :-------------: |:-------------:| :-----: | --------------- | --------------- |
-| 85159       | Pääkirjasto | https://hakemisto.kirjastot.fi/jyvaskyla/jyvaskyla_paakirjasto | https://www.jyvaskyla.fi/kirjasto/aukioloajat-ja-yhteystiedot/paakirjasto | <iframe allowfullscreen="" frameborder="0" height="2000px" src="https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85159&lang=fi" width="100%"></iframe> |
-| 85305      | Halssilan lähikirjasto      | https://hakemisto.kirjastot.fi/jyvaskyla/halssila | https://www.jyvaskyla.fi/kirjasto/aukioloajat-ja-yhteystiedot/lahikirjastot/halssilan-kirjasto | <iframe allowfullscreen="" frameborder="0" height="1500px" src="https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85305&lang=fi" width="100%"></iframe> |
-| 85533 | Huhtasuon lähikirjasto      | https://hakemisto.kirjastot.fi/jyvaskyla/huhtasuo | https://www.jyvaskyla.fi/kirjasto/aukioloajat-ja-yhteystiedot/lahikirjastot/huhtasuon-lahikirjasto | <iframe allowfullscreen="" frameborder="0" height="1500px" src="https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85533&lang=fi" width="100%"></iframe> |
-| 85516 | Keljonkankaan lähikirjasto | https://hakemisto.kirjastot.fi/jyvaskyla/keljonkangas | https://www.jyvaskyla.fi/kirjasto/aukioloajat-ja-yhteystiedot/lahikirjastot/keljonkankaan-kirjasto | <iframe allowfullscreen="" frameborder="0" height="1500px" src="https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85516&lang=fi" width="100%"></iframe> |
-| 85754 | Keltinmäen lähikirjasto | https://hakemisto.kirjastot.fi/jyvaskyla/keltinmaki | https://www.jyvaskyla.fi/kirjasto/aukioloajat-ja-yhteystiedot/lahikirjastot/keltinmaen-kirjasto | <iframe allowfullscreen="" frameborder="0" height="1800px" src="https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85754&lang=fi" width="100%"></iframe> |
-| 85081 | Kirjastoauto Aino | https://hakemisto.kirjastot.fi/jyvaskyla/kirjastoautoaino-9198f |                                                              |  |
-| 85302 | Kirjastoauto Martti | https://hakemisto.kirjastot.fi/jyvaskyla/kirjastoautomartti-a8675 |  |                                                              |
-| 85923 | Kirjastoauto Wivi | https://hakemisto.kirjastot.fi/jyvaskyla/kirjastoautowivi-9437e |  |  |
-| 85116 | Korpilahden lähikirjasto | https://hakemisto.kirjastot.fi/jyvaskyla/korpilahti | https://www.jyvaskyla.fi/kirjasto/aukioloajat-ja-yhteystiedot/lahikirjastot/korpilahden-kirjasto | <iframe allowfullscreen="" frameborder="0" height="1500px" src="https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85116&lang=fi" width="100%"></iframe> |
-| 85160 | Kortepohjan lähikirjasto | https://hakemisto.kirjastot.fi/jyvaskyla/kortepohja | https://www.jyvaskyla.fi/kirjasto/aukioloajat-ja-yhteystiedot/lahikirjastot/kortepohjan-kirjasto | <iframe allowfullscreen="" frameborder="0" height="1700px" src="https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85160&lang=fi" width="100%"></iframe> |
-| 86583 | Kuokkalan lähikirjasto | https://hakemisto.kirjastot.fi/jyvaskyla/roska-86583 | https://www.jyvaskyla.fi/kirjasto/aukioloajat-ja-yhteystiedot/lahikirjastot/kuokkalan-kirjasto | <iframe allowfullscreen="" frameborder="0" height="1500px" src="https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=86583&lang=fi" width="100%"></iframe> |
-| 85909 | Lohikosken pienkirjasto | https://hakemisto.kirjastot.fi/jyvaskyla/lohikoski | https://www.jyvaskyla.fi/kirjasto/aukioloajat-ja-yhteystiedot/lahikirjastot/lohikosken-kirjasto | <iframe allowfullscreen="" frameborder="0" height="1500px" src="https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85909&lang=fi" width="100%"></iframe> |
-| 85732 | Palokan aluekirjasto | https://hakemisto.kirjastot.fi/jyvaskyla/palokka | https://www.jyvaskyla.fi/kirjasto/aukioloajat-ja-yhteystiedot/lahikirjastot/palokan-kirjasto | <iframe allowfullscreen="" frameborder="0" height="2000px" src="https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85732&lang=fi" width="100%"></iframe> |
-| 85117 | Säynätsalon lähikirjasto | https://hakemisto.kirjastot.fi/jyvaskyla/saynatsalo | https://www.jyvaskyla.fi/kirjasto/aukioloajat-ja-yhteystiedot/lahikirjastot/saynatsalon-kirjasto | <iframe allowfullscreen="" frameborder="0" height="1800px" src="https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85117&lang=fi" width="100%"></iframe> |
-| 85111 | Tikkakosken lähikirjasto | https://hakemisto.kirjastot.fi/jyvaskyla/tikkakoski | https://www.jyvaskyla.fi/kirjasto/aukioloajat-ja-yhteystiedot/lahikirjastot/tikkakosken-kirjasto | <iframe allowfullscreen="" frameborder="0" height="2500px" src="https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85111&lang=fi" width="100%"></iframe> |
-| 85573 | Vaajakosken aluekirjasto | https://hakemisto.kirjastot.fi/jyvaskyla/vaajakoski | https://www.jyvaskyla.fi/kirjasto/aukioloajat-ja-yhteystiedot/lahikirjastot/vaajakosken-kirjasto | <iframe allowfullscreen="" frameborder="0" height="2500px" src="https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85573&lang=fi" width="100%"></iframe> |
-| 85306 | Vesangan lähikirjasto | https://hakemisto.kirjastot.fi/jyvaskyla/vesanka | https://www.jyvaskyla.fi/kirjasto/aukioloajat-ja-yhteystiedot/lahikirjastot/vesangan-kirjasto | <iframe allowfullscreen="" frameborder="0" height="1500px" src="https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85306&lang=fi" width="100%"></iframe> |
+| Feature                              | Explanation                                                  |
+| ------------------------------------ | ------------------------------------------------------------ |
+| Rendering of accessibility services  | Currently the following saavutettavuus-palvelut are shown as accessibility icons and translated to English: Esteetön sisäänpääsy, Invapysäköinti, Esteetön WC, Hissi, Induktiosilmukka. Usage: Write service names to "Short description", full descriptions is shown below. |
+| Automatic image slider               | Slider for images                                            |
+| Keyboard navigation                  | Keyboard arrow navigation for schedules, images & moving between "Info" & "Contact details". |
+| Swipe navigation                     | Navigate schedules & images by swiping gestures on touchscreens. |
+| Rendering of iframes                 | If service/department description includes link that contains "embed", it is rendered as iframe instead. e.g. https://www.jyvaskyla.fi/kirjasto/kirjastot?jyvaskylan-paakirjasto?soitonharjoitteluhuoneet |
+| External linkls                      | All links that are not pointing to the parent url are turned into external links. External links also have an icon to clarify them.  Iframes can't redirect parent page to external sites. |
+| Transit directions                   | Link to transit directions for matka.fi or Google maps is generated automatically based on address & coordinates. |
+| Checking for duplicated contacts     | Duplicated contact details are not displayed in the contact details list. |
+| Url navigation                       | With some .js on parent side, it is possible to update the url based on which library, tab (contacts) or service is opened. This url can then be shared and the correct page will open automatically. |
+| Images in descriptions               | Images in descriptions are responsive & styled with borders. |
+| Customise styles with .less          | It is possible to customise the styling of the frames by providing them via parameters.<br />Currently the following parameters are available: primary, links, linksHover, linksExternal, btnHover. |
+| Rendering of departments as services | Departments are included in services in the "Rooms and collections" -section. |
+| And more...                          | This list may be appended in the future.                     |
 
 
 
-**Limitations:**  
+### Technologies
+
+Since .less was added, you pretty much need to run the files in a "local server" of some sort to avoid CORS errors. Other than that, just open the files in browser.
+
+| Library name             | Description                                                |
+| ------------------------ | ---------------------------------------------------------- |
+| .less                    | Dynamic styles                                             |
+| Bootstrap 4              | Styles!                                                    |
+| Font Awesome             | Icons                                                      |
+| JQuery 3                 | Makes things easier.                                       |
+| JQuery Translate         | Translations.                                              |
+| Moment.js                | Formatting times.                                          |
+| Select2                  | Library selector                                           |
+| rsSlides                 | Image slider                                               |
+| Leaflet                  | Adds functionality to OpenStreetMaps, use Wikimedia tiles. |
+| Did we forget something? | I hope not...                                              |
+
+
+
+### **Limitations:**  
 
 - Iframes must open links in new tab
 
+- Iframes can't detect parent's scroll position
 
-**TO DO**
+  
 
-- Adjust font sizes to match jyvaskyla.fi
-- Cleanup css
-- Naming conventions, code standards
-- Other improvments
+### To do...
+
+As of now, there is no public backlog, I use Trello -boards for planning things.
+
+Feel free to contact me for questions etc.

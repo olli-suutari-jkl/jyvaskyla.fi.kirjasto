@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
 <body>
-<iframe id="libFrame" allowfullscreen="" scrolling="no" frameborder="0" height="1500px" src='library.html?lib=85159&amp;consortium=2113&amp;lang=fi&amp;primary=414141&amp;links=E63347&amp;linksHover=A82D0C&amp;linksExternal=414141&amp;btnHover=9F230C' width="100%"></iframe>
+<iframe id="libFrame" allowfullscreen="" scrolling="no" frameborder="0" height="1500px" src='../library.html?city=jyväskylä&lib=85159&consortium=2113&lang=fi' width="100%"></iframe>
 </body>
 </html>
 <script type="text/javascript">
@@ -15,9 +15,6 @@
   css.type = "text/css";
   css.innerHTML = '#libFrame { transition: height 800ms; }';
   document.head.appendChild(css);
-
-  // LibId is used to adjust selected library, if changing language.
-  var libId;
   // https://stackoverflow.com/questions/25098021/securityerror-blocked-a-frame-with-origin-from-accessing-a-cross-origin-frame
   window.addEventListener('message', function(event) {
     var data = event.data;
@@ -61,16 +58,7 @@
         console.log("Redirect failed: " + e);
       }
     }
-    else if(data.type === "libId") {
-      try {
-        libId = data.value;
-      }
-      catch (e) {
-        console.log("libId failed to update: " + e);
-      }
-    }
   });
-
 </script>
 
 
