@@ -614,7 +614,8 @@ function asyncFetchImages() {
 function asyncFetchLocation() {
     var locationDeferred = jQuery.Deferred();
     setTimeout(function() {
-        $.getJSON(jsonp_url + "&with=mail_address", function (data) {
+        $.getJSON(jsonpUrlV4 + "&with=mailAddress", function (data) {
+            var data = data.data;
             if (data.address != null) {
                 contactsIsEmpty = false;
                 if (isEmpty($('#streetAddress'))) {
@@ -623,11 +624,11 @@ function asyncFetchLocation() {
                     }
                 }
                 if (isEmpty($('#postalAddress'))) {
-                    if (data.mail_address != null && data.mail_address.area != null) {
+                    if (data.mailAddress != null && data.mailAddress.area != null) {
                         var boxNumber = '';
                         // Use boxNumber, if null use address
-                        if (data.mail_address.box_number !== null) {
-                            boxNumber = 'PL ' + data.mail_address.box_number;
+                        if (data.mailAddress.boxNumber !== null) {
+                            boxNumber = 'PL ' + data.mailAddress.boxNumber;
                         }
                         else {
                             boxNumber = data.address.street;
@@ -640,11 +641,11 @@ function asyncFetchLocation() {
                         if(boxNumber != null && boxNumber.length !== 0) {
                             postalString += boxNumber + '<br>';
                         }
-                        if(data.mail_address.zipcode !== null && data.mail_address.zipcode.length !== 0) {
-                            postalString += data.mail_address.zipcode + ' ';
+                        if(data.mailAddress.zipcode !== null && data.mailAddress.zipcode.length !== 0) {
+                            postalString += data.mailAddress.zipcode + ' ';
                         }
-                        if(data.mail_address.area !== null && data.mail_address.area.length !== 0) {
-                            postalString += data.mail_address.area;
+                        if(data.mailAddress.area !== null && data.mailAddress.area.length !== 0) {
+                            postalString += data.mailAddress.area;
                         }
                         if(postalString !== data.name + '<br>') {
                             $("#postalAddress").append('<p><strong>' + i18n.get("Postiosoite") + '</strong><br>' + postalString + '</p>');
