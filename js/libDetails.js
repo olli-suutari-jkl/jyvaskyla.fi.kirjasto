@@ -16,7 +16,7 @@ var contactlist = [];
 var numbersList = [];
 var staffList = [];
 /* Functions for checking if name or contact detail exists in arrays with keys "name" and "contact".
-   IEC CRASHES: if (contactlist.findIndex(x => x.contact==data.phone_numbers[i].number) === -1){
+   IEC CRASHES: if (contactlist.findIndex(x => x.contact==data.phoneNumbers[i].number) === -1){
    https://stackoverflow.com/questions/37698996/findindex-method-issue-with-internet-explorer */
 function checkIfNameExists(array, item) {
     for (var i = 0; i < array.length; ++i) {
@@ -38,6 +38,7 @@ function checkIfContactExists(array, item) {
 function asyncFetchGenericDetails() {
     var genericDeferred = jQuery.Deferred();
     setTimeout(function() {
+        // Use v3 api since v4 does not have buildingDetails yet. https://github.com/libraries-fi/kirkanta-api/issues/5
         $.getJSON(jsonp_url + "&with=extra", function (data) {
             if ($("#blockquote").is(':empty')) {
                 if (data.extra.slogan !== null && data.extra.slogan.length !== 0) {
@@ -534,7 +535,7 @@ function generateImages(data) {
             var altCount = i + 1;
             // Use medium image size, large scales smaller images a lot...
             var altText = i18n.get("Kuva kirjastolta") + ' (' + altCount + '/' + data.pictures.length + ')';
-            $(".rslides").append('<li><img src="' + data.pictures[i].files.medium + '" alt="' + altText + '"></li>');
+            $(".rslides").append('<li><img src="' + data.pictures[i].files.medium.url + '" alt="' + altText + '"></li>');
             counter = counter +1;
             if(counter === data.pictures.length) {
                 imageListDeferred.resolve();
@@ -548,7 +549,8 @@ function generateImages(data) {
 function asyncFetchImages() {
     var imagesDeferred = jQuery.Deferred();
     setTimeout(function() {
-            $.getJSON(jsonp_url + "&with=pictures", function (data) {
+            $.getJSON(jsonpUrlV4 + "&with=pictures", function (data) {
+                var data = data.data;
                 // If no pictures found, hide the slider...
                 if (data.pictures.length === 0) {
                     $('#sliderBox').css('display', 'none');
@@ -855,17 +857,19 @@ function asyncFetchNumbers() {
     var numbersDeferred = jQuery.Deferred();
     setTimeout(function() {
         var counter = 0;
-        $.getJSON(jsonp_url + "&with=phone_numbers", function (data) {
-            if(data.phone_numbers.length !== 0) {
-                for (var i = 0; i < data.phone_numbers.length; i++) {
+        $.getJSON(jsonpUrlV4 + "&with=phoneNumbers", function (data) {
+            var data = data.data;
+            console.log(data);
+            if(data.phoneNumbers.length !== 0) {
+                for (var i = 0; i < data.phoneNumbers.length; i++) {
                     // Check if detail is unique.
-                    if(!checkIfContactExists(numbersList, data.phone_numbers[i].number)) {
-                        numbersList.push({name: data.phone_numbers[i].name, contact: data.phone_numbers[i].number});
+                    if(!checkIfContactExists(numbersList, data.phoneNumbers[i].number)) {
+                        numbersList.push({name: data.phoneNumbers[i].name, contact: data.phoneNumbers[i].number});
                     }
                     counter = counter +1;
                 }
                 // If we have looped all, set as resolved, thus moving on.
-                if(counter === data.phone_numbers.length) {
+                if(counter === data.phoneNumbers.length) {
                     $.when(
                         // Sort alphabetically. https://stackoverflow.com/questions/6712034/sort-array-by-firstname-alphabetically-in-javascript
                         numbersList.sort(function(a, b){
@@ -882,7 +886,7 @@ function asyncFetchNumbers() {
                 }
             }
             // Resolve, if no length.
-            else if(data.phone_numbers === undefined || data.phone_numbers.length === 0) {
+            else if(data.phoneNumbers === undefined || data.phoneNumbers.length === 0) {
                 numbersDeferred.resolve()
             }
         });
@@ -895,6 +899,7 @@ function asyncFetchStaff() {
     var staffDeferred = jQuery.Deferred();
     setTimeout(function() {
         var counter = 0;
+        // Use v3 api since v4 also returns "hidden" persons. https://github.com/libraries-fi/kirkanta-api/issues/6
         $.getJSON(jsonp_url + "&with=persons", function (data) {
             if(data.persons.length !== 0) {
                 for (var i = 0; i < data.persons.length; i++) {
