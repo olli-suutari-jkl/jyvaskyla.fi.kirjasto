@@ -120,20 +120,28 @@ function generateSelect() {
             setTimeout(function() {
                 var counter = 0;
                 // Replace City ID's with city names. TO DO: Optimize, 50 items loop 2500 times.
-                for (var x=0; x<libraryList.length; x++) {
-                    $.getJSON("https://api.kirjastot.fi/v3/city/" + libraryList[x].city + "?lang=fi", function(data) {
-                        for (var i = 0; i < libraryList.length; i++) {
-                            if (libraryList[i].city == data.id.toString()) {
-                                libraryList[i].city = data.name;
-                            }
-                        }
-                        counter = counter +1;
+                try {
+                    for (var x=0; x<libraryList.length; x++) {
+
+                        /* THIS CRASHES THINGS, COMMENT FOR NOW.
+                        $.getJSON("https://api.kirjastot.fi/v3/city/" + libraryList[x].city + "?lang=fi", function(data) {
+                            for (var i = 0; i < libraryList.length; i++) {
+                                if (libraryList[i].city == data.id.toString()) {
+                                    libraryList[i].city = data.name;
+                                }
+                            } */
+                        counter = counter + 1;
                         // If we have looped all of the libraries, set as resolved, thus moving on.
-                        if(counter === libraryList.length) {
+                        if (counter === libraryList.length) {
                             citiesDeferred.resolve();
                         }
-                    });
+                    }
+                        //});
                 }
+                catch (e) {
+                    alert(e);
+                }
+
             }, 1 );
             // Return the Promise so caller can't change the Deferred
             return citiesDeferred.promise();
@@ -187,19 +195,26 @@ $(document).ready(function() {
     // Fetch libraries of city, that belong to the same consortium
     if(consortium !== undefined && city !== undefined) {
         isLibaryList = true;
-        $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + lang + "&city.name=" + city + "&limit=1500", function(data) {
-            for (var i=0; i<data.items.length; i++) {
-                // Ignore mobile libraries & other consortiums.
-                if(data.items[i].branch_type !== "mobile" && data.items[i].consortium == consortium) {
-                    libraryList.push({id: data.items[i].id, text: data.items[i].name,
-                        city: data.items[i].city.toString(),
-                        street: data.items[i].address.street,
-                        zipcode: data.items[i].address.zipcode,
-                        coordinates: data.items[i].coordinates});
+        try {
+            $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + lang + "&city.name=" + city + "&limit=1500", function(data) {
+                for (var i=0; i<data.items.length; i++) {
+                    // Ignore mobile libraries & other consortiums.
+                    if(data.items[i].branch_type !== "mobile" && data.items[i].consortium == consortium) {
+                        libraryList.push({id: data.items[i].id, text: data.items[i].name,
+                            city: data.items[i].city.toString(),
+                            street: data.items[i].address.street,
+                            zipcode: data.items[i].address.zipcode,
+                            coordinates: data.items[i].coordinates});
+                    }
                 }
-            }
-            generateSelect();
-        });
+                generateSelect();
+            });
+        }
+        catch (e) {
+            alert(e);
+
+        }
+
     }
     // Fetch libraries of city
     else if(consortium === undefined && city !== undefined) {
