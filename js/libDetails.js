@@ -918,16 +918,30 @@ function asyncFetchStaff() {
     setTimeout(function() {
         var counter = 0;
         // Use v3 api since v4 also returns "hidden" persons. https://github.com/libraries-fi/kirkanta-api/issues/6
-        $.getJSON(jsonp_url + "&with=persons", function (data) {
+        $.getJSON(jsonp_url + "&with=persons&limit=500", function (data) {
             if(data.persons.length !== 0) {
                 for (var i = 0; i < data.persons.length; i++) {
                     var name = data.persons[i].first_name + ' ' + data.persons[i].last_name;
                     if (data.persons[i].job_title !== null) {
                         name += ' – ' + data.persons[i].job_title;
                     }
-                    // Check if name or detail is unique.
-                    if (!checkIfContactExists(staffList, data.persons[i].email) || !checkIfNameExists(staffList, name)){
-                        staffList.push({name: name, contact: data.persons[i].email});
+                    // Do not include contacts with null emails.
+                    // Empty phone is "", empty email is null?
+                    if(data.persons[i].email != null || data.persons[i].phone.length !== 0) {
+                        // Check if name or detail is unique.
+                        var contact = "";
+                        if(data.persons[i].email != null) {
+                            contact = contact + data.persons[i].email;
+                            if(data.persons[i].phone.length !== 0) {
+                                contact = contact + "<br>" + data.persons[i].phone;
+                            }
+                        }
+                        else {
+                            contact = contact + data.persons[i].phone;
+                        }
+                        if (!checkIfContactExists(staffList, contact) || !checkIfNameExists(staffList, name)){
+                            staffList.push({name: name, contact: contact});
+                        }
                     }
                     counter = counter +1;
                 }
