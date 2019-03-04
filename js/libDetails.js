@@ -981,6 +981,7 @@ function generateContacts() {
                     if(contactlist.length === 0 && staffList.length === 0 && numbersList.length === 0) {
                         contactlist.push({name: i18n.get("Ei yhteystietoja"), contact: ""});
                     }
+                    // Links & generic email.
                     for (var i = 0; i < contactlist.length; i++) {
                         var contactDetail = "";
                         if(contactlist[i].contact != null) {
@@ -991,16 +992,7 @@ function generateContacts() {
                             '<td>' + contactDetail + '</td>' +
                             '</tr>');
                     }
-                    for (var i = 0; i < staffList.length; i++) {
-                        var contactDetail = "";
-                        if(staffList[i].contact != null) {
-                            contactDetail = staffList[i].contact;
-                        }
-                        $("#contactsTbody").append('<tr>' +
-                            '<td>' + staffList[i].name + '</td>' +
-                            '<td>' + contactDetail + '</td>' +
-                            '</tr>');
-                    }
+                    // Phones
                     for (var i = 0; i < numbersList.length; i++) {
                         var contactDetail = "";
                         if(numbersList[i].contact != null) {
@@ -1008,6 +1000,17 @@ function generateContacts() {
                         }
                         $("#contactsTbody").append('<tr>' +
                             '<td>' + numbersList[i].name + '</td>' +
+                            '<td>' + contactDetail + '</td>' +
+                            '</tr>');
+                    }
+                    // Staff
+                    for (var i = 0; i < staffList.length; i++) {
+                        var contactDetail = "";
+                        if(staffList[i].contact != null) {
+                            contactDetail = staffList[i].contact;
+                        }
+                        $("#contactsTbody").append('<tr>' +
+                            '<td>' + staffList[i].name + '</td>' +
                             '<td>' + contactDetail + '</td>' +
                             '</tr>');
                     }
