@@ -30,7 +30,7 @@ function adjustHomePageHeight(delay) {
     delay = delay + 150;
     setTimeout(function(){
         try {
-            var newHeight = 15;
+            var newHeight = 0;
             if(selectIsOpen) {
                 newHeight = 650;
             }
@@ -70,6 +70,14 @@ $(document).ready(function() {
         adjustHomePageHeight(0);
     });
 
+    setTimeout(function(){
+        var bodyHeight = $( "body" ).height() -15;
+        if(bodyHeight > 275) {
+            $('#homePageWidget').css("min-height", bodyHeight);
+        }
+        // If we do something like timeout 500, the size will go crazy!
+    }, 1000);
+
     // Add event listener for resizing the window, adjust parent when done so.
     // https://stackoverflow.com/questions/5489946/jquery-how-to-wait-for-the-end-of-resize-event-and-only-then-perform-an-ac
     var rtime;
@@ -93,7 +101,6 @@ $(document).ready(function() {
         }
     }
 });
-
 
 // Function for generating the period info of the schedule.
 function generateScheduleInfo(data) {

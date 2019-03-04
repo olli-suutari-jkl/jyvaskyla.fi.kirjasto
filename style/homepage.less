@@ -1,16 +1,22 @@
+html, body {
+    height: 100%
+}
+
 #homePageWidget {
     max-width: 620px;
     background:rgba(0,0,0,0)!important;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    min-height: 320px;
+    transition: min-height 400ms;
+    min-height: 275px;
 }
 
-@media screen and (min-width: 990px) {
+/* Iframes cannot detect parent width...
+@media screen and (min-width: 767px) {
     #homePageWidget {
+        min-height: 300px;
     }
-}
+}*/
 
 /* Homepage widget */
 #btnOpenLibryPage {
