@@ -926,18 +926,19 @@ function asyncFetchStaff() {
                         name += ' – ' + data.persons[i].job_title;
                     }
                     // Do not include contacts with null emails.
-                    // Empty phone is "", empty email is null?
-                    if(data.persons[i].email != null || data.persons[i].phone.length !== 0) {
+                    if(data.persons[i].email != null || data.persons[i].phone != null) {
                         // Check if name or detail is unique.
                         var contact = "";
                         if(data.persons[i].email != null) {
                             contact = contact + data.persons[i].email;
-                            if(data.persons[i].phone.length !== 0) {
+                            if(data.persons[i].phone != null && data.persons[i].phone.length !== 0) {
                                 contact = contact + "<br>" + data.persons[i].phone;
                             }
                         }
                         else {
-                            contact = contact + data.persons[i].phone;
+                            if(data.persons[i].phone.length !== 0) {
+                                contact = contact + data.persons[i].phone;
+                            }
                         }
                         if (!checkIfContactExists(staffList, contact) || !checkIfNameExists(staffList, name)){
                             staffList.push({name: name, contact: contact});
