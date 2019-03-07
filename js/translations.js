@@ -85,7 +85,7 @@ var dict = {
     },
     "Aukioloajat": {
         fi: "Aukioloajat",
-        en: "Scheludes",
+        en: "Opening hours",
     },
     "Ei aukioloaikoja": {
         fi: "Toimipisteen tietoihin ei ole syötetty aukioloaikatietoja valitulle päivälle.",
@@ -269,7 +269,7 @@ var dict = {
     },
     "Virheelliset aukioloajat": {
         fi: "HUOM: Kirjastojen tiedot haetaan valtakunnallisesta kirjastohakemistosta.  Poikkeusaukiolojen haussa on havaittu ongelmia, eivätkä tiedot pidä välttämättä  paikkaansa.",
-        en: "ATTENTION: Schedules are fetched via the national library database, there are ongoing problems with fetching holiday schedules. Libraries may be shown to be closed or open incorrectly during the holidays.",
+        en: "ATTENTION: Opening hours are fetched via the national library database, there are ongoing problems with fetching holiday schedules. Libraries may be shown to be closed or open incorrectly during the holidays.",
     },
     "Firefox In Private": {
         fi: "Huom! Käytät Firefoxia yksityisen selauksen tilassa. Tämä estää selaimen osoitteen välittämisen kirjastojen tietoja näyttävälle sovellukselle, siten navigointi osoitteen perusteella tiettyyn kirjastoon tai palveluun ei ole mahdollista.",
