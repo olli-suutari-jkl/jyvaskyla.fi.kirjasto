@@ -67,7 +67,9 @@ function asyncFetchV4Data() {
             if(libName === undefined) {
                 libName = data.name;
             }
-            email = data.primaryContactInfo.email.email;
+            if(data.primaryContactInfo.email != null) {
+                email = data.primaryContactInfo.email.email;
+            }
             description = data.description;
             transitInfo = data.transitInfo;
             genericDeferred.resolve()
@@ -113,7 +115,7 @@ function asyncGenerateGenericDetails() {
                 var linkToTransitInfo = address.street + ", "  + address.city +
                     "::" + coordinates.lat + ", "  + coordinates.lon ;
 
-                var infoText = i18n.get("Reittiopas ja julkinen liikenne");
+                var infoText = i18n.get("Route and transportation");
                 linkToTransitInfo = "https://opas.matka.fi/reitti/POS/" + linkToTransitInfo;
                 linkToTransitInfo = encodeURI(linkToTransitInfo);
                 // Matka.fi does not support all cities for public transport details, see: https://www.traficom.fi/fi/asioi-kanssamme/reittiopas
@@ -125,13 +127,13 @@ function asyncGenerateGenericDetails() {
                     linkToTransitInfo = linkToTransitInfo + "/maps/dir//";
                     linkToTransitInfo = linkToTransitInfo + address.street + ", "  + address.zipcode +
                         ", " + address.city + "/@" + coordinates.lat + ", "  + coordinates.lon + ", 15z/";
-                    infoText = i18n.get("Reittiopas");
+                    infoText = i18n.get("Navigation to location");
                 }
                 $('#transitBody').append('<p><a target="_blank" href="' + linkToTransitInfo + '">' + infoText + '</a></p>')
             }
             if (transitInfo.buses != null && transitInfo.buses !== "") {
                 transitIsEmpty = false;
-                $('#transitBody').append('<p>' + i18n.get("Linja-autot") + ': ' + transitInfo.buses + '</p>')
+                $('#transitBody').append('<p>' + i18n.get("Buses") + ': ' + transitInfo.buses + '</p>')
             }
             if (transitInfo.directions != null && transitInfo.directions.length != 0) {
                 transitIsEmpty = false;
@@ -169,30 +171,30 @@ function asyncFetchBuildingDetails() {
             // Table
             if (isEmpty($('#buildingDetails')) && !isReFetching) {
                 // If display none by default, colspan gets messed up.
-                $('#triviaTitle').append( i18n.get("Tietoa kirjastosta"));
+                $('#triviaTitle').append( i18n.get("Trivia"));
                 if (data.extra.founded != null) {
                     triviaIsEmpty = false;
-                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Perustamisvuosi") + ': </strong></td>' +
+                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Founded") + ': </strong></td>' +
                         '<td class="trivia-detail">' + data.extra.founded + '</td></tr>');
                 }
                 if (data.extra.building.building_name != null) {
                     triviaIsEmpty = false;
-                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Rakennus") + ': </strong></td>' +
+                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Building") + ': </strong></td>' +
                         '<td class="trivia-detail">' + data.extra.building.building_name + '</td></tr>');
                 }
                 if (data.extra.building.construction_year != null && data.extra.building.construction_year != 0) {
                     triviaIsEmpty = false;
-                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Rakennettu") + ': </strong></td>' +
+                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Year built") + ': </strong></td>' +
                         '<td class="trivia-detail">' + data.extra.building.construction_year + '</td></tr>');
                 }
                 if (data.extra.building.building_architect != null) {
                     triviaIsEmpty = false;
-                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Arkkitehti") + ': </strong></td>' +
+                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Aritecht") + ': </strong></td>' +
                         '<td class="trivia-detail">' + data.extra.building.building_architect + '</td></tr>');
                 }
                 if (data.extra.building.interior_designer != null) {
                     triviaIsEmpty = false;
-                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Sisustus") + ': </strong></td>' +
+                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Decoration") + ': </strong></td>' +
                         '<td class="trivia-detail">' + data.extra.building.interior_designer + '</td></tr>');
                 }
                 if (!triviaIsEmpty) {
@@ -340,7 +342,7 @@ function bindServiceClicks() {
             $(this).data('website').length > 5) {
             // Use _blank, because iframes don't like moving to new pages.
             popupText = popupText + '<p id="linkToInfo"><a target="_blank" href="' + $(this).data('website') +
-                '" class="external-link">' + i18n.get("Lisätietoja") + '</a></p>';
+                '" class="external-link">' + i18n.get("Additional details") + '</a></p>';
         }
         $("#modalContent").replaceWith('<div id="modalContent">' + popupText + '</div>');
         // Bind click event for clicking links to other services inside the modal.
@@ -478,13 +480,13 @@ function asyncFetchServices() {
         if (roomCount != 0 || collectionCount != 0) {
             $("#roomsAndCollections").css('display', 'block');
             if(roomCount != 0 && collectionCount != 0) {
-                $("#roomsAndCollectionsTitle").prepend(i18n.get("Tilat ja kokoelmat"));
+                $("#roomsAndCollectionsTitle").prepend(i18n.get("Rooms and collections"));
             }
             else if(roomCount != 0) {
-                $("#roomsAndCollectionsTitle").prepend(i18n.get("Tilat"));
+                $("#roomsAndCollectionsTitle").prepend(i18n.get("Rooms"));
             }
             else {
-                $("#roomsAndCollectionsTitle").prepend(i18n.get("Kokoelmat"));
+                $("#roomsAndCollectionsTitle").prepend(i18n.get("Collections"));
             }
             $("#roomsAndCollectionsBadge").append('(' + roomCount + ')');
             noServices = false;
@@ -492,13 +494,13 @@ function asyncFetchServices() {
         if (serviceCount != 0 || hardwareCount != 0) {
             $("#hardwareAndServices").css('display', 'block');
             if(serviceCount != 0 && hardwareCount != 0) {
-                $("#hardwareAndServicesTitle").prepend(i18n.get("Laitteet ja palvelut"));
+                $("#hardwareAndServicesTitle").prepend(i18n.get("Hardware and services"));
             }
             else if(hardwareCount != 0) {
-                $("#hardwareAndServicesTitle").prepend(i18n.get("Laitteisto"));
+                $("#hardwareAndServicesTitle").prepend(i18n.get("Hardware"));
             }
             else {
-                $("#hardwareAndServicesTitle").prepend(i18n.get("Palvelut"));
+                $("#hardwareAndServicesTitle").prepend(i18n.get("Services"));
             }
             $("#hardwareAndServicesBadge").append('(' + serviceCount + ')');
             noServices = false;
@@ -565,7 +567,7 @@ function generateImages(data) {
         for (var i = 0; i < pictures.length; i++) {
             var altCount = i + 1;
             // Use medium image size, large scales smaller images a lot...
-            var altText = i18n.get("Kuva kirjastolta") + ' (' + altCount + '/' + pictures.length + ')';
+            var altText = i18n.get("Picture from the library") + ' (' + altCount + '/' + pictures.length + ')';
             $(".rslides").append('<li><img src="' + pictures[i].files.medium.url + '" alt="' + altText + '"></li>');
             counter = counter +1;
             if(counter === data.length) {
@@ -648,7 +650,7 @@ function asyncFetchLocation() {
                 contactsIsEmpty = false;
                 if (isEmpty($('#streetAddress'))) {
                     if (address.street != null && address.zipcode != null && address.city != null) {
-                        $("#streetAddress").append('<p><strong>' + i18n.get("Osoite") + '</strong><br>' + libName + '<br>' + address.street + '<br>' + address.zipcode + ' ' + address.city + '</p>');
+                        $("#streetAddress").append('<p><strong>' + i18n.get("Address") + '</strong><br>' + libName + '<br>' + address.street + '<br>' + address.zipcode + ' ' + address.city + '</p>');
                     }
                 }
                 if (isEmpty($('#postalAddress'))) {
@@ -676,7 +678,7 @@ function asyncFetchLocation() {
                             postalString += mailAddress.area;
                         }
                         if(postalString !== libName + '<br>') {
-                            $("#postalAddress").append('<p><strong>' + i18n.get("Postiosoite") + '</strong><br>' + postalString + '</p>');
+                            $("#postalAddress").append('<p><strong>' + i18n.get("Postal address") + '</strong><br>' + postalString + '</p>');
                         }
                     }
                     else {
@@ -701,13 +703,13 @@ function asyncFetchLocation() {
             if (email != null && email.length !== 0) {
                 contactsIsEmpty = false;
                 if(!checkIfContactExists(contactlist, email)) {
-                    contactlist.push({name: i18n.get("Oletussähköposti"), contact: email});
+                    contactlist.push({name: i18n.get("Generic email"), contact: email});
                 }
             }
             // Show navigation if content.
             if (!contactsIsEmpty) {
-                $('#navEsittely').css('display', 'block');
-                $('#navYhteystiedot').css('display', 'block');
+                $('#navInfo').css('display', 'block');
+                $('#navContacts').css('display', 'block');
             }
             locationDeferred.resolve();
     }, 1 );
@@ -743,14 +745,14 @@ function asyncLoadMap() {
                     var text = '<strong>' + libraryList[i].text + '</strong><br>' +
                         libraryList[i].street + ', <br>' + libraryList[i].zipcode + ', ' + libraryList[i].city +
                         '<br><button type="button" value="' + libraryList[i].id + '" class="map-library-changer btn btn-md btn-primary py-0 mb-3">' +
-                        i18n.get("Hae tiedot") + '</button>';
+                        i18n.get("Fetch details") + '</button>';
                     if(libraryList[i].id == library) {
                         text = '<strong>' + libraryList[i].text + '</strong><br>' +
                             libraryList[i].street + ', <br>' + libraryList[i].zipcode + ', ' + libraryList[i].city;
                         // Add a notification text about missing coordinates for map.
                         if(libraryList[i].coordinates === null) {
-                            $('#mapContainer').append('<div id="noCoordinates">' + i18n.get("Huom") + '! ' +
-                                libraryList[i].text.toString() + i18n.get("Ei koordinaatteja") + '</div>');
+                            $('#mapContainer').append('<div id="noCoordinates">' + i18n.get("Note") + '! ' +
+                                libraryList[i].text.toString() + i18n.get("No coordinates") + '</div>');
                         }
                     }
                     if (libraryList[i].coordinates != null) {
@@ -830,14 +832,14 @@ function asyncFetchLinks() {
                     linkCount = linkCount +1;
                     $(".some-links").append('<a target="_blank" ' +
                         'href="' + url + '" title="' + element.name + '"> <img src="../images/icons/facebook.svg" alt="' +
-                        i18n.get("Kirjaston") + ' Facebook"/>' +
+                        i18n.get("Librarys") + ' Facebook"/>' +
                         '</a>');
                 }
                 else if (url.indexOf("instagram") !== -1) {
                     linkCount = linkCount +1;
                     $(".some-links").append('<a target="_blank" ' +
                         'href="' + url + '" title="' + element.name + '"> <img src="../images/icons/instagram.svg" alt="' +
-                        i18n.get("Kirjaston") + ' Instagram"/>' +
+                        i18n.get("Librarys") + ' Instagram"/>' +
                         '</a>');
                 }
                 else {
@@ -980,7 +982,7 @@ function generateContacts() {
             $.when( asyncFetchNumbers(), asyncFetchStaff() ).then  (
                 function() {
                     if(contactlist.length === 0 && staffList.length === 0 && numbersList.length === 0) {
-                        contactlist.push({name: i18n.get("Ei yhteystietoja"), contact: ""});
+                        contactlist.push({name: i18n.get("No contacts"), contact: ""});
                     }
                     // Links & generic email.
                     for (var i = 0; i < contactlist.length; i++) {
@@ -1017,8 +1019,8 @@ function generateContacts() {
                     }
                     // Show navigation if content.
                     if (!isEmpty($('#contactsTbody'))) {
-                        $('#navEsittely').css('display', 'block');
-                        $('#navYhteystiedot').css('display', 'block');
+                        $('#navInfo').css('display', 'block');
+                        $('#navContacts').css('display', 'block');
                     }
                     contactsDeferred.resolve();
                 }
@@ -1053,9 +1055,9 @@ function fetchInformation(language, lib) {
                                     function() {
                                         // Generate links & contacts text based on if links were found or not.
                                         if(!noLinks) {
-                                            $('#contactsTitle').append('<span>' + i18n.get("Linkit ja kontaktit") + '</span>');
+                                            $('#contactsTitle').append('<span>' + i18n.get("Links and contacts") + '</span>');
                                         } else {
-                                            $('#contactsTitle').append('<span>' + i18n.get("Kontaktit") + '</span>');
+                                            $('#contactsTitle').append('<span>' + i18n.get("Contacts") + '</span>');
                                         }
                                         fetchDeferred.resolve();
                                     });

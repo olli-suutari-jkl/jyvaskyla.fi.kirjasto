@@ -79,31 +79,31 @@ function addItem(item, listElement) {
             $.each(splittedValues, function (index, value) {
                 accessibilityCount = accessibilityCount + 1;
                 if (value.toLocaleLowerCase().indexOf("esteetön sisäänpääsy") !== -1) {
-                    $(".accessibility-images").append(' <img alt="' + i18n.get("Esteetön sisäänpääsy") + '" src="../images/accessibility/Esteetön_kulku_saavutettavuus.png" /> ');
-                    $("#accessibilityList").append('<li>' + i18n.get("Esteetön sisäänpääsy") + '</li>');
+                    $(".accessibility-images").append(' <img alt="' + i18n.get("Accessible entrance") + '" src="../images/accessibility/Esteetön_kulku_saavutettavuus.png" /> ');
+                    $("#accessibilityList").append('<li>' + i18n.get("Accessible entrance") + '</li>');
                 }
                 else if (value.toLocaleLowerCase().indexOf("invapysäköinti") !== -1) {
-                    $(".accessibility-images").append(' <img alt="' + i18n.get("Invapysäköinti") + '" src="../images/accessibility/Esteetön_parkki.png" /> ');
-                    $("#accessibilityList").append('<li>' + i18n.get("Invapysäköinti") + '</li>');
+                    $(".accessibility-images").append(' <img alt="' + i18n.get("Disabled parking") + '" src="../images/accessibility/Esteetön_parkki.png" /> ');
+                    $("#accessibilityList").append('<li>' + i18n.get("Disabled parking") + '</li>');
                 }
                 else if (value.toLocaleLowerCase().indexOf("esteetön wc") !== -1) {
-                    $(".accessibility-images").append(' <img alt="' + i18n.get("Esteetön wc") + '" src="../images/accessibility/Esteetön_wc.png" /> ');
-                    $("#accessibilityList").append('<li>' + i18n.get("Esteetön wc") + '</li>');
+                    $(".accessibility-images").append(' <img alt="' + i18n.get("Accessible toilet") + '" src="../images/accessibility/Esteetön_wc.png" /> ');
+                    $("#accessibilityList").append('<li>' + i18n.get("Accessible toilet") + '</li>');
                 }
                 else if (value.toLocaleLowerCase().indexOf("hissi") !== -1) {
-                    $(".accessibility-images").append(' <img alt="' + i18n.get("Hissi") + '" src="../images/accessibility/Esteetön_hissi.png" /> ');
-                    $("#accessibilityList").append('<li>' + i18n.get("Hissi") + '</li>');
+                    $(".accessibility-images").append(' <img alt="' + i18n.get("Elevator") + '" src="../images/accessibility/Esteetön_hissi.png" /> ');
+                    $("#accessibilityList").append('<li>' + i18n.get("Elevator") + '</li>');
                 }
                 else if (value.toLocaleLowerCase().indexOf("pyörätuoliluiska") !== -1) {
-                    $(".accessibility-images").append(' <img alt="' + i18n.get("Ramppi") + '" src="../images/accessibility/Esteetön_ramppi.png" /> ');
-                    $("#accessibilityList").append('<li>' + i18n.get("Ramppi") + '</li>');
+                    $(".accessibility-images").append(' <img alt="' + i18n.get("Wheelchar ramp") + '" src="../images/accessibility/Esteetön_ramppi.png" /> ');
+                    $("#accessibilityList").append('<li>' + i18n.get("Wheelchar ramp") + '</li>');
                 }
                 else if (value.toLocaleLowerCase().indexOf("induktiosilmukka") !== -1) {
-                    $(".accessibility-images").append(' <img alt="' + i18n.get("Induktiosilmukka") + '" src="../images/accessibility/Esteetön_induktiosilmukka.png" /> ');
-                    $("#accessibilityList").append('<li>' + i18n.get("Induktiosilmukka") + '</li>');
+                    $(".accessibility-images").append(' <img alt="' + i18n.get("Induction loop") + '" src="../images/accessibility/Esteetön_induktiosilmukka.png" /> ');
+                    $("#accessibilityList").append('<li>' + i18n.get("Induction loop") + '</li>');
                 }
                 else if (value.toLocaleLowerCase().indexOf("suuren kirjasinkoon kokoelma") !== -1) {
-                    $("#accessibilityList").append('<li>' + i18n.get("Suuren kirjasinkoon kokoelma") + '</li>');
+                    $("#accessibilityList").append('<li>' + i18n.get("Collection of books with large fonts") + '</li>');
                 }
                 else {
                     if (value != null && value.length != 0) {
@@ -114,7 +114,7 @@ function addItem(item, listElement) {
         }
         if (accessibilityCount != 0 || !accessibilityIsEmpty) {
             $("#accessibility").css('display', 'block');
-            $("#accessibilityTitle").prepend(i18n.get("Saavutettavuus"));
+            $("#accessibilityTitle").prepend(i18n.get("Accesibility"));
             if(accessibilityCount !== 0) {
                 $("#accessibilityBadge").append('(' + accessibilityCount + ')');
             }
@@ -172,7 +172,7 @@ function addItem(item, listElement) {
 
             // Add price where available.
             if (item.price != null && item.price.length != 0) {
-                description = description + '<p><strong>' + i18n.get("Hintatiedot") + ':</strong> ' + item.price + '</p>';
+                description = description + '<p><strong>' + i18n.get("Price") + ':</strong> ' + item.price + '</p>';
             }
             // Replace quotes from the description., they would break things...
             description = description.replace(/["']/g, '&quot;');
@@ -199,10 +199,10 @@ function bindActions() {
     // Navigation events
     function navigateToDefault(animationTime) {
         // Hide other sections & active nav styles.
-        $("#navYhteystiedot").removeClass( "active" );
+        $("#navContacts").removeClass( "active" );
         $(".yhteystiedot").hide(animationTime);
         // Show selected section + add active to nav
-        $("#navEsittely").addClass( "active" );
+        $("#navInfo").addClass( "active" );
         $(".esittely").show(animationTime);
         // Hide infobox if visible.
         if(isInfoBoxVisible) {
@@ -217,10 +217,10 @@ function bindActions() {
 
     function navigateToContacts(animationTime) {
         // Hide other sections & active nav styles.
-        $("#navEsittely").removeClass( "active" );
+        $("#navInfo").removeClass( "active" );
         $(".esittely").hide(animationTime);
         // Show selected section + add active to nav.
-        $("#navYhteystiedot").addClass( "active" );
+        $("#navContacts").addClass( "active" );
         $(".yhteystiedot").show(animationTime);
         // Hide infobox if visible.
         if(isInfoBoxVisible) {
@@ -258,11 +258,11 @@ function bindActions() {
         }
     }
 
-    $( "#navEsittely" ).on('click', function () {
+    $( "#navInfo" ).on('click', function () {
         navigateToDefault(600);
     });
 
-    $( "#navYhteystiedot" ).on('click', function () {
+    $( "#navContacts" ).on('click', function () {
         navigateToContacts(600);
     });
     // Activate arrow navigation when hovering over the navigation.
@@ -432,30 +432,21 @@ $(document).ready(function() {
     map = L.map('mapContainer');
     // UI texts.
     if($('#librarySelectorTitle')) {
-        $('#librarySelectorLabel').append(i18n.get("Kirjaston valinta"));
+        $('#librarySelectorLabel').append(i18n.get("Library selector"));
     }
-    $('#navEsittely').append(i18n.get("Esittely"));
-    $('#navYhteystiedot').append(i18n.get("Yhteystiedot"));
-    $('#transitTitle').append(i18n.get("Liikenneyhteydet"));
-    $('#socialMediaSr').append(i18n.get("Sosiaalinen media"));
-    $('#srPictures').append(i18n.get("Kuvia kirjastolta"));
-    document.getElementById('expandSlider').title = i18n.get("Avaa tai sulje kokoruututila");
+    $('#navInfo').append(i18n.get("Info"));
+    $('#navContacts').append(i18n.get("Contact details"));
+    $('#transitTitle').append(i18n.get("Transit details"));
+    $('#socialMediaSr').append(i18n.get("Social media"));
+    $('#srPictures').append(i18n.get("Pictures from the library"));
+    document.getElementById('expandSlider').title = i18n.get("Toggle full-screen");
     // Yhteystiedot UI texts.
-    document.getElementById('expandMap').title = i18n.get("Avaa tai sulje kokoruututila");
-    $('#locationTitle').append(i18n.get("Sijainti"));
-    $('#srAddress').append(i18n.get("Osoitetiedot"));
-    $('#transitDetailsTitle').append(i18n.get("Ohjeita liikenteeseen"));
-    // Phone numbers
-    $('#phonesTitle').append(i18n.get("Puhelinnumerot"));
-    $('#sectionTh').append(i18n.get("Osasto"));
-    $('#numberTh').append(i18n.get("Numero"));
-    // Staff
-    $('#staffTitle').append(i18n.get("Henkilökunta"));
-    $('#nameTh').append(i18n.get("Nimi"));
-    $('#titleTh').append(i18n.get("Työnimike"));
-    $('#contactDetailsTh').append(i18n.get("Yhteystieto"));
+    document.getElementById('expandMap').title = i18n.get("Toggle full-screen");
+    $('#locationTitle').append(i18n.get("Location"));
+    $('#srAddress').append(i18n.get("Address details"));
+    $('#transitDetailsTitle').append(i18n.get("Instructions for transit"));
     // Services
-    $('#closeInfoBtn').append(i18n.get("Sulje"));
+    $('#closeInfoBtn').append(i18n.get("Close"));
     // Apparently IOS does not support Full screen API:  https://github.com/googlevr/vrview/issues/112
     // Hide fullscreen toggler & increase slider/map sizes a bit on larger screens to compensate the lack of full screen.
     // Since navigation buttons on slider do not apparently work either, hide them too... we got swiping after all!
@@ -477,15 +468,13 @@ $(document).ready(function() {
         }
     }
     // Since the api is having problems with special schedules, add a notification. To be commented when fixed.
-    //$('#schedules').prepend('<p style="color: red">' + i18n.get("Virheelliset aukioloajat") + '</p>');
-
+    //$('#schedules').prepend('<p style="color: red">' + i18n.get("Wrong schedules") + '</p>');
     // Clone page, to be restored if library selector is used.
     divClone = $("#pageContainer").clone();
     // Fetch details if not generating select for libraries, otherwise trigger this in consortium.js
     if(consortium === undefined && city === undefined) {
         fetchInformation(lang);
     }
-
     // Add event listener for resizing the window, adjust parent when done so.
     // https://stackoverflow.com/questions/5489946/jquery-how-to-wait-for-the-end-of-resize-event-and-only-then-perform-an-ac
     var rtime;

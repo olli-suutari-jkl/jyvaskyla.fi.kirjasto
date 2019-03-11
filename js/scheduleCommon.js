@@ -134,7 +134,7 @@ $(document).ready(function() {
         getWeekSchelude(0, library);
     }
     // UI texts.
-    $('#scheludesSr').append(i18n.get("Aikataulut"));
+    $('#scheludesSr').append(i18n.get("Opening hours")); // Standalone schedules.
     bindScheduleKeyNavigation();
     // Detect left/right on schedules or move backwards/forwards in slider if in fullscreen mode or when hovering small slider..
     $(document).keydown(function(e) {
@@ -152,14 +152,14 @@ $(document).ready(function() {
                     $("#sliderPrevious").click();
                 }
                 else if($(".nav-pills").hasClass("hovering")
-                    || $("#navEsittely").is(":focus") || $("#navYhteystiedot").is(":focus")|| $("#navPalvelut").is(":focus")) {
+                    || $("#navInfo").is(":focus") || $("#navContacts").is(":focus")|| $("#navPalvelut").is(":focus")) {
                     if(activeTab === 1) {
-                        $("#navEsittely").focus();
-                        $("#navEsittely").click();
+                        $("#navInfo").focus();
+                        $("#navInfo").click();
                     }
                     else if(activeTab === 2) {
-                        $("#navYhteystiedot").focus();
-                        $("#navYhteystiedot").click();
+                        $("#navContacts").focus();
+                        $("#navContacts").click();
                     }
                 }
                 break;
@@ -177,10 +177,10 @@ $(document).ready(function() {
                     $("#sliderForward").click();
                 }
                 else if($(".nav-pills").hasClass("hovering")
-                    || $("#navEsittely").is(":focus") || $("#navYhteystiedot").is(":focus")|| $("#navPalvelut").is(":focus")) {
+                    || $("#navInfo").is(":focus") || $("#navContacts").is(":focus")|| $("#navPalvelut").is(":focus")) {
                     if(activeTab === 0) {
-                        $("#navYhteystiedot").focus();
-                        $("#navYhteystiedot").click();
+                        $("#navContacts").focus();
+                        $("#navContacts").click();
                     }
                     else if(activeTab === 1) {
                         $("#navPalvelut").focus();

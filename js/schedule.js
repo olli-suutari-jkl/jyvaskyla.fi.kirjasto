@@ -121,7 +121,7 @@ function getWeekSchelude(direction, lib) {
         return;
     }
     // Display week number.
-    $("#weekNumber").html(i18n.get("Viikko") + ' ' + weekNumber);
+    $("#weekNumber").html(i18n.get("Week") + ' ' + weekNumber);
     // Use &pretty: https://github.com/libraries-fi/kirkanta-api/issues/3
     $.getJSON("https://api.kirjastot.fi/v4/schedules?library=" + lib + "&lang=" + lang +
         "&period.start=" + weekCounter + "w&period.end=" + weekCounter + "w&refs=period&limit=5000&pretty", function (data) {
@@ -221,7 +221,7 @@ function getWeekSchelude(direction, lib) {
                         staffPresentEnd = to;
                         // Store the row as a variable.
                         staffToday = '<tr class="time--sub time isTodayClass time--with-staff">' +
-                            '<td class="trn"><i class="fa fa-level-up fa-rotate-90"></i> ' + i18n.get("Palveluaika") + '</td>' +
+                            '<td class="trn"><i class="fa fa-level-up fa-rotate-90"></i> ' + i18n.get("Service time") + '</td>' +
                             '<td>' + staffPresentStart + ' – ' + staffPresentEnd + '</td>' +
                             '</tr>';
                     }
@@ -229,12 +229,12 @@ function getWeekSchelude(direction, lib) {
                     else {
                         if (staffPresentStart === '') {
                             selfServiceBefore = '<tr class="time--sub time isTodayClass time--no-staff">' +
-                                '<td><i class="fa fa-level-up fa-rotate-90"></i> ' + i18n.get("Omatoimiaika") + '</td>' +
+                                '<td><i class="fa fa-level-up fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
                                 '<td>' + from + ' – ' + to + '</td>' +
                                 '</tr>';
                         } else {
                             selfServiceAfter = '<tr class="time--sub time isTodayClass time--no-staff">' +
-                                '<td><i class="fa fa-level-up fa-rotate-90"></i> ' + i18n.get("Omatoimiaika") + '</td>' +
+                                '<td><i class="fa fa-level-up fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
                                 '<td>' + from + ' – ' + to + '</td>' +
                                 '</tr>';
                         }
@@ -290,7 +290,7 @@ function getWeekSchelude(direction, lib) {
                     '<time datetime="' + begin.format('YYYY-MM-DD') + '">' + begin.format('D.M.') + '</time>' +
                     '</th>' +
                     '<td class="day-name">' + dayName + '</td>' +
-                    '<td class="main-schedule closed">' + i18n.get("Suljettu") + '</td>' +
+                    '<td class="main-schedule closed">' + i18n.get("Closed") + '</td>' +
                     '</tr>' + dayInfo;
             } else {
                 scheludeRow = '<tr class="time ' + isTodayClass + '">' +
@@ -338,7 +338,7 @@ function getWeekSchelude(direction, lib) {
                 $("#scheduleInfo").addClass('m-font');
             }
         } else {
-            $('#scheduleTitle').html(i18n.get("Aukioloajat"));
+            $('#scheduleTitle').html(i18n.get("Opening hours"));
             $('#scheduleTitle').css('display', 'block');
         }
     });

@@ -1,273 +1,221 @@
 var dict = {
-    "Kirjaston valinta": {
+    "Library selector": {
         fi: "Kirjaston valinta",
         en: "Library selector",
     },
-    "Esittely": {
+    "Info": {
         fi: "Esittely",
         en: "Info",
     },
-    "Palvelut": {
+    "Services": {
         fi: "Palvelut",
         en: "Services",
     },
-    "Liikenneyhteydet ja saavutettavuus": {
-        fi: "Liikenne & saavutettavuus",
-        en: "Transit & accessibility",
-    },
-    "Ajankohtaista ja esittely": {
-        fi: "Ajankohtaista & esittely",
-        en: "News & introduction",
-    },
-    "Liikenneyhteydet": {
+    "Transit details": {
         fi: "Liikenneyhteydet",
         en: "Transit details",
     },
-    "Ohjeita liikenteeseen": {
+    "Instructions for transit": {
         fi: "Ohjeita liikenteeseen",
         en: "Instructions for transit",
     },
-    "Reittiopas ja julkinen liikenne": {
-        en: "Reittiopas ja julkinen liikenne",
+    "Route and transportation": {
+        fi: "Reittiopas ja julkinen liikenne",
         en: "Route and public transportation",
     },
-    "Reittiopas": {
-        en: "Reittiopas",
+    "Navigation to location": {
+        fi: "Reittiopas",
         en: "Navigation to location",
     },
-    "Linja-autot": {
+    "Buses": {
         fi: "Linja-autot",
         en: "Buses",
     },
-    "Pysäköinti": {
-        fi: "Pysäköinti",
-        en: "Parking",
-    },
-    "Saavutettavuus": {
+    "Accesibility": {
         fi: "Saavutettavuus",
         en: "Accesibility",
     },
-    "Esteetön sisäänpääsy": {
+    "Accessible entrance": {
         fi: "Esteetön sisäänpääsy",
         en: "Accessible entrance",
     },
-    "Invapysäköinti": {
+    "Disabled parking": {
         fi: "Invapysäköinti",
         en: "Disabled parking",
     },
-    "Esteetön wc": {
+    "Accessible toilet": {
         fi: "Esteetön WC",
         en: "Accessible toilet",
     },
-    "Hissi": {
+    "Elevator": {
         fi: "Hissi",
         en: "Elevator",
     },
-    "Pyörätuoliluiska": {
+    "Wheelchar ramp": {
         fi: "Pyörätuoliluiska",
         en: "Wheelchar ramp",
     },
-    "Induktiosilmukka": {
+    "Induction loop": {
         fi: "Induktiosilmukka",
         en: "Induction loop",
     },
-    "Suuren kirjasinkoon kokoelma": {
+    "Collection of books with large fonts": {
         fi: "Suuren kirjasinkoon kokoelma",
         en: "Collection of books with large fonts",
     },
-    "Kirjaston": {
+    "Librarys": {
         fi: "Kirjaston",
         en: "Library's",
     },
-    "Sosiaalinen media": {
+    "Social media": {
         fi: "Sosiaalinen media",
         en: "Social media",
     },
-    "Aukioloajat": {
+    "Opening hours": {
         fi: "Aukioloajat",
         en: "Opening hours",
     },
-    "Ei aukioloaikoja": {
+    "No opening hours": {
         fi: "Toimipisteen tietoihin ei ole syötetty aukioloaikatietoja valitulle päivälle.",
         en: "The library has not entered schedules for the selected day.",
     },
-    "Aikataulut": {
-        fi: "Aikataulut",
-        en: "Scheludes",
-    },
-    "Viikko": {
+    "Week": {
         fi: "Viikko",
         en: "Week",
     },
-    "Palveluaika": {
+    "Service time": {
         fi: "Palveluaika",
         en: "Service time",
     },
-    "Aukiolo": {
+    "Day schedule": {
         fi: "Aukioloaika",
         en: "Day schedule",
     },
-    "Omatoimiaika": {
+    "Self-service": {
         fi: "Omatoimiaika",
         en: "Self-service",
     },
-    "Lehtilukusali": {
-        fi: "Lehtilukusali",
-        en: "Magazine department",
-    },
-    "Kuvia kirjastolta": {
+    "Pictures from the library": {
         fi: "Kuvia kirjastolta",
         en: "Pictures from the library",
     },
-    "Kuva kirjastolta": {
+    "Picture from the library": {
         fi: "Kuva kirjastolta",
         en: "Picture from the library",
     },
-    "Suljettu": {
+    "Closed": {
         fi: "Suljettu",
         en: "Closed",
     },
-    "Avaa tai sulje kokoruututila": {
+    "Toggle full-screen": {
         fi: "Avaa tai sulje kokoruututila.",
         en: "Toggle full-screen.",
     },
-    "Tietoa kirjastosta": {
+    "Trivia": {
         fi: "Yleistietoa",
         en: "Trivia",
     },
-    "Perustamisvuosi": {
+    "Founded": {
         fi: "Perustamisvuosi",
         en: "Founded",
     },
-    "Rakennus": {
+    "Building": {
         fi: "Rakennus",
         en: "Building",
     },
-    "Rakennettu": {
+    "Year built": {
         fi: "Rakennettu",
         en: "Year built",
     },
-    "Arkkitehti": {
+    "Aritecht": {
         fi: "Arkkitehti",
         en: "Aritecht",
     },
-    "Sisustus": {
+    "Decoration": {
         fi: "Sisustus",
         en: "Decoration",
     },
-    "Osoitetiedot": {
+    "Address details": {
         fi: "Osoitetiedot",
         en: "Address details",
     },
-    "Osoite": {
+    "Address": {
         fi: "Osoite",
         en: "Address",
     },
-    "Postiosoite": {
+    "Postal address": {
         fi: "Postiosoite",
         en: "Postal address",
     },
-    "Sijainti": {
+    "Location": {
         fi: "Sijainti",
         en: "Location",
     },
-    "Hae tiedot": {
+    "Fetch details": {
         fi: "Hae tiedot",
         en: "Fetch details",
     },
-    "Oletussähköposti": {
+    "Generic email": {
         fi: "Yleinen sähköpostiosoite",
         en: "Generic email",
     },
-    "Sähköposti": {
-        fi: "Sähköposti",
-        en: "Email",
-    },
-    "Puhelinnumerot": {
-        fi: "Puhelinnumerot",
-        en: "Phone numbers",
-    },
-    "Osasto": {
-        fi: "Osasto",
-        en: "Department",
-    },
-    "Numero": {
-        fi: "Numero",
-        en: "Number",
-    },
-    "Nimi": {
-        fi: "Nimi",
-        en: "Name",
-    },
-    "Yhteystiedot": {
+    "Contact details": {
         fi: "Yhteystiedot",
         en: "Contact details",
     },
-    "Kontaktit": {
+    "Contacts": {
         fi: "Kontaktit",
         en: "Contacts",
     },
-    "Linkit ja kontaktit": {
+    "Links and contacts": {
         fi: "Linkit ja kontaktit",
         en: "Links and contacts",
     },
-    "Yhteystieto": {
-        fi: "Yhteystieto",
-        en: "Details",
-    },
-    "Ei yhteystietoja": {
+    "No contacts": {
         fi: "Kirjasto ei ole lisännyt yhteystietoja.",
         en: "Library has not listed any contact details.",
     },
-    "Palvelun lisätiedot": {
-        fi: "Palvelun mahdolliset lisätiedot avautuvat linkkiä painamalla.",
-        en: "More details may be available by clicking the link(s).",
-    },
-    "Laitteet ja palvelut": {
+    "Hardware and services": {
         fi: "Laitteet ja palvelut",
         en: "Hardware and services",
     },
-    "Laitteisto": {
+    "Hardware": {
         fi: "Laitteisto",
         en: "Hardware",
     },
-    "Tilat ja kokoelmat": {
+    "Rooms and collections": {
         fi: "Tilat ja kokoelmat",
         en: "Rooms and collections",
     },
-    "Tilat": {
+    "Rooms": {
         fi: "Tilat",
         en: "Rooms",
     },
-    "Kokoelmat": {
+    "Collections": {
         fi: "Kokoelmat",
         en: "Collections",
     },
-    "Ei palveluita": {
-        fi: "Kirjaston tietoihin ei ole lisätty palveluita.",
-        en: "Library has not listed any services.",
-    },
-    "Hintatiedot": {
+    "Price": {
         fi: "Hintatiedot",
         en: "Price",
     },
-    "Lisätietoja": {
+    "Additional details": {
         fi: "Lisätietoja",
         en: "Additional details",
     },
-    "Sulje": {
+    "Close": {
         fi: "Sulje",
         en: "Close",
     },
-    "Huom": {
+    "Note": {
         fi: "Huom",
         en: "Note",
     },
-    "Ei koordinaatteja": {
+    "No coordinates": {
         fi: ":lle ei ole syötetty koordinaatteja.",
         en: "'s details do not include coordinates.",
     },
-    "Virheelliset aukioloajat": {
+    "Wrong schedules": {
         fi: "HUOM: Kirjastojen tiedot haetaan valtakunnallisesta kirjastohakemistosta.  Poikkeusaukiolojen haussa on havaittu ongelmia, eivätkä tiedot pidä välttämättä  paikkaansa.",
         en: "ATTENTION: Opening hours are fetched via the national library database, there are ongoing problems with fetching holiday schedules. Libraries may be shown to be closed or open incorrectly during the holidays.",
     },
