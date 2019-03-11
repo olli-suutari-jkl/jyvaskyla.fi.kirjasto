@@ -71,9 +71,8 @@ $(document).ready(function() {
     });
 
     setTimeout(function(){
-        var bodyHeight = $( "body" ).height() -15;
-        if(bodyHeight > 305) {
-            $('#homePageWidget').css("min-height", $( "body" ).height());
+        if($( "body" ).height() > 200) {
+            $('#homePageWidget').css("min-height", $( "body" ).height() -18);
         }
         // If we do something like timeout 500, the size will go crazy!
     }, 1000);
