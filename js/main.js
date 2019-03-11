@@ -39,7 +39,18 @@ function toggleFullScreen(target) {
         }
     }
 }
-
+// toggleFullScreen is not fired when  exiting fullscreen on (chrome + others?) with ESC.
+document.addEventListener('fullscreenchange', exitHandler);
+document.addEventListener('webkitfullscreenchange', exitHandler);
+document.addEventListener('mozfullscreenchange', exitHandler);
+document.addEventListener('MSFullscreenChange', exitHandler);
+function exitHandler() {
+    if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
+        // TO DO: this leaves a smallish black margin to the left of the 1st image after exiting the slider.
+        $('#sliderBox').addClass("small-slider");
+        $('#mapContainer').addClass("map-borders");
+    }
+}
 // Function for adding a new palvelut item.
 // Define accessibility count here, define other counts later on.
 var accessibilityCount = 0;
