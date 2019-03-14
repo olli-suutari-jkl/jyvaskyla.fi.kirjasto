@@ -362,9 +362,6 @@ function adjustParentUrl(toAdd, type) {
     refUrl = refUrl.replace(/\(/g, "");
     refUrl = refUrl.replace(/\)/g, "");
     refUrl = refUrl.toLowerCase();
-    // Fix jkl redirects coded ? and ?=? patterns.
-    refUrl = refUrl.replace(/(%3f)/g, "?");
-    refUrl = refUrl.replace(/(\?=\?)/g, "?");
     toAdd = toAdd.toLowerCase();
     toAdd = toAdd.replace(/ /g, "-");
     toAdd = toAdd.replace(/ä/g, "a");
@@ -412,8 +409,11 @@ function adjustParentUrl(toAdd, type) {
     if(toAdd !== ''){
         refUrl = refUrl + "?" + toAdd;
     }
+    refUrl = refUrl.replace(/(%3f)/g, "?");
     // Remove duplicated ?
     refUrl = refUrl.replace(/[?]{2,}/g, "?");
+    // Fix jkl redirects ?=? patterns.
+    refUrl = refUrl.replace(/(\?=\?)/g, "?");
     // Remove ?, = if last character.
     refUrl = refUrl.replace(/\?$/, '');
     refUrl = refUrl.replace(/=$/, '');

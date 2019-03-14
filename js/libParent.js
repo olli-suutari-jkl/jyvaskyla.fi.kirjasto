@@ -42,10 +42,6 @@ window.addEventListener('message', function(event) {
     // Update the url
     else if(data.type === "url") {
         try {
-            // jyvaskyla.fi redirects add ?%3f=? to url, debug...
-            if(window.location.href.indexOf('jyvaskyla') > -1) {
-                console.log(data.value);
-            }
             history.replaceState("", "", data.value);
         }
         catch (e) {
