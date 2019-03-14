@@ -363,7 +363,7 @@ function adjustParentUrl(toAdd, type) {
     refUrl = refUrl.replace(/\)/g, "");
     refUrl = refUrl.toLowerCase();
     // Fix jkl redirects coded ? and ?=? patterns.
-    refUrl = refUrl.replace(/[%3f]/g, "?");
+    refUrl = refUrl.replace(/(%3f)/g, "?");
     refUrl = refUrl.replace(/(\?=\?)/g, "?");
     toAdd = toAdd.toLowerCase();
     toAdd = toAdd.replace(/ /g, "-");
@@ -414,8 +414,9 @@ function adjustParentUrl(toAdd, type) {
     }
     // Remove duplicated ?
     refUrl = refUrl.replace(/[?]{2,}/g, "?");
-    // Remove ? if last character.
+    // Remove ?, = if last character.
     refUrl = refUrl.replace(/\?$/, '');
+    refUrl = refUrl.replace(/=$/, '');
     try {
         parent.postMessage({value: refUrl, type: 'url'}, '*');
     }
