@@ -361,6 +361,7 @@ function adjustParentUrl(toAdd, type) {
     refUrl = refUrl.replace(/%20/g, "-");
     refUrl = refUrl.replace(/\(/g, "");
     refUrl = refUrl.replace(/\)/g, "");
+    refUrl = refUrl.replace(/%3F/g, "?");
     refUrl = refUrl.toLowerCase();
     toAdd = toAdd.toLowerCase();
     toAdd = toAdd.replace(/ /g, "-");
