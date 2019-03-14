@@ -361,7 +361,9 @@ function adjustParentUrl(toAdd, type) {
     refUrl = refUrl.replace(/%20/g, "-");
     refUrl = refUrl.replace(/\(/g, "");
     refUrl = refUrl.replace(/\)/g, "");
+    // Fix jkl redirects coded ? and ?=? patterns.
     refUrl = refUrl.replace(/[%3f]/g, "?");
+    refUrl = refUrl.replace(/(\?=\?)/g, "?");
     refUrl = refUrl.toLowerCase();
     toAdd = toAdd.toLowerCase();
     toAdd = toAdd.replace(/ /g, "-");
