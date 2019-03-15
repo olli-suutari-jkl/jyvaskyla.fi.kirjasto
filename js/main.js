@@ -51,6 +51,27 @@ function exitHandler() {
         $('#mapContainer').addClass("map-borders");
     }
 }
+
+// Check if provided value is not null, undefined or empty
+function isValue(value) {
+    if(value !== null && value !== undefined && value.length !== 0 && value !== "undefined") {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+// Remove httml & www from url and / # from the end.
+function generatPrettyUrl(url) {
+    url = url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "");
+    // Remove / and # from url if last characters
+    if (url.substring(url.length-1) === "/" || url.substring(url.length-1) === "#") {
+        url = url.substring(0, url.length-1);
+    }
+    return url;
+}
+
 // Function for adding a new palvelut item.
 // Define accessibility count here, define other counts later on.
 var accessibilityCount = 0;
@@ -131,12 +152,29 @@ function addItem(item, listElement) {
             if (item.shortDescription != null && item.shortDescription.length != 0) {
                 description = '<p>' + item.shortDescription + '</p>';
             }
-            var websiteLink = item.website;
             // Add "long" description where available.
             if (item.description != null && item.description.length != 0) {
                 // Replace row splits with <br>
                 var longDescription = item.description.replace(/\r\n/g, "<br>");
                 description = '<p>' + description + '</p><p>' + longDescription + '</p>';
+            }
+            // Add price where available.
+            if (isValue(item.price)) {
+                //description = description + '<p><strong>' + i18n.get("Price") + ':</strong> ' + item.price + '</p>';
+                description = description + '<p class="service-info service-price"><i class="fa fa-money"></i> ' + item.price + '</p>';
+            }
+            // Website
+            if(isValue(item.website)) {
+                var prettyLink = generatPrettyUrl(item.website);
+                description = description + '<p class="service-info service-website"><i class="fa fa-globe"></i> ' +
+                    '<a target="_blank" href="' + item.website + '">' + prettyLink + '</a></p>';
+            }
+            // Email & Phone
+            if(isValue(item.email)) {
+                description = description + '<p class="service-info service-email"><i class="fa fa-envelope-square"></i> ' + item.email + '</p>';
+            }
+            if(isValue(item.phoneNumber)) {
+                description = description + '<p class="service-info service-phone"><i class="fa fa-phone-square"></i> ' + item.phoneNumber + '</p>';
             }
             // Replace links from the description
             if (description.indexOf("<a href=") !== -1) {
@@ -170,15 +208,13 @@ function addItem(item, listElement) {
                 }
             }
 
-            // Add price where available.
-            if (item.price != null && item.price.length != 0) {
-                description = description + '<p><strong>' + i18n.get("Price") + ':</strong> ' + item.price + '</p>';
-            }
             // Replace quotes from the description., they would break things...
             description = description.replace(/["']/g, '&quot;');
+
+
             // Add the item to a desired element.
             $(listElement).append('<li> ' +
-                '<a class="index-item" data-name="' + name + '"  data-message="' + description + '" data-website="' + websiteLink + '" tabindex="0" href="#"' +
+                '<a class="index-item" data-name="' + name + '"  data-message="' + description + '" tabindex="0" href="#"' +
                 ' role="button" aria-expanded="false"' +
                 ' title="' + name + '">' + name + '</a></li>');
         }

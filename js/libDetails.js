@@ -329,20 +329,13 @@ function bindServiceClicks() {
         }
 
         // Check if large or small text/modal.
-        if(popupText.length > 200) {
+        if(popupText.length > 260) {
             $('#modal').addClass("modal-lg");
-            $('#modal').css("text-align", "left");
+            $('#modal').removeClass("modal-small");
         }
         else {
+            $('#modal').addClass("modal-small");
             $('#modal').removeClass("modal-lg");
-            $('#modal').css("text-align", "center");
-        }
-        // If website is not null and contains stuff. Sometimes empty website is shown unless lenght is checked.
-        if ($(this).data('website') !== null && $(this).data('website') !== "undefined" &&
-            $(this).data('website').length > 5) {
-            // Use _blank, because iframes don't like moving to new pages.
-            popupText = popupText + '<p id="linkToInfo"><a target="_blank" href="' + $(this).data('website') +
-                '" class="external-link">' + i18n.get("Additional details") + '</a></p>';
         }
         $("#modalContent").replaceWith('<div id="modalContent">' + popupText + '</div>');
         // Bind click event for clicking links to other services inside the modal.
