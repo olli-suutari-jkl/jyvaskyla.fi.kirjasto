@@ -445,10 +445,14 @@ function adjustParentUrl(toAdd, type) {
     if(toAdd !== ''){
         refUrl = refUrl + "?" + toAdd;
     }
+    refUrl = refUrl.replace(/(%3f)/g, "?");
     // Remove duplicated ?
     refUrl = refUrl.replace(/[?]{2,}/g, "?");
-    // Remove ? if last character.
+    // Fix jkl redirects ?=? patterns.
+    refUrl = refUrl.replace(/(\?=\?)/g, "?");
+    // Remove ?, = if last character.
     refUrl = refUrl.replace(/\?$/, '');
+    refUrl = refUrl.replace(/=$/, '');
     try {
         parent.postMessage({value: refUrl, type: 'url'}, '*');
     }
