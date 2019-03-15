@@ -733,13 +733,19 @@ html {
     display: flex;
     font-weight: 400;
     margin-top: 10px;
+    word-break: break-all;
 }
 
 .service-info i {
     font-size: 1.5em!important;
-    width: 45px;
     font-weight: 500;
+    margin-right: 25px;
 }
+// Service price goes more to the right than the other icons... why?
+.service-price i {
+    margin-right: 20px!important;
+}
+
 // First .service-info.
 #modalContent > .service-info {
     padding-top: 15px;

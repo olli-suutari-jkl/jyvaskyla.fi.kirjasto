@@ -161,20 +161,20 @@ function addItem(item, listElement) {
             // Add price where available.
             if (isValue(item.price)) {
                 //description = description + '<p><strong>' + i18n.get("Price") + ':</strong> ' + item.price + '</p>';
-                description = description + '<p class="service-info service-price"><i class="fa fa-money"></i> ' + item.price + '</p>';
+                description = description + '<p class="service-info service-price"><i class="fa fa-money"></i>' + item.price + '</p>';
             }
             // Website
             if(isValue(item.website)) {
                 var prettyLink = generatPrettyUrl(item.website);
-                description = description + '<p class="service-info service-website"><i class="fa fa-globe"></i> ' +
+                description = description + '<p class="service-info service-website"><i class="fa fa-globe"></i>' +
                     '<a target="_blank" href="' + item.website + '">' + prettyLink + '</a></p>';
             }
             // Email & Phone
             if(isValue(item.email)) {
-                description = description + '<p class="service-info service-email"><i class="fa fa-envelope-square"></i> ' + item.email + '</p>';
+                description = description + '<p class="service-info service-email"><i class="fa fa-envelope-square"></i>' + item.email + '</p>';
             }
             if(isValue(item.phoneNumber)) {
-                description = description + '<p class="service-info service-phone"><i class="fa fa-phone-square"></i> ' + item.phoneNumber + '</p>';
+                description = description + '<p class="service-info service-phone"><i class="fa fa-phone-square"></i>' + item.phoneNumber + '</p>';
             }
             // Replace links from the description
             if (description.indexOf("<a href=") !== -1) {
