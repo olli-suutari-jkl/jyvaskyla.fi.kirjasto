@@ -201,7 +201,7 @@ $(document).ready(function() {
             $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + lang + "&city.name=" + city + "&limit=1500", function(data) {
                 for (var i=0; i<data.items.length; i++) {
                     // Ignore mobile libraries & other consortiums.
-                    if(data.items[i].branch_type !== "mobile" && data.items[i].consortium == consortium) {
+                    if(data.items[i].type !== "mobile" && data.items[i].consortium == consortium) {
                         libraryList.push({id: data.items[i].id, text: data.items[i].name,
                             city: data.items[i].city.toString(),
                             street: data.items[i].address.street,
@@ -213,7 +213,7 @@ $(document).ready(function() {
                 $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + oppositeLang + "&city.name=" + city + "&limit=1500", function(data) {
                     for (var i = 0; i < data.items.length; i++) {
                         // Ignore mobile libraries & other consortiums.
-                        if (data.items[i].branch_type !== "mobile" && data.items[i].consortium == consortium) {
+                        if (data.items[i].type !== "mobile" && data.items[i].consortium == consortium) {
                             libListMultiLang.push(data.items[i].name);
                         }
                     }
@@ -233,7 +233,7 @@ $(document).ready(function() {
         $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + lang + "&city.name=" + city, function(data) {
             for (var i=0; i<data.items.length; i++) {
                 // Ignore mobile libraries
-                if(data.items[i].branch_type !== "mobile") {
+                if(data.items[i].type !== "mobile") {
                     libraryList.push({id: data.items[i].id, text: data.items[i].name,
                         city: data.items[i].city.toString(),
                         street: data.items[i].address.street,
@@ -245,7 +245,7 @@ $(document).ready(function() {
             $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + oppositeLang + "&city.name=" + city, function(data) {
                 for (var i = 0; i < data.items.length; i++) {
                     // Ignore mobile libraries & other consortiums.
-                    if (data.items[i].branch_type !== "mobile") {
+                    if (data.items[i].type !== "mobile") {
                         libListMultiLang.push(data.items[i].name);
                     }
                 }
