@@ -239,6 +239,7 @@ $(document).ready(function() {
                         street: data.items[i].address.street,
                         zipcode: data.items[i].address.zipcode,
                         coordinates: data.items[i].coordinates});
+                    libListMultiLang.push(data.items[i].name);
                 }
             }
             $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + oppositeLang + "&city.name=" + city, function(data) {
@@ -265,6 +266,7 @@ $(document).ready(function() {
                     zipcode: data.items[i].address.zipcode,
                     coordinates: data.items[i].coordinates
                 });
+                libListMultiLang.push(data.items[i].name);
             }
             $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + oppositeLang + "&consortium=" + consortium + "&limit=1500", function(data) {
                 for (var i = 0; i < data.items.length; i++) {

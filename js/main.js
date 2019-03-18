@@ -372,7 +372,7 @@ function adjustParentHeight(delay, elementPosY) {
             }
             if (navigator.appName == 'Microsoft Internet Explorer' ||  !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv:11/)) || (typeof $.browser !== "undefined" && $.browser.msie == 1)) {
                 //alert("Please dont use IE.");
-                console.log(newHeight);
+                //console.log(newHeight);
                 if(newHeight < 200) {
                     newHeight = newHeight + 3000;
                     console.log(newHeight)
