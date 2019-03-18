@@ -393,34 +393,25 @@ function adjustParentHeight(delay, elementPosY) {
   https://gist.github.com/olli-suutari-jkl/8d6ccbc7d3c4e3b563bd5b7cbee095e2
  */
 function adjustParentUrl(toAdd, type) {
-    refUrl = refUrl.replace(/ /g, "-");
-    refUrl = refUrl.replace(/%20/g, "-");
-    refUrl = refUrl.replace(/\(/g, "");
-    refUrl = refUrl.replace(/\)/g, "");
-    refUrl = refUrl.toLowerCase();
-    toAdd = toAdd.toLowerCase();
-    toAdd = toAdd.replace(/ /g, "-");
-    toAdd = toAdd.replace(/ä/g, "a");
-    toAdd = toAdd.replace(/ö/g, "o");
-    toAdd = toAdd.replace(/\(/g, "");
-    toAdd = toAdd.replace(/\)/g, "");
+    refUrl = encodeVal(refUrl);
+    toAdd = encodeVal(toAdd);
     // Remove item from url, if it already exists.
     refUrl = refUrl.replace(new RegExp(toAdd,"i"), "");
     // Check for services.
     if(type !== "introduction" && type !== "contact") {
         // Loop services and check if refUrl contains one of them, if so remove it.
         for (var i = 0; i < serviceNames.length; i++) {
-            var serviceName = serviceNames[i].toLowerCase();
-            serviceName = serviceName.replace(/ /g, "-");
-            serviceName = serviceName.replace(/ /g, "-");
-            serviceName = serviceName.replace(/ä/g, "a");
-            serviceName = serviceName.replace(/ö/g, "o");
-            serviceName = serviceName.replace(/\(/g, "");
-            serviceName = serviceName.replace(/\)/g, "");
+            var serviceName = encodeVal(serviceNames[i]);
             if(refUrl.indexOf(serviceName) > -1) {
                 refUrl = refUrl.replace(serviceName, "");
             }
         }
+    }
+    if(lang === "fi") {
+        refUrl = refUrl.replace(/contacts/g, "");
+    }
+    else if(lang === "en") {
+        refUrl = refUrl.replace(/yhteystiedot/g, "");
     }
     // Remove contacts from url if navigating to introduction.
     if(type === "introduction") {
@@ -430,15 +421,15 @@ function adjustParentUrl(toAdd, type) {
     // Loop libraries and check if refUrl contains one of them, if so remove it.
     if(type === "library") {
         for (var i = 0; i < libListMultiLang.length; i++) {
-            var libraryName = libListMultiLang[i].toLowerCase();
-            libraryName = libraryName.replace(/ /g, "-");
-            libraryName = libraryName.replace(/ä/g, "a");
-            libraryName = libraryName.replace(/ö/g, "o");
-            libraryName = libraryName.replace(/\(/g, "");
-            libraryName = libraryName.replace(/\)/g, "");
-            if(refUrl.indexOf(libraryName.toLowerCase()) > -1) {
+            var nameFi = libListMultiLang[i].nameFi;
+            var nameEn = libListMultiLang[i].nameEn;
+            if(refUrl.indexOf(nameFi) > -1) {
                 refUrl = refUrl.replace(
-                    new RegExp(libraryName,"i"), "");
+                    new RegExp(nameFi,"i"), "");
+            }
+            else if (refUrl.indexOf(nameEn) > -1) {
+                refUrl = refUrl.replace(
+                    new RegExp(nameEn,"i"), "");
             }
         }
     }
