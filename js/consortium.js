@@ -1,4 +1,6 @@
 var libraryList = [];
+// If we switch lang in keskikirjastot.fi, the old lang lib name will ghost in url.
+var libListMultiLang = [];
 var libName;
 // Group libraries by city.
 // https://stackoverflow.com/questions/46043262/split-array-with-objects-to-multiple-arrays-based-on-unique-combination
@@ -187,8 +189,11 @@ function generateSelect() {
             });
     }
 }
-
 $(document).ready(function() {
+    var oppositeLang = "en";
+    if(lang === "en") {
+        oppositeLang = "fi";
+    }
     // Fetch libraries of city, that belong to the same consortium
     if(consortium !== undefined && city !== undefined) {
         isLibaryList = true;
@@ -202,9 +207,18 @@ $(document).ready(function() {
                             street: data.items[i].address.street,
                             zipcode: data.items[i].address.zipcode,
                             coordinates: data.items[i].coordinates});
+                        libListMultiLang.push(data.items[i].name);
                     }
                 }
-                generateSelect();
+                $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + oppositeLang + "&city.name=" + city + "&limit=1500", function(data) {
+                    for (var i = 0; i < data.items.length; i++) {
+                        // Ignore mobile libraries & other consortiums.
+                        if (data.items[i].branch_type !== "mobile" && data.items[i].consortium == consortium) {
+                            libListMultiLang.push(data.items[i].name);
+                        }
+                    }
+                    generateSelect();
+                });
             });
         }
         catch (e) {
@@ -227,7 +241,15 @@ $(document).ready(function() {
                         coordinates: data.items[i].coordinates});
                 }
             }
-            generateSelect();
+            $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + oppositeLang + "&city.name=" + city, function(data) {
+                for (var i = 0; i < data.items.length; i++) {
+                    // Ignore mobile libraries & other consortiums.
+                    if (data.items[i].branch_type !== "mobile") {
+                        libListMultiLang.push(data.items[i].name);
+                    }
+                }
+                generateSelect();
+            });
         });
     }
     // Fetch libraries of consortium
@@ -243,13 +265,13 @@ $(document).ready(function() {
                     zipcode: data.items[i].address.zipcode,
                     coordinates: data.items[i].coordinates
                 });
-                /*
-                if(data.items[i].branch_type !== "mobile") {
-
-                }
-                */
             }
-            generateSelect();
+            $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + oppositeLang + "&consortium=" + consortium + "&limit=1500", function(data) {
+                for (var i = 0; i < data.items.length; i++) {
+                    libListMultiLang.push(data.items[i].name);
+                }
+                generateSelect();
+            });
         });
     }
 
