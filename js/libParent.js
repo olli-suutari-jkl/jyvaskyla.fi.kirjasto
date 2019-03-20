@@ -49,6 +49,7 @@ window.addEventListener('message', function(event) {
         }
     }
 });
+/*
 // Hide liferay portlet title for keskikirjastot.
 if(window.location.href.indexOf('keskikirjastot') > -1) {
     $( ".portlet-title" ).each(function() {
@@ -56,4 +57,5 @@ if(window.location.href.indexOf('keskikirjastot') > -1) {
             $(this).hide();
         }
     });
-}
+}*/
+
