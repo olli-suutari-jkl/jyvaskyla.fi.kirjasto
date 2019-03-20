@@ -1,5 +1,5 @@
 // This file is linked to the parent page, it adds functionality to libFrames.
-var container = document.getElementById('libFrame');
+var libContainer = document.getElementById('libFrame');
 // Add transition style for smooth height adjustments.
 var css = document.createElement("style");
 css.type = "text/css";
@@ -10,7 +10,7 @@ window.addEventListener('message', function(event) {
     var data = event.data;
     // Scroll to position
     if(data.type === "scroll") {
-        var rect = container.getBoundingClientRect();
+        var rect = libContainer.getBoundingClientRect();
         var scrollToPos = rect.top + data.value;
         if(data.scrollParameter === "under") {
             // Scroll if under the scroll position
@@ -37,7 +37,7 @@ window.addEventListener('message', function(event) {
                 data.value = 1000;
             }
         }
-        container.style.height = (data.value) + "px";
+        libContainer.style.height = (data.value) + "px";
     }
     // Update the url
     else if(data.type === "url") {
