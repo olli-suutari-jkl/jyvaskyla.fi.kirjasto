@@ -4,18 +4,6 @@ var libListMultiLang = [];
 var libListMultiLangHelper = [];
 var libName;
 
-function encodeVal(value) {
-    var value = value.toLowerCase();
-    value = value.replace(/ /g, "-");
-    value = value.replace(/ä/g, "a");
-    value = value.replace(/ö/g, "o");
-    value = value.replace(/\(/g, "");
-    value = value.replace(/\)/g, "");
-    value = encodeURI(value);
-    value = value.replace(/%20/g, "-");
-    return value;
-}
-
 // Group libraries by city.
 // https://stackoverflow.com/questions/46043262/split-array-with-objects-to-multiple-arrays-based-on-unique-combination
 function groupByCity(arr) {
@@ -127,7 +115,6 @@ function generateSelect() {
             return 1;
         return 0; //default return value (no sorting)
     });
-
     // If we are fetching a consortium or a city.
     if(consortium !== undefined || city !== undefined) {
         var consortiumLibraries = [];
@@ -148,6 +135,12 @@ function generateSelect() {
                             }
                             counter = counter +1;
                             if(counter === data.items.length) {
+                                // Sort or the city listing wont be in  correct order...
+                                libraryList.sort(function(a, b){
+                                    if(a.city < b.city) { return -1; }
+                                    if(a.city > b.city) { return 1; }
+                                    return 0;
+                                });
                                 citiesDeferred.resolve();
                             }
                         }

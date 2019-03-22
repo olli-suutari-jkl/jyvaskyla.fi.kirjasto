@@ -83,7 +83,7 @@ function asyncGenerateGenericDetails() {
     var genericDeferred = jQuery.Deferred();
     setTimeout(function() {
         if ($("#blockquote").is(':empty')) {
-            if (slogan !== null && slogan.length !== 0) {
+            if (slogan !== null && slogan.length > 1) {
                 $("#blockquote").append(' <blockquote class="blockquote library-slogan">' + slogan + '</blockquote>');
             }
         }

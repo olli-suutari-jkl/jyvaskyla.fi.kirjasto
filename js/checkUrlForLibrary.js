@@ -16,18 +16,20 @@ function asyncCheckUrlForKeskiLibrary() {
             return;
         }
         var matchFound = false;
-        // Loop libraries and check if refUrl contains one of them and click if so.
-        for (var i = 0; i < libraryList.length; i++) {
-            var urlUnescapeSpaces = refUrl.replace(/%20/g, " ");
-            urlUnescapeSpaces = refUrl.replace(/-/g, " ");
-            var escapedName = libraryList[i].text.toLowerCase();
-            escapedName = escapedName.replace(/ä/g, "a");
-            escapedName = escapedName.replace(/ö/g, "o");
-            escapedName = escapedName.replace(/\(/g, "");
-            escapedName = escapedName.replace(/\)/g, "");
-            if(urlUnescapeSpaces.indexOf(escapedName) > -1) {
-                library = libraryList[i].id;
-                matchFound = true;
+        if(!matchFound) {
+            // Loop libraries and check if refUrl contains one of them and click if so.
+            for (var i = 0; i < libraryList.length; i++) {
+                var urlUnescapeSpaces = refUrl.replace(/%20/g, " ");
+                urlUnescapeSpaces = refUrl.replace(/-/g, " ");
+                var escapedName = libraryList[i].text.toLowerCase();
+                escapedName = escapedName.replace(/ä/g, "a");
+                escapedName = escapedName.replace(/ö/g, "o");
+                escapedName = escapedName.replace(/\(/g, "");
+                escapedName = escapedName.replace(/\)/g, "");
+                if(urlUnescapeSpaces.indexOf(escapedName) > -1) {
+                    library = libraryList[i].id;
+                    matchFound = true;
+                }
             }
         }
         // Custom names used for libraries of Jyväskylä.
@@ -172,6 +174,12 @@ function asyncCheckUrlForKeskiLibrary() {
             else if(lang === "en") {
                 adjustParentUrl('main-library-jyvaskyla', 'library');
             }
+        }
+        try {
+            parent.postMessage({value: libListMultiLang, lang: lang, selectedLib: library, type: 'libList'}, '*');
+        }
+        catch (e) {
+            console.log("Parent libList adjustment failed: " + e);
         }
         urlDeferred.resolve();
     }, 1 );

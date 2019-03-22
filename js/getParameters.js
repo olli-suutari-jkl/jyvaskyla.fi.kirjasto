@@ -51,15 +51,54 @@ if(lang == undefined && library == undefined){
 var i18n = $('body').translate({lang: lang, t: dict}); // Use the correct language
 $("html").attr("lang", lang);
 
+// Check if provided value is not null, undefined or empty
+function isValue(value) {
+    if(value !== null && value !== undefined && value.length !== 0 && value !== "undefined") {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+function encodeVal(value) {
+    if(!isValue(value)) {
+        return value;
+    }
+    value = value.toLowerCase();
+    value = value.replace(/ /g, "-");
+    value = value.replace(/ä/g, "a");
+    value = value.replace(/ö/g, "o");
+    value = value.replace(/\(/g, "");
+    value = value.replace(/\)/g, "");
+    value = encodeURI(value);
+    value = value.replace(/%20/g, "-");
+    return value;
+}
+
+function decodeVal(value) {
+    if(!isValue(value)) {
+        return value;
+    }
+    value = decodeURI(value);
+    value = value.toLowerCase();
+    value = value.replace(/ /g, "-");
+    value = value.replace(/ä/g, "a");
+    value = value.replace(/ö/g, "o");
+    value = value.replace(/\(/g, "");
+    value = value.replace(/\)/g, "");
+    return value;
+}
+
 // Get referrer url (Iframe parent). If Library name is set, use that as the default (checkUrlForLibrary.js).
 // This is also used for navigating to service x by default.
 refUrl = (window.location != window.parent.location)
     ? document.referrer
     : document.location.href;
-refUrl = refUrl.toLocaleLowerCase();
 if(refUrl.length === 0) {
     refUrl = window.location.href;
 }
+refUrl = decodeVal(refUrl);
 // Navigate to contacts or services, if parameter is in the url.
 // Active tab: 0 = info, 1 = contact details, 3 = services.
 var activeTab = 0;

@@ -52,16 +52,6 @@ function exitHandler() {
     }
 }
 
-// Check if provided value is not null, undefined or empty
-function isValue(value) {
-    if(value !== null && value !== undefined && value.length !== 0 && value !== "undefined") {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
 // Remove httml & www from url and / # from the end.
 function generatPrettyUrl(url) {
     url = url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "");
@@ -375,7 +365,7 @@ function adjustParentHeight(delay, elementPosY) {
                 //console.log(newHeight);
                 if(newHeight < 200) {
                     newHeight = newHeight + 3000;
-                    console.log(newHeight)
+                    //console.log(newHeight)
                 }
             }
             if(newHeight !== height) {
@@ -394,7 +384,26 @@ function adjustParentHeight(delay, elementPosY) {
  */
 function adjustParentUrl(toAdd, type) {
     refUrl = encodeVal(refUrl);
+    // Sometimes refurl is set to github when paging back or forwards, reset in case so...
+    if(refUrl.indexOf("github") >-1) {
+        refUrl = (window.location != window.parent.location)
+            ? document.referrer
+            : document.location.href;
+        if(refUrl.length === 0) {
+            refUrl = window.location.href;
+        }
+        refUrl = decodeVal(refUrl);
+    }
     toAdd = encodeVal(toAdd);
+    var stateTitle = libName;
+    if(stateTitle === undefined) {
+        if(lang == "fi") {
+            stateTitle = "Kirjastot"
+        }
+        else {
+            stateTitle = "Libraries"
+        }
+    }
     // Remove item from url, if it already exists.
     refUrl = refUrl.replace(new RegExp(toAdd,"i"), "");
     // Check for services.
@@ -404,6 +413,7 @@ function adjustParentUrl(toAdd, type) {
             var serviceName = encodeVal(serviceNames[i]);
             if(refUrl.indexOf(serviceName) > -1) {
                 refUrl = refUrl.replace(serviceName, "");
+                stateTitle = stateTitle + " | " + serviceNames[i];
             }
         }
     }
@@ -441,11 +451,22 @@ function adjustParentUrl(toAdd, type) {
     refUrl = refUrl.replace(/[?]{2,}/g, "?");
     // Fix jkl redirects ?=? patterns.
     refUrl = refUrl.replace(/(\?=\?)/g, "?");
+    // Always place contacts at the end of the url.
+    if(refUrl.indexOf('?yhteystiedot') > -1) {
+        refUrl = refUrl.replace('?yhteystiedot', "");
+        refUrl = refUrl + '?yhteystiedot'
+        stateTitle = stateTitle + " | Yhteystiedot"
+    }
+    else if(refUrl.indexOf('?contacts') > -1) {
+        refUrl = refUrl.replace('?contacts', "");
+        refUrl = refUrl + '?contacts'
+        stateTitle = stateTitle + " | Contacts"
+    }
     // Remove ?, = if last character.
     refUrl = refUrl.replace(/\?$/, '');
     refUrl = refUrl.replace(/=$/, '');
     try {
-        parent.postMessage({value: refUrl, type: 'url'}, '*');
+        parent.postMessage({value: refUrl, stateTitle: stateTitle, type: 'url'}, '*');
     }
     catch (e) {
         console.log("Parent url adjustment failed: " + e);
