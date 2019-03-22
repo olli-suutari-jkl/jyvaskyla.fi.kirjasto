@@ -113,7 +113,7 @@ var dict = {
     },
     "Trivia": {
         fi: "Yleistietoa",
-        en: "Trivia",
+        en: "General knowledge",
     },
     "Founded": {
         fi: "Perustamisvuosi",
@@ -127,9 +127,9 @@ var dict = {
         fi: "Rakennettu",
         en: "Year built",
     },
-    "Aritecht": {
+    "Architect": {
         fi: "Arkkitehti",
-        en: "Aritecht",
+        en: "Architect",
     },
     "Decoration": {
         fi: "Sisustus",

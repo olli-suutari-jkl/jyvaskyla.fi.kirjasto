@@ -149,7 +149,6 @@ function generateSelect() {
                 catch (e) {
                     console.log("Error in fetching cities: " + e);
                 }
-
             }, 1 );
             // Return the Promise so caller can't change the Deferred
             return citiesDeferred.promise();

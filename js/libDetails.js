@@ -189,7 +189,7 @@ function asyncFetchBuildingDetails() {
                 }
                 if (data.extra.building.building_architect != null) {
                     triviaIsEmpty = false;
-                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Aritecht") + ': </strong></td>' +
+                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Architect") + ': </strong></td>' +
                         '<td class="trivia-detail">' + data.extra.building.building_architect + '</td></tr>');
                 }
                 if (data.extra.building.interior_designer != null) {
