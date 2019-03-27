@@ -124,8 +124,8 @@ if(window.location.href.indexOf('keskikirjastot') > -1) {
 // Handle history forward/back calls.
 window.onpopstate = function(e) {
     setTimeout(function(){
-        if(e.state.urlValue !== storedUrl) {
+        if(e.state.urlValue != null && e.state.urlValue !== storedUrl) {
             window.location.href = e.state.urlValue;
         }
-    }, 300);
+    }, 450);
 };
