@@ -113,7 +113,7 @@ var dict = {
     },
     "Trivia": {
         fi: "Yleistietoa",
-        en: "General knowledge",
+        en: "General information",
     },
     "Founded": {
         fi: "Perustamisvuosi",
