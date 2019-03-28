@@ -147,8 +147,8 @@ function addItem(item, listElement) {
             if (item.shortDescription != null && item.shortDescription.length != 0) {
                 description = '<p>' + item.shortDescription + '</p>';
             }
-            // Add "long" description where available.
-            if (item.description != null && item.description.length != 0) {
+            // Add "long" description where available && not equal to the short one.
+            if (item.description != null && item.description.length != 0 && item.description !== item.shortDescription) {
                 // Replace row splits with <br>
                 var longDescription = item.description.replace(/\r\n/g, "<br>");
                 description = '<p>' + description + '</p><p>' + longDescription + '</p>';
