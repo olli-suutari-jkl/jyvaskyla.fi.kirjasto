@@ -262,10 +262,10 @@ function toggleModal(elementPosY) {
                         });
                         isModalCloseBinded = true;
                     }
-                    adjustParentHeight(50, elementPosY)
-
+                    adjustParentHeight(50, elementPosY);
                 }, 100);
-
+                // Bind the tooltips.
+                $('[data-toggle="tooltip"]').tooltip();
             }, delay);
         }
         showModal(delay);
@@ -1090,7 +1090,6 @@ function fetchInformation(language, lib) {
                         if(isScheduleEmpty && noImages && triviaIsEmpty) {
                             $("#introductionSidebar").append('<div id="noIntroContent"><h3>' +
                                 i18n.get("No content") + ' <i class="fa fa-frown-o"></i></h3></div>');
-
                         }
                     }
                 }

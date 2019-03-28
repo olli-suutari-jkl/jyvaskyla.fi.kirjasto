@@ -62,6 +62,11 @@ function generatPrettyUrl(url) {
     return url;
 }
 
+// Capitalize the 1st letter of a string.
+function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 // Function for adding a new palvelut item.
 // Define accessibility count here, define other counts later on.
 var accessibilityCount = 0;
@@ -148,23 +153,31 @@ function addItem(item, listElement) {
                 var longDescription = item.description.replace(/\r\n/g, "<br>");
                 description = '<p>' + description + '</p><p>' + longDescription + '</p>';
             }
+            // Accessible icons: https://fontawesome.com/how-to-use/on-the-web/other-topics/accessibility
             // Add price where available.
             if (isValue(item.price)) {
-                //description = description + '<p><strong>' + i18n.get("Price") + ':</strong> ' + item.price + '</p>';
-                description = description + '<p class="service-info service-price"><i class="fa fa-money"></i>' + item.price + '</p>';
+                description = description + '<p class="service-info service-price" aria-label="' + i18n.get("Price") + '">' +
+                    '<i class="fa fa-money" data-toggle="tooltip" title="' + i18n.get("Price") + '" data-placement="top" ' +
+                    'aria-hidden="true"></i>' + capitalize(item.price) + '</p>';
             }
             // Website
             if(isValue(item.website)) {
                 var prettyLink = generatPrettyUrl(item.website);
-                description = description + '<p class="service-info service-website"><i class="fa fa-globe"></i>' +
-                    '<a target="_blank" href="' + item.website + '">' + prettyLink + '</a></p>';
+                description = description + '<p class="service-info service-website" aria-label="' + i18n.get("Price") +
+                    '"><i class="fa fa-globe" data-toggle="tooltip" title="' + i18n.get("Website") + '" ' +
+                    'data-placement="top" aria-hidden="true"></i><a target="_blank" href="' + item.website + '">' +
+                    capitalize(prettyLink) + '</a></p>';
             }
             // Email & Phone
             if(isValue(item.email)) {
-                description = description + '<p class="service-info service-email"><i class="fa fa-envelope-square"></i>' + item.email + '</p>';
+                description = description + '<p class="service-info service-email" aria-label="' + i18n.get("Email") + '">' +
+                    '<i class="fa fa-envelope-square" data-toggle="tooltip" title="' + i18n.get("Email") + '" ' +
+                    'data-placement="top" aria-hidden="true"></i>' + capitalize(item.email) +'</p>';
             }
             if(isValue(item.phoneNumber)) {
-                description = description + '<p class="service-info service-phone"><i class="fa fa-phone-square"></i>' + item.phoneNumber + '</p>';
+                description = description + '<p class="service-info service-phone" aria-label="' + i18n.get("Phone") + '">' +
+                    '<i class="fa fa-phone-square" data-toggle="tooltip" title="' + i18n.get("Phone") + '" ' +
+                    'data-placement="top" aria-hidden="true"></i>' + capitalize(item.phoneNumber) + '</p>';
             }
             // Replace links from the description
             if (description.indexOf("<a href=") !== -1) {

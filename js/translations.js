@@ -199,6 +199,18 @@ var dict = {
         fi: "Hintatiedot",
         en: "Price",
     },
+    "Website": {
+        fi: "Lisätietoja verkossa",
+        en: "Website",
+    },
+    "Email": {
+        fi: "Sähköpostiosoite",
+        en: "Email",
+    },
+    "Phone": {
+        fi: "Puhelin",
+        en: "Phone",
+    },
     "Additional details": {
         fi: "Lisätietoja",
         en: "Additional details",

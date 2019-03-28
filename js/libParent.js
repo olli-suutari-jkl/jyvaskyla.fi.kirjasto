@@ -100,7 +100,6 @@ window.addEventListener('message', function(event) {
             if(data.value == currentUrl || !(currentUrl.indexOf('?') > -1)) {
                 //history.replaceState("", "", data.value);
                 history.replaceState(stateObj, data.stateTitle, data.value);
-
             }
             else {
                 //history.pushState("", "", data.value);
