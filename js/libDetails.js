@@ -936,7 +936,10 @@ function asyncFetchStaff() {
                             }
                         }
                         if (!checkIfContactExists(staffList, contact) || !checkIfNameExists(staffList, name)){
-                            staffList.push({name: name, contact: contact});
+                            // Don't push if contact or name is empty.
+                            if(contact.length !== 0 && name.length !== 0) {
+                                staffList.push({name: name, contact: contact});
+                            }
                         }
                     }
                     counter = counter +1;
