@@ -1081,19 +1081,47 @@ function fetchInformation(language, lib) {
                 }, 400);
             }
             else {
-                if(noServices && language === "fi") {
-                    $('#libraryServices').css('display', 'none');
-                    // If no content is provided for the left collumn.
-                    if (descriptionIsEmpty) {
+                if(language === "fi") {
+                    var noLeftCol = false;
+                    var noSidebar = false;
+                    if(noServices) {
+                        $('#libraryServices').css('display', 'none');
+                        // If no content is provided for the left column.
+                        if (descriptionIsEmpty) {
+                            if(slogan !== null) {
+                                if(slogan.length <2) {
+                                    noLeftCol = true;
+
+                                }
+                            }
+                            else {
+                                noLeftCol = true;
+                            }
+                        }
+                    }
+                    // Right bar is empty.
+                    if(isScheduleEmpty && noImages && triviaIsEmpty) {
+                        noSidebar = true;
+                    }
+                    if(noLeftCol) {
                         // Hide the content on left, make the sidebar 100% in width.
                         $(".details").css("display", "none");
                         $("#leftBar").css("display", "none");
-                        $("#introductionSidebar").addClass("col-md-12");
                         $("#introductionSidebar").removeClass("col-lg-5 col-xl-4 order-2 sidebar");
-                        if(isScheduleEmpty && noImages && triviaIsEmpty) {
-                            $("#introductionSidebar").append('<div id="noIntroContent"><h3>' +
-                                i18n.get("No content") + ' <i class="fa fa-frown-o"></i></h3></div>');
-                        }
+                        $("#introductionSidebar").addClass("col-md-12");
+                        $("#sliderBox").removeClass("small-slider");
+                        $("#expandSlider").css("display", "none");
+                    }
+                    if(noSidebar && !noLeftCol) {
+                        $(".introductionSidebar").css("display", "none");
+                        $("#leftBar").addClass("col-md-12");
+                        $("#leftBar").removeClass("col-lg-5 col-xl-4 order-2 col-sm-12 col-md-7 col-lg-7 col-xl-8 col-md-12");
+                        $("#leftBar").css("border", "none");
+                    }
+                    // No content at all.
+                    if(noLeftCol && noSidebar) {
+                        $("#introductionSidebar").append('<div id="noIntroContent"><h3>' +
+                            i18n.get("No content") + ' <i class="fa fa-frown-o"></i></h3></div>');
                     }
                 }
                 adjustParentHeight(200);
