@@ -251,6 +251,11 @@ function bindActions() {
             activeTab = 0;
             adjustParentHeight(animationTime);
             adjustParentUrl('', 'introduction');
+            // Image slider goes black if we move from contacts, re-adding class with timeout fixes it.
+            $("#sliderBox").removeClass("small-slider");
+            setTimeout(function(){
+                $("#sliderBox").addClass("small-slider");
+            }, 600);
         }
     }
 

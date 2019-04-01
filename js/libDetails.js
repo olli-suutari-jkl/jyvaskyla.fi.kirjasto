@@ -1091,7 +1091,6 @@ function fetchInformation(language, lib) {
                             if(slogan !== null) {
                                 if(slogan.length <2) {
                                     noLeftCol = true;
-
                                 }
                             }
                             else {
