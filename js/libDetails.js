@@ -314,7 +314,7 @@ function bindServiceClicks() {
                     escapedName = escapedName.replace(/-/g, " ");
                     if(textInside.indexOf(escapedName) > -1) {
                         var linkToService = reFindLinksExec[0].replace('<p>',
-                            '<a class="service-link-in-modal" data-name="' + serviceNames[i] + '" href="#">');
+                            '<a class="service-link-in-modal" data-name="' + serviceNames[i] + '" href="javascript:void(0);">');
                         linkToService = linkToService.replace('</p>', '</a>');
                         linksToServices.push({position: reFindLinksExec[0], iframe: linkToService});
                     }

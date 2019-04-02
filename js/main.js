@@ -215,9 +215,10 @@ function addItem(item, listElement) {
             description = description.replace(/["']/g, '&quot;');
 
 
-            // Add the item to a desired element.
+            // Add the item to a desired element. href javascript... prevents opening in new tab (iframe src is github)
+            // https://stackoverflow.com/questions/31472065/preventing-pages-being-open-in-a-new-tab-window
             $(listElement).append('<li> ' +
-                '<a class="index-item" data-name="' + name + '"  data-message="' + description + '" tabindex="0" href="#"' +
+                '<a class="index-item" data-name="' + name + '"  data-message="' + description + '" tabindex="0" href="javascript:void(0);"' +
                 ' role="button" aria-expanded="false"' +
                 ' title="' + name + '">' + name + '</a></li>');
         }
