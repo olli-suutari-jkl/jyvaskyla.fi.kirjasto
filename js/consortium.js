@@ -7,11 +7,22 @@ var libName;
 // Group libraries by city.
 // https://stackoverflow.com/questions/46043262/split-array-with-objects-to-multiple-arrays-based-on-unique-combination
 function groupByCity(arr) {
+    var wiitaUnionMobileAdded = false;
     // for each object obj in the array arr
     return arr.reduce(function(res, obj) {
         var key = obj.city;
         // create a new object based on the object
         var newObj = {city: key, id: obj.id, text: obj.text};
+        // Wiitaunion mobile library is used in both "Pihtipudas" and "Viitasaari".
+        // b identifier is added so both won't be selected by id in selector.
+        if(obj.id == 85449) {
+            if(wiitaUnionMobileAdded) {
+                newObj = {city: key, id: obj.id + "b", text: obj.text};
+            }
+            else {
+                wiitaUnionMobileAdded = true;
+            }
+        }
         // if res has a sub-array for the current key then...
         if(res[key]) {
             res[key].push(newObj); // ... push newObj into that sub-array
@@ -37,7 +48,6 @@ function modelMatcher (params, data) {
         // Clone the data object if there are children
         // This is required as we modify the object to remove any non-matches
         var match = $.extend(true, {}, data);
-
         // Check each child of the option
         for (var c = data.children.length - 1; c >= 0; c--) {
             var child = data.children[c];
@@ -309,6 +319,16 @@ $(document).ready(function() {
                 else {
                     libListMultiLangHelper.push({nameEn: encodeVal(data.items[i].name), id: data.items[i].id});
                 }
+                // Wiitaunion mobile library is used in both "Pihtipudas (85449)" and "Viitasaari".
+                if(data.items[i].id == 85449) {
+                    libraryList.push({
+                        id: data.items[i].id, text: data.items[i].name,
+                        city: "16055",
+                        street: data.items[i].address.street,
+                        zipcode: data.items[i].address.zipcode,
+                        coordinates: data.items[i].coordinates
+                    });
+                }
             }
             $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + oppositeLang + "&consortium=" + consortium + "&limit=1500", function(data) {
                 for (var i = 0; i < data.items.length; i++) {
@@ -326,10 +346,16 @@ $(document).ready(function() {
     }
 
     $("#librarySelector").change(function(){
+        var newLib =  $(this).val();
+        // Wiitaunion mobile library is used in both "Pihtipudas" and "Viitasaari".
+        // b identifier is added so both won't be selected by id in selector.
+        if(newLib.indexOf("b") > -1) {
+            newLib = newLib.replace("b", "");
+        }
         // Don't use !== as it won't match.
-        if($(this).val() != library) {
+        if(newLib != library) {
             // Set the global library parameter, so schedule switching won't mess things up.
-            library = $(this).val();
+            library = newLib;
             libName = $("#librarySelector option:selected").text();
             if(!homePage) {
                 if (isInfoBoxVisible) {
@@ -365,7 +391,7 @@ $(document).ready(function() {
                 contactlist = [];
                 numbersList = [];
                 staffList = [];
-                fetchInformation(lang, $(this).val());
+                fetchInformation(lang, library);
                 // Re-bind navigation and other stuff.
                 bindActions();
                 if(document.getElementById("sliderBox") != null) {

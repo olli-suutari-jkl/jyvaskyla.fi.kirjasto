@@ -734,6 +734,8 @@ function asyncLoadMap() {
                     iconSize:     [24, 24], // size of the icon
                 });
                 var counter = 0;
+                // coordinateErrorSet is used when a library is listed twice in the listing. (Mobile library of Wiitaunion)
+                var coordinateErrorSet = false;
                 for (var i = 0; i < libraryList.length; i++) {
                     var text = '<strong>' + libraryList[i].text + '</strong><br>' +
                         libraryList[i].street + ', <br>' + libraryList[i].zipcode + ', ' + libraryList[i].city +
@@ -743,9 +745,10 @@ function asyncLoadMap() {
                         text = '<strong>' + libraryList[i].text + '</strong><br>' +
                             libraryList[i].street + ', <br>' + libraryList[i].zipcode + ', ' + libraryList[i].city;
                         // Add a notification text about missing coordinates for map.
-                        if(libraryList[i].coordinates === null) {
+                        if(libraryList[i].coordinates === null && !coordinateErrorSet) {
                             $('#mapContainer').append('<div id="noCoordinates">' + i18n.get("Note") + '! ' +
                                 libraryList[i].text.toString() + i18n.get("No coordinates") + '</div>');
+                            coordinateErrorSet = true;
                         }
                     }
                     if (libraryList[i].coordinates != null) {
