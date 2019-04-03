@@ -116,15 +116,16 @@ function getWeekSchelude(direction, lib) {
         weekCounter = -10;
         return;
     }
-    if (weekCounter > 26) {
-        weekCounter = 26;
+    // Due to the issues in the api, restrict to 3 weeks. https://github.com/libraries-fi/kirkanta-api/issues/4
+    if (weekCounter > 3) {
+        weekCounter = 3;
         return;
     }
     // Display week number.
     $("#weekNumber").html(i18n.get("Week") + ' ' + weekNumber);
     // Use &pretty: https://github.com/libraries-fi/kirkanta-api/issues/3
     $.getJSON("https://api.kirjastot.fi/v4/schedules?library=" + lib + "&lang=" + lang +
-        "&period.start=" + weekCounter + "w&period.end=" + weekCounter + "w&refs=period&limit=5000&pretty", function (data) {
+        "&period.start=" + weekCounter + "w&period.end=" + weekCounter + "w&refs=period&limit=5000", function (data) {
         if (data.items.length === 0) {
             $('#schedules').css('display', 'none');
             isScheduleEmpty = true;
