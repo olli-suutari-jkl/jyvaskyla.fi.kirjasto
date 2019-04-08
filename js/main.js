@@ -539,7 +539,7 @@ $(document).ready(function() {
         }
     }
     // Since the api is having problems with special schedules, add a notification. To be commented when fixed.
-    //$('#schedules').prepend('<p style="color: red">' + i18n.get("Wrong schedules") + '</p>');
+    $('#schedules').prepend('<p style="color: red">' + i18n.get("Wrong schedules") + '</p>');
     // Clone page, to be restored if library selector is used.
     divClone = $("#pageContainer").clone();
     // Fetch details if not generating select for libraries, otherwise trigger this in consortium.js
