@@ -373,6 +373,8 @@ function getDaySchelude(direction, lib) {
                 document.title = data.name;
             }
         }
+        // Since the api is having problems with special schedules, add a notification. To be commented when fixed.
+        $('#schedules').prepend('<p style="color: red">' + i18n.get("Wrong schedules") + '</p>');
         adjustHomePageHeight(0);
         $('#scheduleTitle').html(i18n.get("Opening hours"));
         $('#scheduleTitle').css('display', 'block');
