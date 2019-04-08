@@ -95,7 +95,6 @@ var weekCounter = 0;
 var dateInSchedule;
 // totalRows is used to dynamically adjust font sizes for info-screens.
 var totalRows = 0;
-
 function getWeekSchelude(direction, lib) {
     if(v4ApiBroken) {
         getWeekScheludeV3(direction, lib);

@@ -8,10 +8,8 @@ var HHmmFormat = 'HH:mm';
 
 // V3 api is sometimes more reliable than V4 api when fetching schedules.
 var v4ApiBroken = false;
-var v4ApiBrokenChecked = false;
 function getTuesdayDate(week) {
     var dayINeed = 2; // for Tuesday.
-
     var d = new Date();
     d.setHours(0,0,0,0);
     var today = moment(d).add(week, 'weeks').isoWeekday();
@@ -26,7 +24,7 @@ function getTuesdayDate(week) {
 }
 
 function checkIfV4ApiIsBroken() {
-    // Check if Jyväskylä main library returns monday schedule info as Sunday and set flag to true if so.
+    // Check if Jyväskylä main library returns Tuesdays schedule info as Sunday and set flag to true if so.
     $.getJSON("https://api.kirjastot.fi/v4/schedules?library=85159&lang=fi" +
         "&period.start=0w&period.end=3w&refs=period&limit=5000", function (data) {
         var tuesdayOne = moment(getTuesdayDate(0));
@@ -43,7 +41,6 @@ function checkIfV4ApiIsBroken() {
                 }
             }
         }
-        v4ApiBrokenChecked = true;
         // Trigger schedule fetching, if no library list, otherwise trigger in consortium.js
         if(!isLibaryList && !homePage) {
             setTimeout(function() {
@@ -59,7 +56,7 @@ function isBefore(timeOne, timeTwo) {
 }
 
 function isSame(timeOne, timeTwo) {
-    if(moment(timeOne, HHmmFormat).isSame(moment(timeTwo, HHmmFormat))) {
+    if (moment(timeOne, HHmmFormat).isSame(moment(timeTwo, HHmmFormat))) {
         return true;
     } else {
         return false;
@@ -67,7 +64,7 @@ function isSame(timeOne, timeTwo) {
 }
 
 function isSameOrBefore(timeOne, timeTwo) {
-    if(moment(timeOne, HHmmFormat).isBefore(moment(timeTwo, HHmmFormat)) ||
+    if (moment(timeOne, HHmmFormat).isBefore(moment(timeTwo, HHmmFormat)) ||
         (moment(timeOne, HHmmFormat).isSame(moment(timeTwo, HHmmFormat)))) {
         return true;
     } else {

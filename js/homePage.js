@@ -54,7 +54,7 @@ var selectIsOpen = false;
 $(document).ready(function() {
     $("#btnOpenLibryPage").append(i18n.get("Open library page"));
     // Since the api is having problems with special schedules, add a notification. To be commented when fixed.
-    $('#schedules').prepend('<p style="color: red">' + i18n.get("Wrong schedules") + '</p>');
+    //$('#schedules').prepend('<p style="color: red">' + i18n.get("Wrong schedules") + '</p>');
     adjustHomePageHeight(500);
     $("#btnOpenLibryPage").on('click', function () {
         moveParentToLibraryUrl(libName);
