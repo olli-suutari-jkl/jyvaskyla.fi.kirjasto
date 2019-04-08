@@ -31,6 +31,7 @@ function getDayScheludeV3(direction, lib) {
             begin = moment(date).startOf('week').isoWeekday(1);
         }
         var str = '';
+        $('#dayInfo').replaceWith('<span id="dayInfo" style="display: none" class="info-text"><i class="fa fa-info-circle" > </i></span>');
         for (var i=0; i<1; i++) {
             // If today, add some colourful classes!
             var isTodayClass = '';
@@ -90,9 +91,6 @@ function getDayScheludeV3(direction, lib) {
 
                         $('#dayInfo').replaceWith('<span id="dayInfo" class="info-span info-text"><i class="fa fa-info-circle"> </i> ' + infoText + '</span>');
                         increaseRowCount(true);
-                    }
-                    else {
-                        $('#dayInfo').replaceWith('<span id="dayInfo" style="display: none" class="info-text"><i class="fa fa-info-circle" > </i></span>');
                     }
                 }
                 // Self service times.
@@ -427,11 +425,11 @@ function getDayScheludeV3(direction, lib) {
             }
             // Show the info in the ui, if provided.
             if(holidayDescription !== undefined && holidayDescription !== null && isHoliday) {
-                $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-text"><i class="fa fa-info-circle" > </i> '
+                $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-span info-text"><i class="fa fa-info-circle" > </i> '
                     + holidayDescription + '</span>');
             }
             else if(!isHoliday && genericDescription !== undefined && genericDescription !== null) {
-                $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-text"><i class="fa fa-info-circle" > </i> '
+                $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-span info-text"><i class="fa fa-info-circle" > </i> '
                     + genericDescription + '</span>');
             }
             else {
