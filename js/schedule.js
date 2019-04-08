@@ -91,12 +91,16 @@ function generateScheduleInfo(data) {
                 }
         }
 }
-
 var weekCounter = 0;
 var dateInSchedule;
 // totalRows is used to dynamically adjust font sizes for info-screens.
 var totalRows = 0;
+
 function getWeekSchelude(direction, lib) {
+    if(v4ApiBroken) {
+        getWeekScheludeV3(direction, lib);
+        return;
+    }
     totalRows = 0;
     // If no library is provided, use the default option.
     if (lib === undefined) {
@@ -123,9 +127,9 @@ function getWeekSchelude(direction, lib) {
     }
     // Display week number.
     $("#weekNumber").html(i18n.get("Week") + ' ' + weekNumber);
-    // Use &pretty: https://github.com/libraries-fi/kirkanta-api/issues/3
     $.getJSON("https://api.kirjastot.fi/v4/schedules?library=" + lib + "&lang=" + lang +
         "&period.start=" + weekCounter + "w&period.end=" + weekCounter + "w&refs=period&limit=5000", function (data) {
+        //console.log(data);
         if (data.items.length === 0) {
             $('#schedules').css('display', 'none');
             isScheduleEmpty = true;

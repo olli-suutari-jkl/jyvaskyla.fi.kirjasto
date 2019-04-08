@@ -3,7 +3,6 @@ var libraryList = [];
 var libListMultiLang = [];
 var libListMultiLangHelper = [];
 var libName;
-
 // Group libraries by city.
 // https://stackoverflow.com/questions/46043262/split-array-with-objects-to-multiple-arrays-based-on-unique-combination
 function groupByCity(arr) {

@@ -174,6 +174,10 @@ function getDaySchelude(direction, lib) {
     if (lib === undefined) {
         lib = library;
     }
+    if(v4ApiBroken) {
+        getDayScheludeV3(direction, lib);
+        return;
+    }
     // +1 or -1;
     weekCounter = weekCounter + direction;
     // Do not allow going more than 14 days to the past or 28 days to the future.
@@ -185,6 +189,7 @@ function getDaySchelude(direction, lib) {
         weekCounter = 28;
         return;
     }
+
     selectedDate.setDate(selectedDate.getDate() + direction);
     //console.log(selectedDate);
     var prettyDate = moment(selectedDate).format("DD.MM.YY");
@@ -353,7 +358,6 @@ function getDaySchelude(direction, lib) {
                     '<td colspan="2" class="main-schedule closed">' + i18n.get("Closed") + '</td>' +
                     '</tr>';
             } else {
-
                 var mainSchedule = '<tr class="time ' + isTodayClass + '">' +
                     '<td colspan="2" class="main-schedule">' + mainScheduleText +': <time datetime="' + dayStart + '">' + dayStart.replace(/:/g, ".") + '</time> – <time datetime="' + dayEnd + '">'
                     + dayEnd.replace(/:/g, ".") + '</time></td></tr>';
@@ -368,12 +372,6 @@ function getDaySchelude(direction, lib) {
             begin.add(1, 'd');
         }
         $("#weekSchelude").replaceWith('<tbody id="weekSchelude" class="schedules-weekly">' + str);
-        // If document has no title, set it to Library name.
-        if (document.title === '') {
-            if (data.name != null) {
-                document.title = data.name;
-            }
-        }
         adjustHomePageHeight(0);
         $('#scheduleTitle').html(i18n.get("Opening hours"));
         $('#scheduleTitle').css('display', 'block');
