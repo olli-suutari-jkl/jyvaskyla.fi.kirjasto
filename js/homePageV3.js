@@ -91,6 +91,7 @@ function getDayScheludeV3(direction, lib) {
 
                         $('#dayInfo').replaceWith('<span id="dayInfo" class="info-span info-text"><i class="fa fa-info-circle"> </i> ' + infoText + '</span>');
                         increaseRowCount(true);
+                        console.log(infoText)
                     }
                 }
                 // Self service times.

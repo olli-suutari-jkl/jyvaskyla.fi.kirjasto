@@ -439,7 +439,7 @@ function getWeekScheludeV3(direction, lib) {
             }
             // Show the info in the ui, if provided.
             if(holidayDescription !== undefined && holidayDescription !== null && isHoliday) {
-                $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-text"><i class="fa fa-info-circle" > </i> '
+                $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-span info-text"><i class="fa fa-info-circle" > </i> '
                     + holidayDescription + '</span>');
                 // Add rows for infoscreen font-size calculations...
                 if (holidayDescription.length < 40) {
@@ -457,7 +457,7 @@ function getWeekScheludeV3(direction, lib) {
                 }
             }
             else if(!isHoliday && genericDescription !== undefined && genericDescription !== null) {
-                $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-text"><i class="fa fa-info-circle" > </i> '
+                $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-span info-text"><i class="fa fa-info-circle" > </i> '
                     + genericDescription + '</span>');
                 // Add rows for infoscreen font-size calculations...
                 if (genericDescription.length < 40) {
