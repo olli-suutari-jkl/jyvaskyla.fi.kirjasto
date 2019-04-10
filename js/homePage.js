@@ -169,6 +169,8 @@ function generateScheduleInfo(data) {
 var weekCounter = 0;
 var dateInSchedule;
 var selectedDate = new Date();
+var weekMinReached = false;
+var weekMaxReached = false;
 function getDaySchelude(direction, lib) {
     // If no library is provided, use the default option.
     if (lib === undefined) {
@@ -180,23 +182,52 @@ function getDaySchelude(direction, lib) {
     }
     // +1 or -1;
     weekCounter = weekCounter + direction;
-    // Do not allow going more than 14 days to the past or 28 days to the future.
-    if (weekCounter < -14) {
-        weekCounter = -14;
+    // Do not allow going more than 30 days to the past or 60 days to the future.
+    if (weekCounter < -30) {
+        weekCounter = -30;
+        if(!weekMinReached) {
+            $('#lastWeek').attr('data-toggle', 'tooltip');
+            $('#lastWeek').attr('title', i18n.get("Min schedules"));
+            $("#lastWeek").tooltip("enable");
+            weekMinReached = true;
+        }
+        $('#lastWeek').tooltip('show');
         return;
     }
-    if (weekCounter > 28) {
-        weekCounter = 28;
+    if (weekCounter > 60) {
+        weekCounter = 60;
+        if(!weekMaxReached) {
+            $('#nextWeek').attr('data-toggle', 'tooltip');
+            $('#nextWeek').attr('title', i18n.get("Max schedules"));
+            $("#nextWeek").tooltip("enable");
+            weekMaxReached = true;
+        }
+        $('#nextWeek').tooltip('show');
         return;
     }
-
+    if(weekMinReached) {
+        // Hiding hides tooltip even if cursor is placed on it.
+        $("#lastWeek").tooltip("hide");
+        // Disable removes the bootstrap tooltip.
+        $("#lastWeek").tooltip("disable");
+        // Removing attributes removes the normal tooltip.
+        $("#lastWeek").removeAttr("data-toggle");
+        $("#lastWeek").removeAttr("title");
+        weekMinReached = false;
+    }
+    if(weekMaxReached) {
+        $("#nextWeek").tooltip("hide");
+        $("#nextWeek").tooltip("disable");
+        $("#nextWeek").removeAttr("data-toggle");
+        $("#nextWeek").removeAttr("title");
+        weekMaxReached = false;
+    }
     selectedDate.setDate(selectedDate.getDate() + direction);
     //console.log(selectedDate);
     var prettyDate = moment(selectedDate).format("DD.MM.YY");
     // Capitalize 1st letter of dayname.
     var dayName = moment(selectedDate).format("dddd");
     dayName = dayName[0].toUpperCase() + dayName.substr(1);
-
     $("#weekNumber").html(dayName + " " + prettyDate);
     // Use &pretty: https://github.com/libraries-fi/kirkanta-api/issues/3
     $.getJSON("https://api.kirjastot.fi/v4/schedules?library=" + lib + "&lang=" + lang +

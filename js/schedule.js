@@ -131,7 +131,6 @@ function getWeekSchelude(direction, lib) {
     // Do not allow going more than 8 weeks to the past or for more than 12 weeks.
     if (weekCounter < -8) {
         weekCounter = -8;
-        // Koningas
         if(!largeSchedules) {
             if(!weekMinReached) {
                 $('#lastWeek').attr('data-toggle', 'tooltip');
