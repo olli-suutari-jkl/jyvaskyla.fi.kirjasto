@@ -58,7 +58,6 @@ function generateScheduleInfo(data) {
                     }
                 }
                 if(genericDescription !== undefined && !isSpecialWeek) {
-                    console.log("HEY!");
                     // Add rows for infoscreen font-size calculations...
                     if (genericDescription.length < 40) {
                         totalRows = totalRows +1;
@@ -130,8 +129,8 @@ function getWeekSchelude(direction, lib) {
         return;
     }
     // Do not allow going more than 8 weeks to the past or for more than 12 weeks.
-    if (weekCounter < -10) {
-        weekCounter = -10;
+    if (weekCounter < -8) {
+        weekCounter = -8;
         // Koningas
         if(!largeSchedules) {
             if(!weekMinReached) {
