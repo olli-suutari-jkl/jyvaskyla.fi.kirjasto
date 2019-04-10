@@ -240,11 +240,11 @@
 }
 
 .m-font .info-span-lg {
-    font-size: 1.75em;
+    font-size: 1.65rem;
 }
 
 .m-font .info-span-lg {
-    font-size: 1.7em;
+    font-size: 1.6rem;
 }
 
 /* XL-font */
@@ -261,7 +261,7 @@
 }
 
 .xl-font .info-span-lg {
-    font-size: 2em;
+    font-size: 2.1rem;
 }
 
 /* XXL-font */
@@ -280,5 +280,5 @@
 }
 
 .xxl-font .info-span-lg {
-    font-size: 2.7em;
+    font-size: 2.6rem;
 }
