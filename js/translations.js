@@ -83,6 +83,14 @@ var dict = {
         fi: "Viikko",
         en: "Week",
     },
+    "Max schedules": {
+        fi: "Aukioloaikojen hakua tulevaisuuteen on rajattu, jotta kirjastot ehtivät syöttää aikataulunsa palveluun. Huomaa myös, ettei poikkeusaukioloaikoja ole välttämättä syötetty näin pitkälle.",
+        en: "Fetching schedules beyond the selected date is not supported in order to give libraries more time to enter them.",
+    },
+    "Min schedules": {
+        fi: "Aukioloaikojen hakua taakseppäin on rajattu teknisistä syistä.",
+        en: "Fetching of past schedules is limited for technological reasons.",
+    },
     "Service time": {
         fi: "Palveluaika",
         en: "Service time",

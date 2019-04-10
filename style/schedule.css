@@ -59,19 +59,28 @@
     text-align: center;
 }
 
-.info-span {
-    padding-right: 1em;
+.info-span, .info-span-lg {
+    margin-left: 0.3em;
     margin-bottom: 0.95em;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
+.info-span-lg i, .info-span i {
+    margin-right: 0.8em!important;
+}
+
+
+.info-span-lg i {
+    margin-top: 0!important;
+    font-size: 1.45em!important;
+    margin-left: .5em;
+}
 
 .info-span i {
-    font-size: 1.45em!important;
-    margin-top: 0!important;
-    margin-right: 0.8em!important;
+    font-size: 1.28em!important;
+    margin-top: 3px;
 }
 
 #weekNumber, .btn-arrow {
@@ -94,11 +103,18 @@
 
 .info-text {
     font-weight: 400;
-    padding-left: 7px;
     display: flex;
     white-space: normal;
     text-align: left;
     float: left;
+}
+
+#scheduleInfos td {
+    padding-top: 15px!important;
+}
+
+.thead-light td {
+    margin-bottom: 25px!important;
 }
 
 .schedules-weekly tr.time--sub td {
@@ -132,7 +148,6 @@
 }
 
 .fa-info-circle {
-    margin-top: 0.29em!important;
     margin-right: 0.45em!important;
 }
 
@@ -201,12 +216,12 @@
     font-size: 1.7em;
 }
 
-.large-schedules .info-span {
+.large-schedules .info-span-lg {
     padding-left: 1.6em;
     margin-top: -10px;
 }
 
-.large-schedules .info-span .fa-info-circle {
+.large-schedules .info-span-lg .fa-info-circle {
     margin-right: 0.8em!important;
     padding-top: 10px;
 }
@@ -224,11 +239,11 @@
     font-size: 1.8em;
 }
 
-.m-font .info-span{
+.m-font .info-span-lg {
     font-size: 1.75em;
 }
 
-.m-font .info-span {
+.m-font .info-span-lg {
     font-size: 1.7em;
 }
 
@@ -245,7 +260,7 @@
     font-size: 2.1em;
 }
 
-.xl-font .info-span {
+.xl-font .info-span-lg {
     font-size: 2em;
 }
 
@@ -264,6 +279,6 @@
     font-size: 2.8em;
 }
 
-.xxl-font .info-span {
+.xxl-font .info-span-lg {
     font-size: 2.7em;
 }

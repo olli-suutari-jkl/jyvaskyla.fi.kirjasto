@@ -8,6 +8,7 @@ var HHmmFormat = 'HH:mm';
 
 // V3 api is sometimes more reliable than V4 api when fetching schedules.
 var v4ApiBroken = false;
+/*
 function getTuesdayDate(week) {
     var dayINeed = 2; // for Tuesday.
     var d = new Date();
@@ -41,16 +42,10 @@ function checkIfV4ApiIsBroken() {
                 }
             }
         }
-        // Trigger schedule fetching, if no library list, otherwise trigger in consortium.js
-        if(!isLibaryList && !homePage) {
-            setTimeout(function() {
-                getWeekSchelude(0, library);
-            }, 50 );
-        }
     });
 }
 checkIfV4ApiIsBroken();
-
+*/
 function isBefore(timeOne, timeTwo) {
     return !!moment(timeOne, HHmmFormat).isBefore(moment(timeTwo, HHmmFormat));
 }
@@ -174,6 +169,12 @@ function swipeNavigation(el,d) {
 }
 
 $(document).ready(function() {
+    // Trigger schedule fetching, if no library list, otherwise trigger in consortium.js
+    if(!isLibaryList && !homePage) {
+        setTimeout(function() {
+            getWeekSchelude(0, library);
+        }, 50 );
+    }
     // UI texts.
     $('#scheludesSr').append(i18n.get("Opening hours")); // Standalone schedules.
     bindScheduleKeyNavigation();

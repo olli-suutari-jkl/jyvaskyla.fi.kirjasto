@@ -94,22 +94,38 @@
         <!-- Scheludes -->
         <section id="schedules" class="library-schedules normal-schedules">
           <h3 id="scheduleTitle" class="underlined-title" style="display: none"></h3>
-          <span id="specialInfo" style="display: none" class="info-text"><i class="fa fa-info-circle" > </i></span>
-          <span id="scheduleInfo" style="display: none" class="info-text"><i class="fa fa-info-circle" > </i></span>
           <table class="table table-sm">
             <thead class="thead-light">
             <tr>
               <td colspan="3">
-                <button type="button" id="lastWeek" class="btn btn-sm btn-light btn-back btn-arrow" aria-hidden="true" onclick="getWeekSchelude(-1)">
+                <button type="button" id="lastWeek" data-placement="bottom"
+                        class="btn btn-sm btn-light btn-back btn-arrow" aria-hidden="true" onclick="getWeekSchelude(-1)">
                   ❮
                 </button>
                 <span id="weekNumber"></span>
-                <button type="button" id="nextWeek" class="btn btn-sm btn-light btn-next btn-arrow" aria-hidden="true" onclick="getWeekSchelude(1)">
+                <button type="button" id="nextWeek" data-placement="bottom"
+                        class="btn btn-sm btn-light btn-next btn-arrow" aria-hidden="true" onclick="getWeekSchelude(1)">
                   ❯
                 </button>
               </td>
             </tr>
             </thead>
+            <tbody id="scheduleInfos" class="schedule-infos" style="display: none">
+            <tr id="scheduleInfoRow" style="display: none">
+              <td colspan="3">
+                <span id="scheduleInfo" class="">
+                  <i class="fa fa-info-circle" > </i>
+                </span>
+              </td>
+            </tr>
+            <tr id="specialInfoRow" style="display: none">
+              <td colspan="3">
+                <span id="specialInfo" class="info-span info-text">
+                  <i class="fa fa-info-circle" > </i>
+                </span>
+              </td>
+            </tr>
+            </tbody>
             <tbody id="weekSchelude" class="schedules-weekly">
             </tbody>
           </table>

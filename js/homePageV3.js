@@ -388,7 +388,6 @@ function getDayScheludeV3(direction, lib) {
             str += scheludeRow;
             begin.add(1, 'd');
         }
-
         $( "#weekSchelude" ).replaceWith( '<tbody id="weekSchelude" class="schedules-weekly">' + str );
     });
 // Get descriptions...
