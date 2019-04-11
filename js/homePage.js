@@ -106,7 +106,6 @@ $(document).ready(function() {
 function generateScheduleInfo(data) {
     var genericDescription;
     var holidayDescription;
-    var isHoliday = false;
     var items = [];
     // Turn object object array to object array.
     for (var key in data) {
@@ -132,36 +131,22 @@ function generateScheduleInfo(data) {
                 }
                 else {
                     holidayDescription = items[i].description;
-                    isHoliday = true;
                 }
             }
         }
-        var isSpecialWeek = false;
         if(holidayDescription !== undefined) {
-            var mondayDate = moment().add(weekCounter, 'weeks').weekday(0).format("YYYY-MM-DD");
-            var sundayDate = moment().add(weekCounter, 'weeks').weekday(6).format("YYYY-MM-DD");
-            //console.log(items[i].validFrom + "|"  + mondayDate);
-            //console.log(items[i].validUntil + "|"  + sundayDate);
-            if(items[i].validFrom == mondayDate && items[i].validUntil == sundayDate) {
-                isSpecialWeek = true;
                 $('#specialInfo').replaceWith('<span id="specialInfo" class="info-span info-text"><i class="fa fa-info-circle" > </i> '
                     + holidayDescription + '</span>');
-            }
-            else {
-                //genericDescription = genericDescription + "<br><br>" + holidayDescription;
-                $('#specialInfo').replaceWith('<span id="specialInfo" class="info-span info-text"><i class="fa fa-info-circle" > </i> '
-                    + holidayDescription + '</span>');
-            }
         }
-        if(genericDescription !== undefined && !isSpecialWeek) {
+        else {
+            $('#specialInfo').replaceWith('<span id="specialInfo" style="display: none" class="info-span info-text"><i class="fa fa-info-circle" > </i></span>');
+        }
+        if(genericDescription !== undefined) {
             $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-span info-text"><i class="fa fa-info-circle" > </i> '
                 + genericDescription + '</span>');
         }
         else {
             $('#scheduleInfo').replaceWith('<span id="scheduleInfo" style="display: none" class="info-span info-text"><i class="fa fa-info-circle" > </i></span>');
-        }
-        if(holidayDescription === undefined) {
-            $('#specialInfo').replaceWith('<span id="specialInfo" style="display: none" class="info-span info-text"><i class="fa fa-info-circle" > </i></span>');
         }
     }
 }
