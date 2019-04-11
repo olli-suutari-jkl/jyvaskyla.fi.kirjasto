@@ -52,6 +52,7 @@ function generateScheduleInfo(data) {
                     }
                     var mondayDate = moment().add(weekCounter, 'weeks').weekday(0).format("YYYY-MM-DD");
                     var sundayDate = moment().add(weekCounter, 'weeks').weekday(6).format("YYYY-MM-DD");
+                    isSpecialInfo = true;
                     if(items[i].validFrom == mondayDate && items[i].validUntil == sundayDate) {
                         isSpecialWeek = true;
                         totalRows = totalRows +2;
@@ -185,9 +186,7 @@ function getWeekSchelude(direction, lib) {
                 $('#schedules').css('display', 'none');
             }
             else {
-                console.log("Oh yeah!")
                 $("#weekSchelude").replaceWith('<tbody id="weekSchelude" class="schedules-weekly">');
-
                 dayInfo = '<tr class="info-span info-text">' +
                     '<td colspan="2"><span id="scheduleInfo" class="info-span info-text"><i class="fa fa-info-circle" > </i> ' + infoText + '</span></td>' +
                     '</tr>';
