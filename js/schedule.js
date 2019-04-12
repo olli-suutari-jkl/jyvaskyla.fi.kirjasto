@@ -188,9 +188,8 @@ function getWeekSchelude(direction, lib) {
             else {
                 $("#weekSchelude").replaceWith('<tbody id="weekSchelude" class="schedules-weekly">');
                 dayInfo = '<tr class="info-span info-text">' +
-                    '<td colspan="2"><span id="scheduleInfo" class="info-span info-text"><i class="fa fa-info-circle" > </i> ' + infoText + '</span></td>' +
-                    '</tr>';
-
+                    '<td colspan="2"><span id="scheduleInfo" class="info-span info-text"><i class="fa fa-info-circle" > ' +
+                    '</i> ' + i18n.get("No schedules") + '</span></td></tr>';
                 $("#weekSchelude").append(dayInfo);
 
                 //$('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-span info-text"><i class="fa fa-info-circle" > </i> "uh oh" + '</span>');

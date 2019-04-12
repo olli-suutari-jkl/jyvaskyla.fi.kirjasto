@@ -91,6 +91,10 @@ var dict = {
         fi: "Aukioloaikojen hakua taakseppäin on rajattu teknisistä syistä.",
         en: "Fetching of past schedules is limited for technological reasons.",
     },
+    "No schedules": {
+        fi: "Aukioloaikojen haku epäonnistui valitulle viikolle. Tämä voi johtua siitä, ettei niitä ole syötetty valtakunnalliseen kirjastohakemistoon.",
+        en: "Fetching of schedules for the selected week failed. This probably means the library has not entered them to the national library database.",
+    },
     "Service time": {
         fi: "Palveluaika",
         en: "Service time",

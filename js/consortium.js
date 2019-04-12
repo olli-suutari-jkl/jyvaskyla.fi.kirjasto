@@ -390,6 +390,8 @@ $(document).ready(function() {
                 contactlist = [];
                 numbersList = [];
                 staffList = [];
+                weekMinReached = false;
+                weekMaxReached = false;
                 fetchInformation(lang, library);
                 // Re-bind navigation and other stuff.
                 bindActions();
