@@ -114,10 +114,10 @@ function generateAccessibilityTextSvg(serviceName) {
     // Adjust the svg width after it is created, do this afterwards in order to calc the width from text width.
     setTimeout(function(){
         var width = document.getElementById(svgId).getComputedTextLength();
-        width = Math.trunc(width + 20);
+        width = Math.floor(width + 20);
         svg.setAttribute("width", width);
         $(".accessibility-images").append(svg);
-    }, 150);
+    }, 200);
 }
 
 // Function for adding a new palvelut item.
