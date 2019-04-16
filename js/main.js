@@ -115,7 +115,7 @@ function generateAccessibilityTextSvg(serviceName) {
         width = Math.trunc(width + 20);
         svg.setAttribute("width", width);
         $(".accessibility-images").append(svg);
-    }, 50);
+    }, 150);
 }
 
 // Function for adding a new palvelut item.
