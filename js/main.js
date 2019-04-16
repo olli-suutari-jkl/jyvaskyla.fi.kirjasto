@@ -106,8 +106,10 @@ function generateAccessibilityTextSvg(serviceName) {
     svgCounter = svgCounter +1;
     svgText.appendChild(document.createTextNode(serviceName));
     // Append the item.
-    svg.append(svgBg);
-    svg.append(svgText);
+    //svg.append(svgBg);
+    $(svg).append(svgBg);
+    $(svg).append(svgText);
+    //svg.append(svgText);
     $(".accessibility-images").append(svg);
     // Adjust the svg width after it is created, do this afterwards in order to calc the width from text width.
     setTimeout(function(){
