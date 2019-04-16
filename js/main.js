@@ -67,6 +67,13 @@ function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+function generateAccessibilityImg(translationName, iconPath) {
+    iconPath = "../images/accessibility/" + iconPath;
+    translationName = i18n.get(translationName);
+    $(".accessibility-images").append(' <img alt="' + translationName + '" ' +
+        'src="' + iconPath + '" data-placement="bottom" title="' + translationName + '" data-toggle="accessibility-tooltip"  /> ');
+}
+
 // Function for adding a new palvelut item.
 // Define accessibility count here, define other counts later on.
 var accessibilityCount = 0;
@@ -95,27 +102,27 @@ function addItem(item, listElement) {
             $.each(splittedValues, function (index, value) {
                 accessibilityCount = accessibilityCount + 1;
                 if (value.toLocaleLowerCase().indexOf("esteetön sisäänpääsy") !== -1) {
-                    $(".accessibility-images").append(' <img alt="' + i18n.get("Accessible entrance") + '" src="../images/accessibility/Esteetön_kulku_saavutettavuus.png" /> ');
+                    generateAccessibilityImg("Accessible entrance", "Esteetön_kulku_saavutettavuus.png");
                     $("#accessibilityList").append('<li>' + i18n.get("Accessible entrance") + '</li>');
                 }
                 else if (value.toLocaleLowerCase().indexOf("invapysäköinti") !== -1) {
-                    $(".accessibility-images").append(' <img alt="' + i18n.get("Disabled parking") + '" src="../images/accessibility/Esteetön_parkki.png" /> ');
+                    generateAccessibilityImg("Disabled parking", "Esteetön_parkki.png");
                     $("#accessibilityList").append('<li>' + i18n.get("Disabled parking") + '</li>');
                 }
                 else if (value.toLocaleLowerCase().indexOf("esteetön wc") !== -1) {
-                    $(".accessibility-images").append(' <img alt="' + i18n.get("Accessible toilet") + '" src="../images/accessibility/Esteetön_wc.png" /> ');
+                    generateAccessibilityImg("Accessible toilet", "Esteetön_wc.png");
                     $("#accessibilityList").append('<li>' + i18n.get("Accessible toilet") + '</li>');
                 }
                 else if (value.toLocaleLowerCase().indexOf("hissi") !== -1) {
-                    $(".accessibility-images").append(' <img alt="' + i18n.get("Elevator") + '" src="../images/accessibility/Esteetön_hissi.png" /> ');
+                    generateAccessibilityImg("Elevator", "Esteetön_hissi.png");
                     $("#accessibilityList").append('<li>' + i18n.get("Elevator") + '</li>');
                 }
                 else if (value.toLocaleLowerCase().indexOf("pyörätuoliluiska") !== -1) {
-                    $(".accessibility-images").append(' <img alt="' + i18n.get("Wheelchar ramp") + '" src="../images/accessibility/Esteetön_ramppi.png" /> ');
+                    generateAccessibilityImg("Wheelchar ramp", "Esteetön_ramppi.png");
                     $("#accessibilityList").append('<li>' + i18n.get("Wheelchar ramp") + '</li>');
                 }
                 else if (value.toLocaleLowerCase().indexOf("induktiosilmukka") !== -1) {
-                    $(".accessibility-images").append(' <img alt="' + i18n.get("Induction loop") + '" src="../images/accessibility/Esteetön_induktiosilmukka.png" /> ');
+                    generateAccessibilityImg("Induction loop", "Esteetön_induktiosilmukka.png");
                     $("#accessibilityList").append('<li>' + i18n.get("Induction loop") + '</li>');
                 }
                 else if (value.toLocaleLowerCase().indexOf("suuren kirjasinkoon kokoelma") !== -1) {
@@ -133,6 +140,7 @@ function addItem(item, listElement) {
             $("#accessibilityTitle").prepend(i18n.get("Accesibility"));
             if(accessibilityCount !== 0) {
                 $("#accessibilityBadge").append('(' + accessibilityCount + ')');
+                $('[data-toggle="accessibility-tooltip"]').tooltip();
             }
             noServices = false;
         }
