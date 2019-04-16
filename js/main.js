@@ -68,10 +68,54 @@ function capitalize(string) {
 }
 
 function generateAccessibilityImg(translationName, iconPath) {
-    iconPath = "../images/accessibility/" + iconPath;
     translationName = i18n.get(translationName);
+    iconPath = "../images/accessibility/" + iconPath;
     $(".accessibility-images").append(' <img alt="' + translationName + '" ' +
         'src="' + iconPath + '" data-placement="bottom" title="' + translationName + '" data-toggle="accessibility-tooltip"  /> ');
+}
+
+var svgCounter = 0;
+function generateAccessibilityTextSvg(serviceName) {
+    var svgns = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(svgns, "svg");
+    svg.setAttributeNS(null,"height","50");
+    svg.setAttributeNS(null,"role","img");
+    svg.setAttributeNS(null,"alt", serviceName);
+    // Generate background
+    var svgBg = document.createElementNS(svgns, 'rect');
+    svgBg.setAttributeNS(null,"height","50");
+    svgBg.setAttributeNS(null,"width","100%");
+    svgBg.setAttributeNS(null,"rx","8");
+    svgBg.setAttributeNS(null,"ry","8");
+    svgBg.setAttributeNS(null,"stroke","#8496B9");
+    svgBg.setAttributeNS(null,"stroke-width","3");
+    svgBg.setAttributeNS(null,"stroke-linecap","butt");
+    svgBg.style.position = "absolute";
+    svgBg.style.fill = "#155196";
+    // Generate text
+    var svgText = document.createElementNS(svgns,"text");
+    svgText.setAttributeNS(null,"x","10");
+    svgText.setAttributeNS(null,"y","63%");
+    svgText.setAttributeNS(null,"width","100px");
+    svgText.setAttributeNS(null,"height","auto");
+    svgText.setAttributeNS(null,"font-size","16");
+    svgText.setAttributeNS(null,"font-family","Verdana");
+    svgText.setAttributeNS(null,"fill","#FEFEFE");
+    var svgId = "accessibilityExtra" + svgCounter;
+    svgText.setAttributeNS(null,"id", "accessibilityExtra" + svgCounter);
+    svgCounter = svgCounter +1;
+    svgText.appendChild(document.createTextNode(serviceName));
+    // Append the item.
+    svg.append(svgBg);
+    svg.append(svgText);
+    $(".accessibility-images").append(svg);
+    // Adjust the svg width after it is created, do this afterwards in order to calc the width from text width.
+    setTimeout(function(){
+        var width = document.getElementById(svgId).getComputedTextLength();
+        width = Math.trunc(width + 20);
+        svg.setAttribute("width", width);
+        $(".accessibility-images").append(svg);
+    }, 50);
 }
 
 // Function for adding a new palvelut item.
@@ -86,16 +130,8 @@ function addItem(item, listElement) {
         name = item.name;
     }
     if(listElement === "#accessibilityItems" && accessibilityIsEmpty) {
-        if (isEmpty($('#accessibilityDetails'))) {
-            // Description.
-            if (item.description != null && item.description.length != 0) {
-                accessibilityIsEmpty = false;
-                $(".accessibility-details").css("display", "block");
-                $("#accessibilityDetails").append('<p>' + item.description.replace(/(<a )+/g, '<a target="_blank" ') + '</p>');
-            }
-        }
         // List of values separated by "," in the short description.
-        if (item.shortDescription !== null && isEmpty($('#accessibility-images')) && isEmpty($('#accessibilityList'))) {
+        if (item.shortDescription !== null && isEmpty($('#accessibility-images'))) {
             accessibilityIsEmpty = false;
             $(".accessibility-details").css("display", "block");
             var splittedValues = item.shortDescription.split(",");
@@ -103,41 +139,46 @@ function addItem(item, listElement) {
                 accessibilityCount = accessibilityCount + 1;
                 if (value.toLocaleLowerCase().indexOf("esteetön sisäänpääsy") !== -1) {
                     generateAccessibilityImg("Accessible entrance", "Esteetön_kulku_saavutettavuus.png");
-                    $("#accessibilityList").append('<li>' + i18n.get("Accessible entrance") + '</li>');
                 }
                 else if (value.toLocaleLowerCase().indexOf("invapysäköinti") !== -1) {
                     generateAccessibilityImg("Disabled parking", "Esteetön_parkki.png");
-                    $("#accessibilityList").append('<li>' + i18n.get("Disabled parking") + '</li>');
                 }
                 else if (value.toLocaleLowerCase().indexOf("esteetön wc") !== -1) {
                     generateAccessibilityImg("Accessible toilet", "Esteetön_wc.png");
-                    $("#accessibilityList").append('<li>' + i18n.get("Accessible toilet") + '</li>');
                 }
                 else if (value.toLocaleLowerCase().indexOf("hissi") !== -1) {
                     generateAccessibilityImg("Elevator", "Esteetön_hissi.png");
-                    $("#accessibilityList").append('<li>' + i18n.get("Elevator") + '</li>');
                 }
                 else if (value.toLocaleLowerCase().indexOf("pyörätuoliluiska") !== -1) {
                     generateAccessibilityImg("Wheelchar ramp", "Esteetön_ramppi.png");
-                    $("#accessibilityList").append('<li>' + i18n.get("Wheelchar ramp") + '</li>');
                 }
                 else if (value.toLocaleLowerCase().indexOf("induktiosilmukka") !== -1) {
                     generateAccessibilityImg("Induction loop", "Esteetön_induktiosilmukka.png");
-                    $("#accessibilityList").append('<li>' + i18n.get("Induction loop") + '</li>');
                 }
                 else if (value.toLocaleLowerCase().indexOf("suuren kirjasinkoon kokoelma") !== -1) {
-                    $("#accessibilityList").append('<li>' + i18n.get("Collection of books with large fonts") + '</li>');
+                    generateAccessibilityTextSvg(i18n.get("Collection of books with large fonts"));
                 }
                 else {
                     if (value != null && value.length != 0) {
-                        $("#accessibilityList").append('<li>' + value + '</li>');
+                        generateAccessibilityTextSvg(value)
                     }
                 }
             });
         }
+        if (isEmpty($('#accessibilityDetails'))) {
+            // Description.
+            if (item.description != null && item.description.length != 0) {
+                accessibilityIsEmpty = false;
+                $(".accessibility-details").css("display", "block");
+                if(accessibilityCount !== 0) {
+                    $("#accessibilityDetails").append('<h4>' + i18n.get("Accessibility details") + '</h4>')
+                }
+                $("#accessibilityDetails").append(item.description.replace(/(<a )+/g, '<a target="_blank" '));
+            }
+        }
         if (accessibilityCount != 0 || !accessibilityIsEmpty) {
             $("#accessibility").css('display', 'block');
-            $("#accessibilityTitle").prepend(i18n.get("Accesibility"));
+            $("#accessibilityTitle").prepend(i18n.get("Accessibility"));
             if(accessibilityCount !== 0) {
                 $("#accessibilityBadge").append('(' + accessibilityCount + ')');
                 $('[data-toggle="accessibility-tooltip"]').tooltip();
@@ -388,11 +429,8 @@ function adjustParentHeight(delay, elementPosY) {
                 }*/
             }
             if (navigator.appName == 'Microsoft Internet Explorer' ||  !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv:11/)) || (typeof $.browser !== "undefined" && $.browser.msie == 1)) {
-                //alert("Please dont use IE.");
-                //console.log(newHeight);
                 if(newHeight < 200) {
                     newHeight = newHeight + 3000;
-                    //console.log(newHeight)
                 }
             }
             if(newHeight !== height) {

@@ -31,9 +31,13 @@ var dict = {
         fi: "Linja-autot",
         en: "Buses",
     },
-    "Accesibility": {
+    "Accessibility": {
         fi: "Saavutettavuus",
-        en: "Accesibility",
+        en: "Accessibility",
+    },
+    "Accessibility details": {
+        fi: "Lisätietoja saavutettavuudesta",
+        en: "Additional accessibility information",
     },
     "Accessible entrance": {
         fi: "Esteetön sisäänpääsy",
