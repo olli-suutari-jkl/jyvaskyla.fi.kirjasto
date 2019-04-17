@@ -74,50 +74,13 @@ function generateAccessibilityImg(translationName, iconPath) {
         'src="' + iconPath + '" data-placement="bottom" title="' + translationName + '" data-toggle="accessibility-tooltip"  /> ');
 }
 
-var svgCounter = 0;
-function generateAccessibilityTextSvg(serviceName) {
-    var svgns = "http://www.w3.org/2000/svg";
-    var svg = document.createElementNS(svgns, "svg");
-    svg.setAttributeNS(null,"height","50");
-    svg.setAttributeNS(null,"role","img");
-    svg.setAttributeNS(null,"alt", serviceName);
-    // Generate background
-    var svgBg = document.createElementNS(svgns, 'rect');
-    svgBg.setAttributeNS(null,"height","50");
-    svgBg.setAttributeNS(null,"width","100%");
-    svgBg.setAttributeNS(null,"rx","8");
-    svgBg.setAttributeNS(null,"ry","8");
-    svgBg.setAttributeNS(null,"stroke","#8496B9");
-    svgBg.setAttributeNS(null,"stroke-width","3");
-    svgBg.setAttributeNS(null,"stroke-linecap","butt");
-    svgBg.style.position = "absolute";
-    svgBg.style.fill = "#155196";
-    // Generate text
-    var svgText = document.createElementNS(svgns,"text");
-    svgText.setAttributeNS(null,"x","10");
-    svgText.setAttributeNS(null,"y","63%");
-    svgText.setAttributeNS(null,"width","100px");
-    svgText.setAttributeNS(null,"height","auto");
-    svgText.setAttributeNS(null,"font-size","16");
-    svgText.setAttributeNS(null,"font-family","Verdana");
-    svgText.setAttributeNS(null,"fill","#FEFEFE");
-    var svgId = "accessibilityExtra" + svgCounter;
-    svgText.setAttributeNS(null,"id", "accessibilityExtra" + svgCounter);
-    svgCounter = svgCounter +1;
-    svgText.appendChild(document.createTextNode(serviceName));
-    // Append the item.
-    //svg.append(svgBg);
-    $(svg).append(svgBg);
-    $(svg).append(svgText);
-    //svg.append(svgText);
-    $(".accessibility-images").append(svg);
-    // Adjust the svg width after it is created, do this afterwards in order to calc the width from text width.
+function generateAccessibilityTextBlock(serviceName) {
+    var blockItem = '<span class="accessibility-text-block" role="img" alt="' + serviceName +'">' +
+        serviceName + ' </span>';
+    // Use timeout so actual icons are rendered first.
     setTimeout(function(){
-        var width = document.getElementById(svgId).getComputedTextLength();
-        width = Math.floor(width + 20);
-        svg.setAttribute("width", width);
-        $(".accessibility-images").append(svg);
-    }, 500);
+        $(".accessibility-images").append(blockItem);
+    }, 100);
 }
 
 // Function for adding a new palvelut item.
@@ -158,11 +121,11 @@ function addItem(item, listElement) {
                     generateAccessibilityImg("Induction loop", "Esteetön_induktiosilmukka.png");
                 }
                 else if (value.toLocaleLowerCase().indexOf("suuren kirjasinkoon kokoelma") !== -1) {
-                    generateAccessibilityTextSvg(i18n.get("Collection of books with large fonts"));
+                    generateAccessibilityTextBlock(i18n.get("Collection of books with large fonts"));
                 }
                 else {
                     if (value != null && value.length != 0) {
-                        generateAccessibilityTextSvg(value)
+                        generateAccessibilityTextBlock(value);
                     }
                 }
             });
