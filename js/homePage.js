@@ -214,9 +214,9 @@ function getDaySchelude(direction, lib) {
     var dayName = moment(selectedDate).format("dddd");
     dayName = dayName[0].toUpperCase() + dayName.substr(1);
     $("#weekNumber").html(dayName + " " + prettyDate);
-    // Use &pretty: https://github.com/libraries-fi/kirkanta-api/issues/3
     $.getJSON("https://api.kirjastot.fi/v4/schedules?library=" + lib + "&lang=" + lang +
-        "&period.start=" + weekCounter + "d&period.end=" + weekCounter + "d&refs=period&limit=5000&pretty", function (data) {
+        "&period.start=" + weekCounter + "d&period.end=" + weekCounter + "d&refs=period&limit=5000",
+        {_: new Date().getTime()}, function (data) {
         if (data.items.length === 0) {
             //$('#schedules').css('display', 'none');
             $("#weekSchelude").replaceWith('<tbody id="weekSchelude" class="schedules-weekly">' + "<tr><td></td></tr>");

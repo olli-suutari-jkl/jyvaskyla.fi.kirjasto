@@ -1,7 +1,7 @@
 // Variables
-var jsonp_url = "https://api.kirjastot.fi/v3/library/" + library + "?lang=" + lang;
-var jsonpUrlV4 = "https://api.kirjastot.fi/v4/library/" + library + "?lang=" + lang +
-    "&with=pictures,services,departments,mailAddress,links,phoneNumbers,primaryContactInfo,transitInfo&limit=1500";
+var withParams = "&with=pictures,services,buildingInfo,departments,mailAddress,links,phoneNumbers,primaryContactInfo," +
+    "persons,transitInfo&limit=1500";
+var jsonpUrlV4 = "https://api.kirjastot.fi/v4/library/" + library + "?lang=" + lang + withParams;
 var transitIsEmpty = true;
 var descriptionIsEmpty = true;
 var isReFetching = false;
@@ -20,11 +20,14 @@ var phoneNumbers = null;
 var pictures = null;
 var arrayOfServices = null;
 var slogan = null;
+var founded = null;
+var buildingInfo = null;
 var email = null;
 var description = null;
 var transitInfo = null;
 var lon;
 var lat;
+var persons = null;
 var contactlist = [];
 var numbersList = [];
 var staffList = [];
@@ -52,7 +55,8 @@ function checkIfContactExists(array, item) {
 function asyncFetchV4Data() {
     var genericDeferred = jQuery.Deferred();
     setTimeout(function() {
-        $.getJSON(jsonpUrlV4, function (data) {
+        // Disable caching: https://stackoverflow.com/questions/13391563/how-to-set-cache-false-for-getjson-in-jquery
+        $.getJSON(jsonpUrlV4, {_: new Date().getTime()}, function (data) {
             var data = data.data;
             address = data.address;
             mailAddress = data.mailAddress;
@@ -60,9 +64,12 @@ function asyncFetchV4Data() {
             departments = data.departments;
             links = data.links;
             phoneNumbers = data.phoneNumbers;
+            persons = data.persons;
             pictures = data.pictures;
             arrayOfServices = data.services;
             slogan = data.slogan;
+            founded = data.founded;
+            buildingInfo = data.buildingInfo;
             // libName is undefined if on a standalone lib page.
             if(libName === undefined) {
                 libName = data.name;
@@ -72,7 +79,7 @@ function asyncFetchV4Data() {
             }
             description = data.description;
             transitInfo = data.transitInfo;
-            genericDeferred.resolve()
+            genericDeferred.resolve();
         });
     }, 1 );
     // Return the Promise so caller can't change the Deferred
@@ -161,52 +168,6 @@ function asyncGenerateGenericDetails() {
     return genericDeferred.promise();
 }
 
-
-/* Fetch generic details and generate the UI */
-function asyncFetchBuildingDetails() {
-    var genericDeferred = jQuery.Deferred();
-    setTimeout(function() {
-        // Use v3 api since v4 does not have buildingDetails yet. https://github.com/libraries-fi/kirkanta-api/issues/5
-        $.getJSON(jsonp_url + "&with=extra", function (data) {
-            // Table
-            if (isEmpty($('#buildingDetails')) && !isReFetching) {
-                // If display none by default, colspan gets messed up.
-                $('#triviaTitle').append( i18n.get("Trivia"));
-                if (data.extra.founded != null) {
-                    triviaIsEmpty = false;
-                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Founded") + ': </strong></td>' +
-                        '<td class="trivia-detail">' + data.extra.founded + '</td></tr>');
-                }
-                if (data.extra.building.building_name != null) {
-                    triviaIsEmpty = false;
-                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Building") + ': </strong></td>' +
-                        '<td class="trivia-detail">' + data.extra.building.building_name + '</td></tr>');
-                }
-                if (data.extra.building.construction_year != null && data.extra.building.construction_year != 0) {
-                    triviaIsEmpty = false;
-                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Year built") + ': </strong></td>' +
-                        '<td class="trivia-detail">' + data.extra.building.construction_year + '</td></tr>');
-                }
-                if (data.extra.building.building_architect != null) {
-                    triviaIsEmpty = false;
-                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Architect") + ': </strong></td>' +
-                        '<td class="trivia-detail">' + data.extra.building.building_architect + '</td></tr>');
-                }
-                if (data.extra.building.interior_designer != null) {
-                    triviaIsEmpty = false;
-                    $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Decoration") + ': </strong></td>' +
-                        '<td class="trivia-detail">' + data.extra.building.interior_designer + '</td></tr>');
-                }
-                if (!triviaIsEmpty) {
-                    $(".trivia-section").css("display", "block");
-                }
-            }
-            genericDeferred.resolve()
-        });
-    }, 1 );
-    // Return the Promise so caller can't change the Deferred
-    return genericDeferred.promise();
-}
 // CollectionCount is used with departments.
 var roomCount = 0;
 // Bind modal closing event only once.
@@ -572,6 +533,52 @@ function generateImages(data) {
     return imageListDeferred.promise();
 }
 
+function asyncGenerateTrivia() {
+    var triviaDeferred = jQuery.Deferred();
+    setTimeout(function() {
+        if (isEmpty($('#buildingDetails')) && !isReFetching) {
+            // If display none by default, colspan gets messed up.
+            $('#triviaTitle').append( i18n.get("Trivia"));
+            if(buildingInfo == null && founded == null) {
+                triviaIsEmpty = true;
+                $(".trivia-section").css("display", "block");
+                triviaDeferred.resolve();
+            }
+            if (founded != null) {
+                triviaIsEmpty = false;
+                $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Founded") + ': </strong></td>' +
+                    '<td class="trivia-detail">' + founded + '</td></tr>');
+            }
+            if (buildingInfo.buildingName != null) {
+                triviaIsEmpty = false;
+                $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Building") + ': </strong></td>' +
+                    '<td class="trivia-detail">' + buildingInfo.buildingName + '</td></tr>');
+            }
+            if (buildingInfo.constructionYear != null && buildingInfo.constructionYear != 0) {
+                triviaIsEmpty = false;
+                $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Year built") + ': </strong></td>' +
+                    '<td class="trivia-detail">' + buildingInfo.constructionYear + '</td></tr>');
+            }
+            if (buildingInfo.architect != null) {
+                triviaIsEmpty = false;
+                $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Architect") + ': </strong></td>' +
+                    '<td class="trivia-detail">' + buildingInfo.architect + '</td></tr>');
+            }
+            if (buildingInfo.interiorDesigner != null) {
+                triviaIsEmpty = false;
+                $("#triviaBody").append('<tr><td class="trivia-cell-title"><strong>' + i18n.get("Decoration") + ': </strong></td>' +
+                    '<td class="trivia-detail">' + buildingInfo.interiorDesigner + '</td></tr>');
+            }
+            if (!triviaIsEmpty) {
+                $(".trivia-section").css("display", "block");
+            }
+            triviaDeferred.resolve();
+        }
+    }, 1 );
+    // Return the Promise so caller can't change the Deferred
+    return triviaDeferred.promise();
+}
+
 function asyncFetchImages() {
     var imagesDeferred = jQuery.Deferred();
     setTimeout(function() {
@@ -873,7 +880,7 @@ function asyncFetchLinks() {
     return linksDeferred.promise();
 }
 
-function asyncFetchNumbers() {
+function asyncGenerateNumbers() {
     var numbersDeferred = jQuery.Deferred();
     setTimeout(function() {
         var counter = 0;
@@ -911,63 +918,60 @@ function asyncFetchNumbers() {
     return numbersDeferred.promise();
 }
 
-function asyncFetchStaff() {
+function asyncGenerateStaff() {
     var staffDeferred = jQuery.Deferred();
     setTimeout(function() {
         var counter = 0;
-        // Use v3 api since v4 also returns "hidden" persons. https://github.com/libraries-fi/kirkanta-api/issues/6
-        $.getJSON(jsonp_url + "&with=persons&limit=500", function (data) {
-            if(data.persons.length !== 0) {
-                for (var i = 0; i < data.persons.length; i++) {
-                    var name = data.persons[i].first_name + ' ' + data.persons[i].last_name;
-                    if (data.persons[i].job_title !== null) {
-                        name += ' – ' + data.persons[i].job_title;
-                    }
-                    // Do not include contacts with null emails.
-                    if(data.persons[i].email != null || data.persons[i].phone != null) {
-                        // Check if name or detail is unique.
-                        var contact = "";
-                        if(data.persons[i].email != null) {
-                            contact = contact + data.persons[i].email;
-                            if(data.persons[i].phone != null && data.persons[i].phone.length !== 0) {
-                                contact = contact + "<br>" + data.persons[i].phone;
-                            }
-                        }
-                        else {
-                            if(data.persons[i].phone.length !== 0) {
-                                contact = contact + data.persons[i].phone;
-                            }
-                        }
-                        if (!checkIfContactExists(staffList, contact) || !checkIfNameExists(staffList, name)){
-                            // Don't push if contact or name is empty.
-                            if(contact.length !== 0 && name.length !== 0) {
-                                staffList.push({name: name, contact: contact});
-                            }
+        if(persons.length !== 0) {
+            for (var i = 0; i < persons.length; i++) {
+                var name = persons[i].firstName + ' ' + persons[i].lastName;
+                if (persons[i].jobTitle !== null) {
+                    name += ' – ' + persons[i].jobTitle;
+                }
+                // Do not include contacts with null emails.
+                if(persons[i].email != null || persons[i].phone != null) {
+                    // Check if name or detail is unique.
+                    var contact = "";
+                    if(persons[i].email != null) {
+                        contact = contact + persons[i].email;
+                        if(persons[i].phone != null && persons[i].phone.length !== 0) {
+                            contact = contact + "<br>" + persons[i].phone;
                         }
                     }
-                    counter = counter +1;
+                    else {
+                        if(persons[i].phone.length !== 0) {
+                            contact = contact + persons[i].phone;
+                        }
+                    }
+                    if (!checkIfContactExists(staffList, contact) || !checkIfNameExists(staffList, name)){
+                        // Don't push if contact or name is empty.
+                        if(contact.length !== 0 && name.length !== 0) {
+                            staffList.push({name: name, contact: contact});
+                        }
+                    }
                 }
-                // If we have looped all, set as resolved, thus moving on.
-                if(counter === data.persons.length) {
-                    // Sort alphabetically. https://stackoverflow.com/questions/6712034/sort-array-by-firstname-alphabetically-in-javascript
-                    $.when(
-                        staffList.sort(function(a, b){
-                            var nameA=a.name.toLowerCase(), nameB=b.name.toLowerCase();
-                            if (nameA < nameB) //sort string ascending
-                                return -1;
-                            if (nameA > nameB)
-                                return 1;
-                            return 0; //default return value (no sorting)
-                        })
-                    ).then  (
-                        staffDeferred.resolve()
-                    );
-                }
+                counter = counter +1;
             }
-            else {
-                staffDeferred.resolve()
+            // If we have looped all, set as resolved, thus moving on.
+            if(counter === persons.length) {
+                // Sort alphabetically. https://stackoverflow.com/questions/6712034/sort-array-by-firstname-alphabetically-in-javascript
+                $.when(
+                    staffList.sort(function(a, b){
+                        var nameA=a.name.toLowerCase(), nameB=b.name.toLowerCase();
+                        if (nameA < nameB) //sort string ascending
+                            return -1;
+                        if (nameA > nameB)
+                            return 1;
+                        return 0; //default return value (no sorting)
+                    })
+                ).then  (
+                    staffDeferred.resolve()
+                );
             }
-        });
+        }
+        else {
+            staffDeferred.resolve()
+        }
     }, 1 );
     // Return the Promise so caller can't change the Deferred
     return staffDeferred.promise();
@@ -978,7 +982,7 @@ function generateContacts() {
     var contactsDeferred = jQuery.Deferred();
     setTimeout(function() {
         if (isEmpty($('#contactsTbody'))) {
-            $.when( asyncFetchNumbers(), asyncFetchStaff() ).then  (
+            $.when( asyncGenerateNumbers(), asyncGenerateStaff() ).then  (
                 function() {
                     if(contactlist.length === 0 && staffList.length === 0 && numbersList.length === 0) {
                         contactlist.push({name: i18n.get("No contacts"), contact: ""});
@@ -1038,17 +1042,16 @@ function fetchInformation(language, lib) {
     if (lib === undefined) {
         lib = library; // Use default if none provided.
     }
-    jsonp_url = "https://api.kirjastot.fi/v3/library/" + lib + "?lang=" + language;
-    jsonpUrlV4 = "https://api.kirjastot.fi/v4/library/" + lib + "?lang=" + language +
-        "&with=pictures,services,departments,mailAddress,links,phoneNumbers,primaryContactInfo,transitInfo&limit=1500";
+    jsonpUrlV4 = "https://api.kirjastot.fi/v4/library/" + lib + "?lang=" + language + withParams;
     // Fetch generic details.
     function triggerFetch() {
         var fetchDeferred = jQuery.Deferred();
         setTimeout(function() {
             if(!isReFetching) {
-                $.when( asyncFetchBuildingDetails(), asyncFetchV4Data() ).then(
+                $.when( asyncFetchV4Data() ).then(
                     function() {
-                        $.when( asyncGenerateGenericDetails(), asyncFetchDepartments(), asyncFetchImages(), asyncFetchLinks(), asyncFetchLocation()).then(
+                        $.when( asyncGenerateGenericDetails(), asyncGenerateTrivia(), asyncFetchDepartments(),
+                            asyncFetchImages(), asyncFetchLinks(), asyncFetchLocation()).then(
                             function() {
                                 $.when( asyncFetchServices(), asyncLoadMap(), generateContacts()  ).then(
                                     function() {

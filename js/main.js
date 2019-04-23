@@ -579,6 +579,4 @@ $(document).ready(function() {
             }
         }
     }
-    // Disable caching.
-    $.ajaxSetup({ cache: false });
 }); // OnReady

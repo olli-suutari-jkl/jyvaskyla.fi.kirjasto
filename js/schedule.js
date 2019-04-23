@@ -179,7 +179,7 @@ function getWeekSchelude(direction, lib) {
     // Display week number.
     $("#weekNumber").html(i18n.get("Week") + ' ' + weekNumber);
     $.getJSON("https://api.kirjastot.fi/v4/schedules?library=" + lib + "&lang=" + lang +
-        "&period.start=" + weekCounter + "w&period.end=" + weekCounter + "w&refs=period&limit=5000", function (data) {
+        "&period.start=" + weekCounter + "w&period.end=" + weekCounter + "w&refs=period&limit=5000", {_: new Date().getTime()}, function (data) {
         if (data.items.length === 0) {
             // If we have not previously fetched the schedules succesfully.
             if(!schedulesAreAvailable) {
