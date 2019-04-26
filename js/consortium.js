@@ -374,6 +374,7 @@ $(document).ready(function() {
                 isReFetching = false;
                 isModalCloseBinded = false;
                 isServiceClickBinded = false;
+                schedulesAreAvailable = false;
                 map = L.map('mapContainer');
                 mailAddress = null;
                 coordinates = null;
