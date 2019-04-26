@@ -201,19 +201,19 @@
 
 /* L-font (default) */
 .large-schedules td, .large-schedules th{
-    font-size: 1.9em;
+    font-size: 1.8em;
 }
 
 .large-schedules .date-container, .large-schedules .day-name {
     padding-top: 0.4em!important;
     font-weight: 600;
-    font-size: 1.8em;
+    font-size: 1.7em;
 }
 
 .large-schedules .main-schedule {
     padding-top: 0.45em;
     font-weight: 600;
-    font-size: 1.7em;
+    font-size: 1.6em;
 }
 
 .large-schedules .info-span-lg {
@@ -228,57 +228,57 @@
 
 /* medium-font, used if schedule contains so many rows L-font would not fit well. */
 .m-font td, .m-font th{
-    font-size: 1.9em;
-}
-
-.m-font .date-container, .m-font .day-name {
-    font-size: 2em;
-}
-
-.m-font .main-schedule {
     font-size: 1.8em;
 }
 
-.m-font .info-span-lg {
-    font-size: 1.65rem;
+.m-font .date-container, .m-font .day-name {
+    font-size: 1.9em;
+}
+
+.m-font .main-schedule {
+    font-size: 1.7em;
 }
 
 .m-font .info-span-lg {
-    font-size: 1.6rem;
+    font-size: 1.55rem;
+}
+
+.m-font .info-span-lg {
+    font-size: 1.5rem;
 }
 
 /* XL-font */
 .xl-font td,.xl-font th{
-    font-size: 2.2em;
+    font-size: 2.05em;
 }
 
 .xl-font .date-container, .xl-font .day-name {
-    font-size: 2.3em;
+    font-size: 2.15em;
 }
 
 .xl-font .main-schedule {
-    font-size: 2.1em;
+    font-size: 1.95em;
 }
 
 .xl-font .info-span-lg {
-    font-size: 2.1rem;
+    font-size: 1.95rem;
 }
 
 /* XXL-font */
 .xxl-font td,.xxl-font th{
-    font-size: 3em;
+    font-size: 2.85em;
 }
 
 .xxl-font .date-container, .xxl-font .day-name {
-    font-size: 2.9em;
+    font-size: 2.75em;
 }
 
 .xxl-font .main-schedule {
     padding-top: 0.45em;
     font-weight: 600;
-    font-size: 2.8em;
+    font-size: 2.65em;
 }
 
 .xxl-font .info-span-lg {
-    font-size: 2.6rem;
+    font-size: 2.45rem;
 }
