@@ -28,10 +28,10 @@
 }
 
 @media screen and (min-width: 500px) and (max-width: 768px) {
-        .normal-schedules {
-            margin-left: -25px;
-            margin-right: -25px;
-        }
+    .normal-schedules {
+        margin-left: -25px;
+        margin-right: -25px;
+    }
 }
 
 .day-name, .main-schedule {
@@ -79,7 +79,7 @@
 }
 
 .info-span i {
-    font-size: 1.28em!important;
+    font-size: 1.25em!important;
     margin-top: 3px;
 }
 
@@ -226,6 +226,22 @@
     padding-top: 10px;
 }
 
+.large-schedules  .info-span-lg i {
+    font-size: 1.3em!important;
+}
+
+.large-schedules .info-span i {
+    font-size: 1.2em!important;
+}
+
+.m-font .info-span-lg i, .m-font .info-span i, .l-font .info-span-lg i, .l-font .info-span i, .xl-font .info-span-lg i, .xl-font .info-span i {
+    margin-top: 6px!important;
+}
+
+.xxl-font .info-span-lg i, .xxl-font .info-span i {
+    margin-top: 8px!important;
+}
+
 /* medium-font, used if schedule contains so many rows L-font would not fit well. */
 .m-font td, .m-font th{
     font-size: 1.8em;
@@ -261,7 +277,7 @@
 }
 
 .xl-font .info-span-lg {
-    font-size: 1.95rem;
+    font-size: 1.85rem;
 }
 
 /* XXL-font */
@@ -280,5 +296,5 @@
 }
 
 .xxl-font .info-span-lg {
-    font-size: 2.45rem;
+    font-size: 2.35rem;
 }
