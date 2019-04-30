@@ -308,7 +308,7 @@ function getDaySchelude(direction, lib) {
                             '</tr>';
                     }
                     // self-service
-                    else {
+                    else if(time.status === 2) {
                         if (staffPresentStart === '') {
                             selfServiceBefore = '<tr class="time--sub time isTodayClass time--no-staff">' +
                                 '<td class="align-right"><i class="fa fa-level-up fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
