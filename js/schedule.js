@@ -266,7 +266,6 @@ function getWeekSchelude(direction, lib) {
                 }
                 for (var t = 0; t < schedules[i].times.length; t++) {
                     var time = schedules[i].times[t];
-                    increaseRowCount();
                     var from = time.from;
                     var to = time.to;
                     // Adjust main opening times.
@@ -281,6 +280,9 @@ function getWeekSchelude(direction, lib) {
                     1 means the library is open and has staff.
                     2 means the library is in self-service mode (no staff).
                     */
+                    if(time.status !== 0) {
+                        increaseRowCount();
+                    }
                     if (time.status === 1) {
                         staffPresentStart = from;
                         staffPresentEnd = to;
@@ -291,7 +293,7 @@ function getWeekSchelude(direction, lib) {
                             '</tr>';
                     }
                     // self-service
-                    else {
+                    else if(time.status === 2) {
                         if (staffPresentStart === '') {
                             selfServiceBefore = '<tr class="time--sub time isTodayClass time--no-staff">' +
                                 '<td><i class="fa fa-level-up fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
