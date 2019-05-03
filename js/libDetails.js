@@ -1108,7 +1108,7 @@ function fetchInformation(language, lib) {
                         $("#closeModal").text(i18n.get("Close"));
                     }
                     // Right bar is empty.
-                    if(isScheduleEmpty && noImages && triviaIsEmpty) {
+                    if(isScheduleEmpty && !schedulesAreAvailable && noImages && triviaIsEmpty) {
                         noSidebar = true;
                     }
                     if(noLeftCol) {

@@ -365,7 +365,7 @@ $(document).ready(function() {
                 accessibilityIsEmpty = true;
                 transitIsEmpty = true;
                 descriptionIsEmpty = true;
-                isScheduleEmpty = true;
+                isScheduleEmpty = false;
                 noImages = true;
                 triviaIsEmpty = true;
                 mapLoaded = false;
@@ -374,7 +374,7 @@ $(document).ready(function() {
                 isReFetching = false;
                 isModalCloseBinded = false;
                 isServiceClickBinded = false;
-                schedulesAreAvailable = false;
+                schedulesAreAvailable = true;
                 map = L.map('mapContainer');
                 mailAddress = null;
                 coordinates = null;
