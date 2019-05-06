@@ -103,22 +103,22 @@ function addItem(item, listElement) {
             $.each(splittedValues, function (index, value) {
                 accessibilityCount = accessibilityCount + 1;
                 if (value.toLocaleLowerCase().indexOf("esteetön sisäänpääsy") !== -1) {
-                    generateAccessibilityImg("Accessible entrance", "Esteetön_kulku_saavutettavuus.png");
+                    generateAccessibilityImg("Accessible entrance", "Esteetön_kulku_saavutettavuus.svg");
                 }
                 else if (value.toLocaleLowerCase().indexOf("invapysäköinti") !== -1) {
-                    generateAccessibilityImg("Disabled parking", "Esteetön_parkki.png");
+                    generateAccessibilityImg("Disabled parking", "Esteetön_parkki.svg");
                 }
                 else if (value.toLocaleLowerCase().indexOf("esteetön wc") !== -1) {
-                    generateAccessibilityImg("Accessible toilet", "Esteetön_wc.png");
+                    generateAccessibilityImg("Accessible toilet", "Esteetön_wc.svg");
                 }
                 else if (value.toLocaleLowerCase().indexOf("hissi") !== -1) {
-                    generateAccessibilityImg("Elevator", "Esteetön_hissi.png");
+                    generateAccessibilityImg("Elevator", "Esteetön_hissi.svg");
                 }
                 else if (value.toLocaleLowerCase().indexOf("pyörätuoliluiska") !== -1) {
-                    generateAccessibilityImg("Wheelchar ramp", "Esteetön_ramppi.png");
+                    generateAccessibilityImg("Wheelchar ramp", "Esteetön_ramppi.svg");
                 }
                 else if (value.toLocaleLowerCase().indexOf("induktiosilmukka") !== -1) {
-                    generateAccessibilityImg("Induction loop", "Esteetön_induktiosilmukka.png");
+                    generateAccessibilityImg("Induction loop", "Esteetön_induktiosilmukka.svg");
                 }
                 else if (value.toLocaleLowerCase().indexOf("suuren kirjasinkoon kokoelma") !== -1) {
                     generateAccessibilityTextBlock(i18n.get("Collection of books with large fonts"));
