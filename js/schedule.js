@@ -6,6 +6,8 @@ function generateScheduleInfo(data) {
     var items = [];
     var isWeekInfo = false;
     var isSpecialInfo = false;
+    var normalScheduleIsAvailable = false;
+    var isSpecialWeek = false;
     // Turn object object array to object array.
     for (var key in data) {
         if (data.hasOwnProperty(key) && (typeof data[key] === "object")) {
@@ -17,91 +19,105 @@ function generateScheduleInfo(data) {
                 row[key] = obj[key];
             }
             items.push(row);
+            /* If no normal schedules are not available, do not set the variable to true.
+               This is used to detect special schedules within special schedules. (eq. summer schedules and mid summer special schedules. */
+            if(!row.isException) {
+                normalScheduleIsAvailable = true
+            }
         }
     };
     // Loop the array.
     for (var i = 0; i < items.length; i++) {
-         // Collections
-                if (items[i].name != null) {
-                    // Generic description has no valid_until (null)
-                    if(items[i].description !== null && items[i].description.length !== 0) {
-                        if(!items[i].isException) {
-                                genericDescription = items[i].description;
-                            }
-                            else {
-                                holidayDescription = items[i].description;
-                                isHoliday = true;
-                            }
-                        }
-                }
-                var isSpecialWeek = false;
-                if(holidayDescription !== undefined) {
-                    // Add rows for infoscreen font-size calculations...
-                    if (holidayDescription.length < 40) {
-                        totalRows = totalRows +1;
-                    }
-                    else if (holidayDescription.length > 40 && holidayDescription.length < 90) {
-                        holidayDescription = splitString(holidayDescription);
-                        totalRows = totalRows +2;
-                    }
-                    else if(holidayDescription.length > 130 && holidayDescription.length < 170) {
-                        totalRows = totalRows +3;
-                    }
-                    else {
-                        totalRows = totalRows +4;
-                    }
-                    var mondayDate = moment().add(weekCounter, 'weeks').weekday(0).format("YYYY-MM-DD");
-                    var sundayDate = moment().add(weekCounter, 'weeks').weekday(6).format("YYYY-MM-DD");
-                    isSpecialInfo = true;
-                    if(items[i].validFrom == mondayDate && items[i].validUntil == sundayDate) {
-                        isSpecialWeek = true;
-                        totalRows = totalRows +2;
-                    }
-                }
-                if(genericDescription !== undefined && !isSpecialWeek) {
-                    // Add rows for infoscreen font-size calculations...
-                    if (genericDescription.length < 40) {
-                        totalRows = totalRows +1;
-                    }
-                    else if (genericDescription.length > 40 && genericDescription.length < 90) {
-                        genericDescription = splitString(genericDescription);
-                        totalRows = totalRows +2;
-                    }
-                    else if(genericDescription.length > 130 && genericDescription.length < 170) {
-                        totalRows = totalRows +3;
-                    }
-                    else {
-                        totalRows = totalRows +4;
-                    }
-                    isWeekInfo = true;
-                }
-                else {
-                    $('#scheduleInfo').replaceWith('<span id="scheduleInfo" style="display: none" class="info-span info-text"><i class="fa fa-info-circle" > </i></span>');
-                }
-                if(holidayDescription === undefined) {
-                    $('#specialInfo').replaceWith('<span id="specialInfo" style="display: none" class="info-span info-text"><i class="fa fa-info-circle" > </i></span>');
-                }
-                if(isWeekInfo || isSpecialInfo) {
-                    $('#scheduleInfos').css("display", "");
-                }
-                else {
-                    $('#scheduleInfos').css("display", "none");
-                }
-                if(isWeekInfo) {
-                    $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-span-lg info-text"><i class="fa fa-info-circle" > </i> ' + genericDescription + '</span>');
-                    $('#scheduleInfoRow').css("display", "");
-                }
-                else {
-                    $('#scheduleInfoRow').css("display", "none");
-                }
-                if(isSpecialInfo) {
-                    $('#specialInfo').replaceWith('<span id="specialInfo" class="info-span-lg info-text"><i class="fa fa-info-circle" > </i>' + holidayDescription + '</span>');
-                    $('#specialInfoRow').css("display", "");
-                }
-                else {
-                    $('#specialInfoRow').css("display", "none");
-                }
+        var mondayDate = moment().add(weekCounter, 'weeks').weekday(1).format("YYYY-MM-DD");
+        var sundayDate = moment().add(weekCounter, 'weeks').weekday(7).format("YYYY-MM-DD");
+        //console.log(items[i].validFrom + " | " + mondayDate);
+        //console.log(items[i].validUntil + " | " + sundayDate);
+        if(items[i].validFrom == mondayDate && items[i].validUntil == sundayDate) {
+            isSpecialWeek = true;
+            totalRows = totalRows +2;
+            if(isValue(items[i].description)) {
+                holidayDescription = items[i].description;
+            }
+            isHoliday = true;
         }
+        if (items[i].name != null && !isSpecialWeek) {
+            // Generic description has no valid_until (null)
+            if(items[i].description !== null && items[i].description.length !== 0) {
+                if(!items[i].isException) {
+                        genericDescription = items[i].description;
+                }
+                else {
+                    if(normalScheduleIsAvailable) {
+                        holidayDescription = items[i].description;
+                        isHoliday = true;
+                    }
+                    else {
+                        genericDescription = items[i].description;
+                    }
+                }
+            }
+        }
+        if(holidayDescription !== undefined) {
+            // Add rows for infoscreen font-size calculations...
+            if (holidayDescription.length < 40) {
+                totalRows = totalRows +1;
+            }
+            else if (holidayDescription.length > 40 && holidayDescription.length < 90) {
+                holidayDescription = splitString(holidayDescription);
+                totalRows = totalRows +2;
+            }
+            else if(holidayDescription.length > 130 && holidayDescription.length < 170) {
+                totalRows = totalRows +3;
+            }
+            else {
+                totalRows = totalRows +4;
+            }
+            isSpecialInfo = true;
+        }
+        if(genericDescription !== undefined) {
+            // Add rows for infoscreen font-size calculations...
+            if (genericDescription.length < 40) {
+                totalRows = totalRows +1;
+            }
+            else if (genericDescription.length > 40 && genericDescription.length < 90) {
+                genericDescription = splitString(genericDescription);
+                totalRows = totalRows +2;
+            }
+            else if(genericDescription.length > 130 && genericDescription.length < 170) {
+                totalRows = totalRows +3;
+            }
+            else {
+                totalRows = totalRows +4;
+            }
+            isWeekInfo = true;
+        }
+        else {
+            $('#scheduleInfo').replaceWith('<span id="scheduleInfo" style="display: none" class="info-span info-text"><i class="fa fa-info-circle" > </i></span>');
+        }
+        if(holidayDescription === undefined) {
+            $('#specialInfo').replaceWith('<span id="specialInfo" style="display: none" class="info-span info-text"><i class="fa fa-info-circle" > </i></span>');
+        }
+        if(isWeekInfo || isSpecialInfo) {
+            $('#scheduleInfos').css("display", "");
+        }
+        else {
+            $('#scheduleInfos').css("display", "none");
+        }
+        if(isWeekInfo) {
+            $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-span-lg info-text"><i class="fa fa-info-circle" > </i> ' + genericDescription + '</span>');
+            $('#scheduleInfoRow').css("display", "");
+        }
+        else {
+            $('#scheduleInfoRow').css("display", "none");
+        }
+        if(isSpecialInfo) {
+            $('#specialInfo').replaceWith('<span id="specialInfo" class="info-span-lg info-text"><i class="fa fa-info-circle" > </i>' + holidayDescription + '</span>');
+            $('#specialInfoRow').css("display", "");
+        }
+        else {
+            $('#specialInfoRow').css("display", "none");
+        }
+    }
 }
 var weekCounter = 0;
 var dateInSchedule;

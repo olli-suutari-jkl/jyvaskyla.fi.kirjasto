@@ -27,7 +27,7 @@ var height = 0;
 function adjustHomePageHeight(delay) {
     clearTimeout(clearTimer);
     isAdjustingHeight = true;
-    delay = delay + 150;
+    delay = delay + 250;
     setTimeout(function(){
         try {
             var newHeight = 0;
