@@ -3,6 +3,14 @@
     background:rgba(0,0,0,0)!important;
 }
 
+/* Media query for IE 10-11. Fixes schedule table being larger than the container */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    #schedules table {
+        table-layout: fixed;
+        word-break: break-all;
+    }
+}
+
 @media screen and (max-width: 499px) {
     .normal-schedules {
         margin-left: calc(50% - 48.33vw);
