@@ -46,6 +46,31 @@ function checkIfV4ApiIsBroken() {
 }
 checkIfV4ApiIsBroken();
 */
+
+// Check that generic and special descriptions are not the same.
+function strippedValueEquals(valueA, valueB) {
+    valueA = valueA.replace(/\r?\n|\r/g, "");
+    valueA = valueA.replace(/\./g, "");
+    valueA = valueA.replace(/,/g, "");
+    valueA = valueA.replace(/ /g, "");
+    valueA = valueA.replace(/-/g, "");
+    valueA = valueA.replace(/–/g, "");
+    valueA = valueA.toLowerCase();
+    valueB = valueB.replace(/\r?\n|\r/g, "");
+    valueB = valueB.replace(/\./g, "");
+    valueB = valueB.replace(/,/g, "");
+    valueB = valueB.replace(/ /g, "");
+    valueB = valueB.replace(/-/g, "");
+    valueB = valueB.replace(/–/g, "");
+    valueB = valueB.toLowerCase();
+    if(valueA == valueB) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 function isBefore(timeOne, timeTwo) {
     return !!moment(timeOne, HHmmFormat).isBefore(moment(timeTwo, HHmmFormat));
 }
