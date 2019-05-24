@@ -5,7 +5,7 @@
 
 /* Media query for IE 10-11. Fixes schedule table being larger than the container */
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-    .normal-schedules table {
+    .normal-schedules table, .schedules-widget table {
         table-layout: fixed;
         word-break: break-all;
         width: 100%;
