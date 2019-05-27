@@ -49,6 +49,12 @@ checkIfV4ApiIsBroken();
 
 // Check that generic and special descriptions are not the same.
 function strippedValueEquals(valueA, valueB) {
+    /*if(valueA == null && valueB == null) {
+        return true;
+    }*/
+    if(valueA == null || valueB == null) {
+        return false;
+    }
     valueA = valueA.replace(/\r?\n|\r/g, "");
     valueA = valueA.replace(/\./g, "");
     valueA = valueA.replace(/,/g, "");

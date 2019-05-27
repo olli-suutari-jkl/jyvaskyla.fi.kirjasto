@@ -158,8 +158,14 @@ function addItem(item, listElement) {
         if (isValue(item.shortDescription) || isValue(item.description) || isValue(item.website) ||
         isValue(item.email) || isValue(item.phoneNumber)) {
             var description = "";
-            if (item.shortDescription != null && item.shortDescription.length != 0) {
-                description = '<p>' + item.shortDescription + '</p>';
+            if (item.shortDescription != null && item.shortDescription.length != 0 &&
+                !strippedValueEquals(item.shortDescription, item.name)) {
+                var shortDescription = item.shortDescription;
+                var lastChar = shortDescription[shortDescription.length -1];
+                if(lastChar != "." && lastChar != "!" && lastChar != "?") {
+                    shortDescription = shortDescription + ".";
+                }
+                description = '<p>' + shortDescription + '</p>';
             }
             // Add "long" description where available && not equal to the short one.
             if (item.description != null && item.description.length != 0 && item.description !== item.shortDescription) {
