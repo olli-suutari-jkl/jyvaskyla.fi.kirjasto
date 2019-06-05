@@ -209,11 +209,12 @@ function getWeekSchelude(direction, lib) {
                 schedulesAreAvailable = false;
             }
             else {
-                $("#weekSchelude").replaceWith('<tbody id="weekSchelude" class="schedules-weekly">');
-                dayInfo = '<tr class="info-span info-text">' +
-                    '<td colspan="2"><span id="scheduleInfo" class="info-span info-text"><i class="fa fa-info-circle" > ' +
-                    '</i> ' + i18n.get("No schedules") + '</span></td></tr>';
-                $("#weekSchelude").append(dayInfo);
+                $("#scheduleInfos").replaceWith('<tbody id="scheduleInfos" class="schedule-infos">' +
+                '<tr id="scheduleInfoRow">' +
+                    '<td colspan="3"><span id="scheduleInfo" class="info-span-lg info-text"><i class="fa fa-info-circle" > ' +
+                    '</i> ' + i18n.get("No schedules") + '</span></td></tr>');
+                $('#weekSchelude').css("display", "none");
+                //$("#weekSchelude").append(dayInfo);
                 isScheduleEmpty = true;
             }
         }
@@ -259,7 +260,6 @@ function getWeekSchelude(direction, lib) {
                 // Capitalize 1st letter of dayname.
                 var dayName = begin.format("dddd");
                 dayName = dayName[0].toUpperCase() + dayName.substr(1);
-
                 function increaseRowCount(isInfo) {
                     // Increase rowspanCount to be used with DD.M. for each open section.
                     rowspanCount = rowspanCount + 1;
@@ -294,6 +294,7 @@ function getWeekSchelude(direction, lib) {
                             '</tr>';
                         increaseRowCount(true);
                     }
+                    var lastStatusIsStaff = false;
                     for (var t = 0; t < schedules[i].times.length; t++) {
                         var time = schedules[i].times[t];
                         var from = time.from;
@@ -311,7 +312,17 @@ function getWeekSchelude(direction, lib) {
                         2 means the library is in self-service mode (no staff).
                         */
                         if(time.status !== 0) {
-                            increaseRowCount();
+                            if(time.status == 1) {
+                                // https://github.com/libraries-fi/kirkanta/issues/12 | Don't increase row count for overlapping staff presents.
+                                if(!lastStatusIsStaff) {
+                                    increaseRowCount();
+                                    lastStatusIsStaff = true;
+                                }
+                            }
+                            else {
+                                increaseRowCount();
+                                lastStatusIsStaff = false;
+                            }
                         }
                         if (time.status === 1) {
                             staffPresentStart = from;
