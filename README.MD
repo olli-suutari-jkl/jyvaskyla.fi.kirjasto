@@ -4,20 +4,15 @@ This repository contains pages (published as GitHub pages) to be implemented as 
 
 Library data is pulled from the kirkanta-api: https://github.com/libraries-fi/kirkanta-api and the UI is loosely inspired by kirjastohakemisto.fi https://github.com/libraries-fi/kirjastohakemisto
 
-This implementation is currently used in Jyvaskyla: https://www.jyvaskyla.fi/kirjasto/kirjastot + standalone schedules in info-screens & https://www.jyvaskyla.fi/kirjasto/kirjastot/omatoimikirjastot.
+This implementation is currently used in [Keski-libraries,](https://www.keskikirjastot.fi/web/arena)  [Jyvaskyla](https://www.jyvaskyla.fi/kirjasto/kirjastot ) and + standalone schedules in info-screens & https://www.jyvaskyla.fi/kirjasto/kirjastot/omatoimikirjastot.
 
 ### **Usage scenarios**
 
-**For examples:** see pages/examples
-
-If city/consortium parameters are provided, Library selector will be shown** according to those parameters (mobile libraries are ignored). Following listings are supported:
-A) Libraries of city, that belong to the same consortium ([https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?city=jyväskylä&lib=85159&consortium=2113&lang=fi)](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?city=jyväskylä&lib=85159&consortium=2113&lang=fi) 
-B) Libraries of city ([https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?city=jyväskylä&lib=85159&lang=fi)](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?city=jyväskylä&lib=85159&lang=fi)
-C) Libraries of consortium  ([https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85159&consortium=2113&lang=fi)](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/library.html?lib=85159&consortium=2113&lang=fi)
-
-Large schedules for info screens can be used with the &large=true parameter, eq.
-https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/schedule.html?lib=85160&lang=fi&large=true
-This increases the schedule font sizes dynamically to be used in a 1080 * 1920 info screens.
+- [Details of a library](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/examples/library-example.html)
+- [Opening times of a library](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/examples/schedule-example.html) | [Large schedules for info screens](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/schedule.html?lib=85160&lang=fi&large=true) (1080x1920, "smart" font sizing)
+- [Libraries of a consortium](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/examples/consortium-example.html)
+- [Libraries of a city](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/examples/city-example.html?jyvaskylan-paakirjasto) (Mobile libraries are ignored, because in JKL, they have their own page)
+- [Single day schedules with a library selector](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/examples/home-example.html)
 
 ### **Features**
 
@@ -38,8 +33,6 @@ In addition to the basic features, this implementation has some extras, some of 
 | Customise styles with .less          | It is possible to customise the styling of the frames by providing them via parameters.<br />Currently the following parameters are available: primary, links, linksHover, linksExternal, btnHover. |
 | Rendering of departments as services | Departments are included in services in the "Rooms and collections" -section. |
 | And more...                          | This list may be appended in the future.                     |
-
-
 
 ### Technologies
 
