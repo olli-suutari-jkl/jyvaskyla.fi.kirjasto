@@ -132,7 +132,7 @@ function generateSelect() {
             setTimeout(function() {
                 try {
                     // Fetch names of all cities in kirkanta.
-                    $.getJSON("https://api.kirjastot.fi/v3/city?lang=fi&limit=1500", function(data) {
+                    $.getJSON("https://api.kirjastot.fi/v4/city?lang=fi&limit=1500", function(data) {
                         var counter = 0;
                         for (var i = 0; i < data.items.length; i++) {
                             // Check if libraryList contains the ID.
