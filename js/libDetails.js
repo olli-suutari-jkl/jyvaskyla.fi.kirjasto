@@ -51,7 +51,6 @@ function checkIfContactExists(array, item) {
     }
     return false;
 }
-/* Fetch things via v4 api, expect persons & building details */
 function asyncFetchV4Data() {
     var genericDeferred = jQuery.Deferred();
     setTimeout(function() {

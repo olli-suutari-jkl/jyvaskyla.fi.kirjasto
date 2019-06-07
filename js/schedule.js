@@ -133,10 +133,6 @@ var schedulesAreAvailable = true;
 var weekMinReached = false;
 var weekMaxReached = false;
 function getWeekSchelude(direction, lib) {
-    if(v4ApiBroken) {
-        getWeekScheludeV3(direction, lib);
-        return;
-    }
     totalRows = 0;
     // If no library is provided, use the default option.
     if (lib === undefined) {

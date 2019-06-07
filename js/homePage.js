@@ -161,10 +161,6 @@ function getDaySchelude(direction, lib) {
     if (lib === undefined) {
         lib = library;
     }
-    if(v4ApiBroken) {
-        getDayScheludeV3(direction, lib);
-        return;
-    }
     // +1 or -1;
     weekCounter = weekCounter + direction;
     // Do not allow going more than 30 days to the past or 60 days to the future.
