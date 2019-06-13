@@ -176,9 +176,13 @@ function addItem(item, listElement) {
             // Accessible icons: https://fontawesome.com/how-to-use/on-the-web/other-topics/accessibility
             // Add price where available.
             if (isValue(item.price)) {
+                var priceText = capitalize(item.price);
+                if(priceText == "Ilmainen" && lang == "en") {
+                    priceText = "Free"
+                }
                 description = description + '<p class="service-info service-price" aria-label="' + i18n.get("Price") + '">' +
                     '<i class="fa fa-money" data-toggle="tooltip" title="' + i18n.get("Price") + '" data-placement="top" ' +
-                    'aria-hidden="true"></i>' + capitalize(item.price) + '</p>';
+                    'aria-hidden="true"></i>' + priceText + '</p>';
             }
             // Website
             if(isValue(item.website)) {
