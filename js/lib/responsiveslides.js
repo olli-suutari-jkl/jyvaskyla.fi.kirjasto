@@ -8,7 +8,7 @@
 // Global variable, this will be set to true when changing the selected library.
 var sliderNeedsToRestart = false;
 var rotate;
-
+// This is called from consortium.js, after lib has changed. It stops the rotation interval within the interval.
 function resetSliderAfterLibChange() {
   sliderNeedsToRestart = true;
   sliderHasStopped = true;
@@ -267,7 +267,9 @@ var length = 1;
         stopAuto();
       });
       // Init cycle
-      startCycle();
+      if ($slide.length > 1) {
+        startCycle();
+      }
     });
   };
 })(jQuery, this, 0);

@@ -1,3 +1,6 @@
+var isIOS = false;
+var isIE = false;
+
 function moveParentToLibraryUrl(toAdd) {
     toAdd = toAdd.toLowerCase();
     toAdd = toAdd.replace(/ /g, "-");
@@ -385,6 +388,16 @@ function getDaySchelude(direction, lib) {
         }
         $("#weekSchelude").replaceWith('<tbody id="weekSchelude" class="schedules-weekly">' + str);
         adjustHomePageHeight(0);
+        var testSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+            navigator.userAgent &&
+            navigator.userAgent.indexOf('CriOS') == -1 &&
+            navigator.userAgent.indexOf('FxiOS') == -1;
+        if(testSafari || /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+            isIOS = true;
+        }
+        if(navigator.appName == 'Microsoft Internet Explorer' ||  !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv:11/)) || (typeof $.browser !== "undefined" && $.browser.msie == 1)) {
+            isIE = true;
+        }
         $('#scheduleTitle').html(i18n.get("Opening hours"));
         $('#scheduleTitle').css('display', 'block');
     });
