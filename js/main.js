@@ -1,9 +1,14 @@
+var isIOS = false;
+var isIE = false;
+
 function toggleFullScreen(target) {
     // if already full screen; exit
     // else go fullscreen
     // If slider, toggle small-slider class.
     if(target === "#sliderBox") {
         $('#sliderBox').toggleClass("small-slider");
+        $('#sliderBox').toggleClass("full-screen-slider");
+        adjustParentHeight(500)
     }
     else if(target === "#mapContainer") {
         $('#mapContainer').toggleClass("map-borders");
@@ -48,8 +53,11 @@ function exitHandler() {
     if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
         // TO DO: this leaves a smallish black margin to the left of the 1st image after exiting the slider.
         $('#sliderBox').addClass("small-slider");
+        $('#sliderBox').removeClass("full-screen-slider");
+
         $('#mapContainer').addClass("map-borders");
     }
+    adjustParentHeight(1500)
 }
 
 // Remove httml & www from url and / # from the end.
@@ -403,7 +411,7 @@ function adjustParentHeight(delay, elementPosY) {
                     newHeight = newHeight + popoverHeight;
                 }*/
             }
-            if (navigator.appName == 'Microsoft Internet Explorer' ||  !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv:11/)) || (typeof $.browser !== "undefined" && $.browser.msie == 1)) {
+            if (isIE) {
                 if(newHeight < 200) {
                     newHeight = newHeight + 3000;
                 }
@@ -531,7 +539,6 @@ $(document).ready(function() {
     $('#transitTitle').append(i18n.get("Transit details"));
     $('#socialMediaSr').append(i18n.get("Social media"));
     $('#srPictures').append(i18n.get("Pictures from the library"));
-    document.getElementById('expandSlider').title = i18n.get("Toggle full-screen");
     // Yhteystiedot UI texts.
     document.getElementById('expandMap').title = i18n.get("Toggle full-screen");
     $('#locationTitle').append(i18n.get("Location"));
@@ -541,17 +548,23 @@ $(document).ready(function() {
     $('#closeInfoBtn').append(i18n.get("Close"));
     // Apparently IOS does not support Full screen API:  https://github.com/googlevr/vrview/issues/112
     // Hide fullscreen toggler & increase slider/map sizes a bit on larger screens to compensate the lack of full screen.
-    // Since navigation buttons on slider do not apparently work either, hide them too... we got swiping after all!
     // https://stackoverflow.com/questions/7944460/detect-safari-browser
-    var isSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
+    var testSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
         navigator.userAgent &&
         navigator.userAgent.indexOf('CriOS') == -1 &&
         navigator.userAgent.indexOf('FxiOS') == -1;
-    if(isSafari || /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
-        $('#expandSlider').css('display', 'none');
+
+    if(testSafari || /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+        isIOS = true;
+    }
+
+    if(navigator.appName == 'Microsoft Internet Explorer' ||  !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv:11/)) || (typeof $.browser !== "undefined" && $.browser.msie == 1)) {
+        isIE = true;
+    }
+    if(isIOS) {
         $('#expandMap').css('display', 'none');
         if($(window).width() > 767) {
-            $('.small-slider').css('height', '330px');
+            //$('.small-slider').css('height', '330px');
             $('#contactsFirstCol').addClass("col-md-12");
             $('#contactsFirstCol').removeClass("col-md-8");
             $('#contactsMapCol').addClass("col-md-12");

@@ -1,178 +1,96 @@
-/*! ResponsiveSlides.js v1.55
+/*! Based on: ResponsiveSlides.js v1.55, but modified heavily.
  * http://responsiveslides.com
  * http://viljamis.com
  *
  * Copyright (c) 2011-2012 @viljamis
  * Available under the MIT license
  */
-
-/*jslint browser: true, sloppy: true, vars: true, plusplus: true, indent: 2 */
-
-/* Modifications by Olli Suutari 
-- Custom styling for prev/next buttons.
-- Current slide is displayed in top left corner
-- Added clickevent preventation for selected image (close fullscreen when clicking background)
-- Added right/left navigation events for slider in fullscreen
-- Navigation now always resets the slider timeout/automatic advancing.
-- Modified default settings:
-  - speed: 0
-  - timeout: 6000
-  - nav: true
-  - pause: true
-  - prevText: <
-  - nextText: >
-*/
-
-function rebindClickPreventation() {
-    // Ignore clicks on selected image.
-    $(".rslides1_on").click(function(event){
-      event.stopPropagation();
-      $("#sliderBox").addClass('hovering');
-    });
-}
-
 // Global variable, this will be set to true when changing the selected library.
 var sliderNeedsToRestart = false;
+var rotate;
+
+function resetSliderAfterLibChange() {
+  sliderNeedsToRestart = true;
+  sliderHasStopped = true;
+  index = 0;
+  setTimeout(function() {
+    sliderNeedsToRestart = false;
+    sliderHasStopped = false;
+  }, 6490 );
+}
+// Once the slider is stopped, don't resume automatically.
+var sliderHasStopped = false;
+var index = 0;
+var length = 1;
 (function ($, window, i) {
   $.fn.responsiveSlides = function (options) {
-
     // Default settings
     var settings = $.extend({
-      "auto": true,             // Boolean: Animate automatically, true or false
-      "speed": 0,               // Integer: Speed of the transition, in milliseconds
-      "timeout": 6500,          // Integer: Time between slide transitions, in milliseconds
-      "pager": false,           // Boolean: Show pager, true or false
-      "nav": true,              // Boolean: Show navigation, true or false
-      "random": false,          // Boolean: Randomize the order of the slides, true or false
-      "pause": true,            // Boolean: Pause on hover, true or false
-      "pauseControls": true,    // Boolean: Pause when hovering controls, true or false
-      "prevText": "<",          // String: Text for the "previous" button
-      "nextText": ">",          // String: Text for the "next" button
-      "maxwidth": "",           // Integer: Max-width of the slideshow, in pixels
-      "navContainer": "",       // Selector: Where auto generated controls should be appended to, default is after the <ul>
-      "manualControls": "",     // Selector: Declare custom pager navigation
-      "namespace": "rslides",   // String: change the default namespace used
-      "before": $.noop,         // Function: Before callback
-      "after": $.noop           // Function: After callback
+      'lazy': true,             // Boolean: Lazy Load Mode https://github.com/viljamis/ResponsiveSlides.js/pull/382/files
+      'speed': 1500,            // Integer: Speed of the transition, in milliseconds
+      'timeout': 6500,          // Integer: Time between slide transitions, in milliseconds
+      'prevText': '<',          // String: Text for the 'previous' button
+      'nextText': '>',          // String: Text for the 'next' button
+      'namespace': 'rslides',   // String: change the default namespace used
+      'before': $.noop,         // Function: Before callback
+      'after': $.noop           // Function: After callback
     }, options);
 
     return this.each(function () {
-
       // Index for namespacing
       i++;
-
       var $this = $(this),
-
         // Local variables
-        vendor,
-        selectTab,
         startCycle,
-        restartCycle,
-        rotate,
-        $tabs,
-
+        stopAuto,
+        startAuto,
         // Helpers
-        index = 0,
         $slide = $this.children(),
-        length = $slide.length,
         fadeTime = parseFloat(settings.speed),
         waitTime = parseFloat(settings.timeout),
-        maxw = parseFloat(settings.maxwidth),
-
-        // Namespacing
+          // Namespacing
         namespace = settings.namespace,
         namespaceIdx = namespace + i,
-
         // Classes
-        navClass = namespace + "_nav " + namespaceIdx + "_nav",
-        activeClass = namespace + "_here",
-        visibleClass = namespaceIdx + "_on",
-        slideClassPrefix = namespaceIdx + "_s",
-
-        // Pager
-        $pager = $("<ul class='" + namespace + "_tabs " + namespaceIdx + "_tabs' />"),
-
+        navClass = namespace + '_nav ' + namespaceIdx + '_nav',
+        visibleClass = namespaceIdx + '_on',
         // Styles for visible and hidden slides
-        visible = {"float": "left", "position": "relative", "opacity": 1, "zIndex": 2},
-        hidden = {"float": "none", "position": "absolute", "opacity": 0, "zIndex": 1},
-
-        // Detect transition support
-        supportsTransitions = (function () {
-          var docBody = document.body || document.documentElement;
-          var styles = docBody.style;
-          var prop = "transition";
-          if (typeof styles[prop] === "string") {
-            return true;
-          }
-          // Tests for vendor specific prop
-          vendor = ["Moz", "Webkit", "Khtml", "O", "ms"];
-          prop = prop.charAt(0).toUpperCase() + prop.substr(1);
-          var i;
-          for (i = 0; i < vendor.length; i++) {
-            if (typeof styles[vendor[i] + prop] === "string") {
-              return true;
-            }
-          }
-          return false;
-        })(),
-
-        // Fading animation
-        slideTo = function (idx) {
-          settings.before(idx);
-          // If CSS3 transitions are supported
-          if (supportsTransitions) {
-            $slide
+        visible = {'float': 'left', 'position': 'relative', 'opacity': 1, 'zIndex': 2},
+        hidden = {'float': 'none', 'position': 'absolute', 'opacity': 0, 'zIndex': 1},
+        slideToHelper = function(idx) {
+          $slide
               .removeClass(visibleClass)
               .css(hidden)
               .eq(idx)
               .addClass(visibleClass)
               .css(visible);
-            index = idx;
-            setTimeout(function () {
-              settings.after(idx);
-            }, fadeTime);
-          // If not, use jQuery fallback
-          } else {
-            $slide
-              .stop()
-              .fadeOut(fadeTime, function () {
-                $(this)
-                  .removeClass(visibleClass)
-                  .css(hidden)
-                  .css("opacity", 1);
-              })
-              .eq(idx)
-              .fadeIn(fadeTime, function () {
-                $(this)
-                  .addClass(visibleClass)
-                  .css(visible);
-                settings.after(idx);
-                index = idx;
-              });
-          }
+          index = idx;
+          setTimeout(function () {
+            settings.after(idx);
+          }, fadeTime);
         };
 
-      // Random order
-      if (settings.random) {
-        $slide.sort(function () {
-          return (Math.round(Math.random()) - 0.5);
-        });
-        $this
-          .empty()
-          .append($slide);
-      }
-
-      // Add ID's to each slide
-      $slide.each(function (i) {
-        this.id = slideClassPrefix + i;
-      });
-
+      slideTo = function (idx) {
+        settings.before(idx);
+        // Lazy loading crashes the slider for iOS...
+        if (settings.lazy && !isIOS) {
+          try {
+            var imgSlide = $($($slide).find("img")[idx]);
+            var dataSrc = imgSlide.attr("src");
+            imgSlide.attr("src", dataSrc);
+            imgSlide.on("load", function() {
+              slideToHelper(idx);
+            })
+          }
+          catch (e) {
+            slideToHelper(idx);
+          }
+        } else {
+          slideToHelper(idx);
+        }
+      };
       // Add max-width and classes
-      $this.addClass(namespace + " " + namespaceIdx);
-      if (options && options.maxwidth) {
-        $this.css("max-width", maxw);
-      }
-
+      $this.addClass(namespace + ' ' + namespaceIdx);
       // Hide all slides, then show first one
       $slide
         .hide()
@@ -181,267 +99,175 @@ var sliderNeedsToRestart = false;
         .addClass(visibleClass)
         .css(visible)
         .show();
-
-      // CSS transitions
-      if (supportsTransitions) {
-        $slide
+      $slide
           .show()
           .css({
-            // -ms prefix isn't needed as IE10 uses prefix free version
-            "-webkit-transition": "opacity " + fadeTime + "ms ease-in-out",
-            "-moz-transition": "opacity " + fadeTime + "ms ease-in-out",
-            "-o-transition": "opacity " + fadeTime + "ms ease-in-out",
-            "transition": "opacity " + fadeTime + "ms ease-in-out"
+            '-webkit-transition': 'opacity ' + fadeTime + 'ms ease-in-out',
+            '-moz-transition': 'opacity ' + fadeTime + 'ms ease-in-out',
+            '-o-transition': 'opacity ' + fadeTime + 'ms ease-in-out',
+            'transition': 'opacity ' + fadeTime + 'ms ease-in-out'
           });
-      }
-
-      // Only run if there's more than one slide
+      // Only run if there"s more than one slide
       if ($slide.length > 1) {
-
         // Make sure the timeout is at least 100ms longer than the fade
         if (waitTime < fadeTime + 100) {
           return;
         }
-
-        // Pager
-        if (settings.pager && !settings.manualControls) {
-          var tabMarkup = [];
-          $slide.each(function (i) {
-            var n = i + 1;
-            tabMarkup +=
-              "<li>" +
-              "<a href='#' class='" + slideClassPrefix + n + "'>" + n + "</a>" +
-              "</li>";
-          });
-          $pager.append(tabMarkup);
-
-          // Inject pager
-          if (options.navContainer) {
-            $(settings.navContainer).append($pager);
-          } else {
-            $this.after($pager);
-          }
-        }
-
-        // Manual pager controls
-        if (settings.manualControls) {
-          $pager = $(settings.manualControls);
-          $pager.addClass(namespace + "_tabs " + namespaceIdx + "_tabs");
-        }
-
-        // Add pager slide class prefixes
-        if (settings.pager || settings.manualControls) {
-          $pager.find('li').each(function (i) {
-            $(this).addClass(slideClassPrefix + (i + 1));
-          });
-        }
-
-        // If we have a pager, we need to set up the selectTab function
-        if (settings.pager || settings.manualControls) {
-          $tabs = $pager.find('a');
-
-          // Select pager item
-          selectTab = function (idx) {
-            $tabs
-              .closest("li")
-              .removeClass(activeClass)
-              .eq(idx)
-              .addClass(activeClass);
-          };
-        }
-
-        // Auto cycle
-        if (settings.auto) {
-          startCycle = function () {
-            rotate = setInterval(function () {
-              // Clear the event queue
-              $slide.stop(true, true);
-              var idx = index + 1 < length ? index + 1 : 0;
-              // Check if library has changed & if there is more than one image.
-              if(sliderNeedsToRestart && $('.rslides li').length >= 2) {
-                // Clean the interval in order to avoid duplicate calls.
-                clearInterval(rotate);
-                sliderNeedsToRestart = false;
-                return;
-              }
-              // Remove active state and set new if pager is set
-              if (settings.pager || settings.manualControls) {
-                selectTab(idx);
-              }
-              if($('.rslides li').length >= 2) {
-                $(".rslides1_on").off("click");
-                slideTo(idx);
-                $('#currentSlide').html(idx + 1);
-                rebindClickPreventation();
-              }
-            }, waitTime);
-          };
-
-          // Init cycle
-            startCycle();
-        }
-
-        // Restarting cycle
-        restartCycle = function () {
-          if (settings.auto) {
-            // Stop
-            clearInterval(rotate);
-            // Restart
-            startCycle();
-          }
-        };
-
-        // Pause on hover
-        if (settings.pause) {
-          $this.hover(function () {
-            clearInterval(rotate);
-          }, function () {
-            restartCycle();
-          });
-        }
-
-        // Pager click event handler
-        if (settings.pager || settings.manualControls) {
-          $tabs.bind("click", function (e) {
-            e.preventDefault();
-
-            if (!settings.pauseControls) {
-              restartCycle();
-            }
-
-            // Get index of clicked tab
-            var idx = $tabs.index(this);
-
-            // Break if element is already active or currently animated
-            if (index === idx || $("." + visibleClass).queue('fx').length) {
-              return;
-            }
-
-            // Remove active state from old tab and set new one
-            selectTab(idx);
-
-            // Do the animation
-            slideTo(idx);
-          })
-            .eq(0)
-            .closest("li")
-            .addClass(activeClass);
-
-          // Pause when hovering pager
-          if (settings.pauseControls) {
-            $tabs.hover(function () {
+        // Auto cycle, do-not re-init when changing the library.
+        startCycle = function () {
+          $("#sliderPlay").removeClass('progress');
+          setTimeout(function(){
+            $("#sliderPlay").addClass('progress');
+          }, 75);
+          clearInterval(rotate);
+          rotate = setInterval(function () {
+            // Clear the event queue
+            $slide.stop(true, true);
+            if($(".rslides li").length < 2) {
               clearInterval(rotate);
-            }, function () {
-              restartCycle();
-            });
-          }
-        }
-
-        // Navigation
-        if (settings.nav) {
-          var navMarkup =
-            "<a href='#'id='sliderPrevious' class='centered-left " + navClass + " prev'>" + settings.prevText + "</a>" +
-            "<a href='#' id='sliderForward' class='centered-right " + navClass + " next'>" + settings.nextText + "</a>";
-
-          // Inject navigation
-          if (options.navContainer) {
-            $(settings.navContainer).append(navMarkup);
-          } else {
-            $this.after(navMarkup);
-          }
-
-          var $trigger = $("." + namespaceIdx + "_nav"),
-            $prev = $trigger.filter(".prev");
-
-          // Click event handler
-          $trigger.bind("click", function (e) {
-            e.preventDefault();
-
-            var $visibleClass = $("." + visibleClass);
-
-            // Prevent clicking if currently animated
-            if ($visibleClass.queue('fx').length) {
-              return;
+              return
             }
-
-            //  Adds active class during slide animation
-            //  $(this)
-            //    .addClass(namespace + "_active")
-            //    .delay(fadeTime)
-            //    .queue(function (next) {
-            //      $(this).removeClass(namespace + "_active");
-            //      next();
-            //  });
-
-            // Determine where to slide
-            var idx = $slide.index($visibleClass),
-              prevIdx = idx - 1,
-              nextIdx = idx + 1 < length ? index + 1 : 0;
-
-            // Go to slide
-            if ($(this)[0] === $prev[0]) {
-              $(".rslides1_on").off("click");
-              slideTo(prevIdx);
-              if(prevIdx == -1) {
-                // If we move from 0 to previous (last slide), ui text would be -1.
-                // $slide.length is the amount of slides.
-                $('#currentSlide').html($slide.length);
-                rebindClickPreventation();
+            $("#sliderPlay").removeClass('progress');
+            setTimeout(function(){
+              $("#sliderPlay").addClass('progress');
+            }, 75);
+              var idx = index + 1 < length ? index + 1 : 0;
+              if(!sliderHasStopped && !sliderNeedsToRestart) {
+                if(idx > length) {
+                  idx = length;
+                }
+                $('.rslides1_on').off('click');
+                slideTo(idx);
+                $("#currentSlide").html(idx + 1);
+                adjustParentHeight(50);
               }
-              else {
-                $('#currentSlide').html(prevIdx + 1);
-                rebindClickPreventation();
-              }
+          }, waitTime);
+        };
+        stopAuto = function (playButton) {
+          clearInterval(rotate);
+          sliderHasStopped = true;
+          $('#sliderPlay').removeClass('progress');
+          $('.fa-stop').addClass('fa-play').removeClass('fa-stop');
+          if(playButton) {
+            $('.slider-play-container').tooltip('hide')
+                .attr('data-original-title', i18n.get('Start automatic playback'))
+                .tooltip('show');
+          }
+
+        };
+        startAuto = function (playButton) {
+          sliderHasStopped = false;
+          $('.fa-play').addClass('fa-stop').removeClass('fa-play');
+          if(playButton) {
+            $('.slider-play-container').tooltip('hide')
+                .attr('data-original-title', i18n.get('Stop automatic playback'))
+                .tooltip('show');
+          }
+          startCycle();
+        };
+        // Navigation
+        var progressBar = '<div data-original-title="' + i18n.get("Stop automatic playback") + '" data-placement="bottom" ' +
+            'data-toggle="navigation-tooltip" class="slider-play-container"> <button id="sliderPlay" class="slider-btn progress blue">' +
+            '<span class="progress-left">' +
+            '<span class="progress-bar"></span>' +
+            '</span>' +
+            '<span class="progress-right">' +
+            '<span class="progress-bar"></span>' +
+            '</span>' +
+            '<div class="progress-value"><i class="fa fa-stop"></i></div>' +
+            '</button></div>';
+        var navMarkup =
+            '<div class="slider-navigation-container">' +
+            '<div class="slider-navigation slider-counter-container">' +
+            '<button title="' + i18n.get("Previous slide") +  '" data-placement="bottom" ' +
+            'data-toggle="navigation-tooltip" id="sliderPrevious" ' +
+            'class="slider-btn ' + navClass + ' prev">' + settings.prevText + '</button>' +
+            '<i class="slider-counter"><span id="currentSlide">1</span></i>' +
+            '<button title="' + i18n.get("Next slide") + '" data-placement="right" data-toggle="navigation-tooltip" ' +
+            'id="sliderForward" class="slider-btn ' + navClass + ' next">' + settings.nextText + '</button></div>' +
+            '<div class="slider-navigation slider-play-expand-container"> ' + progressBar +
+            '<button id="expandSlider" title="' + i18n.get('Toggle full-screen') + '" data-placement="right" ' +
+            ' data-toggle="navigation-tooltip" class="slider-btn test"> ' +
+            '<i class="fa fa-expand"></i></button></div></div>';
+        // Inject navigation
+        $('#sliderBox').append(navMarkup);
+        if(isIOS || isIE) {
+          $('#expandSlider').css('display', 'none');
+          $('.slider-play-container').css('margin-left', '-10px');
+        }
+        $('#sliderPlay').click(function() {
+          if($('#sliderPlay i').hasClass('fa-play')) {
+            startAuto(true);
+          }
+          else {
+            stopAuto(true);
+          }
+        });
+        $('[data-toggle="navigation-tooltip"]').tooltip({
+          // Unless container is specified, tooltips won't work in full screen.
+          container: '.slider-navigation-container',
+        });
+        // De-focus all other buttons
+        $( '.slider-btn' ).mouseover(function() {
+          $(this).focus()
+        });
+        // Defocus any active elements when leaving navigation container.
+        $( '.slider-navigation-container' ).mouseleave(function() {
+          document.activeElement.blur();
+        });
+        // Defocus any active elements when hovering over slide counter.
+        $('.slider-counter').mouseover(function() {
+          document.activeElement.blur();
+        });
+        var $trigger = $('.' + namespaceIdx + '_nav'),
+          $prev = $trigger.filter('.prev');
+        // Click event handler
+        $trigger.bind('click', function (e) {
+          e.preventDefault();
+          var $visibleClass = $('.' + visibleClass);
+          // Prevent clicking if currently animated
+          if ($visibleClass.queue("fx").length) {
+            return;
+          }
+          /*  Adds active class during slide animation
+          $(this)
+              .addClass(namespace + "_active")
+              .delay(fadeTime)
+              .queue(function (next) {
+              $(this).removeClass(namespace + "_active");
+              next();
+          }); */
+          // Determine where to slide
+          var idx = $slide.index($visibleClass),
+            prevIdx = idx - 1 < 0 ? length - 1 : idx - 1, // Fix for prevIdx going < 0 https://github.com/viljamis/ResponsiveSlides.js/pull/212/files
+            nextIdx = idx + 1 < length ? index + 1 : 0;
+          // Go to slide
+          if ($(this)[0] === $prev[0]) {
+            $('.rslides1_on').off('click');
+            slideTo(prevIdx);
+            if(prevIdx == -1) {
+              // If we move from 0 to previous (last slide), ui text would be -1.
+              // $slide.length is the amount of slides.
+              $("#currentSlide").html($slide.length);
             }
             else {
-              $(".rslides1_on").off("click");
-              slideTo(nextIdx);
-              $('#currentSlide').html(nextIdx + 1);
-              rebindClickPreventation();
+              $("#currentSlide").html(prevIdx + 1);
             }
-            if (settings.pager || settings.manualControls) {
-              selectTab($(this)[0] === $prev[0] ? prevIdx : nextIdx);
-            }
-
-            if (!settings.pauseControls) {
-              restartCycle();
-            }
-            // Restart the timer.
-            // Stop
-            clearInterval(rotate);
-            // Restart
-            startCycle();
-          });
-
-          // Pause when hovering navigation
-          if (settings.pauseControls) {
-            $trigger.hover(function () {
-              clearInterval(rotate);
-            }, function () {
-              restartCycle();
-            });
           }
-        }
-
-      }
-
-      // Max-width fallback
-      if (typeof document.body.style.maxWidth === "undefined" && options.maxwidth) {
-        var widthSupport = function () {
-          $this.css("width", "100%");
-          if ($this.width() > maxw) {
-            $this.css("width", maxw);
+          else {
+            $('.rslides1_on').off('click');
+            slideTo(nextIdx);
+            $("#currentSlide").html(nextIdx + 1);
           }
-        };
-
-        // Init fallback
-        widthSupport();
-        $(window).bind("resize", function () {
-          widthSupport();
+          adjustParentHeight(750);
+          stopAuto();
         });
       }
+      $( '.ig-caption' ).mouseover(function() {
+        stopAuto();
+      });
+      // Init cycle
+      startCycle();
     });
-
   };
 })(jQuery, this, 0);
-

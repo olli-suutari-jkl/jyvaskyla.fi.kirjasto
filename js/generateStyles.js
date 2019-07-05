@@ -81,6 +81,16 @@ libraryCssXml.onreadystatechange = function() {
         });
 };
 libraryCssXml.send();
+// Slider
+var sliderCssXml = new XMLHttpRequest();
+sliderCssXml.open('GET', '../style/slider.less');
+sliderCssXml.onreadystatechange = function() {
+    less.render(lessVariables + sliderCssXml.responseText)
+        .then(function(output) {
+            addCssToDocument(output.css);
+        });
+};
+sliderCssXml.send();
 // HomePage stylings.
 if(homePage) {
     var homePageCssXml = new XMLHttpRequest();

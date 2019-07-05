@@ -134,77 +134,6 @@ header {
     padding-left: 10px;
 }
 
-/* Image slider */
-.rslides {
-    position: relative;
-    list-style: none;
-    overflow: hidden;
-    width: 100%;
-    height: auto;
-    padding: 0;
-    margin: 0;
-}
-
-.rslides ul {
-    list-style-type: none;
-}
-
-.rslides li {
-    -webkit-backface-visibility: hidden;
-    position: absolute;
-    display: none;
-    left: 0;
-    top: 0;
-}
-
-.rslides {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    align-items: center;
-    background: black;
-}
-
-.rslides img {
-    display: block;
-    object-position: 50% 50%;
-    /* default value: image is centered*/
-    object-fit: contain;
-    max-width: 100%;
-    max-height: 100%;
-}
-
-#sliderBox {
-    position: relative;
-    z-index: 99;
-}
-
-.small-slider {
-    height: 260px;
-    margin-left: -.75em;
-    margin-right: -.75em;
-}
-
-.small-slider .rslides {
-    border: solid 2px @primary;
-}
-
-.small-slider li {
-    transition: opacity 2s ease-in-out 0s!important;
-}
-
-/* Scale image width up to 150% on 'small' slider, thus cropping sides in order to fill vertically (eq. 16:9 images). */
-
-.small-slider img {
-    max-width: 150%;
-}
-
 .trivia-section {
     margin-top: 2.2em;
     width: 100%;
@@ -221,29 +150,22 @@ header {
     padding-top: 2.5em;
 }
 
-/* Media query for IE 10-11. Since object-fit: contain; is not supported in IE, set width to avoid silly scaling in IE.
-   Also float schedule infos to left. */
+/* Media query for IE 10-11. Float schedule infos to left. */
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-    .small-slider img {
-        width: 430px;
-    }
     .info-text {
         float: left;
     }
 }
 
-/* Optimize slider/map sizes for mobile & tablets. */
+/* Optimize map size for mobile & tablets. */
 @media screen and (min-width: 590px) and (max-width: 768px) {
-    .small-slider {
-        height: 500px;
-    }
     #contactsMapCol {
         height: 400px;
     }
 }
 
 @media screen and (max-width: 589px) {
-    .small-slider, #contactsMapCol {
+    #contactsMapCol {
         height: 280px;
     }
 }
@@ -258,48 +180,27 @@ header {
     top: 7%;
     right: 20px;
     z-index: 9999;
-    padding-top: 6px;
-    padding-bottom: 6px;
+    padding: .4em .6em;
+    color: #fdfdfd;
+    /*  Fallback bg */
+    background-color: rgb(99, 99, 99);
+    /* RGBa with 0.45 opacity */
+    background-color: rgba(99, 99, 99, 0.45);
+    font-size: 1.6em;
 }
 
 .top-right:hover {
     cursor: pointer;
+    color: skyblue;
 }
 
 .top-left {
     position: absolute;
     top: 7%;
-    left: 20px;
+    left: 50%;
     z-index: 91;
     padding-top: 6px;
     padding-bottom: 6px;
-}
-
-/* Note: centered left and right are about 25px too much to the left by default. */
-.centered-left {
-    position: absolute;
-    top: 50%;
-    left: 35px;
-    transform: translate(-50%, -50%);
-    z-index: 97;
-}
-
-.centered-right {
-    position: absolute;
-    top: 50%;
-    right: -5px;
-    transform: translate(-50%, -50%);
-    z-index: 96;
-}
-
-.top-right, .top-left, .centered-left, .centered-right {
-    /*  Fallback bg */
-    background-color: rgb(99, 99, 99);
-    /* RGBa with 0.45 opacity */
-    background-color: rgba(99, 99, 99, 0.45);
-    padding-left: 7px;
-    padding-right: 7px;
-    color: #fdfdfd;
 }
 
 .centered-left, .centered-right, .top-right {
@@ -398,16 +299,6 @@ ul.cols {
         border-top: 2px solid @primary;
         border-bottom: 2px solid @primary;
         margin-top: 1em;
-    }
-
-    #sliderBox {
-        /* If we do left -50vw, details are pulled slightly too much to the left
-        TO DO: Fix the cause. */
-        margin-left: calc(50% - 48.33vw);
-        margin-right: calc(50% - 50vw);
-        width: 100vmin;
-        border-left: none;
-        border-right: none;
     }
 
     .trivia-section {
@@ -624,7 +515,7 @@ ul.cols {
 /* Modal */
 /* Fix modal being clipped from the bottom */
 html {
-    overflow-y: scroll!important;
+    overflow-y: scroll;
 }
 
 /* Fix modal scrolling on Safari on iPads & iPhones: https://stackoverflow.com/questions/44082430/in-ios-iframe-in-a-bootstrap-modal-can-not-scroll TO DO: Still broken? */
@@ -793,5 +684,5 @@ html {
 }
 
 .tooltip {
-    z-index: 999999999999!important;
+    z-index: 999999!important;
 }

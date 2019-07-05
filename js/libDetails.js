@@ -495,7 +495,6 @@ function asyncFetchServices() {
 function asyncFetchDepartments() {
     var departmentsDeferred = jQuery.Deferred();
     setTimeout(function() {
-        // If no pictures found, hide the slider...
         if (departments.length === 0) {
             departmentsDeferred.resolve();
         }
@@ -524,7 +523,31 @@ function generateImages(data) {
             $(".rslides").append('<li><img src="' + pictures[i].files.medium.url + '" alt="' + altText + '"></li>');
             counter = counter +1;
             if(counter === data.length) {
-                imageListDeferred.resolve();
+                if(igImages.length !== 0) {
+                    for (var i = 0; i < igImages.length; i++) {
+                        var igHref = 'target="_blank" href="https://www.instagram.com/p/' + igImages[i].shortcode + '/"';
+                        var igLogo = '<a title="' + i18n.get("Open in instagram") + '" data-placement="bottom" ' +
+                            'data-toggle="navigation-tooltip" class="slider-ig-logo no-external-icon"' + igHref + '>' +
+                            '<img width="42" height="42" class="no-borders" src="../images/icons/instagram.svg" alt="' +
+                        i18n.get("Open in instagram") + '"/></a>';
+                        var likesAlt = igImages[i].likes + " " + i18n.get("Likes on Instagam");
+                        if(igImages[i].likes == 1) {
+                            likesAlt = igImages[i].likes + " " + i18n.get("Likes on Instagram singular");
+                        }
+                        var igHeart = '<a title="' + likesAlt + '" data-placement="bottom" ' +
+                            'data-toggle="navigation-tooltip" class="ig-love-btn ig-love-btn-counter no-external-icon" '
+                            + igHref + '><span>&#x2764;</span><span>' + igImages[i].likes + '</span></a>';
+                        var igCaption = '<figcaption class="ig-caption">' + igImages[i].caption + '</figcaption>';
+                        var igContainer = '<div class="ig-likes-logo-container">' + igHeart + igLogo + '</div>';
+                            $(".rslides").append('<li class="ig-img-container">' + igContainer  +
+                                '<figure><img class="ig-img" src="' + igImages[i].url + '">' + igCaption + '</figure></li>');
+                        counter = counter +1;
+                    }
+                    imageListDeferred.resolve();
+                }
+                else {
+                    imageListDeferred.resolve();
+                }
             }
         }
     }, 1 );
@@ -578,6 +601,7 @@ function asyncGenerateTrivia() {
     return triviaDeferred.promise();
 }
 
+var sliderInitialized = false;
 function asyncFetchImages() {
     var imagesDeferred = jQuery.Deferred();
     setTimeout(function() {
@@ -590,19 +614,29 @@ function asyncFetchImages() {
                     function() {
                         noImages = false;
                         setTimeout(function() {
-                            $('#currentSlide').html(1);
-                            $('.top-left').append('/' + pictures.length);
+                            var combinedLenght = pictures.length + igImages.length;
+                            length = combinedLenght;
                             //$('.top-left').replaceWith('<i class="top-left"><span id="currentSlide"></span></i>/' + data.pictures.length);
-                            -
-                                $(".rslides").responsiveSlides({
-                                    navContainer: "#sliderBox" // Selector: Where controls should be appended to, default is after the 'ul'
-                                });
+                            if(!sliderInitialized) {
+                                $(".rslides").responsiveSlides({});
+                                sliderInitialized = true;
+                            }
+                            else {
+                                $( ".rslides1_on" ).unbind();
+                                $( "#sliderBox" ).unbind();
+                                $("#sliderPlay").unbind();
+
+                                $(".rslides").responsiveSlides({});
+                            }
+
+                            $('.slider-counter').append('/' + combinedLenght);
                             // Exit fullscreen if clicking the .rslides and not within 75px range from the center.
                             $('.rslides').on('click', function () {
                                 if (!$("#sliderBox").hasClass("small-slider")) {
                                     var centerPos = $(window).scrollTop() + $(window).height() / 2;
                                     if (!(event.clientY >= centerPos - 75 && event.clientY <= centerPos + 75)) {
-                                        toggleFullScreen("#sliderBox");
+                                        //toggleFullScreen("#sliderBox");
+                                        //expandedSliderToggler();
                                     }
                                 }
                             });
@@ -631,7 +665,8 @@ function asyncFetchImages() {
                                 }
                             });
                             $( "#expandSlider" ).on('click', function () {
-                                toggleFullScreen('#sliderBox');
+                                expandedSliderToggler();
+                                //toggleFullScreen('#sliderBox');
                             });
                             imagesDeferred.resolve()
                         }, 250 );
@@ -640,6 +675,30 @@ function asyncFetchImages() {
     }, 1 );
     // Return the Promise so caller can't change the Deferred
     return imagesDeferred.promise();
+}
+
+function expandedSliderToggler() {
+    /* TO DO: Implement expanded slider for IE iOS.
+    if(isIOS || isIE) {
+        $('#sliderBox').toggleClass("small-slider");
+        var sliderPos = $("#sliderBox").position().top -50;
+        $('#sliderBox').toggleClass("expanded-slider");
+        var sliderHeight = $("#sliderBox").height();
+        var bodyHeight = $("body").height();
+        var newBodyHeight = sliderHeight + bodyHeight - sliderPos;
+        if($('#sliderBox').hasClass("expanded-slider")) {
+            $('#sliderBox').css("top", sliderPos);
+            $('body').css("height", newBodyHeight);
+        }
+        else {
+            $('#sliderBox').css("top", "");
+            $('body').css("height", "");
+        }
+        adjustParentHeight(500);
+    }
+    else {*/
+        toggleFullScreen("#sliderBox");
+    //}
 }
 
 function asyncFetchLocation() {
@@ -813,6 +872,8 @@ function asyncLoadMap() {
 }
 
 var noLinks = true;
+var igImages = [];
+var igName;
 function asyncFetchLinks() {
     var linksDeferred = jQuery.Deferred();
     setTimeout(function() {
@@ -824,7 +885,8 @@ function asyncFetchLinks() {
             if(links.length === 0) {
                 linksDeferred.resolve();
             }
-            links.forEach(function (element) {
+        var igExists = false;
+        links.forEach(function (element) {
                 // Get url.
                 var url = element.url;
                 if (url === null) {
@@ -833,16 +895,80 @@ function asyncFetchLinks() {
                 if (url.indexOf("facebook") !== -1) {
                     linkCount = linkCount +1;
                     $(".some-links").append('<a target="_blank" ' +
-                        'href="' + url + '" title="' + element.name + '"> <img src="../images/icons/facebook.svg" alt="' +
+                        'href="' + url + '" title="Facebook"> <img src="../images/icons/facebook.svg" alt="' +
                         i18n.get("Librarys") + ' Facebook"/>' +
                         '</a>');
                 }
                 else if (url.indexOf("instagram") !== -1) {
+                    igExists = true;
                     linkCount = linkCount +1;
-                    $(".some-links").append('<a target="_blank" ' +
-                        'href="' + url + '" title="' + element.name + '"> <img src="../images/icons/instagram.svg" alt="' +
+                    $(".some-links").append('<a target="_blank" title="Instagram"' +
+                        'href="' + url + '"> <img width="42" height="42" src="../images/icons/instagram.svg" alt="' +
                         i18n.get("Librarys") + ' Instagram"/>' +
                         '</a>');
+                    igName = url;
+                    if (igName.charAt(igName.length - 1) == '/') {
+                        igName = igName.substr(0, igName.length - 1);
+                    }
+                    var index = igName.lastIndexOf("/");
+                    var igName = igName.substr(index+1);
+                    // Fetch ig images (+ captions & likes) via the IG api.
+                    $.getJSON('https://www.instagram.com/' + igName + '/?__a=1', function (data) {
+                        var images = data.graphql.user.edge_owner_to_timeline_media.edges;
+                        for (var i=0; i<images.length; i++) {
+                            // Limit to 10 latest images.
+                            if(i===10) {
+                                linksDeferred.resolve();
+                                return;
+                            }
+                            var url = images[i].node.display_url;
+                            var shortcode = images[i].node.shortcode;
+                            var likes = images[i].node.edge_liked_by.count;
+                            var caption = images[i].node.edge_media_to_caption.edges[0].node.text;
+                            var tagsToReplace = [];
+                            var reFindTags = new RegExp(/#\S+\s*/g);
+                            var reFindTagsExec = reFindTags.exec(caption);
+                            while (reFindTagsExec != null) {
+                                var tagText = reFindTagsExec[0];
+                                tagText = tagText.replace(" ", "");
+                                var tagLink = tagText.substring(1);
+                                tagLink = '<a target="_blank" class="external-link" href="https://www.instagram.com/explore/tags/' + tagLink
+                                    + '/">' + tagText + '</a> ';
+                                //console.log(tagText + " " + tagLink);
+                                tagsToReplace.push({position: reFindTagsExec[0],
+                                    replacement: tagLink, type: "tag"});
+                                reFindTagsExec = reFindTags.exec(caption);
+                            }
+                            var reFindUsers = new RegExp(/@\S+\s*/g);
+                            var reFindUsersExec = reFindUsers.exec(caption);
+                            while (reFindUsersExec != null) {
+                                var tagText = reFindUsersExec[0];
+                                tagText = tagText.replace(" ", "");
+                                var tagLink = tagText.substring(1);
+                                tagLink = '<a target="_blank" class="external-link" href="https://www.instagram.com/' + tagLink
+                                    + '/">' + tagText + '</a> ';
+                                //console.log(tagText + " " + tagLink);
+                                tagsToReplace.push({position: reFindUsersExec[0],
+                                    replacement: tagLink, type: "user"});
+                                reFindUsersExec = reFindUsers.exec(caption);
+                            }
+                            for (var t = 0; t < tagsToReplace.length; t++) {
+                                // If we have tags #foobar & #foo, #foo would re-place #foobar incorrectly.
+                                if(tagsToReplace[t].type == "tag") {
+                                    caption = caption.replace(tagsToReplace[t].position,
+                                        tagsToReplace[t].replacement.replace("#", "%%%"));
+                                }
+                                else {
+                                    caption = caption.replace(tagsToReplace[t].position,
+                                        tagsToReplace[t].replacement.replace("@", "<<><<>"));
+                                }
+                            }
+                            caption = caption.replace(/%%%/g,'#');
+                            caption = caption.replace(/<<><<>/g,'@');
+                            igImages.push({url: url, shortcode: shortcode, likes: likes, caption: caption});
+                        }
+                        linksDeferred.resolve();
+                    });
                 }
                 else {
                     // Add the link to the contact details listing
@@ -871,7 +997,9 @@ function asyncFetchLinks() {
                     if(linkCount !== 0 ) {
                         noLinks = false;
                     }
-                    linksDeferred.resolve();
+                    if(!igExists){
+                        linksDeferred.resolve();
+                    }
                 }
             });
     }, 1 );
@@ -1050,9 +1178,9 @@ function fetchInformation(language, lib) {
                 $.when( asyncFetchV4Data() ).then(
                     function() {
                         $.when( asyncGenerateGenericDetails(), asyncGenerateTrivia(), asyncFetchDepartments(),
-                            asyncFetchImages(), asyncFetchLinks(), asyncFetchLocation()).then(
+                            asyncFetchLinks(), asyncFetchLocation()).then(
                             function() {
-                                $.when( asyncFetchServices(), asyncLoadMap(), generateContacts()  ).then(
+                                $.when( asyncFetchImages(), asyncFetchServices(), asyncLoadMap(), generateContacts()  ).then(
                                     function() {
                                         // Generate links & contacts text based on if links were found or not.
                                         if(!noLinks) {
@@ -1118,6 +1246,7 @@ function fetchInformation(language, lib) {
                         $("#introductionSidebar").addClass("col-md-12");
                         $("#sliderBox").removeClass("small-slider");
                         $("#expandSlider").css("display", "none");
+                        $('.slider-play-container').css('margin-left', '-10px');
                     }
                     if(noSidebar && !noLeftCol) {
                         $(".introductionSidebar").css("display", "none");

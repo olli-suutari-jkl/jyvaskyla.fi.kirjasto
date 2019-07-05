@@ -10,11 +10,11 @@
   <meta name="format-detection" content="telephone=no">
   <meta name="description" content="Kirjaston tiedot | Library details">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="../style/lib/bootstrap.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="../style/schedule.css">
   <link rel="stylesheet" href="../style/lib/select2.css"/>
   <link rel="stylesheet" href="../style/lib/leaflet.css"/>
-  <script src="../js/lib/jquery-3.3.1.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
   <script src="../js/lib/jquery.translate.js"></script>
   <script src="../js/translations.js"></script>
   <script src="../js/lib/less.min.js" ></script>
@@ -33,10 +33,11 @@
   <script src="../js/main.js"></script>
   <script src="../js/scheduleCommon.js"></script>
   <script src="../js/schedule.js"></script>
-  <script src="../js/lib/popper.min.js"></script>
-  <script src="../js/lib/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </head>
 <body>
+<div class="slider-modal-bg"></div>
 <div id="mainContainer" class="container">
   <!-- Library selector is used only when city/consertium parameters are provided. -->
   <div id="librarySelectorContainer" style="display: none">
@@ -131,8 +132,6 @@
         <section id="sliderBox" class="small-slider">
           <h3 class="sr-only" id="srPictures"></h3>
           <ul class="rslides"></ul>
-          <i id="expandSlider" class="fa fa-expand top-right" title="Toggle full-screen"></i>
-          <i class="top-left"><span id="currentSlide"></span></i>
         </section>
         <section class="trivia-section" style="display: none">
           <h3 id="triviaTitle"></h3>

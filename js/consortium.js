@@ -91,7 +91,7 @@ function initSelect(items) {
     }
     // If we use placeholder in IE, select always has focus and opens automatically.
     // https://stackoverflow.com/questions/29293452/ie-select2-always-gets-the-focus
-    if (navigator.appName == 'Microsoft Internet Explorer' ||  !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv:11/)) || (typeof $.browser !== "undefined" && $.browser.msie == 1)) {
+    if (isIE) {
         $(".library-select").select2({
             data: items,
             language: lang, // Global parameter from getParameters.js
@@ -367,6 +367,9 @@ $(document).ready(function() {
                 descriptionIsEmpty = true;
                 isScheduleEmpty = false;
                 noImages = true;
+                igImages = [];
+                resetSliderAfterLibChange();
+                igName = "";
                 triviaIsEmpty = true;
                 mapLoaded = false;
                 contactsIsEmpty = true;

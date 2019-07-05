@@ -1,5 +1,5 @@
-/* Generic styling */
 @charset "UTF-8";
+/* Generic styling */
 @font-face {
     font-family: Verdana;
     /* Use ../style/ in path so iut works in main.js as well */
@@ -46,12 +46,12 @@ a:hover {
     color: @linksHover;
 }
 
-a[target=_blank]:not([href*="instagram"]):not([href*="facebook"]):after{
+a[target=_blank]:not([title*="Instagram"]):not([title*="Facebook"]):after{
     font-family: "FontAwesome";
     content: "\f08e";
-    font-size: 0.85em;
+    font-size: 0.7em;
     color: @linksExternal;
-    padding-left: 5px;
+    padding-left: 3px;
 }
 
 .hidden {

@@ -96,7 +96,7 @@ function bindScheduleKeyNavigation() {
 function detectswipe(el,func) {
     var swipe_det = new Object();
     swipe_det.sX = 0; swipe_det.sY = 0; swipe_det.eX = 0; swipe_det.eY = 0;
-    var min_x = 30;  // min x swipe for horizontal swipe
+    var min_x = 40;  // min x swipe for horizontal swipe
     var max_x = 1;  // max x difference for vertical swipe (ignored)
     var min_y = 1;  // min y swipe for vertical swipe (ignored)
     var max_y = 60;  // max y difference for horizontal swipe
@@ -113,6 +113,11 @@ function detectswipe(el,func) {
         swipe_det.eY = t.screenY;
     },false);
     ele.addEventListener('touchend',function(e){
+        // Hide/inactivate any tooltips when swiping the slider.
+        if(el == "#sliderbox") {
+            $('.tooltip').hide();
+            document.activeElement.blur();
+        }
         // horizontal detection
         if ((((swipe_det.eX - min_x > swipe_det.sX) || (swipe_det.eX + min_x < swipe_det.sX)) && ((swipe_det.eY < swipe_det.sY + max_y) && (swipe_det.sY > swipe_det.eY - max_y) && (swipe_det.eX > 0)))) {
             e.preventDefault();
@@ -168,8 +173,8 @@ $(document).ready(function() {
     bindScheduleKeyNavigation();
     // Detect left/right on schedules or move backwards/forwards in slider if in fullscreen mode or when hovering small slider..
     $(document).keydown(function(e) {
-        switch(e.which) {
-            case 37: // left
+        switch(e.key) {
+            case "ArrowLeft": // left
                 if($(".library-schedules").hasClass("hovering")
                     || $("#lastWeek").is(":focus") || $("#nextWeek").is(":focus")) {
                     $("#lastWeek").focus();
@@ -193,7 +198,7 @@ $(document).ready(function() {
                     }
                 }
                 break;
-            case 39: // right
+            case "ArrowRight": // right
                 if($(".library-schedules").hasClass("hovering")
                     || $("#lastWeek").is(":focus") || $("#nextWeek").is(":focus")) {
                     $("#nextWeek").focus();
