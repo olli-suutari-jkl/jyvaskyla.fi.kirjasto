@@ -143,16 +143,14 @@ var length = 1;
               }
           }, waitTime);
         };
-        stopAuto = function (playButton) {
+        stopAuto = function () {
           clearInterval(rotate);
           sliderHasStopped = true;
           $('#sliderPlay').removeClass('progress');
           $('.fa-stop').addClass('fa-play').removeClass('fa-stop');
-          if(playButton) {
-            $('.slider-play-container').tooltip('hide')
-                .attr('data-original-title', i18n.get('Start automatic playback'))
-                .tooltip('show');
-          }
+          $('.slider-play-container').tooltip('hide')
+              .attr('data-original-title', i18n.get('Start automatic playback'))
+              //.tooltip('show');
 
         };
         startAuto = function (playButton) {
@@ -200,7 +198,7 @@ var length = 1;
             startAuto(true);
           }
           else {
-            stopAuto(true);
+            stopAuto();
           }
         });
         $('[data-toggle="navigation-tooltip"]').tooltip({

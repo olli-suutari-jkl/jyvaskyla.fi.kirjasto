@@ -70,6 +70,33 @@ function generatPrettyUrl(url) {
     return url;
 }
 
+// Genearate mailto links within a string. There is a different generator for contacts table, this is used only for service modals.
+// https://stackoverflow.com/questions/24269116/convert-plain-text-email-to-clickable-link-regex-jquery
+function generateMailToLink(string) {
+    var result = "";
+    if(string.charAt(0) == '"' && string.substr(-1) == '"') {
+        string = string.slice(1,-1);
+    }
+    // Unless we wrap the address to html, we will get an error. TO DO: fix.
+    string = '<p>' + string + '</p>'
+    $(string).filter(function () {
+        var html = $(this).html();
+        var emailPattern = /[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}/g;
+
+        var matched_str = $(this).html().match(emailPattern);
+        if ( matched_str ) {
+            var text = $(this).html();
+            $.each(matched_str, function (index, value) {
+                text = text.replace(value,"<a class='no-external-icon' href='mailto:"+value+"'>"+value+"</a>");
+            });
+            $(this).html(text);
+            result = $(this).html(text)[0].innerHTML;
+            return $(this)
+        }
+    });
+    return result;
+}
+
 // Capitalize the 1st letter of a string.
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -202,9 +229,11 @@ function addItem(item, listElement) {
             }
             // Email & Phone
             if(isValue(item.email)) {
+                var mailToLink = JSON.stringify(capitalize(item.email));
+                mailToLink = generateMailToLink(mailToLink);
                 description = description + '<p class="service-info service-email" aria-label="' + i18n.get("Email") + '">' +
                     '<i class="fa fa-envelope-square" data-toggle="tooltip" title="' + i18n.get("Email") + '" ' +
-                    'data-placement="top" aria-hidden="true"></i>' + capitalize(item.email) +'</p>';
+                    'data-placement="top" aria-hidden="true"></i>' + capitalize(mailToLink) +'</p>';
             }
             if(isValue(item.phoneNumber)) {
                 description = description + '<p class="service-info service-phone" aria-label="' + i18n.get("Phone") + '">' +

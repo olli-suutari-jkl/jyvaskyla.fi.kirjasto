@@ -51,6 +51,7 @@ function checkIfContactExists(array, item) {
     }
     return false;
 }
+
 function asyncFetchV4Data() {
     var genericDeferred = jQuery.Deferred();
     setTimeout(function() {
@@ -74,7 +75,13 @@ function asyncFetchV4Data() {
                 libName = data.name;
             }
             if(data.primaryContactInfo.email != null) {
-                email = data.primaryContactInfo.email.email;
+                // Add description if available.
+                if(isValue(data.primaryContactInfo.email.description)) {
+                    email = data.primaryContactInfo.email.email + data.primaryContactInfo.email.description;
+                }
+                else {
+                    email = data.primaryContactInfo.email.email;
+                }
             }
             description = data.description;
             transitInfo = data.transitInfo;
@@ -887,87 +894,91 @@ function asyncFetchLinks() {
             }
         var igExists = false;
         links.forEach(function (element) {
-                // Get url.
-                var url = element.url;
-                if (url === null) {
-                    return
+            // Get url.
+            var url = element.url;
+            if (url === null) {
+                return
+            }
+            var description = "";
+            if(element.description !== null && element.description.length > 1) {
+                description = element.description;
+            }
+            if (url.indexOf("facebook") !== -1) {
+                linkCount = linkCount +1;
+                $(".some-links").append('<a target="_blank" ' +
+                    'href="' + url + '" title="Facebook"> <img src="../images/icons/facebook.svg" alt="' +
+                    i18n.get("Librarys") + ' Facebook"/>' +
+                    '</a>');
+            }
+            else if (url.indexOf("instagram") !== -1) {
+                igExists = true;
+                linkCount = linkCount +1;
+                $(".some-links").append('<a target="_blank" title="Instagram"' +
+                    'href="' + url + '"> <img width="42" height="42" src="../images/icons/instagram.svg" alt="' +
+                    i18n.get("Librarys") + ' Instagram"/>' +
+                    '</a>');
+                igName = url;
+                if (igName.charAt(igName.length - 1) == '/') {
+                    igName = igName.substr(0, igName.length - 1);
                 }
-                if (url.indexOf("facebook") !== -1) {
-                    linkCount = linkCount +1;
-                    $(".some-links").append('<a target="_blank" ' +
-                        'href="' + url + '" title="Facebook"> <img src="../images/icons/facebook.svg" alt="' +
-                        i18n.get("Librarys") + ' Facebook"/>' +
-                        '</a>');
-                }
-                else if (url.indexOf("instagram") !== -1) {
-                    igExists = true;
-                    linkCount = linkCount +1;
-                    $(".some-links").append('<a target="_blank" title="Instagram"' +
-                        'href="' + url + '"> <img width="42" height="42" src="../images/icons/instagram.svg" alt="' +
-                        i18n.get("Librarys") + ' Instagram"/>' +
-                        '</a>');
-                    igName = url;
-                    if (igName.charAt(igName.length - 1) == '/') {
-                        igName = igName.substr(0, igName.length - 1);
-                    }
-                    var index = igName.lastIndexOf("/");
-                    var igName = igName.substr(index+1);
-                    // Fetch ig images (+ captions & likes) via the IG api.
-                    $.getJSON('https://www.instagram.com/' + igName + '/?__a=1', function (data) {
-                        var images = data.graphql.user.edge_owner_to_timeline_media.edges;
-                        for (var i=0; i<images.length; i++) {
-                            // Limit to 10 latest images.
-                            if(i===10) {
-                                linksDeferred.resolve();
-                                return;
-                            }
-                            var url = images[i].node.display_url;
-                            var shortcode = images[i].node.shortcode;
-                            var likes = images[i].node.edge_liked_by.count;
-                            var caption = images[i].node.edge_media_to_caption.edges[0].node.text;
-                            var tagsToReplace = [];
-                            var reFindTags = new RegExp(/#\S+\s*/g);
-                            var reFindTagsExec = reFindTags.exec(caption);
-                            while (reFindTagsExec != null) {
-                                var tagText = reFindTagsExec[0];
-                                tagText = tagText.replace(" ", "");
-                                var tagLink = tagText.substring(1);
-                                tagLink = '<a target="_blank" class="external-link" href="https://www.instagram.com/explore/tags/' + tagLink
-                                    + '/">' + tagText + '</a> ';
-                                //console.log(tagText + " " + tagLink);
-                                tagsToReplace.push({position: reFindTagsExec[0],
-                                    replacement: tagLink, type: "tag"});
-                                reFindTagsExec = reFindTags.exec(caption);
-                            }
-                            var reFindUsers = new RegExp(/@\S+\s*/g);
-                            var reFindUsersExec = reFindUsers.exec(caption);
-                            while (reFindUsersExec != null) {
-                                var tagText = reFindUsersExec[0];
-                                tagText = tagText.replace(" ", "");
-                                var tagLink = tagText.substring(1);
-                                tagLink = '<a target="_blank" class="external-link" href="https://www.instagram.com/' + tagLink
-                                    + '/">' + tagText + '</a> ';
-                                //console.log(tagText + " " + tagLink);
-                                tagsToReplace.push({position: reFindUsersExec[0],
-                                    replacement: tagLink, type: "user"});
-                                reFindUsersExec = reFindUsers.exec(caption);
-                            }
-                            for (var t = 0; t < tagsToReplace.length; t++) {
-                                // If we have tags #foobar & #foo, #foo would re-place #foobar incorrectly.
-                                if(tagsToReplace[t].type == "tag") {
-                                    caption = caption.replace(tagsToReplace[t].position,
-                                        tagsToReplace[t].replacement.replace("#", "%%%"));
-                                }
-                                else {
-                                    caption = caption.replace(tagsToReplace[t].position,
-                                        tagsToReplace[t].replacement.replace("@", "<<><<>"));
-                                }
-                            }
-                            caption = caption.replace(/%%%/g,'#');
-                            caption = caption.replace(/<<><<>/g,'@');
-                            igImages.push({url: url, shortcode: shortcode, likes: likes, caption: caption});
+                var index = igName.lastIndexOf("/");
+                var igName = igName.substr(index+1);
+                // Fetch ig images (+ captions & likes) via the IG api.
+                $.getJSON('https://www.instagram.com/' + igName + '/?__a=1', function (data) {
+                    var images = data.graphql.user.edge_owner_to_timeline_media.edges;
+                    for (var i=0; i<images.length; i++) {
+                        // Limit to 10 latest images.
+                        if(i===10) {
+                            linksDeferred.resolve();
+                            return;
                         }
-                        linksDeferred.resolve();
+                        var url = images[i].node.display_url;
+                        var shortcode = images[i].node.shortcode;
+                        var likes = images[i].node.edge_liked_by.count;
+                        var caption = images[i].node.edge_media_to_caption.edges[0].node.text;
+                        var tagsToReplace = [];
+                        var reFindTags = new RegExp(/#\S+\s*/g);
+                        var reFindTagsExec = reFindTags.exec(caption);
+                        while (reFindTagsExec != null) {
+                            var tagText = reFindTagsExec[0];
+                            tagText = tagText.replace(" ", "");
+                            var tagLink = tagText.substring(1);
+                            tagLink = '<a target="_blank" class="external-link" href="https://www.instagram.com/explore/tags/' + tagLink
+                                + '/">' + tagText + '</a> ';
+                            //console.log(tagText + " " + tagLink);
+                            tagsToReplace.push({position: reFindTagsExec[0],
+                                replacement: tagLink, type: "tag"});
+                            reFindTagsExec = reFindTags.exec(caption);
+                        }
+                        var reFindUsers = new RegExp(/@\S+\s*/g);
+                        var reFindUsersExec = reFindUsers.exec(caption);
+                        while (reFindUsersExec != null) {
+                            var tagText = reFindUsersExec[0];
+                            tagText = tagText.replace(" ", "");
+                            var tagLink = tagText.substring(1);
+                            tagLink = '<a target="_blank" class="external-link" href="https://www.instagram.com/' + tagLink
+                                + '/">' + tagText + '</a> ';
+                            //console.log(tagText + " " + tagLink);
+                            tagsToReplace.push({position: reFindUsersExec[0],
+                                replacement: tagLink, type: "user"});
+                            reFindUsersExec = reFindUsers.exec(caption);
+                        }
+                        for (var t = 0; t < tagsToReplace.length; t++) {
+                            // If we have tags #foobar & #foo, #foo would re-place #foobar incorrectly.
+                            if(tagsToReplace[t].type == "tag") {
+                                caption = caption.replace(tagsToReplace[t].position,
+                                    tagsToReplace[t].replacement.replace("#", "%%%"));
+                            }
+                            else {
+                                caption = caption.replace(tagsToReplace[t].position,
+                                    tagsToReplace[t].replacement.replace("@", "<<><<>"));
+                            }
+                        }
+                        caption = caption.replace(/%%%/g,'#');
+                        caption = caption.replace(/<<><<>/g,'@');
+                        igImages.push({url: url, shortcode: shortcode, likes: likes, caption: caption});
+                    }
+                    linksDeferred.resolve();
                     });
                 }
                 else {
@@ -983,10 +994,9 @@ function asyncFetchLinks() {
                         }
                         // Generate the link
                         prettyUrl = '<a target="_blank" href="' + url + '">' + prettyUrl + '</a>';
-
                         if(!checkIfContactExists(contactlist, prettyUrl) && !checkIfNameExists(contactlist, element.name)) {
                             contactlist.unshift({name: element.name,
-                                contact: prettyUrl});
+                                contact: prettyUrl + description});
                             linkCount = linkCount +1;
                         }
                     }
@@ -1015,7 +1025,12 @@ function asyncGenerateNumbers() {
                 for (var i = 0; i < phoneNumbers.length; i++) {
                     // Check if detail is unique.
                     if(!checkIfContactExists(numbersList, phoneNumbers[i].number)) {
-                        numbersList.push({name: phoneNumbers[i].name, contact: phoneNumbers[i].number});
+                        var description = "";
+                        if(phoneNumbers[i].description !== null && phoneNumbers[i].description.length > 1) {
+                            description = phoneNumbers[i].description;
+                        }
+                        numbersList.push({name: phoneNumbers[i].name,
+                            contact: phoneNumbers[i].number + description});
                     }
                     counter = counter +1;
                 }
@@ -1073,6 +1088,7 @@ function asyncGenerateStaff() {
                     if (!checkIfContactExists(staffList, contact) || !checkIfNameExists(staffList, name)){
                         // Don't push if contact or name is empty.
                         if(contact.length !== 0 && name.length !== 0) {
+                            // Note: Staff does not have description field.
                             staffList.push({name: name, contact: contact});
                         }
                     }
@@ -1155,7 +1171,6 @@ function generateContacts() {
                     contactsDeferred.resolve();
                 }
             );
-
         }
         else {
             contactsDeferred.resolve();
@@ -1259,6 +1274,17 @@ function fetchInformation(language, lib) {
                         $("#introductionSidebar").append('<div id="noIntroContent"><h3>' +
                             i18n.get("No content") + ' <i class="fa fa-frown-o"></i></h3></div>');
                     }
+                    // Generate mailto links into the contacts table.
+                    // https://www.joe-stevens.com/2010/02/18/convert-all-static-text-email-addresses-to-mailto-links-using-jquery/
+                    $().ready(function() {
+                        var regEx = /(\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*)/;
+                        $("table td").filter(function() {
+                            return $(this).html().match(regEx);
+                        }).each(function() {
+                            $(this).html($(this).html().replace(regEx, "<a href=\"mailto:$1\">$1</a>"));
+                        });
+                    });
+
                 }
                 adjustParentHeight(200);
             }

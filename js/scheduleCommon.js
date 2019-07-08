@@ -96,10 +96,10 @@ function bindScheduleKeyNavigation() {
 function detectswipe(el,func) {
     var swipe_det = new Object();
     swipe_det.sX = 0; swipe_det.sY = 0; swipe_det.eX = 0; swipe_det.eY = 0;
-    var min_x = 40;  // min x swipe for horizontal swipe
+    var min_x = 55;  // min x swipe for horizontal swipe
     var max_x = 1;  // max x difference for vertical swipe (ignored)
     var min_y = 1;  // min y swipe for vertical swipe (ignored)
-    var max_y = 60;  // max y difference for horizontal swipe
+    var max_y = 45;  // max y difference for horizontal swipe
     var direc = "";
     ele = document.getElementById(el);
     ele.addEventListener('touchstart',function(e){
