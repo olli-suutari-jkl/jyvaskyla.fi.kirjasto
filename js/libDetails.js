@@ -1284,7 +1284,6 @@ function fetchInformation(language, lib) {
                             $(this).html($(this).html().replace(regEx, "<a href=\"mailto:$1\">$1</a>"));
                         });
                     });
-
                 }
                 adjustParentHeight(200);
             }

@@ -229,11 +229,10 @@ function addItem(item, listElement) {
             }
             // Email & Phone
             if(isValue(item.email)) {
-                var mailToLink = JSON.stringify(capitalize(item.email));
-                mailToLink = generateMailToLink(mailToLink);
+                var mailToLink = generateMailToLink(capitalize(item.email));
                 description = description + '<p class="service-info service-email" aria-label="' + i18n.get("Email") + '">' +
                     '<i class="fa fa-envelope-square" data-toggle="tooltip" title="' + i18n.get("Email") + '" ' +
-                    'data-placement="top" aria-hidden="true"></i>' + capitalize(mailToLink) +'</p>';
+                    'data-placement="top" aria-hidden="true"></i>' + mailToLink +'</p>';
             }
             if(isValue(item.phoneNumber)) {
                 description = description + '<p class="service-info service-phone" aria-label="' + i18n.get("Phone") + '">' +

@@ -366,6 +366,10 @@ Z-indexes:
     .slider-counter {
         margin-top: 8px;
     }
+    // Non-ig images could scale to silly heights while max was missing.
+    .small-slider li img {
+        max-height: 280px;
+    }
 }
 
 #expandSlider {
