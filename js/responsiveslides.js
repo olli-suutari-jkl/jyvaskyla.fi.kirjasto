@@ -29,8 +29,6 @@ var length = 1;
       'lazy': true,             // Boolean: Lazy Load Mode https://github.com/viljamis/ResponsiveSlides.js/pull/382/files
       'speed': 1500,            // Integer: Speed of the transition, in milliseconds
       'timeout': 6500,          // Integer: Time between slide transitions, in milliseconds
-      'prevText': '<',          // String: Text for the 'previous' button
-      'nextText': '>',          // String: Text for the 'next' button
       'namespace': 'rslides',   // String: change the default namespace used
       'before': $.noop,         // Function: Before callback
       'after': $.noop           // Function: After callback
@@ -172,21 +170,21 @@ var length = 1;
             '<span class="progress-right">' +
             '<span class="progress-bar"></span>' +
             '</span>' +
-            '<div class="progress-value"><i class="fa fa-stop"></i></div>' +
+            '<div class="progress-value"><i class="fas fa-stop"></i></div>' +
             '</button></div>';
         var navMarkup =
             '<div class="slider-navigation-container">' +
             '<div class="slider-navigation slider-counter-container">' +
             '<button title="' + i18n.get("Previous slide") +  '" data-placement="bottom" ' +
             'data-toggle="navigation-tooltip" id="sliderPrevious" ' +
-            'class="slider-btn ' + navClass + ' prev">' + settings.prevText + '</button>' +
+            'class="slider-btn ' + navClass + ' prev"><i class="fas fa-arrow-left"></i></button>' +
             '<i class="slider-counter"><span id="currentSlide">1</span></i>' +
             '<button title="' + i18n.get("Next slide") + '" data-placement="right" data-toggle="navigation-tooltip" ' +
-            'id="sliderForward" class="slider-btn ' + navClass + ' next">' + settings.nextText + '</button></div>' +
+            'id="sliderForward" class="slider-btn ' + navClass + ' next"><i class="fas fa-arrow-right"></i>' + '</button></div>' +
             '<div class="slider-navigation slider-play-expand-container"> ' + progressBar +
             '<button id="expandSlider" title="' + i18n.get('Toggle full-screen') + '" data-placement="right" ' +
             ' data-toggle="navigation-tooltip" class="slider-btn test"> ' +
-            '<i class="fa fa-expand"></i></button></div></div>';
+            '<i class="fas fa-expand"></i></button></div></div>';
         // Inject navigation
         $('#sliderBox').append(navMarkup);
         if(isIOS || isIE) {
@@ -205,6 +203,10 @@ var length = 1;
           // Unless container is specified, tooltips won't work in full screen.
           container: '.slider-navigation-container',
         });
+
+        $('.slider-play-container').on('show.bs.tooltip', function () {
+            $('.slider-play-container').tooltip('hide');
+        })
         // De-focus all other buttons
         $( '.slider-btn' ).mouseover(function() {
           $(this).focus()

@@ -1,7 +1,8 @@
-.responsive-table {
-    overflow-x: auto
+/* Fix modal being clipped from the bottom */
+html {
+    overflow-y: scroll;
 }
-
+/* Navigation */
 header {
     margin-bottom: 0.5em;
 }
@@ -46,18 +47,26 @@ header {
         min-width: 300px;
     }
 }
-
+// Main container.
 #mainContainer {
     padding-top: 1rem;
     padding-bottom: 0.5rem;
 }
 
+@media (min-width:989px) {
+    #mainContainer {
+        border: @primary solid 1px;
+        border-radius: 10px;
+        background: rgba(220, 221, 212, 0.15);
+        padding: 2em 1em 2.5em;
+        margin-top: 1.3em;
+        margin-bottom: 1.3em;
+    }
+}
 
-.esittely {
-    padding-top: 2em;
-    padding-left: 1.5em;
-    padding-right: 1.5em;
-    border-top: 1px solid @primary;
+/* Container for blockquote */
+#blockquote  {
+    margin-bottom: 0.75rem;
 }
 
 .blockquote {
@@ -67,6 +76,23 @@ header {
     font-weight: 600;
     text-align: center;
     font-size: 1.15em;
+}
+@media screen and (max-width: 499px) {
+    .blockquote {
+        padding: 0 .5em;
+    }
+}
+@media screen and (min-width: 768px) {
+    .blockquote {
+        padding: 0 3.7em;
+    }
+}
+/* #introductionTab row contains #leftBar and #introductionSidebar */
+#introductionTab {
+    padding-top: 2em;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+    border-top: 1px solid @primary;
 }
 
 #introductionSidebar {
@@ -79,17 +105,16 @@ header {
         border-right:  solid @primary;
         border-width: 0.0016rem;
     }
-
-    .blockquote {
-        padding: 0 3.7em;
-    }
-
     #introductionSidebar {
         padding-left: 2.5em;
     }
 }
 
 /* Service listings */
+.main>.row:last-child {
+    flex-grow: 1
+}
+
 .cols li {
     word-break: break-all!important;
     padding-bottom: 5px;
@@ -98,6 +123,30 @@ header {
 .cols {
     padding-left: 10px;
     list-style-type: none;
+}
+
+ul.cols {
+    list-style-type: none
+}
+
+@media (max-width: 767px) {
+    .cols {
+        -webkit-column-count: 1;
+        column-count: 1
+    }
+}
+
+@media (min-width: 768px) {
+    .cols {
+        -webkit-column-count: 2;
+        column-count: 2
+    }
+}
+
+@media (min-width: 700px) {
+    .select2-container {
+        width: 65%!important;
+    }
 }
 
 .accessibility-images img, .accessibility-text-block {
@@ -150,10 +199,105 @@ header {
     padding-top: 2.5em;
 }
 
-/* Media query for IE 10-11. Float schedule infos to left. */
-@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-    .info-text {
-        float: left;
+.trivia-cell-title {
+    text-align: center;
+}
+
+#triviaTable tr, #triviaTable td {
+    border: none;
+    padding: 0.5em;
+}
+
+@media screen and (max-width: 768px) {
+    .trivia-cell-title {
+        text-align: right!important;
+    }
+    .trivia-detail {
+        text-align: left;
+    }
+}
+
+@media screen and (max-width: 499px) {
+    .trivia-section {
+        margin-left: calc(50% - 48.33vw);
+        margin-right: calc(50% - 50vw);
+        width: 100vmin;
+    }
+    .trivia-cell-title {
+        text-align: right;
+    }
+}
+
+#contactsTab .contact-details {
+    padding-left: 0.75rem;
+    align-content: center;
+}
+
+/* Styles for contact section fas */
+#contactsTab section h2 .fas, #contactsTab section th .fas {
+    margin-right: 0.35rem !important;
+    color: @primary;
+}
+
+.fa-facebook-square {
+    color: #3B5AA5;
+    font-size: 2.35rem!important;
+}
+
+.fa-instagram {
+    padding: 5px 7px;
+    color: #ffffff;
+    background: #E64980;
+    font-size: 1.9rem!important;
+}
+
+/* #contactsTab contains all things in contacts tab */
+#contactsTab {
+    padding: 0;
+    margin: 0;
+}
+
+/* Location */
+#locationRow {
+    margin-bottom: 3em;
+}
+
+#contactsMapCol {
+    padding: 0;
+    height: auto;
+    border-top: 1px solid @primary;
+    min-height: 260px;
+}
+
+#expandMap {
+    position: absolute;
+    top: 1em;
+    right: 20px;
+    z-index: 9999;
+    padding: .4em .6em;
+    color: #fdfdfd;
+    /*  Fallback bg */
+    background-color: rgb(99, 99, 99);
+    /* RGBa with 0.45 opacity */
+    background-color: rgba(99, 99, 99, 0.45);
+    font-size: 1.5rem!important;
+}
+
+#expandMap:hover {
+    cursor: pointer;
+    color: skyblue;
+}
+
+@media screen and (min-width: 500px) and (max-width: 768px) {
+    #contactsMapCol {
+        margin-top: 1.5em;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #contactsMapCol {
+        border-top: 2px solid @primary;
+        border-bottom: 2px solid @primary;
     }
 }
 
@@ -170,151 +314,12 @@ header {
     }
 }
 
-.details, #blockquote  {
-    margin-bottom: 0.75rem;
-}
-
-/* Navigation elements */
-.top-right {
-    position: absolute;
-    top: 7%;
-    right: 20px;
-    z-index: 9999;
-    padding: .4em .6em;
-    color: #fdfdfd;
-    /*  Fallback bg */
-    background-color: rgb(99, 99, 99);
-    /* RGBa with 0.45 opacity */
-    background-color: rgba(99, 99, 99, 0.45);
-    font-size: 1.6em;
-}
-
-.top-right:hover {
-    cursor: pointer;
-    color: skyblue;
-}
-
-.top-left {
-    position: absolute;
-    top: 7%;
-    left: 50%;
-    z-index: 91;
-    padding-top: 6px;
-    padding-bottom: 6px;
-}
-
-.centered-left, .centered-right, .top-right {
-    font-size: 1.6em!important;
-}
-
-.top-right:hover, .centered-left:hover, .centered-right:hover  {
-    color: skyblue;
-}
-
-/* Service cols */
-.main>.row:last-child {
-    flex-grow: 1
-}
-
-@media (max-width: 767px) {
-    .cols {
-        -webkit-column-count: 1;
-        column-count: 1
-    }
-}
-
-@media (min-width: 768px) {
-    .cols {
-        -webkit-column-count: 2;
-        column-count: 2
-    }
-}
-
-@media (min-width: 700px) {
-    .select2-container {
-        width: 65%!important;
-    }
-}
-ul.cols {
-    list-style-type: none
-}
-
-#pageContactInfo .contact-details {
-    padding-left: 0.75rem;
-    align-content: center;
-}
-
-/* Styles for contact section fa */
-#pageContactInfo section h2 .fa, #pageContactInfo section th .fa {
-    margin-right: 0.35rem!important;
-    color: @primary;
-}
-
-#pageContactInfo {
-    padding: 0;
-    margin: 0;
-}
-
-/* Location */
-
-#locationRow {
-    margin-bottom: 3em;
-}
-@media screen and (min-width: 500px) and (max-width: 768px) {
-    #contactsMapCol {
-        margin-top: 1.5em;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    #contactsMapCol {
-        border-top: 2px solid @primary;
-        border-bottom: 2px solid @primary;
-    }
-
-    .trivia-cell-title {
-        text-align: right!important;
-    }
-
-    .trivia-detail {
-        text-align: left;
-    }
-
-
-}
-
-#contactsMapCol {
-    padding: 0;
-    height: auto;
-    border-top: 1px solid @primary;
-    min-height: 260px;
-}
-
-.trivia-cell-title {
-    text-align: center;
-}
-
 @media screen and (max-width: 499px) {
     #contactsMapCol {
         border-top: 2px solid @primary;
         border-bottom: 2px solid @primary;
         margin-top: 1em;
     }
-
-    .trivia-section {
-        margin-left: calc(50% - 48.33vw);
-        margin-right: calc(50% - 50vw);
-        width: 100vmin;
-    }
-
-    .blockquote {
-        padding: 0 .5em;
-    }
-
-    .trivia-cell-title {
-        text-align: right;
-    }
-
 }
 
 #contactsFirstCol {
@@ -346,23 +351,29 @@ ul.cols {
     padding-left: 0.75em;
 }
 
-#triviaTable tr, #triviaTable td {
-    border: none;
-    padding: 0.5em;
+.map-library-changer {
+    margin-top: .9em;
+    margin-bottom: -2em;
 }
 
-.map-library-changer {
-    margin-top: 1em;
+.lib-marker {
+    font-size: 1.5rem;
 }
+
+.leaflet-popup-content {
+    padding: 1em .5em .5em .5em;
+}
+
+.leaflet-popup-close-button {
+    font-size: 1.2rem!important;
+    margin: .3em!important;
+}
+
 
 #mapContainer {
     width: 100%;
     height: 100%;
     z-index: 99;
-}
-
-#expandMap {
-    top: 1em;
 }
 
 #noCoordinates {
@@ -401,8 +412,12 @@ ul.cols {
 }
 
 
-#pageContactInfo section h2 i {
+#contactsTab section h2 i {
     font-size: 0.85em;
+}
+
+#staffTableContainer {
+    overflow-x: auto
 }
 
 /* Social media links */
@@ -410,6 +425,8 @@ ul.cols {
     text-align: right;
     align-content: center;
     padding-right: 1em;
+    vertical-align: center;
+    display: flex;
 }
 
 @media (max-width:979px) {
@@ -422,7 +439,7 @@ ul.cols {
         min-width: 100%!important;
     }
 
-    #staffTable {
+    #staffTableContainer {
         margin-left: calc(50% - 50vw);
         margin-right: calc(50% - 50vw);
         width: 100vmin;
@@ -441,27 +458,12 @@ ul.cols {
 
 }
 
-@media (min-width:989px) {
-    #mainContainer {
-        border: @primary solid 1px;
-        border-radius: 10px;
-        background: rgba(220, 221, 212, 0.15);
-        padding-top: 2em;
-        padding-bottom: 2.5em;
-        padding-left: 1em;
-        padding-right: 1em;
-        margin-top: 1.3em;
-        margin-bottom: 1.3em;
-    }
-}
-
-
 .some-links a {
     margin-right: .5rem
 }
 
 .some-links a:hover {
-    opacity: .85
+    opacity: .75
 }
 
 @media (min-width:769px) {
@@ -483,8 +485,8 @@ ul.cols {
     padding-right: 0.3em!important;
 }
 
-.some-links a img{
-    margin-top: 10px; /* Using em would not add margin on mobile, where rows are splitted */
+.some-links a i {
+    margin-top: 10px; /* Using em would not add margin on mobile, where rows are split */
 }
 
 #contactsTable th {
@@ -512,12 +514,11 @@ ul.cols {
     background-color: rgba(137, 137, 101, 0.05);
 }
 
-/* Modal */
-/* Fix modal being clipped from the bottom */
-html {
-    overflow-y: scroll;
+.tooltip {
+    z-index: 999999999!important;
 }
 
+/* Modal */
 /* Fix modal scrolling on Safari on iPads & iPhones: https://stackoverflow.com/questions/44082430/in-ios-iframe-in-a-bootstrap-modal-can-not-scroll TO DO: Still broken? */
 .modal-body {
     -webkit-overflow-scrolling: touch!important;
@@ -540,17 +541,16 @@ html {
 }
 
 /* Close button in the right corner of the modal */
-.close {
+.close, .leaflet-popup-close-button {
     font-size: 1.85em;
-    color: #f7502e;
+    color: #f7502e!important;
 }
 
-.close:hover {
-    color: #d83d1e;
+.close:hover, .leaflet-popup-close-button:hover {
+    color: #d83d1e!important;
 }
 
-/* Media query for IE 10-11. Since object-fit: contain; is not supported in IE, set width to avoid silly scaling in IE.
-   Also float schedule infos to left. */
+/* Media query for IE 10-11. */
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
     #closeModal {
         display: block;
@@ -587,7 +587,7 @@ html {
 
 #modalContentContainer {
     max-height: 5500px;
-    /* Stylish bordrers: https://gist.github.com/chemicaloliver/1234670 */
+    /* Stylish borders: https://gist.github.com/chemicaloliver/1234670 */
     border: 1px solid rgba(0, 0, 0, 0.3);
     -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
     -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
@@ -682,8 +682,4 @@ html {
 
 .modal-small .service-info i {
     margin-right: 10px;
-}
-
-.tooltip {
-    z-index: 999999999!important;
 }

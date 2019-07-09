@@ -219,8 +219,8 @@ Z-indexes:
 }
 
 .full-screen-slider .ig-img-container {
-    width: 100% ;
-    height: 100% ;
+    width: 100%;
+    height: 100%;
 }
 
 
@@ -272,9 +272,12 @@ Z-indexes:
     }
 }
 
-.full-screen-slider .ig-likes-logo-container {
-    margin-right: 2em;
-    margin-top: 1em;
+@media screen and (min-width: 768px){
+    .full-screen-slider .ig-likes-logo-container {
+        margin-right: 2em;
+        margin-top: 1em;
+    }
+
 }
 
 /* Based on: https://codepen.io/Idered/pen/qLoGE */
@@ -351,8 +354,7 @@ Z-indexes:
 }
 
 #sliderPrevious, #sliderForward {
-    font-size: 1.8rem;
-    margin-top: -4px;
+    font-size: 1.4rem;
 }
 
 .slider-counter {
@@ -461,7 +463,7 @@ Z-indexes:
     border-radius: 50%;
     border: 2px solid #ebebeb;
     font-size: .85rem;
-    line-height: 20px;
+    line-height: 21px;
     text-align: center;
     position: absolute;
     top: 7.5%;

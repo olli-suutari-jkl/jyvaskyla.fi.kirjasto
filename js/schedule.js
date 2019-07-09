@@ -25,7 +25,7 @@ function generateScheduleInfo(data) {
                 normalScheduleIsAvailable = true
             }
         }
-    };
+    }
     // Loop the array.
     for (var i = 0; i < items.length; i++) {
         var mondayDate = moment().add(weekCounter, 'weeks').weekday(1).format("YYYY-MM-DD");
@@ -98,10 +98,10 @@ function generateScheduleInfo(data) {
         isWeekInfo = true;
     }
     else {
-        $('#scheduleInfo').replaceWith('<span id="scheduleInfo" style="display: none" class="info-span info-text"><i class="fa fa-info-circle" > </i></span>');
+        $('#scheduleInfo').replaceWith('<span id="scheduleInfo" style="display: none" class="info-span info-text"><i class="fas fa-info-circle" > </i></span>');
     }
     if(holidayDescription === undefined) {
-        $('#specialInfo').replaceWith('<span id="specialInfo" style="display: none" class="info-span info-text"><i class="fa fa-info-circle" > </i></span>');
+        $('#specialInfo').replaceWith('<span id="specialInfo" style="display: none" class="info-span info-text"><i class="fas fa-info-circle" > </i></span>');
     }
     if(isWeekInfo || isSpecialInfo) {
         $('#scheduleInfos').css("display", "");
@@ -110,14 +110,14 @@ function generateScheduleInfo(data) {
         $('#scheduleInfos').css("display", "none");
     }
     if(isWeekInfo) {
-        $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-span-lg info-text"><i class="fa fa-info-circle" > </i> ' + genericDescription + '</span>');
+        $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-span-lg info-text"><i class="fas fa-info-circle" > </i> ' + genericDescription + '</span>');
         $('#scheduleInfoRow').css("display", "");
     }
     else {
         $('#scheduleInfoRow').css("display", "none");
     }
     if(isSpecialInfo) {
-        $('#specialInfo').replaceWith('<span id="specialInfo" class="info-span-lg info-text"><i class="fa fa-info-circle" > </i>' + holidayDescription + '</span>');
+        $('#specialInfo').replaceWith('<span id="specialInfo" class="info-span-lg info-text"><i class="fas fa-info-circle" > </i>' + holidayDescription + '</span>');
         $('#specialInfoRow').css("display", "");
     }
     else {
@@ -207,7 +207,7 @@ function getWeekSchelude(direction, lib) {
             else {
                 $("#scheduleInfos").replaceWith('<tbody id="scheduleInfos" class="schedule-infos">' +
                 '<tr id="scheduleInfoRow">' +
-                    '<td colspan="3"><span id="scheduleInfo" class="info-span-lg info-text"><i class="fa fa-info-circle" > ' +
+                    '<td colspan="3"><span id="scheduleInfo" class="info-span-lg info-text"><i class="fas fa-info-circle" > ' +
                     '</i> ' + i18n.get("No schedules") + '</span></td></tr>');
                 $('#weekSchelude').css("display", "none");
                 //$("#weekSchelude").append(dayInfo);
@@ -286,7 +286,7 @@ function getWeekSchelude(direction, lib) {
                             }
                         }
                         dayInfo = '<tr class="info-row time--sub isTodayClass">' +
-                            '<td colspan="2"><span class="info-span info-text"><i class="fa fa-info-circle" > </i> ' + infoText + '</span></td>' +
+                            '<td colspan="2"><span class="info-span info-text"><i class="fas fa-info-circle" > </i> ' + infoText + '</span></td>' +
                             '</tr>';
                         increaseRowCount(true);
                     }
@@ -325,7 +325,7 @@ function getWeekSchelude(direction, lib) {
                             staffPresentEnd = to;
                             // Store the row as a variable.
                             staffToday = '<tr class="time--sub time isTodayClass time--with-staff">' +
-                                '<td class="trn"><i class="fa fa-level-up fa-rotate-90"></i> ' + i18n.get("Service time") + '</td>' +
+                                '<td class="trn"><i class="fas fa-level-up fa-rotate-90"></i> ' + i18n.get("Service time") + '</td>' +
                                 '<td>' + staffPresentStart + ' – ' + staffPresentEnd + '</td>' +
                                 '</tr>';
                         }
@@ -333,12 +333,12 @@ function getWeekSchelude(direction, lib) {
                         else if(time.status === 2) {
                             if (staffPresentStart === '') {
                                 selfServiceBefore = '<tr class="time--sub time isTodayClass time--no-staff">' +
-                                    '<td><i class="fa fa-level-up fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
+                                    '<td><i class="fas fa-level-up fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
                                     '<td>' + from + ' – ' + to + '</td>' +
                                     '</tr>';
                             } else {
                                 selfServiceAfter = '<tr class="time--sub time isTodayClass time--no-staff">' +
-                                    '<td><i class="fa fa-level-up fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
+                                    '<td><i class="fas fa-level-up fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
                                     '<td>' + from + ' – ' + to + '</td>' +
                                     '</tr>';
                             }

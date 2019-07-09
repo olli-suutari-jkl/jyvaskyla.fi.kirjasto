@@ -535,8 +535,7 @@ function generateImages(data) {
                         var igHref = 'target="_blank" href="https://www.instagram.com/p/' + igImages[i].shortcode + '/"';
                         var igLogo = '<a title="' + i18n.get("Open in instagram") + '" data-placement="bottom" ' +
                             'data-toggle="navigation-tooltip" class="slider-ig-logo no-external-icon"' + igHref + '>' +
-                            '<img width="42" height="42" class="no-borders" src="../images/icons/instagram.svg" alt="' +
-                        i18n.get("Open in instagram") + '"/></a>';
+                            '<i class="fab fa-instagram"></i></a>';
                         var likesAlt = igImages[i].likes + " " + i18n.get("Likes on Instagam");
                         if(igImages[i].likes == 1) {
                             likesAlt = igImages[i].likes + " " + i18n.get("Likes on Instagram singular");
@@ -799,12 +798,14 @@ function asyncLoadMap() {
             var addCoordinatesDeferred = jQuery.Deferred();
             setTimeout(function() {
             if(libraryList.length !== 0) {
-                var markerIcon = L.icon({
-                    // https://material.io/tools/icons/?style=baseline
-                    iconUrl: '../images/icons/local_library.svg',
-                    popupAnchor:  [-8, -3], // point from which the popup should open relative to the iconAnchor
-                    iconSize:     [24, 24], // size of the icon
+
+                var markerIcon = L.divIcon({
+                    html: '<i class="fas fa-book-reader"></i>',
+                    iconSize: [24, 24],
+                    popupAnchor:  [-10, -1], // point from which the popup should open relative to the iconAnchor
+                    className: 'lib-marker'
                 });
+
                 var counter = 0;
                 // coordinateErrorSet is used when a library is listed twice in the listing. (Mobile library of Wiitaunion)
                 var coordinateErrorSet = false;
@@ -906,17 +907,14 @@ function asyncFetchLinks() {
             if (url.indexOf("facebook") !== -1) {
                 linkCount = linkCount +1;
                 $(".some-links").append('<a target="_blank" ' +
-                    'href="' + url + '" title="Facebook"> <img src="../images/icons/facebook.svg" alt="' +
-                    i18n.get("Librarys") + ' Facebook"/>' +
-                    '</a>');
+                    'href="' + url + '" title="' + i18n.get("Librarys") + ' Facebook"> <i class="fab ' +
+                    'fa-facebook-square"></i></a>');
             }
             else if (url.indexOf("instagram") !== -1) {
                 igExists = true;
                 linkCount = linkCount +1;
-                $(".some-links").append('<a target="_blank" title="Instagram"' +
-                    'href="' + url + '"> <img width="42" height="42" src="../images/icons/instagram.svg" alt="' +
-                    i18n.get("Librarys") + ' Instagram"/>' +
-                    '</a>');
+                $(".some-links").append('<a target="_blank" title="' + i18n.get("Librarys") + ' Instagram"' +
+                    'href="' + url + '">  <i class="fab fa-instagram"></i></a>');
                 igName = url;
                 if (igName.charAt(igName.length - 1) == '/') {
                     igName = igName.substr(0, igName.length - 1);
@@ -1272,7 +1270,7 @@ function fetchInformation(language, lib) {
                     // No content at all.
                     if(noLeftCol && noSidebar) {
                         $("#introductionSidebar").append('<div id="noIntroContent"><h3>' +
-                            i18n.get("No content") + ' <i class="fa fa-frown-o"></i></h3></div>');
+                            i18n.get("No content") + ' <i class="fas fa-frown-o"></i></h3></div>');
                     }
                     // Generate mailto links into the contacts table.
                     // https://www.joe-stevens.com/2010/02/18/convert-all-static-text-email-addresses-to-mailto-links-using-jquery/

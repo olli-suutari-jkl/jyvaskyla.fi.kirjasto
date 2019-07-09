@@ -122,7 +122,7 @@ function generateScheduleInfo(data) {
             }
             items.push(row);
         }
-    };
+    }
     // Loop the array.
     for (var i = 0; i < items.length; i++) {
         // Collections
@@ -138,18 +138,18 @@ function generateScheduleInfo(data) {
             }
         }
         if(holidayDescription !== undefined) {
-                $('#specialInfo').replaceWith('<span id="specialInfo" class="info-span info-text"><i class="fa fa-info-circle" > </i> '
+                $('#specialInfo').replaceWith('<span id="specialInfo" class="info-span info-text"><i class="fas fa-info-circle" > </i> '
                     + holidayDescription + '</span>');
         }
         else {
-            $('#specialInfo').replaceWith('<span id="specialInfo" style="display: none" class="info-span info-text"><i class="fa fa-info-circle" > </i></span>');
+            $('#specialInfo').replaceWith('<span id="specialInfo" style="display: none" class="info-span info-text"><i class="fas fa-info-circle" > </i></span>');
         }
         if(genericDescription !== undefined) {
-            $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-span info-text"><i class="fa fa-info-circle" > </i> '
+            $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-span info-text"><i class="fas fa-info-circle" > </i> '
                 + genericDescription + '</span>');
         }
         else {
-            $('#scheduleInfo').replaceWith('<span id="scheduleInfo" style="display: none" class="info-span info-text"><i class="fa fa-info-circle" > </i></span>');
+            $('#scheduleInfo').replaceWith('<span id="scheduleInfo" style="display: none" class="info-span info-text"><i class="fas fa-info-circle" > </i></span>');
         }
     }
 }
@@ -207,7 +207,6 @@ function getDaySchelude(direction, lib) {
         weekMaxReached = false;
     }
     selectedDate.setDate(selectedDate.getDate() + direction);
-    //console.log(selectedDate);
     var prettyDate = moment(selectedDate).format("DD.MM.YY");
     // Capitalize 1st letter of dayname.
     var dayName = moment(selectedDate).format("dddd");
@@ -219,8 +218,8 @@ function getDaySchelude(direction, lib) {
         if (data.items.length === 0) {
             //$('#schedules').css('display', 'none');
             $("#weekSchelude").replaceWith('<tbody id="weekSchelude" class="schedules-weekly">' + "<tr><td></td></tr>");
-            $('#dayInfo').replaceWith('<span id="dayInfo" style="display: none" class="info-text"><i class="fa fa-info-circle" > </i></span>');
-            $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-span info-text"><i class="fa fa-info-circle" > </i> '
+            $('#dayInfo').replaceWith('<span id="dayInfo" style="display: none" class="info-text"><i class="fas fa-info-circle" > </i></span>');
+            $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-span info-text"><i class="fas fa-info-circle" > </i> '
                 + i18n.get("No opening hours") + '</span>');
             return;
         }
@@ -278,11 +277,11 @@ function getDaySchelude(direction, lib) {
                             infoText = splitString(infoText);
                         }
                     }
-                    $('#dayInfo').replaceWith('<span id="dayInfo" class="info-span info-text"><i class="fa fa-info-circle"> </i> ' + infoText + '</span>');
+                    $('#dayInfo').replaceWith('<span id="dayInfo" class="info-span info-text"><i class="fas fa-info-circle"> </i> ' + infoText + '</span>');
                     increaseRowCount(true);
                 }
                 else {
-                    $('#dayInfo').replaceWith('<span id="dayInfo" style="display: none" class="info-text"><i class="fa fa-info-circle" > </i></span>');
+                    $('#dayInfo').replaceWith('<span id="dayInfo" style="display: none" class="info-text"><i class="fas fa-info-circle" > </i></span>');
                 }
                 for (var t = 0; t < schedules[i].times.length; t++) {
                     var time = schedules[i].times[t];
@@ -302,7 +301,7 @@ function getDaySchelude(direction, lib) {
                         staffPresentEnd = to;
                         // Store the row as a variable.
                         staffToday = '<tr class="time--sub time isTodayClass time--with-staff">' +
-                            '<td class="align-right trn"><i class="fa fa-level-up fa-rotate-90"></i> ' + i18n.get("Service time") + '</td>' +
+                            '<td class="align-right trn"><i class="fas fa-level-up fa-rotate-90"></i> ' + i18n.get("Service time") + '</td>' +
                             '<td class="align-left">' + staffPresentStart + ' – ' + staffPresentEnd + '</td>' +
                             '</tr>';
                     }
@@ -310,12 +309,12 @@ function getDaySchelude(direction, lib) {
                     else if(time.status === 2) {
                         if (staffPresentStart === '') {
                             selfServiceBefore = '<tr class="time--sub time isTodayClass time--no-staff">' +
-                                '<td class="align-right"><i class="fa fa-level-up fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
+                                '<td class="align-right"><i class="fas fa-level-up fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
                                 '<td class="align-left">' + from + ' – ' + to + '</td>' +
                                 '</tr>';
                         } else {
                             selfServiceAfter = '<tr class="time--sub time isTodayClass time--no-staff">' +
-                                '<td class="align-right"><i class="fa fa-level-up fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
+                                '<td class="align-right"><i class="fas fa-level-up fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
                                 '<td class="align-left">' + from + ' – ' + to + '</td>' +
                                 '</tr>';
                         }
