@@ -1,4 +1,5 @@
 var isIOS = false;
+var isIOSMobile = false;
 var isIE = false;
 
 function toggleFullScreen(target) {
@@ -316,6 +317,9 @@ function bindActions() {
             setTimeout(function(){
                 $("#sliderBox").addClass("small-slider");
             }, 600);
+            if(!fbWidgetSetUp) {
+                generateFbWidgets();
+            }
         }
     }
 
@@ -580,9 +584,15 @@ $(document).ready(function() {
         navigator.userAgent &&
         navigator.userAgent.indexOf('CriOS') == -1 &&
         navigator.userAgent.indexOf('FxiOS') == -1;
-
     if(testSafari || /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
         isIOS = true;
+    }
+
+    // https://stackoverflow.com/questions/4617638/detect-ipad-users-using-jquery
+    var isIPad = navigator.userAgent.match(/iPad/i) != null;
+    var isIPhone = (navigator.userAgent.match(/iPhone/i) != null) || (navigator.userAgent.match(/iPod/i) != null);
+    if(isIPad || isIPhone) {
+        isIOSMobile = true;
     }
 
     if(navigator.appName == 'Microsoft Internet Explorer' ||  !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv:11/)) || (typeof $.browser !== "undefined" && $.browser.msie == 1)) {

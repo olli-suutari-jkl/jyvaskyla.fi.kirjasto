@@ -325,7 +325,7 @@ function getWeekSchelude(direction, lib) {
                             staffPresentEnd = to;
                             // Store the row as a variable.
                             staffToday = '<tr class="time--sub time isTodayClass time--with-staff">' +
-                                '<td class="trn"><i class="fas fa-level-up fa-rotate-90"></i> ' + i18n.get("Service time") + '</td>' +
+                                '<td class="trn"><i class="fas fa-level-up-alt fa-rotate-90"></i> ' + i18n.get("Service time") + '</td>' +
                                 '<td>' + staffPresentStart + ' – ' + staffPresentEnd + '</td>' +
                                 '</tr>';
                         }
@@ -333,12 +333,12 @@ function getWeekSchelude(direction, lib) {
                         else if(time.status === 2) {
                             if (staffPresentStart === '') {
                                 selfServiceBefore = '<tr class="time--sub time isTodayClass time--no-staff">' +
-                                    '<td><i class="fas fa-level-up fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
+                                    '<td><i class="fas fa-level-up-alt fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
                                     '<td>' + from + ' – ' + to + '</td>' +
                                     '</tr>';
                             } else {
                                 selfServiceAfter = '<tr class="time--sub time isTodayClass time--no-staff">' +
-                                    '<td><i class="fas fa-level-up fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
+                                    '<td><i class="fas fa-level-up-alt fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
                                     '<td>' + from + ' – ' + to + '</td>' +
                                     '</tr>';
                             }

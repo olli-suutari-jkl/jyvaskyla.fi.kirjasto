@@ -87,12 +87,19 @@ header {
         padding: 0 3.7em;
     }
 }
+
 /* #introductionTab row contains #leftBar and #introductionSidebar */
 #introductionTab {
     padding-top: 2em;
     padding-left: 1.5em;
     padding-right: 1.5em;
     border-top: 1px solid @primary;
+}
+
+.fb-page {
+    padding-top: 20px;
+    /* If FB widget is not atleast 316 px in width, the event dates are not visible. */
+    min-width: 316px!important;
 }
 
 #introductionSidebar {
@@ -107,6 +114,15 @@ header {
     }
     #introductionSidebar {
         padding-left: 2.5em;
+    }
+}
+
+@media screen and (max-width: 499px) {
+    #leftBar {
+        margin-left: calc(50% - 45vw);
+        margin-right: calc(50% - 45vw);
+        width: 100vmin;
+        align-content: center;
     }
 }
 
@@ -222,9 +238,6 @@ ul.cols {
         margin-left: calc(50% - 48.33vw);
         margin-right: calc(50% - 50vw);
         width: 100vmin;
-    }
-    .trivia-cell-title {
-        text-align: right;
     }
 }
 
@@ -543,6 +556,9 @@ ul.cols {
 /* Close button in the right corner of the modal */
 .close, .leaflet-popup-close-button {
     font-size: 1.85em;
+}
+
+.close {
     color: #f7502e!important;
 }
 

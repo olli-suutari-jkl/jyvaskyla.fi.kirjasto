@@ -882,6 +882,102 @@ function asyncLoadMap() {
 var noLinks = true;
 var igImages = [];
 var igName;
+var fbPageNames = [];
+var fbScriptLoaded = false;
+var fbWidgetSetUp = false;
+var descriptionWidth = Math.round($('.news-description').width());
+
+function generateFbWidgets() {
+    // Do not generate the widget if we are in contacts. This will be re-triggered when moving to the description.
+    if(fbPageNames.length == 0 || activeTab == 1) {
+        return;
+    }
+    var fbHTML = "";
+    var adaptWidth = "true";
+    var fbWidth = 500;
+    var bsCols = "col-lg-6 col-md-12";
+    // The widget has a bug in iOS where switching to events tab does not work as it just jumps back to timeline.
+    var tabs = "timeline,events";
+    if(isIOSMobile) {
+        tabs = "timeline";
+    }
+    // Descriptionheight is used with side by side layout. This is increased if 2 col layout is used.
+    var descriptionHeight = 500;
+    var leftBarWidth = Math.round($('#leftBar').outerWidth());
+    // If FB widget is not atleast 316 px in width, the event dates are not visible.
+    if(leftBarWidth < 632) {
+        bsCols = "";
+    }
+    if(leftBarWidth < 500) {
+        fbWidth = Math.round($('body').width());
+        adaptWidth = "false";
+    }
+    else if(leftBarWidth < 1000 && fbPageNames.length != 1) {
+        fbWidth = fbWidth/2;
+    }
+    if(fbWidth > leftBarWidth) {
+        fbWidth = leftBarWidth ;
+    }
+    if(fbWidth < 316) {
+        fbWidth = 316;
+    }
+    if(fbPageNames.length == 1) {
+        if (!isEmpty($('#introContent'))) {
+            $('.news-description').addClass(bsCols);
+            if(leftBarWidth > 632) {
+                descriptionHeight = Math.round($('.news-description').height() -50);
+            }
+        }
+        else {
+            $('.news-description').hide();
+        }
+        // If description + fb do not fit together, don't set fb height to description height.
+        descriptionWidth = Math.round($('.news-description').width());
+        // If we use smaller than xl, event calendar date icons are lost because the frame gets too small.
+        fbHTML =  '<div class="fb-page ' + bsCols + '" style="width: ' + fbWidth + '; margin-bottom: 2em;" data-href="https://www.facebook.com/' + fbPageNames[0] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="' + adaptWidth + '" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false"></div>';
+        $('.news-description').after(fbHTML);
+    }
+    else {
+        var feedOne = "";
+        var feedTwo = "";
+        for (var i = 0; i < fbPageNames.length; i++) {
+            // Max 2 feeds.
+            if(i == 0) {
+                feedOne = '<div class="fb-page ' + bsCols + '" data-href="https://www.facebook.com/' + fbPageNames[0] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="true" data-adapt-container-width="' + adaptWidth + '" data-hide-cover="false" data-show-facepile="false"></div>';
+            }
+            if(i == 1) {
+                feedTwo = '<div class="fb-page ' + bsCols + '" data-href="https://www.facebook.com/' + fbPageNames[1] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="true" data-adapt-container-width="' + adaptWidth + '" data-hide-cover="false" data-show-facepile="false"></div>';
+            }
+        }
+        fbHTML = '<div class="row" style="width: 100vmin; margin-bottom: 2em;">' + feedOne + feedTwo + '</div>';
+        $('.news-description').after(fbHTML);
+    }
+    // Load the fb script if not already loaded.
+    if(!fbScriptLoaded) {
+        fbScriptLoaded = true;
+        var fbScript = "https://connect.facebook.net/fi_FI/sdk.js#xfbml=1&version=v3.3";
+        if(lang != "fi") {
+            fbScript = "https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.3"
+        }
+        var script = document.createElement('script');
+        /*script.onload = function () {
+            console.log("D O  A F T E R  I N I T")
+        }*/
+        script.src = fbScript;
+        document.head.appendChild(script); //or something of the likes
+    }
+    // After lib has changed.
+    else {
+        FB.init({
+            status: true,
+            xfbml: true,
+            version: 'v3.3'
+        });
+    }
+    fbWidgetSetUp = true;
+    adjustParentHeight();
+}
+
 function asyncFetchLinks() {
     var linksDeferred = jQuery.Deferred();
     setTimeout(function() {
@@ -909,6 +1005,13 @@ function asyncFetchLinks() {
                 $(".some-links").append('<a target="_blank" ' +
                     'href="' + url + '" title="' + i18n.get("Librarys") + ' Facebook"> <i class="fab ' +
                     'fa-facebook-square"></i></a>');
+                var fbName = url;
+                if (fbName.charAt(fbName.length - 1) == '/') {
+                    fbName = fbName.substr(0, fbName.length - 1);
+                }
+                var index = fbName.lastIndexOf("/");
+                var fbName = fbName.substr(index+1);
+                fbPageNames.push(fbName);
             }
             else if (url.indexOf("instagram") !== -1) {
                 igExists = true;
@@ -943,7 +1046,6 @@ function asyncFetchLinks() {
                             var tagLink = tagText.substring(1);
                             tagLink = '<a target="_blank" class="external-link" href="https://www.instagram.com/explore/tags/' + tagLink
                                 + '/">' + tagText + '</a> ';
-                            //console.log(tagText + " " + tagLink);
                             tagsToReplace.push({position: reFindTagsExec[0],
                                 replacement: tagLink, type: "tag"});
                             reFindTagsExec = reFindTags.exec(caption);
@@ -956,7 +1058,6 @@ function asyncFetchLinks() {
                             var tagLink = tagText.substring(1);
                             tagLink = '<a target="_blank" class="external-link" href="https://www.instagram.com/' + tagLink
                                 + '/">' + tagText + '</a> ';
-                            //console.log(tagText + " " + tagLink);
                             tagsToReplace.push({position: reFindUsersExec[0],
                                 replacement: tagLink, type: "user"});
                             reFindUsersExec = reFindUsers.exec(caption);
@@ -1272,16 +1373,18 @@ function fetchInformation(language, lib) {
                         $("#introductionSidebar").append('<div id="noIntroContent"><h3>' +
                             i18n.get("No content") + ' <i class="fas fa-frown-o"></i></h3></div>');
                     }
-                    // Generate mailto links into the contacts table.
+                    // Generate mailto links into the contacts table + descriptions. If we do this for all things, modal links and hover popups break.
                     // https://www.joe-stevens.com/2010/02/18/convert-all-static-text-email-addresses-to-mailto-links-using-jquery/
                     $().ready(function() {
                         var regEx = /(\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*)/;
-                        $("table td").filter(function() {
+                        $("#introContent, #accessibilityDetails, table td").filter(function() {
                             return $(this).html().match(regEx);
                         }).each(function() {
                             $(this).html($(this).html().replace(regEx, "<a href=\"mailto:$1\">$1</a>"));
                         });
                     });
+                    // Generate FB widget(s)
+                    generateFbWidgets();
                 }
                 adjustParentHeight(200);
             }

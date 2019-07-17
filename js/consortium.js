@@ -370,6 +370,8 @@ $(document).ready(function() {
                 igImages = [];
                 resetSliderAfterLibChange();
                 igName = "";
+                fbPageNames = [];
+                fbWidgetSetUp = false;
                 triviaIsEmpty = true;
                 mapLoaded = false;
                 contactsIsEmpty = true;

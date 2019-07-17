@@ -163,7 +163,7 @@
     background: #E1F7FA;
 }
 
-.fa-level-up, .fa-info-circle {
+.fa-level-up-alt, .fa-info-circle {
     margin-right: 0.2em;
 }
 
@@ -181,12 +181,12 @@
     padding-top: 0.05em!important;
 }
 
-.large-schedules .fa-level-up, .large-schedules .fa-info-circle {
+.large-schedules .fa-level-up-alt, .large-schedules .fa-info-circle {
     margin-right: 0.4em;
     margin-left: 0.15em;
 }
 
-.large-schedules .fa-level-up {
+.large-schedules .fa-level-up-alt {
     margin-left: 0.25em;
 }
 

@@ -8,6 +8,7 @@ document.head.appendChild(css);
 // Event listener for messages from the iframe.
 var libList;
 var storedUrl = window.location.href;
+
 window.addEventListener('message', function(event) {
     var data = event.data;
     if(data.type === "libList") {

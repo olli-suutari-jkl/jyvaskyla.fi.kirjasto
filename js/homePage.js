@@ -301,7 +301,7 @@ function getDaySchelude(direction, lib) {
                         staffPresentEnd = to;
                         // Store the row as a variable.
                         staffToday = '<tr class="time--sub time isTodayClass time--with-staff">' +
-                            '<td class="align-right trn"><i class="fas fa-level-up fa-rotate-90"></i> ' + i18n.get("Service time") + '</td>' +
+                            '<td class="align-right trn"><i class="fas fa-level-up-alt fa-rotate-90"></i> ' + i18n.get("Service time") + '</td>' +
                             '<td class="align-left">' + staffPresentStart + ' – ' + staffPresentEnd + '</td>' +
                             '</tr>';
                     }
@@ -309,12 +309,12 @@ function getDaySchelude(direction, lib) {
                     else if(time.status === 2) {
                         if (staffPresentStart === '') {
                             selfServiceBefore = '<tr class="time--sub time isTodayClass time--no-staff">' +
-                                '<td class="align-right"><i class="fas fa-level-up fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
+                                '<td class="align-right"><i class="fas fa-level-up-alt fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
                                 '<td class="align-left">' + from + ' – ' + to + '</td>' +
                                 '</tr>';
                         } else {
                             selfServiceAfter = '<tr class="time--sub time isTodayClass time--no-staff">' +
-                                '<td class="align-right"><i class="fas fa-level-up fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
+                                '<td class="align-right"><i class="fas fa-level-up-alt fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
                                 '<td class="align-left">' + from + ' – ' + to + '</td>' +
                                 '</tr>';
                         }
