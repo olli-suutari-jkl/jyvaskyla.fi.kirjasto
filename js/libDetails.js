@@ -886,7 +886,6 @@ var fbPageNames = [];
 var fbScriptLoaded = false;
 var fbWidgetSetUp = false;
 var descriptionWidth = Math.round($('.news-description').width());
-
 function generateFbWidgets() {
     // Do not generate the widget if we are in contacts. This will be re-triggered when moving to the description.
     if(fbPageNames.length == 0 || activeTab == 1) {
@@ -940,16 +939,32 @@ function generateFbWidgets() {
     else {
         var feedOne = "";
         var feedTwo = "";
+        // Feeds 3 & 4 are only used with iOS mobile..
+        var feedThree = "";
+        var feedFour = "";
         for (var i = 0; i < fbPageNames.length; i++) {
             // Max 2 feeds.
             if(i == 0) {
                 feedOne = '<div class="fb-page ' + bsCols + '" data-href="https://www.facebook.com/' + fbPageNames[0] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="true" data-adapt-container-width="' + adaptWidth + '" data-hide-cover="false" data-show-facepile="false"></div>';
             }
             if(i == 1) {
+                // 2nd item is for events in iOS
+                if(isIOSMobile){
+                    tabs = "events"
+                }
                 feedTwo = '<div class="fb-page ' + bsCols + '" data-href="https://www.facebook.com/' + fbPageNames[1] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="true" data-adapt-container-width="' + adaptWidth + '" data-hide-cover="false" data-show-facepile="false"></div>';
             }
+            if(i == 2 && isIOSMobile) {
+                tabs = "timeline";
+                feedThree = '<div class="fb-page ' + bsCols + '" data-href="https://www.facebook.com/' + fbPageNames[2] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="true" data-adapt-container-width="' + adaptWidth + '" data-hide-cover="false" data-show-facepile="false"></div>';
+            }
+            if(i == 3 && isIOSMobile) {
+                tabs = "events";
+                feedFour = '<div class="fb-page ' + bsCols + '" data-href="https://www.facebook.com/' + fbPageNames[3] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="true" data-adapt-container-width="' + adaptWidth + '" data-hide-cover="false" data-show-facepile="false"></div>';
+            }
         }
-        fbHTML = '<div class="row" style="width: 100vmin; margin-bottom: 2em;">' + feedOne + feedTwo + '</div>';
+        fbHTML = '<div class="row" style="width: 100vmin; margin-bottom: 2em;">' + feedOne + feedTwo +
+            feedThree + feedFour + '</div>';
         $('.news-description').after(fbHTML);
     }
     // Load the fb script if not already loaded.
@@ -1012,6 +1027,10 @@ function asyncFetchLinks() {
                 var index = fbName.lastIndexOf("/");
                 var fbName = fbName.substr(index+1);
                 fbPageNames.push(fbName);
+                // Push twice for iPhones + pads/(pods?), since the tab switching is broken...
+                if(isIOSMobile) {
+                    fbPageNames.push(fbName);
+                }
             }
             else if (url.indexOf("instagram") !== -1) {
                 igExists = true;
