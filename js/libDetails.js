@@ -114,6 +114,8 @@ function asyncGenerateGenericDetails() {
                 description = description.replace(/^(&nbsp;)+/g, '');
                 // Remove empty paragraphs
                 description = description.replace(/(<p>&nbsp;<\/p>)+/g, "");
+                // Generate webropol survey frames.
+                description = generateWebropolSurveyFrames(description);
                 // Add target="_blank" to links. Same url links would open inside Iframe, links to outside  wouldn't work.
                 description = description.replace(/(<a )+/g, '<a target="_blank" ');
                 $("#introContent").append(description);

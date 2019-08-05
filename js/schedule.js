@@ -110,6 +110,9 @@ function generateScheduleInfo(data) {
         $('#scheduleInfos').css("display", "none");
     }
     if(isWeekInfo) {
+        // Replace line breaks with br.
+        genericDescription = genericDescription.replace(/(?:\r\n|\r|\n)/g, '<br>');
+        genericDescription = generateLinks(genericDescription)
         $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-span-lg info-text"><i class="fas fa-info-circle" > </i> ' + genericDescription + '</span>');
         $('#scheduleInfoRow').css("display", "");
     }
@@ -117,13 +120,14 @@ function generateScheduleInfo(data) {
         $('#scheduleInfoRow').css("display", "none");
     }
     if(isSpecialInfo) {
+        holidayDescription = holidayDescription.replace(/(?:\r\n|\r|\n)/g, '<br>');
+        holidayDescription = generateLinks(holidayDescription);
         $('#specialInfo').replaceWith('<span id="specialInfo" class="info-span-lg info-text"><i class="fas fa-info-circle" > </i>' + holidayDescription + '</span>');
         $('#specialInfoRow').css("display", "");
     }
     else {
         $('#specialInfoRow').css("display", "none");
     }
-
 }
 var weekCounter = 0;
 var dateInSchedule;

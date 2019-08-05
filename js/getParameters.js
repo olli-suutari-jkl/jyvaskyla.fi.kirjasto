@@ -100,7 +100,7 @@ if(refUrl.length === 0) {
 }
 refUrl = decodeVal(refUrl);
 // Navigate to contacts or services, if parameter is in the url.
-// Active tab: 0 = info, 1 = contact details, 3 = services.
+// Active tab: 0 = info, 1 = contact details
 var activeTab = 0;
 if(refUrl.indexOf("yhteys") > -1 || refUrl.indexOf("contact") > -1) {
     activeTab = 1;

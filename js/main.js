@@ -98,9 +98,67 @@ function generateMailToLink(string) {
     return result;
 }
 
+function generateWebropolSurveyFrames(description) {
+    if (description.indexOf("<a href=") !== -1) {
+        // Make all links external.
+        //description = description.replace(/(<a href=")+/g, '<a class="external-link" target="_blank" href="');
+        // Generate iframes from links that contain "embed"
+        var linksToReplace = [];
+        var reFindLinks = new RegExp(/<a\b[^>]*>(.*?)<\/a>/g);
+        var reFindLinksExec = reFindLinks.exec(description);
+        while (reFindLinksExec != null) {
+            // If link contains "embed", turn it into iframe.
+            if (reFindLinksExec[0].indexOf("webropol") !== -1) {
+                // Find url
+                var urlOfLink = new RegExp(/"(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?"/g).exec(reFindLinksExec[0]);
+                // Generate iframe
+                var iframeCode = '<iframe style="overflow-x: hidden;" frameborder="0" height="800px" scrolling="yes" src='  + urlOfLink[0] + ' width="100%"></iframe>';
+                // Push to array
+                linksToReplace.push({position: reFindLinksExec[0], replacement: iframeCode});
+            }
+            // Normal links
+            else {
+                // Push to array
+                linksToReplace.push({position: reFindLinksExec[0], replacement: reFindLinksExec[0].replace(/(<a href=")+/g, '<a class="external-link" target="_blank" href="')});
+            }
+            // Loop all links.
+            reFindLinksExec = reFindLinks.exec(description);
+        }
+        // Loop & add iframes from embedded links.
+        for (var i = 0; i < linksToReplace.length; i++) {
+            description = description.replace(linksToReplace[i].position, linksToReplace[i].replacement);
+        }
+    }
+    return description;
+}
+
 // Capitalize the 1st letter of a string.
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// Generate url in text.
+function generateLinks(string) {
+    var result = "";
+    string = '<p>' + string + '</p>';
+    $(string).filter(function () {
+        var html = $(this).html();
+        // https://stackoverflow.com/questions/6038061/regular-expression-to-find-urls-within-a-string
+        var linkPattern = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g;
+        var matched_str = $(this).html().match(linkPattern);
+        if ( matched_str ) {
+            var text = $(this).html();
+            $.each(matched_str, function (index, value) {
+                text = text.replace(value,"<a target='_blank' href='"+value+"'>"+generatPrettyUrl(value)+"</a>");
+            });
+            $(this).html(text);
+            result = $(this).html(text)[0].innerHTML;
+            return $(this)
+        }
+    });
+    // If the result contains a link, the layout is weird unless we wrap it to <p>
+    result = '<p>' + result + '</p>';
+    return result;
 }
 
 function generateAccessibilityImg(translationName, iconPath) {
