@@ -34,6 +34,30 @@ function strippedValueEquals(valueA, valueB) {
     }
 }
 
+// Generate url in text.
+function generateLinks(string) {
+    var result = "";
+    string = '<p>' + string + '</p>';
+    $(string).filter(function () {
+        var html = $(this).html();
+        // https://stackoverflow.com/questions/6038061/regular-expression-to-find-urls-within-a-string
+        var linkPattern = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g;
+        var matched_str = $(this).html().match(linkPattern);
+        if ( matched_str ) {
+            var text = $(this).html();
+            $.each(matched_str, function (index, value) {
+                text = text.replace(value,"<a target='_blank' href='"+value+"'>"+generatPrettyUrl(value)+"</a>");
+            });
+            $(this).html(text);
+            result = $(this).html(text)[0].innerHTML;
+            return $(this)
+        }
+    });
+    // If the result contains a link, the layout is weird unless we wrap it to <p>
+    result = '<p>' + result + '</p>';
+    return result;
+}
+
 function isBefore(timeOne, timeTwo) {
     return !!moment(timeOne, HHmmFormat).isBefore(moment(timeTwo, HHmmFormat));
 }
