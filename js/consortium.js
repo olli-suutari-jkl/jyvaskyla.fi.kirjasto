@@ -11,7 +11,7 @@ function groupByCity(arr) {
     return arr.reduce(function(res, obj) {
         var key = obj.city;
         // create a new object based on the object
-        var newObj = {city: key, id: obj.id, text: obj.text};
+        var newObj = {city: key, id: obj.id, text: obj.text, services: obj.services};
         // Wiitaunion mobile library is used in both "Pihtipudas" and "Viitasaari".
         // b identifier is added so both won't be selected by id in selector.
         if(obj.id == 85449) {
@@ -36,12 +36,10 @@ function groupByCity(arr) {
 
 function modelMatcher (params, data) {
     data.parentText = data.parentText || "";
-
     // Always return the object if there is nothing to compare
     if ($.trim(params.term) === '') {
         return data;
     }
-
     // Do a recursive check for options with children
     if (data.children && data.children.length > 0) {
         // Clone the data object if there are children
@@ -50,44 +48,56 @@ function modelMatcher (params, data) {
         // Check each child of the option
         for (var c = data.children.length - 1; c >= 0; c--) {
             var child = data.children[c];
-            child.parentText += data.parentText + " " + data.text;
-
-            var matches = modelMatcher(params, child);
-
+            var matches;
+            if(homePage) {
+                child.parentText += data.parentText + " " + data.text;
+                matches = modelMatcher(params, child);
+            }
+            else {
+                var services = child.services;
+                child.parentText += data.parentText + " " + data.text + " " + JSON.stringify(services);
+                matches = modelMatcher(params, child, services);
+            }
             // If there wasn't a match, remove the object in the array
             if (matches == null) {
                 match.children.splice(c, 1);
             }
         }
-
         // If any children matched, return the new object
         if (match.children.length > 0) {
             return match;
         }
-
         // If there were no matching children, check just the plain object
         return modelMatcher(params, match);
     }
-
     // If the typed-in term matches the text of this term, or the text from any
     // parent term, then it's a match.
-    var original = (data.parentText + ' ' + data.text).toUpperCase();
+    var original;
+    if(homePage) {
+        original = (data.parentText + ' ' + data.text).toUpperCase();
+    }
+    else {
+        original = (data.parentText + ' ' + data.text + ' ' + JSON.stringify(data.services)).toUpperCase();
+    }
     var term = params.term.toUpperCase();
-
-
     // Check if the text contains the term
     if (original.indexOf(term) > -1) {
         return data;
     }
-
     // If it doesn't contain the term, don't return anything
     return null;
 }
 
 function initSelect(items) {
-    var placeholderText = "Hae nimellä...";
+    var placeholderText = "Hae nimeä tai palvelua...";
     if(lang === "en") {
-        placeholderText = "Search by name...";
+        placeholderText = "Search by name or service...";
+    }
+    if(homePage) {
+        placeholderText = "Hae nimellä...";
+        if(lang === "en") {
+            placeholderText = "Search by name...";
+        }
     }
     // If we use placeholder in IE, select always has focus and opens automatically.
     // https://stackoverflow.com/questions/29293452/ie-select2-always-gets-the-focus
@@ -154,6 +164,7 @@ function generateSelect() {
                             }
                         }
                     });
+                    console.log(libraryList)
                 }
                 catch (e) {
                     console.log("Error in fetching cities: " + e);
@@ -215,6 +226,10 @@ function findIndexInObjectArray(arraytosearch, key, valuetosearch) {
 }
 
 $(document).ready(function() {
+    var withServices = "&with=services";
+    if(homePage) {
+        withServices = "";
+    }
     var oppositeLang = "en";
     if(lang === "en") {
         oppositeLang = "fi";
@@ -223,7 +238,8 @@ $(document).ready(function() {
     if(consortium !== undefined && city !== undefined) {
         isLibaryList = true;
         try {
-            $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + lang + "&city.name=" + city + "&limit=1500", function(data) {
+            $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + lang + "&city.name=" + city  +
+                withServices + "&limit=1500", function(data) {
                 for (var i=0; i<data.items.length; i++) {
                     // Ignore mobile libraries & other consortiums.
                     if(data.items[i].type !== "mobile" && data.items[i].consortium == consortium) {
@@ -231,7 +247,9 @@ $(document).ready(function() {
                             city: data.items[i].city.toString(),
                             street: data.items[i].address.street,
                             zipcode: data.items[i].address.zipcode,
-                            coordinates: data.items[i].coordinates});
+                            coordinates: data.items[i].coordinates,
+                            services: data.items[i].services
+                        });
                         if(lang === "fi") {
                             libListMultiLangHelper.push({nameFi: encodeVal(data.items[i].name), id: data.items[i].id});
                         }
@@ -265,7 +283,8 @@ $(document).ready(function() {
     // Fetch libraries of city
     else if(consortium === undefined && city !== undefined) {
         isLibaryList = true;
-        $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + lang + "&city.name=" + city, function(data) {
+        $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + lang + "&city.name=" + city +
+            + withServices + "&limit=1500", function(data) {
             for (var i=0; i<data.items.length; i++) {
                 // Ignore mobile libraries
                 if(data.items[i].type !== "mobile") {
@@ -273,7 +292,9 @@ $(document).ready(function() {
                         city: data.items[i].city.toString(),
                         street: data.items[i].address.street,
                         zipcode: data.items[i].address.zipcode,
-                        coordinates: data.items[i].coordinates});
+                        coordinates: data.items[i].coordinates,
+                        services: data.items[i].services
+                    });
                     if(lang === "fi") {
                         libListMultiLangHelper.push({nameFi: encodeVal(data.items[i].name), id: data.items[i].id});
                     }
@@ -302,7 +323,8 @@ $(document).ready(function() {
     // Fetch libraries of consortium
     else if(consortium !== undefined && city === undefined) {
         isLibaryList = true;
-        $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + lang + "&consortium=" + consortium + "&limit=1500", function(data) {
+        $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + lang + "&consortium=" + consortium +
+        withServices + "&limit=1500", function(data) {
             for (var i=0; i<data.items.length; i++) {
                 // Include mobile libraries in consortium listings...
                 libraryList.push({
@@ -310,7 +332,8 @@ $(document).ready(function() {
                     city: data.items[i].city.toString(),
                     street: data.items[i].address.street,
                     zipcode: data.items[i].address.zipcode,
-                    coordinates: data.items[i].coordinates
+                    coordinates: data.items[i].coordinates,
+                    services: data.items[i].services
                 });
                 if(lang === "fi") {
                     libListMultiLangHelper.push({nameFi: encodeVal(data.items[i].name), id: data.items[i].id});
@@ -325,7 +348,8 @@ $(document).ready(function() {
                         city: "16055",
                         street: data.items[i].address.street,
                         zipcode: data.items[i].address.zipcode,
-                        coordinates: data.items[i].coordinates
+                        coordinates: data.items[i].coordinates,
+                        services: data.items[i].services
                     });
                 }
             }
