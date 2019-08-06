@@ -53,8 +53,13 @@ function generateLinks(string) {
             return $(this)
         }
     });
-    // If the result contains a link, the layout is weird unless we wrap it to <p>
-    result = '<p>' + result + '</p>';
+    if(result == "") {
+        result = string;
+    }
+    else {
+        // If the result contains a link, the layout is weird unless we wrap it to <p>
+        result = '<p>' + result + '</p>';
+    }
     return result;
 }
 
