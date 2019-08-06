@@ -1015,7 +1015,7 @@ function asyncFetchLinks() {
             }
             var description = "";
             if(element.description !== null && element.description.length > 1) {
-                description = element.description;
+                description =  "<br>" + element.description;
             }
             if (url.indexOf("facebook") !== -1) {
                 linkCount = linkCount +1;
