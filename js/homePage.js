@@ -1,6 +1,17 @@
 var isIOS = false;
 var isIE = false;
 
+
+// THIS IS DUPLICATED ON MAIN.JS, WHICH IS NOT LOADED IN HOMEPAGE.HTML. TO DO; Make main.js essential.
+function generatePrettyUrl (url) {
+    url = url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "");
+    // Remove / and # from url if last characters
+    if (url.substring(url.length-1) === "/" || url.substring(url.length-1) === "#") {
+        url = url.substring(0, url.length-1);
+    }
+    return url;
+}
+
 function moveParentToLibraryUrl(toAdd) {
     toAdd = toAdd.toLowerCase();
     toAdd = toAdd.replace(/ /g, "-");
@@ -138,6 +149,8 @@ function generateScheduleInfo(data) {
             }
         }
         if(holidayDescription !== undefined) {
+            holidayDescription = holidayDescription.replace(/(?:\r\n|\r|\n)/g, '<br>');
+            holidayDescription = generateLinks(holidayDescription);
                 $('#specialInfo').replaceWith('<span id="specialInfo" class="info-span info-text"><i class="fas fa-info-circle" > </i> '
                     + holidayDescription + '</span>');
         }
@@ -145,6 +158,8 @@ function generateScheduleInfo(data) {
             $('#specialInfo').replaceWith('<span id="specialInfo" style="display: none" class="info-span info-text"><i class="fas fa-info-circle" > </i></span>');
         }
         if(genericDescription !== undefined) {
+            genericDescription = genericDescription.replace(/(?:\r\n|\r|\n)/g, '<br>');
+            genericDescription = generateLinks(genericDescription);
             $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-span info-text"><i class="fas fa-info-circle" > </i> '
                 + genericDescription + '</span>');
         }

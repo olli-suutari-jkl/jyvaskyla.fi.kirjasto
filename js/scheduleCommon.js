@@ -46,7 +46,7 @@ function generateLinks(string) {
         if ( matched_str ) {
             var text = $(this).html();
             $.each(matched_str, function (index, value) {
-                text = text.replace(value,"<a target='_blank' href='"+value+"'>"+generatPrettyUrl(value)+"</a>");
+                text = text.replace(value,"<a target='_blank' href='"+value+"'>"+generatePrettyUrl (value)+"</a>");
             });
             $(this).html(text);
             result = $(this).html(text)[0].innerHTML;

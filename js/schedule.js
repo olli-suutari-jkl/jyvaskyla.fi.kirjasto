@@ -112,7 +112,7 @@ function generateScheduleInfo(data) {
     if(isWeekInfo) {
         // Replace line breaks with br.
         genericDescription = genericDescription.replace(/(?:\r\n|\r|\n)/g, '<br>');
-        genericDescription = generateLinks(genericDescription)
+        genericDescription = generateLinks(genericDescription);
         $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-span-lg info-text"><i class="fas fa-info-circle" > </i> ' + genericDescription + '</span>');
         $('#scheduleInfoRow').css("display", "");
     }

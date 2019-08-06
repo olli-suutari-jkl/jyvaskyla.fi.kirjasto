@@ -62,7 +62,7 @@ function exitHandler() {
 }
 
 // Remove httml & www from url and / # from the end.
-function generatPrettyUrl(url) {
+function generatePrettyUrl (url) {
     url = url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "");
     // Remove / and # from url if last characters
     if (url.substring(url.length-1) === "/" || url.substring(url.length-1) === "#") {
@@ -255,7 +255,7 @@ function addItem(item, listElement) {
             }
             // Website
             if(isValue(item.website)) {
-                var prettyLink = generatPrettyUrl(item.website);
+                var prettyLink = generatePrettyUrl (item.website);
                 description = description + '<p class="service-info service-website" aria-label="' + i18n.get("Price") +
                     '"><i class="fas fa-globe" data-toggle="tooltip" title="' + i18n.get("Website") + '" ' +
                     'data-placement="top"></i><a target="_blank" href="' + item.website + '">' +
