@@ -127,6 +127,7 @@
     white-space: normal;
     text-align: left;
     float: left;
+    word-break: break-word;
 }
 
 #scheduleInfos td {
