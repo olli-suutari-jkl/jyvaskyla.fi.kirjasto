@@ -38,7 +38,7 @@ if(libPageUrl !== undefined) {
 if(getParamValue('font') == 'l' || getParamValue('font') == 'xl') {
     largeSchedules = true;
 }
-/* Alternative:   <script data-library="85111" data-lang="fi" src="../../js/main.js" type="text/javascript"></script>*/
+/* Alternative:   <script data-library="85111" data-lang="fi" src="../../js/libMain.js" type="text/javascript"></script>*/
 // If lang and lib are undefined (not used in iframe)
 if(lang == undefined && library == undefined){
     var scripts = document.getElementsByTagName('script');

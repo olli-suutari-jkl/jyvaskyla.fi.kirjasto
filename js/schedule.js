@@ -273,7 +273,7 @@ function getWeekSchelude(direction, lib) {
                     // Info row.
                     if (schedules[i].info !== null) {
                         // Split long info strings in half, ignore longer than 60/80 chars.
-                        var infoText = schedules[i].info;
+                        var infoText = capitalize(schedules[i].info);
                         if (largeSchedules) {
                             if (infoText.length > 30 && infoText.length < 80) {
                                 infoText = splitString(infoText);

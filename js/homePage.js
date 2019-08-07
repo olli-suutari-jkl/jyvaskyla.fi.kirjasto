@@ -1,17 +1,3 @@
-var isIOS = false;
-var isIE = false;
-
-
-// THIS IS DUPLICATED ON MAIN.JS, WHICH IS NOT LOADED IN HOMEPAGE.HTML. TO DO; Make main.js essential.
-function generatePrettyUrl (url) {
-    url = url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "");
-    // Remove / and # from url if last characters
-    if (url.substring(url.length-1) === "/" || url.substring(url.length-1) === "#") {
-        url = url.substring(0, url.length-1);
-    }
-    return url;
-}
-
 function moveParentToLibraryUrl(toAdd) {
     toAdd = toAdd.toLowerCase();
     toAdd = toAdd.replace(/ /g, "-");
@@ -28,16 +14,6 @@ function moveParentToLibraryUrl(toAdd) {
     }
 }
 
-// Timer  is used to stop onresize event from firing after adjustment is done by triggering the function manually.
-var isAdjustingHeight = false;
-var clearTimer;
-function setAdjustingToFalse() {
-    clearTimer = setTimeout(function(){
-        isAdjustingHeight = false;
-    }, 1200);
-}
-
-var height = 0;
 function adjustHomePageHeight(delay) {
     clearTimeout(clearTimer);
     isAdjustingHeight = true;
@@ -282,7 +258,7 @@ function getDaySchelude(direction, lib) {
                 // Info row.
                 if (schedules[i].info !== null) {
                     // Split long info strings in half, ignore longer than 60/80 chars.
-                    var infoText = schedules[i].info;
+                    var infoText = capitalize(schedules[i].info);
                     if (largeSchedules) {
                         if (infoText.length > 30 && infoText.length < 80) {
                             infoText = splitString(infoText);
@@ -402,16 +378,6 @@ function getDaySchelude(direction, lib) {
         }
         $("#weekSchelude").replaceWith('<tbody id="weekSchelude" class="schedules-weekly">' + str);
         adjustHomePageHeight(0);
-        var testSafari = navigator.vendor && navigator.vendor.indexOf('Apple') > -1 &&
-            navigator.userAgent &&
-            navigator.userAgent.indexOf('CriOS') == -1 &&
-            navigator.userAgent.indexOf('FxiOS') == -1;
-        if(testSafari || /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
-            isIOS = true;
-        }
-        if(navigator.appName == 'Microsoft Internet Explorer' ||  !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv:11/)) || (typeof $.browser !== "undefined" && $.browser.msie == 1)) {
-            isIE = true;
-        }
         $('#scheduleTitle').html(i18n.get("Opening hours"));
         $('#scheduleTitle').css('display', 'block');
     });
