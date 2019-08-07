@@ -183,7 +183,7 @@ var length = 1;
             'id="sliderForward" class="slider-btn ' + navClass + ' next"><i class="fas fa-arrow-right"></i>' + '</button></div>' +
             '<div class="slider-navigation slider-play-expand-container"> ' + progressBar +
             '<button id="expandSlider" title="' + i18n.get('Toggle full-screen') + '" data-placement="right" ' +
-            ' data-toggle="navigation-tooltip" class="slider-btn test"> ' +
+            ' data-toggle="navigation-tooltip" class="slider-btn"> ' +
             '<i class="fas fa-expand"></i></button></div></div>';
         // Inject navigation
         $('#sliderBox').append(navMarkup);

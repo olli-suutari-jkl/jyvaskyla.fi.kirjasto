@@ -657,14 +657,7 @@ function asyncFetchImages() {
                             // Activate arrow navigation when hovering over the small slider.
                             $("#sliderBox").mouseenter(function () {
                                 if (!$("#sliderBox").hasClass('hovering') && $("#sliderBox").hasClass("small-slider")) {
-                                    // If element is never focused, navigation may not work.
                                     $("#sliderBox").addClass('hovering');
-                                    $("#sliderForward").focus();
-                                    // If we blur instantly, arrow navigation won't work unless something has been clicked in the document.
-                                    setTimeout(function () {
-                                        $("#sliderForward").blur();
-                                    }, 5);
-                                    //$("#sliderForward").blur();
                                 }
                             });
                             $("#sliderBox").mouseleave(function () {
