@@ -55,7 +55,7 @@ function modelMatcher (params, data) {
             }
             else {
                 var services = child.services;
-                child.parentText += data.parentText + " " + data.text + " " + JSON.stringify(services);
+                child.parentText += data.parentText + " " + data.text + " " + services;
                 matches = modelMatcher(params, child, services);
             }
             // If there wasn't a match, remove the object in the array
@@ -77,7 +77,7 @@ function modelMatcher (params, data) {
         original = (data.parentText + ' ' + data.text).toUpperCase();
     }
     else {
-        original = (data.parentText + ' ' + data.text + ' ' + JSON.stringify(data.services)).toUpperCase();
+        original = (data.parentText + ' ' + data.text + ' ' + data.services).toUpperCase();
     }
     var term = params.term.toUpperCase();
     // Check if the text contains the term
@@ -164,7 +164,6 @@ function generateSelect() {
                             }
                         }
                     });
-                    console.log(libraryList)
                 }
                 catch (e) {
                     console.log("Error in fetching cities: " + e);
@@ -293,7 +292,7 @@ $(document).ready(function() {
                         street: data.items[i].address.street,
                         zipcode: data.items[i].address.zipcode,
                         coordinates: data.items[i].coordinates,
-                        services: data.items[i].services
+                        services: JSON.stringify(data.items[i].services)
                     });
                     if(lang === "fi") {
                         libListMultiLangHelper.push({nameFi: encodeVal(data.items[i].name), id: data.items[i].id});
@@ -333,7 +332,7 @@ $(document).ready(function() {
                     street: data.items[i].address.street,
                     zipcode: data.items[i].address.zipcode,
                     coordinates: data.items[i].coordinates,
-                    services: data.items[i].services
+                    services: JSON.stringify(data.items[i].services)
                 });
                 if(lang === "fi") {
                     libListMultiLangHelper.push({nameFi: encodeVal(data.items[i].name), id: data.items[i].id});
@@ -349,7 +348,7 @@ $(document).ready(function() {
                         street: data.items[i].address.street,
                         zipcode: data.items[i].address.zipcode,
                         coordinates: data.items[i].coordinates,
-                        services: data.items[i].services
+                        services: JSON.stringify(data.items[i].services)
                     });
                 }
             }
