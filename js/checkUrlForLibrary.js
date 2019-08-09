@@ -30,13 +30,18 @@ function asyncCheckUrlForKeskiLibrary() {
                     library = libraryList[i].id;
                     matchFound = true;
                 }
+                else if(urlUnescapeSpaces.indexOf(libraryList[i].id) > -1) {
+                    library = libraryList[i].id;
+                    matchFound = true;
+                    refUrl = refUrl.replace(libraryList[i].id, escapedName);
+                    adjustParentUrl(escapedName);
+                }
             }
         }
         // Custom names used for libraries of Jyväskylä.
         if(!matchFound) {
             if(refUrl.indexOf("halssila") > -1) {
                 library = 85305;
-
                 if(lang === "fi") {
                     replaceJyvaskylaLibName("halssilan-lahikirjasto");
                 }
