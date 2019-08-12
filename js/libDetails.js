@@ -1050,7 +1050,10 @@ function asyncFetchLinks() {
                         var url = images[i].node.display_url;
                         var shortcode = images[i].node.shortcode;
                         var likes = images[i].node.edge_liked_by.count;
-                        var caption = images[i].node.edge_media_to_caption.edges[0].node.text;
+                        var caption = "";
+                        if(images[i].node.edge_media_to_caption.edges[0] !== undefined) {
+                            caption = images[i].node.edge_media_to_caption.edges[0].node.text;
+                        }
                         var tagsToReplace = [];
                         var reFindTags = new RegExp(/#\S+\s*/g);
                         var reFindTagsExec = reFindTags.exec(caption);
