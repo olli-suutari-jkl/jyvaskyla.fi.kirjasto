@@ -16,11 +16,12 @@ function asyncCheckUrlForKeskiLibrary() {
             return;
         }
         var matchFound = false;
+        var urlUnescapeSpaces = refUrl.replace(/%20/g, " ");
+        urlUnescapeSpaces = refUrl.replace(/-/g, " ");
+        //console.log(urlUnescapeSpaces)
         if(!matchFound) {
             // Loop libraries and check if refUrl contains one of them and click if so.
             for (var i = 0; i < libraryList.length; i++) {
-                var urlUnescapeSpaces = refUrl.replace(/%20/g, " ");
-                urlUnescapeSpaces = refUrl.replace(/-/g, " ");
                 var escapedName = libraryList[i].text.toLowerCase();
                 escapedName = escapedName.replace(/ä/g, "a");
                 escapedName = escapedName.replace(/ö/g, "o");
@@ -122,7 +123,6 @@ function asyncCheckUrlForKeskiLibrary() {
             }
             else if(refUrl.indexOf("palok") > -1) {
                 library = 85732;
-
                 if(lang === "fi") {
                     replaceJyvaskylaLibName("palokan-aluekirjasto");
                 }

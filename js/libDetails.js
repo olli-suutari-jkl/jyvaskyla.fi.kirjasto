@@ -19,6 +19,8 @@ var links = null;
 var phoneNumbers = null;
 var pictures = null;
 var arrayOfServices = null;
+var arrayOfServiceNames = [];
+var arrayOfServiceNamesInOppositeLang = [];
 var slogan = null;
 var founded = null;
 var buildingInfo = null;
@@ -85,12 +87,61 @@ function asyncFetchV4Data() {
             }
             description = data.description;
             transitInfo = data.transitInfo;
+            for (var i = 0; i < arrayOfServices.length; i++) {
+                var name = arrayOfServices[i].standardName.toLowerCase();
+                var customName = "";
+                if(arrayOfServices[i].name !== null) {
+                    customName = arrayOfServices[i].name.toLowerCase();
+                    customName = customName.replace(/,/g, "");
+                    customName = customName.replace(/ä/g, "a");
+                    customName = customName.replace(/ö/g, "o");
+                    customName = customName.replace(/\(/g, "");
+                    customName = customName.replace(/\)/g, "");
+                    customName = customName.replace(/_/g, " ");
+                    customName = customName.replace(/-/g, " ");
+                }
+                arrayOfServiceNames.push({name: name, customName: customName});
+            }
             genericDeferred.resolve();
         });
     }, 1 );
     // Return the Promise so caller can't change the Deferred
     return genericDeferred.promise();
 }
+
+function asyncFetchServiceNamesInOppositeLang() {
+    var serviceNamesDeferred = jQuery.Deferred();
+    var oppositeLang = "fi";
+    if(lang == "fi") {
+        oppositeLang = "en";
+    }
+    setTimeout(function() {
+        // Disable caching: https://stackoverflow.com/questions/13391563/how-to-set-cache-false-for-getjson-in-jquery
+        $.getJSON("https://api.kirjastot.fi/v4/library/" + library + "?lang=" + oppositeLang + "&with=services", {_: new Date().getTime()}, function (data) {
+            var data = data.data.services;
+            for (var i = 0; i < data.length; i++) {
+                var name = data[i].standardName.toLowerCase();
+                var customName = "";
+                if(data[i].name !== null) {
+                    customName = data[i].name.toLowerCase();
+                    customName = customName.replace(/,/g, "");
+                    customName = customName.replace(/ä/g, "a");
+                    customName = customName.replace(/ö/g, "o");
+                    customName = customName.replace(/\(/g, "");
+                    customName = customName.replace(/\)/g, "");
+                    customName = customName.replace(/_/g, " ");
+                    customName = customName.replace(/-/g, " ");
+                }
+                arrayOfServiceNamesInOppositeLang.push({name: name, customName: customName});
+            }
+            serviceNamesDeferred.resolve();
+        });
+    }, 1 );
+    // Return the Promise so caller can't change the Deferred
+    return serviceNamesDeferred.promise();
+}
+
+
 /* Fetch things via v4 api, expect persons & building details */
 function asyncGenerateGenericDetails() {
     var genericDeferred = jQuery.Deferred();
@@ -124,6 +175,11 @@ function asyncGenerateGenericDetails() {
         }
         // Transit details
         if (transitIsEmpty) {
+            // There is a bug that is hard to re-produce where the generate UI functions would be triggered even though the data is still null. It may be linked to slow networks. As a workaround, we reload the page if address details are null. TO DO: Better fix.
+            if(address == null || transitInfo == null || buildingInfo == null) {
+                fetchInformation(lang, library);
+                return;
+            }
             var cityName = address.city;
             if(coordinates != null && address.street != null && cityName != null) {
                 transitIsEmpty = false;
@@ -272,7 +328,6 @@ function bindServiceClicks() {
                 textInside = textInside.replace(/\)/g, "");
                 textInside = textInside.replace(/_/g, " ");
                 textInside = textInside.replace(/-/g, " ");
-                // Loop services and check if refUrl contains one of them and click if so.
                 for (var i = 0; i < serviceNames.length; i++) {
                     var escapedName = serviceNames[i].toLowerCase();
                     escapedName = escapedName.replace(/ä/g, "a");
@@ -478,22 +533,89 @@ function asyncFetchServices() {
             urlUnescapeSpaces = urlUnescapeSpaces.replace(/\)/g, "");
             // Loop services and check if refUrl contains one of them and click if so.
             var toClick = "";
-            for (var i = 0; i < serviceNames.length; i++) {
-                var escapedName = serviceNames[i].toLowerCase();
+            var matchFound = false;
+            for (var i = 0; i < serviceNamesWithLinks.length; i++) {
+                var escapedName = serviceNamesWithLinks[i].toLowerCase();
                 escapedName = escapedName.replace(/ä/g, "a");
                 escapedName = escapedName.replace(/ö/g, "o");
+                escapedName = escapedName.replace(",", "")
                 escapedName = escapedName.replace(/\(/g, "");
                 escapedName = escapedName.replace(/\)/g, "");
                 escapedName = escapedName.replace(/_/g, " ");
                 escapedName = escapedName.replace(/-/g, " ");
                 if(urlUnescapeSpaces.indexOf(escapedName) > -1) {
-                    toClick = serviceNames[i];
+                    matchFound = true;
+                    toClick = serviceNamesWithLinks[i];
                     setTimeout(function(){
                         openOnLoad = true;
                         $("li").find('[data-name="'+ toClick +'"]').click();
                     }, 600);
                 }
             }
+            var matchingServiceLinkFound = false;
+            if(!matchFound) {
+                for (var i = 0; i < arrayOfServiceNamesInOppositeLang.length; i++) {
+                    if(arrayOfServiceNamesInOppositeLang[i].customName !== "") {
+                    var oppositeCustomName = encodeVal(arrayOfServiceNamesInOppositeLang[i].customName);
+                    oppositeCustomName = oppositeCustomName.replace(/-/g, " ");
+                    oppositeCustomName = oppositeCustomName.replace(/,/g, "");
+                    if(urlUnescapeSpaces.indexOf(oppositeCustomName) > -1) {
+                        matchFound = true;
+                        toClick = decodeVal(arrayOfServiceNames[i].customName);
+                        if(toClick == "") {
+                            toClick = decodeVal(arrayOfServiceNames[i].name)
+                        }
+                        for (var t = 0; t < serviceNamesWithLinks.length; t++) {
+                            var valueInLowerCase = decodeVal(serviceNamesWithLinks[t].toLowerCase());
+                            if(valueInLowerCase.indexOf(toClick) > -1) {
+                                matchingServiceLinkFound = true;
+                                toClick = serviceNamesWithLinks[t];
+                                setTimeout(function(){
+                                    openOnLoad = true;
+                                    $("li").find('[data-name="'+ toClick +'"]').click();
+                                }, 600);
+                            }
+                        }
+                        // If no matching service is available to click, remove name from url.
+                        if(!matchingServiceLinkFound) {
+                            var index = refUrl.lastIndexOf("?");
+                            var serviceToRemove = refUrl.substr(index+1);
+                            adjustParentUrl(serviceToRemove, "removeService");
+                        }
+                    }
+                }
+            }
+        }
+        if(!matchFound) {
+            for (var i = 0; i < arrayOfServiceNames.length; i++) {
+                // Service names may contain "-" eg. Celia-library services
+                var oppositeName = encodeVal(arrayOfServiceNamesInOppositeLang[i].name);
+                oppositeName = oppositeName.replace(/-/g, " ");
+                oppositeName = oppositeName.replace(/,/g, "");
+                if(urlUnescapeSpaces.indexOf(oppositeName) > -1) {
+                    matchFound = true;
+                    toClick = decodeVal(arrayOfServiceNames[i].name);
+                    if(arrayOfServiceNames[i].customName !== "") {
+                        toClick = decodeVal(arrayOfServiceNames[i].customName);
+                    }
+                    for (var t = 0; t < serviceNamesWithLinks.length; t++) {
+                        var valueInLowerCase = decodeVal(serviceNamesWithLinks[t].toLowerCase());
+                        if(valueInLowerCase.indexOf(toClick) > -1) {
+                            matchingServiceLinkFound = true;
+                            toClick = serviceNamesWithLinks[t];
+                            setTimeout(function(){
+                                openOnLoad = true;
+                                $("li").find('[data-name="'+ toClick +'"]').click();
+                            }, 600);
+                        }
+                    }
+                    // If no matching service is available to click, remove name from url.
+                    if(!matchingServiceLinkFound) {
+                        adjustParentUrl();
+                    }
+                }
+            }
+        }
         }
         servicesDeferred.resolve();
     }, 1 );
@@ -1050,7 +1172,10 @@ function asyncFetchLinks() {
                         var url = images[i].node.display_url;
                         var shortcode = images[i].node.shortcode;
                         var likes = images[i].node.edge_liked_by.count;
-                        var caption = images[i].node.edge_media_to_caption.edges[0].node.text;
+                        var caption = "";
+                        if(images[i].node.edge_media_to_caption.edges[0] !== undefined) {
+                            caption = images[i].node.edge_media_to_caption.edges[0].node.text;
+                        }
                         var tagsToReplace = [];
                         var reFindTags = new RegExp(/#\S+\s*/g);
                         var reFindTagsExec = reFindTags.exec(caption);
@@ -1303,7 +1428,7 @@ function fetchInformation(language, lib) {
         var fetchDeferred = jQuery.Deferred();
         setTimeout(function() {
             if(!isReFetching) {
-                $.when( asyncFetchV4Data() ).then(
+                $.when( asyncFetchV4Data() && asyncFetchServiceNamesInOppositeLang() ).then(
                     function() {
                         $.when( asyncGenerateGenericDetails(), asyncGenerateTrivia(), asyncFetchDepartments(),
                             asyncFetchLinks(), asyncFetchLocation()).then(

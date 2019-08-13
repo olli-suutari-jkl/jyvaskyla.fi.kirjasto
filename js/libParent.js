@@ -19,47 +19,75 @@ window.addEventListener('message', function(event) {
         var currentUrl = window.location.href;
         var needsRedirect = false;
         var name = "";
-        if(lang === "fi") {
-            for (var i = 0; i < libList.length; i++) {
-                if (referrer.indexOf(libList[i].nameEn) > -1 && libList[i].id != currentLib &&
-                    libList[i].nameEn !== libList[i].nameFi) {
-                    name = "?" + libList[i].nameFi;
-                    currentUrl = currentUrl.replace(/\?(.*)/g, name);
+        var serviceNameInUrl = "";
+        var refParamCount = (referrer.match(/\?/g) || []).length;
+        var fiLibNameInUrl = "";
+        var enLibNameInUrl = "";
+        for (var i = 0; i < libList.length; i++) {
+            var libNameEn = libList[i].nameEn;
+            var libNameFi = libList[i].nameFi;
+            if (referrer.indexOf("?" + libNameEn) > -1) {
+                enLibNameInUrl = libNameEn;
+            }
+            if (referrer.indexOf("?" + libNameFi) > -1) {
+                fiLibNameInUrl = libNameFi;
+            }
+        }
+        if(refParamCount == 2) {
+            var index = referrer.lastIndexOf("?");
+            serviceNameInUrl = "?" + referrer.substr(index+1);
+            if(serviceNameInUrl != "?yhteystiedot" && serviceNameInUrl != "?contacts"
+            && serviceNameInUrl != fiLibNameInUrl && serviceNameInUrl != enLibNameInUrl) {
+                var redirectUrl = currentUrl + serviceNameInUrl;
+                if (currentUrl.toLowerCase().indexOf(serviceNameInUrl) === -1) {
+                    currentUrl = redirectUrl;
                     needsRedirect = true;
+                }
+            }
+        }
+        if(lang === "fi") {
+            if(enLibNameInUrl != "") {
+                for (var i = 0; i < libList.length; i++) {
+                    if (enLibNameInUrl.indexOf(libList[i].nameEn) > -1 && libList[i].id != currentLib &&
+                        libList[i].nameEn !== libList[i].nameFi) {
+                        name = "?" + libList[i].nameFi;
+                        currentUrl = currentUrl.replace(/\?(.*)/g, name) + serviceNameInUrl;
+                        needsRedirect = true;
+                    }
                 }
             }
             if (referrer.indexOf("contacts") > -1) {
-                currentUrl = currentUrl + "?yhteystiedot";
-                //currentUrl = currentUrl.replace(/(contacts)/g, "yhteystiedot");
-                needsRedirect = true;
-            }
-        }
-        else if(lang === "en") {
-            for (var i = 0; i < libList.length; i++) {
-                if (referrer.indexOf(libList[i].nameFi) > -1 && libList[i].id != currentLib &&
-                    libList[i].nameEn !== libList[i].nameFi) {
-                    name = "?" + libList[i].nameEn;
-                    currentUrl = currentUrl.replace(/\?(.*)/g, name);
+                if(currentUrl.indexOf("yhteystiedot") === -1) {
+                    currentUrl = currentUrl + "?yhteystiedot";
                     needsRedirect = true;
                 }
             }
+        }
+        else if(lang === "en") {
+            if(fiLibNameInUrl != "") {
+                for (var i = 0; i < libList.length; i++) {
+                    if (fiLibNameInUrl.indexOf(libList[i].nameFi) > -1 && libList[i].id != currentLib &&
+                        libList[i].nameEn !== libList[i].nameFi) {
+                        name = "?" + libList[i].nameEn;
+                        currentUrl = currentUrl.replace(/\?(.*)/g, name) + serviceNameInUrl;
+                        needsRedirect = true;
+                    }
+                }
+            }
             if (referrer.indexOf("yhteystiedot") > -1) {
-                currentUrl = currentUrl + "?contacts";
-                //currentUrl = currentUrl.replace(/(contacts)/g, "yhteystiedot");
-                needsRedirect = true;
+                if(currentUrl.indexOf("contacts") === -1) {
+                    currentUrl = currentUrl + "?contacts";
+                    needsRedirect = true;
+                }
             }
         }
-        if(needsRedirect) {
-            setTimeout(function(){
-                /* IE does not update referrer if we use history.replaceState or .pushState , thus this wont work on ie.
-                https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/10474810/
-                Bonus: IE also loses referrer when using window.location.href = ...
-                // https://blog.mathiaskunto.com/2012/02/20/internet-explorer-loses-referrer-when-redirecting-or-linking-with-javascript/
-                */
-                storedUrl = currentUrl;
+        setTimeout(function(){
+            if(needsRedirect) {
+                var stateObj = { urlValue: currentUrl };
+                history.replaceState( stateObj , '', currentUrl );
                 window.location.href = currentUrl;
-            }, 50);
-        }
+            }
+        }, 100);
     }
     // Scroll to position
     else if(data.type === "scroll") {

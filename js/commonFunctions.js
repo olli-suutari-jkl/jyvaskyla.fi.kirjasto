@@ -104,6 +104,7 @@ function adjustParentHeight(delay, elementPosY) {
 /* If iframe has no referrerpolicy="unsafe-url" attribute, FF private mode blocks url from passing to iframe.
   https://gist.github.com/olli-suutari-jkl/8d6ccbc7d3c4e3b563bd5b7cbee095e2
  */
+var checkedUrlForLibNamesInOppositeLang = false;
 function adjustParentUrl(toAdd, type) {
     refUrl = encodeVal(refUrl);
     // Sometimes refurl is set to github when paging back or forwards, reset in case so...
@@ -128,19 +129,82 @@ function adjustParentUrl(toAdd, type) {
     }
     // Remove item from url, if it already exists.
     refUrl = refUrl.replace(new RegExp(toAdd,"i"), "");
-    // Check for services.
-    if(type !== "introduction" && type !== "contact") {
-        // Loop services and check if refUrl contains one of them, if so remove it.
-        for (var i = 0; i < serviceNames.length; i++) {
-            var serviceName = encodeVal(serviceNames[i]);
-            if(refUrl.indexOf(serviceName) > -1) {
-                refUrl = refUrl.replace(serviceName, "");
-                stateTitle = stateTitle + " | " + serviceNames[i];
+    if(type == "removeService") {
+        toAdd = "";
+    }
+    // Remove lib name in opposite language, if any are present. If this is not done, it could sometimes result in infinite loop...
+    if(!checkedUrlForLibNamesInOppositeLang) {
+        for (var i = 0; i < libListMultiLang.length; i++) {
+            var libName = libListMultiLang[i].nameEn;
+            if(lang == "en") {
+                libName = libListMultiLang[i].nameFi;
             }
+            if (refUrl.indexOf("?" + libName) > -1) {
+                refUrl = refUrl.replace("?" + libName, "");
+            }
+        }
+        checkedUrlForLibNamesInOppositeLang = true;
+    }
+    // Cleanup any potential service names.
+    var serviceMathchFound = false;
+    for (var i = 0; i < arrayOfServiceNamesInOppositeLang.length; i++) {
+        if(arrayOfServiceNamesInOppositeLang[i].customName !== "") {
+            var oppositeCustomName = encodeVal(arrayOfServiceNamesInOppositeLang[i].customName);
+            oppositeCustomName = oppositeCustomName.replace(/,/g, "");
+            if(refUrl.indexOf("?" + oppositeCustomName) > -1) {
+                serviceMathchFound = true;
+                refUrl = refUrl.replace("?" + decodeVal(arrayOfServiceNamesInOppositeLang[i].customName), "");
+            }
+        }
+        if(!serviceMathchFound) {
+            if(arrayOfServiceNamesInOppositeLang[i].name !== "") {
+                var oppositeName = encodeVal(arrayOfServiceNamesInOppositeLang[i].name);
+                oppositeName = oppositeName.replace(/,/g, "");
+                if(refUrl.indexOf("?" + oppositeName) > -1) {
+                    serviceMathchFound = true;
+                    refUrl = refUrl.replace("?" + decodeVal(arrayOfServiceNamesInOppositeLang[i].name), "");
+                }
+            }
+        }
+    }
+    serviceMathchFound = false;
+    for (var i = 0; i < arrayOfServiceNames.length; i++) {
+        if(arrayOfServiceNames[i].customName !== "") {
+            var oppositeCustomName = encodeVal(arrayOfServiceNames[i].customName);
+            oppositeCustomName = oppositeCustomName.replace(/,/g, "");
+            if(refUrl.indexOf("?" + oppositeCustomName) > -1) {
+                serviceMathchFound = true;
+                refUrl = refUrl.replace("?" + decodeVal(arrayOfServiceNames[i].customName), "");
+            }
+        }
+        if(!serviceMathchFound) {
+            if(arrayOfServiceNames[i].name !== "") {
+                var oppositeName = encodeVal(arrayOfServiceNames[i].name);
+                oppositeName = oppositeName.replace(/,/g, "");
+                if(refUrl.indexOf("?" + oppositeName) > -1) {
+                    serviceMathchFound = true;
+                    refUrl = refUrl.replace("?" + decodeVal(arrayOfServiceNames[i].name), "");
+                }
+            }
+        }
+    }
+    if(lang === "fi" && toAdd == "yhteystiedot") {
+        var countYhteystiedotInUrl = (refUrl.match(/yhteystiedot/g) || []).length;
+        if(countYhteystiedotInUrl !== 0) {
+            toAdd = "";
+        }
+    }
+    else if(lang === "en" && toAdd == "contacts") {
+        refUrl = refUrl.replace(/yhteystiedot/g, "");
+        var countContactsInUrl = (refUrl.match(/contacts/g) || []).length;
+        if(countContactsInUrl !== 0 && toAdd == "contacts") {
+            toAdd = "";
         }
     }
     if(lang === "fi") {
         refUrl = refUrl.replace(/contacts/g, "");
+        var countYhteystiedotInUrl = (refUrl.match(/yhteystiedot/g) || []).length;
+
     }
     else if(lang === "en") {
         refUrl = refUrl.replace(/yhteystiedot/g, "");

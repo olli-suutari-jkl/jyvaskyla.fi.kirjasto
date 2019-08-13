@@ -53,8 +53,16 @@ $("html").attr("lang", lang);
 
 // Check if provided value is not null, undefined or empty
 function isValue(value) {
-    if(value !== null && value !== undefined && value.length !== 0 && value !== "undefined") {
-        return true;
+    if(value !== null && value !== undefined && value.length !== 0 && value !== "undefined" || $.trim(value) !== "") {
+        var valueWithoutPTags = value.replace(/<p>/g, "");
+        valueWithoutPTags = valueWithoutPTags.replace(/<\/p>/g, "");
+        valueWithoutPTags = $.trim(valueWithoutPTags);
+        if(valueWithoutPTags.length < 1) {
+            return false;
+        }
+        else {
+            return true;
+        }
     }
     else {
         return false;
@@ -66,6 +74,7 @@ function encodeVal(value) {
         return value;
     }
     value = value.toLowerCase();
+    value = value.replace(/,/g, "");
     value = value.replace(/ /g, "-");
     value = value.replace(/ä/g, "a");
     value = value.replace(/ö/g, "o");
@@ -82,6 +91,7 @@ function decodeVal(value) {
     }
     value = decodeURI(value);
     value = value.toLowerCase();
+    value = value.replace(/,/g, "");
     value = value.replace(/ /g, "-");
     value = value.replace(/ä/g, "a");
     value = value.replace(/ö/g, "o");

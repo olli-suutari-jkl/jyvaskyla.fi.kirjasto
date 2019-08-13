@@ -411,6 +411,9 @@ $(document).ready(function() {
                 phoneNumbers = null;
                 pictures = null;
                 arrayOfServices = null;
+                serviceNamesWithLinks = [];
+                arrayOfServiceNames = [];
+                arrayOfServiceNamesInOppositeLang = [];
                 slogan = null;
                 email = null;
                 description = null;
