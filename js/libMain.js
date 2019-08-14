@@ -244,6 +244,17 @@ function addItem(item, listElement) {
                         // Push to array
                         linksToReplace.push({position: reFindLinksExec[0], replacement: iframeCode});
                     }
+                    // Microsoft Bookings calendars
+                    else if (reFindLinksExec[0].indexOf("/bookings/") !== -1) {
+                        // Find url
+                        console.log(reFindLinksExec[0])
+                        var BookingUrlOfLink = new RegExp(/"(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?"/g).exec(reFindLinksExec[0]);
+                        // Generate iframe
+                        var iframeCode = '<iframe frameborder="0" height="1200px" scrolling="yes"  src='  + BookingUrlOfLink[0] +
+                            ' width="100%" style="border: 0"></iframe>';
+                        // Push to array
+                        linksToReplace.push({position: reFindLinksExec[0], replacement: iframeCode});
+                    }
                     // Normal links
                     else {
                         // Push to array
