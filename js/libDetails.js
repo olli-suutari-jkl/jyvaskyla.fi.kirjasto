@@ -364,6 +364,8 @@ function bindServiceClicks() {
         $("#modalContent").replaceWith('<div id="modalContent">' + popupText + '</div>');
         // Bind click event for clicking links to other services inside the modal.
         $(".service-link-in-modal").on('click', function () {
+            var currentServiceName = $('#modalTitle').text();
+            adjustParentUrl(currentServiceName, "removeService");
             var name = $(this).data('name');
             toggleModal();
             setTimeout(function(){
