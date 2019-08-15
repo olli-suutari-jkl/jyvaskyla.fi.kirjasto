@@ -44,6 +44,28 @@ function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+function capitalizeEmail(string) {
+    var stringSplitted = string.split("@");
+    var splittedByDots = stringSplitted[0].split(".");
+    string = "";
+    for (var i = 0; i < splittedByDots.length; i++) {
+        string = string + capitalize(splittedByDots[i]) + ".";
+    }
+    string = string.slice(0, -1) + '@';
+    string = string + stringSplitted[1];
+    return string;
+}
+
+// sanitizedHTMLString parses characters that would break html.
+function sanitizedHTMLString(string) {
+    string = string.replace('"', '&quot;');
+    string = string.replace("'", '&apos;');
+    string = string.replace("&", '&amp;');
+    string = string.replace("<", '&lt;');
+    string = string.replace(">", '&gt;');
+    return string;
+}
+
 // Function for checking if element is empty.
 function isEmpty( el ){
     return !$.trim(el.html())

@@ -328,8 +328,8 @@ function bindServiceClicks() {
                 textInside = textInside.replace(/\)/g, "");
                 textInside = textInside.replace(/_/g, " ");
                 textInside = textInside.replace(/-/g, " ");
-                for (var i = 0; i < serviceNames.length; i++) {
-                    var escapedName = serviceNames[i].toLowerCase();
+                for (var i = 0; i < serviceNamesWithLinks.length; i++) {
+                    var escapedName = serviceNamesWithLinks[i].toLowerCase();
                     escapedName = escapedName.replace(/ä/g, "a");
                     escapedName = escapedName.replace(/ö/g, "o");
                     escapedName = escapedName.replace(/\(/g, "");
@@ -338,7 +338,7 @@ function bindServiceClicks() {
                     escapedName = escapedName.replace(/-/g, " ");
                     if(textInside.indexOf(escapedName) > -1) {
                         var linkToService = reFindLinksExec[0].replace('<p>',
-                            '<a class="service-link-in-modal" data-name="' + serviceNames[i] + '" href="javascript:void(0);">');
+                            '<a class="service-link-in-modal" data-name="' + serviceNamesWithLinks[i] + '" href="javascript:void(0);">');
                         linkToService = linkToService.replace('</p>', '</a>');
                         linksToServices.push({position: reFindLinksExec[0], iframe: linkToService});
                     }
@@ -884,7 +884,7 @@ function asyncFetchLocation() {
             if (email != null && email.length !== 0) {
                 contactsIsEmpty = false;
                 if(!checkIfContactExists(contactlist, email)) {
-                    contactlist.push({name: i18n.get("Generic email"), contact: email});
+                    contactlist.push({name: i18n.get("Generic email"), contact: capitalizeEmail(email)});
                 }
             }
             // Show navigation if content.
@@ -1230,10 +1230,11 @@ function asyncFetchLinks() {
                         if (prettyUrl.substring(prettyUrl.length-1) === "/" || prettyUrl.substring(prettyUrl.length-1) === "#") {
                             prettyUrl = prettyUrl.substring(0, prettyUrl.length-1);
                         }
+                        prettyUrl = capitalize(prettyUrl);
                         // Generate the link
                         prettyUrl = '<a target="_blank" href="' + url + '">' + prettyUrl + '</a>';
                         if(!checkIfContactExists(contactlist, prettyUrl) && !checkIfNameExists(contactlist, element.name)) {
-                            contactlist.unshift({name: element.name,
+                            contactlist.unshift({name: capitalize(sanitizedHTMLString(element.name)),
                                 contact: prettyUrl + description});
                             linkCount = linkCount +1;
                         }
@@ -1313,7 +1314,7 @@ function asyncGenerateStaff() {
                     // Check if name or detail is unique.
                     var contact = "";
                     if(persons[i].email != null) {
-                        contact = contact + persons[i].email;
+                        contact = contact + capitalizeEmail(persons[i].email);
                         if(persons[i].phone != null && persons[i].phone.length !== 0) {
                             contact = contact + "<br>" + persons[i].phone;
                         }
