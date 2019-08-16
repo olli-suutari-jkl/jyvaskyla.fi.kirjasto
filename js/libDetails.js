@@ -366,7 +366,7 @@ function bindServiceClicks() {
         // Bind click event for clicking links to other services inside the modal.
         $(".service-link-in-modal").on('click', function () {
             var currentServiceName = $('#modalTitle').text();
-            adjustParentUrl(currentServiceName, "removeService");
+            adjustParentUrl(currentServiceName, "cleanupUrl");
             var name = $(this).data('name');
             toggleModal();
             setTimeout(function(){
@@ -583,7 +583,7 @@ function asyncFetchServices() {
                         if(!matchingServiceLinkFound) {
                             var index = refUrl.lastIndexOf("?");
                             var serviceToRemove = refUrl.substr(index+1);
-                            adjustParentUrl(serviceToRemove, "removeService");
+                            adjustParentUrl(serviceToRemove, "cleanupUrl");
                         }
                     }
                 }

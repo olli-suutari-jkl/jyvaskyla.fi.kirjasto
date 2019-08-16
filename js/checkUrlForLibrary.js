@@ -17,25 +17,34 @@ function asyncCheckUrlForKeskiLibrary() {
         }
         var matchFound = false;
         var urlUnescapeSpaces = refUrl.replace(/%20/g, " ");
-        urlUnescapeSpaces = refUrl.replace(/-/g, " ");
-        //console.log(urlUnescapeSpaces)
         if(!matchFound) {
             // Loop libraries and check if refUrl contains one of them and click if so.
-            for (var i = 0; i < libraryList.length; i++) {
-                var escapedName = libraryList[i].text.toLowerCase();
-                escapedName = escapedName.replace(/ä/g, "a");
-                escapedName = escapedName.replace(/ö/g, "o");
-                escapedName = escapedName.replace(/\(/g, "");
-                escapedName = escapedName.replace(/\)/g, "");
-                if(urlUnescapeSpaces.indexOf(escapedName) > -1) {
-                    library = libraryList[i].id;
+            for (var i = 0; i < libListMultiLang.length; i++) {
+
+                if(urlUnescapeSpaces.indexOf(libListMultiLang[i].nameFi) > -1
+                || urlUnescapeSpaces.indexOf(libListMultiLang[i].nameEn) > -1) {
+                    library = libListMultiLang[i].id;
                     matchFound = true;
+                    var libName = libListMultiLang[i].nameFi;
+                    if(lang == "en") {
+                        libName = libListMultiLang[i].nameEn;
+                        adjustParentUrl(libListMultiLang[i].nameFi, "cleanupUrl")
+                    }
+                    else {
+                        adjustParentUrl(libListMultiLang[i].nameFi, "cleanupUrl")
+
+                    }
+                    adjustParentUrl(libName);
                 }
-                else if(urlUnescapeSpaces.indexOf(libraryList[i].id) > -1) {
-                    library = libraryList[i].id;
+                else if(urlUnescapeSpaces.indexOf(libListMultiLang[i].id) > -1) {
+                    library = libListMultiLang[i].id;
                     matchFound = true;
-                    refUrl = refUrl.replace(libraryList[i].id, escapedName);
-                    adjustParentUrl(escapedName);
+                    var libName = libListMultiLang[i].nameFi;
+                    if(lang == "en") {
+                        libName = libListMultiLang[i].nameEn;
+                    }
+                    refUrl = refUrl.replace(libListMultiLang[i].id, libName);
+                    adjustParentUrl(libName);
                 }
             }
         }

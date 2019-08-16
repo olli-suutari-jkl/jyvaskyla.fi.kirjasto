@@ -151,7 +151,7 @@ function adjustParentUrl(toAdd, type) {
     }
     // Remove item from url, if it already exists.
     refUrl = refUrl.replace(new RegExp(toAdd,"i"), "");
-    if(type == "removeService") {
+    if(type == "cleanupUrl") {
         toAdd = "";
     }
     // Remove lib name in opposite language, if any are present. If this is not done, it could sometimes result in infinite loop...
