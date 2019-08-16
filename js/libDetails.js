@@ -33,6 +33,7 @@ var persons = null;
 var contactlist = [];
 var numbersList = [];
 var staffList = [];
+var linksIncludeFacebook = false;
 
 /* Functions for checking if name or contact detail exists in arrays with keys "name" and "contact".
    IEC CRASHES: if (contactlist.findIndex(x => x.contact==data.phoneNumbers[i].number) === -1){
@@ -1150,6 +1151,7 @@ function asyncFetchLinks() {
                 if(isIOSMobile) {
                     fbPageNames.push(fbName);
                 }
+                linksIncludeFacebook = true;
             }
             else if (url.indexOf("instagram") !== -1) {
                 igExists = true;
@@ -1494,7 +1496,8 @@ function fetchInformation(language, lib) {
                     if(isScheduleEmpty && !schedulesAreAvailable && noImages && triviaIsEmpty) {
                         noSidebar = true;
                     }
-                    if(noLeftCol) {
+                    // Facebook widget is generated after this check happens. If links include FB, don't hide.
+                    if(noLeftCol && !linksIncludeFacebook) {
                         // Hide the content on left, make the sidebar 100% in width.
                         $(".details").css("display", "none");
                         $("#leftBar").css("display", "none");

@@ -422,6 +422,7 @@ $(document).ready(function() {
                 contactlist = [];
                 numbersList = [];
                 staffList = [];
+                linksIncludeFacebook = false;
                 weekMinReached = false;
                 weekMaxReached = false;
                 fetchInformation(lang, library);
