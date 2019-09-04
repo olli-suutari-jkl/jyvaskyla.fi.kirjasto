@@ -132,9 +132,10 @@ function addItem(item, listElement) {
             celiaDescription = capitalize(addMissingDot(item.shortDescription));
         }
         if(isValue(item.description)) {
-            if(removeHtmlTags(item.description) != celiaDescription)
-            celiaDescription = celiaDescription + " " + capitalize(addMissingDot(item.description));
-            celiaDescription = removeHtmlTags(celiaDescription);
+            if(removeHtmlTags(item.description) != celiaDescription) {
+                celiaDescription = celiaDescription + " " + capitalize(addMissingDot(removeHtmlTags(item.description)));
+            }
+
         }
         if(celiaDescription == "") {
             celiaDescription = i18n.get("Celia info");
