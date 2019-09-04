@@ -413,6 +413,7 @@ function bindServiceClicks() {
     isServiceClickBinded = true;
 }
 
+var accessibilityCount = 0;
 function asyncFetchServices() {
     var servicesDeferred = jQuery.Deferred();
     setTimeout(function() {
@@ -441,8 +442,20 @@ function asyncFetchServices() {
         }
         for (var i = 0; i < arrayOfServices.length; i++) {
             // Collections
-            if (arrayOfServices[i].name != null && arrayOfServices[i].name.length != 0 || arrayOfServices[i].standardName != null) {
-                if (arrayOfServices[i].type == "collection") {
+            if (arrayOfServices[i].name != null && arrayOfServices[i].name.length != 0 ||
+                arrayOfServices[i].standardName != null) {
+                var itemName;
+                if(arrayOfServices[i].name != null) {
+                    itemName = arrayOfServices[i].name;
+                }
+                else {
+                    itemName = arrayOfServices[i].standardName;
+                }
+                if(itemName.toLowerCase().indexOf("celia") !== -1) {
+                    // Accessibility count is increased in the function.
+                    addItem(arrayOfServices[i], 'accessibilityCelia');
+                }
+                else if (arrayOfServices[i].type == "collection") {
                     if (!roomsAndCollectionsAdded) {
                         collectionCount = collectionCount + 1;
                         collections.push(arrayOfServices[i]);
@@ -523,6 +536,17 @@ function asyncFetchServices() {
                 $("#hardwareAndServicesTitle").prepend(i18n.get("Services"));
             }
             $("#hardwareAndServicesBadge").append('(' + serviceCount + ')');
+            noServices = false;
+        }
+        if (accessibilityCount != 0 || !accessibilityIsEmpty) {
+            $("#accessibility").css('display', 'block');
+            $("#accessibilityTitle").prepend(i18n.get("Accessibility"));
+            if(accessibilityCount !== 0) {
+                $("#accessibilityBadge").append('(' + accessibilityCount + ')');
+                setTimeout(function(){
+                    $('[data-toggle="accessibility-tooltip"]').tooltip();
+                }, 150);
+            }
             noServices = false;
         }
         // Add event listener for clicking links.

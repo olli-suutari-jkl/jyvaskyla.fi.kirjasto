@@ -55,6 +55,19 @@ function capitalizeEmail(string) {
     string = string + stringSplitted[1];
     return string;
 }
+// Function for adding "." to a string if the last character is not "?", "." or "!".
+function addMissingDot(string) {
+    var lastChar = string[string.length -1];
+    // Remove any potential " " chars from the end of the string.
+    while (lastChar == " ") {
+        string = string.slice(0, -1);
+        lastChar = string[string.length -1];
+    }
+    if(lastChar != "." && lastChar != "!" && lastChar != "?") {
+        string = string + ".";
+    }
+    return string;
+}
 
 // sanitizedHTMLString parses characters that would break html.
 function sanitizedHTMLString(string) {

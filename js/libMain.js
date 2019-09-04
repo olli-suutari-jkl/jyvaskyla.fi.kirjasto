@@ -59,8 +59,11 @@ function exitHandler() {
 function generateAccessibilityImg(translationName, iconPath) {
     translationName = i18n.get(translationName);
     iconPath = "../images/accessibility/" + iconPath;
-    $(".accessibility-images").append(' <img alt="' + translationName + '" ' +
-        'src="' + iconPath + '" data-placement="bottom" title="' + translationName + '" data-toggle="accessibility-tooltip"  /> ');
+    // Celia block should be generated 1st.
+    setTimeout(function(){
+        $(".accessibility-images").append(' <img alt="' + translationName + '" ' +
+            'src="' + iconPath + '" data-placement="bottom" title="' + translationName + '" data-toggle="accessibility-tooltip"  /> ');
+    }, 200);
 }
 
 function generateAccessibilityTextBlock(serviceName) {
@@ -69,7 +72,7 @@ function generateAccessibilityTextBlock(serviceName) {
     // Use timeout so actual icons are rendered first.
     setTimeout(function(){
         $(".accessibility-images").append(blockItem);
-    }, 100);
+    }, 300);
 }
 
 function generateWebropolSurveyFrames(description) {
@@ -106,9 +109,14 @@ function generateWebropolSurveyFrames(description) {
     return description;
 }
 
+function removeHtmlTags(string) {
+    string = string.replace(/<p>/g, "");
+    string = string.replace(/<\/p>/g, "");
+    return string;
+}
+
 // Function for adding a new palvelut item.
 // Define accessibility count here, define other counts later on.
-var accessibilityCount = 0;
 var accessibilityIsEmpty = true;
 var serviceNamesWithLinks = [];
 function addItem(item, listElement) {
@@ -116,6 +124,25 @@ function addItem(item, listElement) {
     // Use "Custom name", where available.
     if (item.name != null && item.name.length != 0) {
         name = item.name;
+    }
+    var celiaForAccessibility = "";
+    if(listElement == "accessibilityCelia") {
+        var celiaDescription = "";
+        if(isValue(item.shortDescription)) {
+            celiaDescription = capitalize(addMissingDot(item.shortDescription));
+        }
+        if(isValue(item.description)) {
+            if(removeHtmlTags(item.description) != celiaDescription)
+            celiaDescription = celiaDescription + " " + capitalize(addMissingDot(item.description));
+            celiaDescription = removeHtmlTags(celiaDescription);
+        }
+        if(celiaDescription == "") {
+            celiaDescription = i18n.get("Celia info");
+        }
+        var blockItem = '<img  class="celia-services" src="../images/accessibility/Celia.png" alt="Celia-logo" data-placement="bottom" title="' + celiaDescription + '" data-toggle="accessibility-tooltip">';
+        $(".accessibility-images").append(blockItem);
+        accessibilityCount = accessibilityCount + 1;
+        noServices = false;
     }
     if(listElement === "#accessibilityItems" && accessibilityIsEmpty) {
         // List of values separated by "," in the short description.
@@ -164,15 +191,6 @@ function addItem(item, listElement) {
                 $("#accessibilityDetails").append(item.description.replace(/(<a )+/g, '<a target="_blank" '));
             }
         }
-        if (accessibilityCount != 0 || !accessibilityIsEmpty) {
-            $("#accessibility").css('display', 'block');
-            $("#accessibilityTitle").prepend(i18n.get("Accessibility"));
-            if(accessibilityCount !== 0) {
-                $("#accessibilityBadge").append('(' + accessibilityCount + ')');
-                $('[data-toggle="accessibility-tooltip"]').tooltip();
-            }
-            noServices = false;
-        }
     }
     else {
         // Add popup link if additional details are available.
@@ -183,11 +201,7 @@ function addItem(item, listElement) {
             var description = "";
             if (item.shortDescription != null && item.shortDescription.length != 0 &&
                 !strippedValueEquals(item.shortDescription, item.name)) {
-                var shortDescription = item.shortDescription;
-                var lastChar = shortDescription[shortDescription.length -1];
-                if(lastChar != "." && lastChar != "!" && lastChar != "?") {
-                    shortDescription = shortDescription + ".";
-                }
+                var shortDescription = capitalize(addMissingDot(item.shortDescription));
                 description = '<p>' + shortDescription + '</p>';
             }
             // Add "long" description where available && not equal to the short one.
