@@ -545,7 +545,7 @@ function asyncFetchServices() {
                 $("#accessibilityBadge").append('(' + accessibilityCount + ')');
                 setTimeout(function(){
                     $('[data-toggle="accessibility-tooltip"]').tooltip();
-                }, 150);
+                }, 500);
             }
             noServices = false;
         }
