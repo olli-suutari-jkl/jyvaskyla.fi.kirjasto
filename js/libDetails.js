@@ -617,6 +617,9 @@ function asyncFetchServices() {
             for (var i = 0; i < arrayOfServiceNames.length; i++) {
                 // Service names may contain "-" eg. Celia-library services
                 var oppositeName = encodeVal(arrayOfServiceNamesInOppositeLang[i].name);
+                if(arrayOfServiceNamesInOppositeLang[i].customName !== "") {
+                    oppositeName = encodeVal(arrayOfServiceNamesInOppositeLang[i].customName);
+                }
                 oppositeName = oppositeName.replace(/-/g, " ");
                 oppositeName = oppositeName.replace(/,/g, "");
                 if(urlUnescapeSpaces.indexOf(oppositeName) > -1) {
