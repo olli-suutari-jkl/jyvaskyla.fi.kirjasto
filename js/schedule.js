@@ -422,6 +422,12 @@ function getWeekSchelude(direction, lib) {
                 document.title = data.name;
             }
         }
+        if(bodyWidth < 768 && !mobileSchedulesMoved && $("#blockquote").length) {
+            mobileSchedulesMoved = true;
+            scheduleClone = $("#schedules").clone();
+            $("#schedules").html('');
+            $("#blockquote").after(scheduleClone);
+        }
         // Large schedules are used in iDiD info screens.
         if(largeSchedules) {
             $(".library-schedules").removeClass('col-lg-4 col-xl-3 schedules-widget xxl-font xl-font m-font');

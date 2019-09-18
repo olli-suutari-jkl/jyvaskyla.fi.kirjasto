@@ -32,9 +32,9 @@
 
 @media screen and (max-width: 499px) {
     .normal-schedules {
-        margin-left: calc(50% - 48.33vw);
-        margin-right: calc(50% - 50vw);
-        width: 100vmin;
+        margin-left: calc(50% - 52vw);
+        margin-right: calc(50% - 48.33vw);
+        width: 98vmin;
         align-content: center;
     }
 

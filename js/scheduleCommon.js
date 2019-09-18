@@ -2,6 +2,7 @@
 var isLibaryList = false;
 // isScheduleEmpty is is used for displaying error message if no description or schedules is found.
 var isScheduleEmpty = false;
+var mobileSchedulesMoved = false;
 moment.locale(lang);
 var HHmmFormat = 'HH:mm';
 // Check that generic and special descriptions are not the same.

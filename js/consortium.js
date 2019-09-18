@@ -425,6 +425,7 @@ $(document).ready(function() {
                 linksIncludeFacebook = false;
                 weekMinReached = false;
                 weekMaxReached = false;
+                mobileSchedulesMoved = false;
                 fetchInformation(lang, library);
                 // Re-bind navigation and other stuff.
                 bindActions();

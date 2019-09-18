@@ -1526,10 +1526,19 @@ function fetchInformation(language, lib) {
                     // Facebook widget is generated after this check happens. If links include FB, don't hide.
                     if(noLeftCol && !linksIncludeFacebook) {
                         // Hide the content on left, make the sidebar 100% in width.
+                        if(bodyWidth < 767) {
+                            if(isScheduleEmpty) {
+                                $("#leftBar").css("display", "none");
+                                $("#introductionSidebar").removeClass("col-lg-5 col-xl-4 order-2 sidebar");
+                                $("#introductionSidebar").addClass("col-md-12");
+                            }
+                        }
+                        else {
+                            $("#leftBar").css("display", "none");
+                            $("#introductionSidebar").removeClass("col-lg-5 col-xl-4 order-2 sidebar");
+                            $("#introductionSidebar").addClass("col-md-12");
+                        }
                         $(".details").css("display", "none");
-                        $("#leftBar").css("display", "none");
-                        $("#introductionSidebar").removeClass("col-lg-5 col-xl-4 order-2 sidebar");
-                        $("#introductionSidebar").addClass("col-md-12");
                         $("#sliderBox").removeClass("small-slider");
                         $("#expandSlider").css("display", "none");
                         $('.slider-play-container').css('margin-left', '-10px');

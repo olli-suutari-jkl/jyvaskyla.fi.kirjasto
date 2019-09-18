@@ -1,6 +1,7 @@
 var isIOS = false;
 var isIOSMobile = false;
 var isIE = false;
+var bodyWidth = 0;
 
 // Remove httml & www from url and / # from the end.
 function generatePrettyUrl (url) {
@@ -319,6 +320,7 @@ $(document).ready(function() {
     if(homePage || largeSchedules) {
         return;
     }
+    bodyWidth = $('body').width();
     // Add event listener for resizing the window, adjust parent when done so.
     // https://stackoverflow.com/questions/5489946/jquery-how-to-wait-for-the-end-of-resize-event-and-only-then-perform-an-ac
     var rtime;
