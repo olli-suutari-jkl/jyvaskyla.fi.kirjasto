@@ -427,6 +427,8 @@ function getWeekSchelude(direction, lib) {
             scheduleClone = $("#schedules").clone();
             $("#schedules").html('');
             $("#blockquote").after(scheduleClone);
+            bindScheduleKeyNavigation();
+            detectswipe("schedules", swipeNavigation);
         }
         // Large schedules are used in iDiD info screens.
         if(largeSchedules) {
