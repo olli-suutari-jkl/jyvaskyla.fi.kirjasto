@@ -738,7 +738,9 @@ function asyncGenerateTrivia() {
     setTimeout(function() {
         if (isEmpty($('#buildingDetails')) && !isReFetching) {
             // If display none by default, colspan gets messed up.
-            $('#triviaTitle').append( i18n.get("Trivia"));
+            if($('#triviaTitle').text().length === 0) {
+                $('#triviaTitle').append( i18n.get("Trivia"));
+            }
             if(buildingInfo == null && founded == null) {
                 triviaIsEmpty = true;
                 $(".trivia-section").css("display", "block");
