@@ -125,7 +125,6 @@ function addItem(item, listElement) {
     if (item.name != null && item.name.length != 0) {
         name = item.name;
     }
-    var celiaForAccessibility = "";
     if(listElement == "accessibilityCelia") {
         var celiaDescription = "";
         if(isValue(item.shortDescription)) {
@@ -135,15 +134,40 @@ function addItem(item, listElement) {
             if(removeHtmlTags(item.description) != celiaDescription) {
                 celiaDescription = celiaDescription + " " + capitalize(addMissingDot(removeHtmlTags(item.description)));
             }
-
+        }
+        var standardName = item.standardName;
+        if(standardName.toLowerCase().indexOf("registeration") > -1 ||
+            standardName.toLowerCase().indexOf("rekisteröityminen") > -1 ) {
+            if(isValue(celiaDescription)) {
+                celiaDescription = standardName + ": " + celiaDescription;
+            }
         }
         if(celiaDescription == "") {
             celiaDescription = i18n.get("Celia info");
         }
-        var blockItem = '<img  class="celia-services" src="../images/accessibility/Celia.png" alt="Celia-logo" data-placement="bottom" title="' + celiaDescription + '" data-toggle="accessibility-tooltip">';
-        $(".accessibility-images").append(blockItem);
-        accessibilityCount = accessibilityCount + 1;
-        noServices = false;
+        celiaDescription = "<p>" + celiaDescription + '</p>';
+        if(isValue(item.website)) {
+            var prettyLink = generatePrettyUrl (item.website);
+            celiaDescription = celiaDescription + "<p class='service-info service-website' " +
+                " aria-label='" + i18n.get("Website") + "'>" +
+                "<i aria-hidden='true' class='fas fa-globe'></i><span class='sr-only'>" + i18n.get('Website') +
+                ":</span> <a target='_blank' href='" + item.website + "'>" +
+                capitalize(prettyLink) + "</a></p>";
+        }
+        if($(".celia-services").length) {
+            var newDescription = celiaDescription + $(".celia-services").prop('title');
+            if(standardName.toLowerCase().indexOf("registration") > -1 ||
+                standardName.toLowerCase().indexOf("rekisteröityminen") > -1 ) {
+                newDescription = $(".celia-services").prop('title') + celiaDescription
+            }
+            $(".celia-services").prop('title', newDescription);
+        }
+        else {
+            var blockItem = '<img  class="celia-services" src="../images/accessibility/Celia.png" alt="Celia-logo" data-placement="bottom" title="' + celiaDescription + '" data-toggle="accessibility-tooltip">';
+            $(".accessibility-images").append(blockItem);
+            accessibilityCount = accessibilityCount + 1;
+            noServices = false;
+        }
     }
     if(listElement === "#accessibilityItems" && accessibilityIsEmpty) {
         // List of values separated by "," in the short description.
@@ -224,7 +248,7 @@ function addItem(item, listElement) {
             // Website
             if(isValue(item.website)) {
                 var prettyLink = generatePrettyUrl (item.website);
-                description = description + '<p class="service-info service-website" aria-label="' + i18n.get("Price") +
+                description = description + '<p class="service-info service-website" aria-label="' + i18n.get("Website") +
                     '"><i class="fas fa-globe" data-toggle="tooltip" title="' + i18n.get("Website") + '" ' +
                     'data-placement="top"></i><a target="_blank" href="' + item.website + '">' +
                     capitalize(prettyLink) + '</a></p>';
