@@ -163,7 +163,7 @@ function addItem(item, listElement) {
             $(".celia-services").prop('title', newDescription);
         }
         else {
-            var blockItem = '<img  class="celia-services" src="../images/accessibility/Celia.png" alt="Celia-logo" data-placement="bottom" title="' + celiaDescription + '" data-toggle="accessibility-tooltip">';
+            var blockItem = '<img  class="celia-services" src="../images/accessibility/Celia.png" alt="Celia-logo" data-placement="bottom" title="' + i18n.get("Celia title") + '" data-content="' + celiaDescription + '" data-toggle="accessibility-tooltip">';
             $(".accessibility-images").append(blockItem);
             accessibilityCount = accessibilityCount + 1;
             noServices = false;

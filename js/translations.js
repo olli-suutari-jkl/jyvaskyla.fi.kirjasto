@@ -39,6 +39,10 @@ var dict = {
         fi: "Lisätietoja saavutettavuudesta",
         en: "Additional accessibility information",
     },
+    "Celia title": {
+        fi: "Celia-kirjaston palvelut",
+        en: "Celia-library services",
+    },
     "Celia info": {
         fi: "Celia tuottaa ja välittää kirjallisuutta lukemisesteisille saavutettavassa muodossa, mm. äänikirjoina ja pistekirjoina. Kirjastossa voit rekisteröityä Celian verkkopalvelun asiakkaaksi, lisätietoja tarjolla olevista palveluista saat ottamalla yhteyttä kirjastoon.",
         en: "Celia produces and distributes literature in accessible formats, such as talking books and braille books. Registration for the Celia services is available here, for further details of available services, please contact the library.",
