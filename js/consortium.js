@@ -276,7 +276,6 @@ $(document).ready(function() {
         }
         catch (e) {
             alert(e);
-
         }
     }
     // Fetch libraries of city

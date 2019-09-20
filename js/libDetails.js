@@ -104,6 +104,12 @@ function asyncFetchV4Data() {
                 arrayOfServiceNames.push({name: name, customName: customName});
             }
             genericDeferred.resolve();
+        }).catch(function (jqXHR, textStatus, errorThrown) {
+            console.log("Error in fetching library data.")
+            console.error(jqXHR);
+            console.error(textStatus);
+            console.error(errorThrown);
+            genericDeferred.resolve();
         });
     }, 1 );
     // Return the Promise so caller can't change the Deferred
@@ -732,6 +738,11 @@ function generateImages(data) {
                             'data-toggle="navigation-tooltip" class="ig-love-btn ig-love-btn-counter no-external-icon" '
                             + igHref + '><span>&#x2764;</span><span>' + igImages[i].likes + '</span></a>';
                         var igCaption = '<figcaption class="ig-caption">' + igImages[i].caption + '</figcaption>';
+                        /*
+                        if(igImages[i].url.indexOf(".mp4") <1) {
+                            console.log(igImages[i].url)
+                        }*/
+
                         var igContainer = '<div class="ig-likes-logo-container">' + igHeart + igLogo + '</div>';
                             $(".rslides").append('<li class="ig-img-container">' + igContainer  +
                                 '<figure><img class="ig-img" src="' + igImages[i].url + '">' + igCaption + '</figure></li>');
@@ -1108,6 +1119,9 @@ function generateFbWidgets() {
             $('.news-description').addClass(bsCols);
             if(leftBarWidth > 632) {
                 descriptionHeight = Math.round($('.news-description').height() -50);
+                if(descriptionHeight > 1500) {
+                    descriptionHeight = 1500;
+                }
             }
         }
         else {
@@ -1153,9 +1167,9 @@ function generateFbWidgets() {
     // Load the fb script if not already loaded.
     if(!fbScriptLoaded) {
         fbScriptLoaded = true;
-        var fbScript = "https://connect.facebook.net/fi_FI/sdk.js#xfbml=1&version=v3.3";
+        var fbScript = "https://connect.facebook.net/fi_FI/sdk.js#xfbml=1&version=v4.0";
         if(lang != "fi") {
-            fbScript = "https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.3"
+            fbScript = "https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v4.0"
         }
         var script = document.createElement('script');
         /*script.onload = function () {
@@ -1169,7 +1183,7 @@ function generateFbWidgets() {
         FB.init({
             status: true,
             xfbml: true,
-            version: 'v3.3'
+            version: 'v4.0'
         });
     }
     fbWidgetSetUp = true;
@@ -1284,7 +1298,43 @@ function asyncFetchLinks() {
                         igImages.push({url: url, shortcode: shortcode, likes: likes, caption: caption});
                     }
                     linksDeferred.resolve();
-                    });
+                }).catch(function (jqXHR, textStatus, errorThrown) {
+                    console.log("Error in fetching Instagram photos.");
+                    console.error(jqXHR);
+                    console.error(textStatus);
+                    console.error(errorThrown);
+                    linksDeferred.resolve();
+                });
+                        /*
+                        if (images[i].node.__typename == "GraphVideo") {
+
+                            $.getJSON('https://www.instagram.com/p/' + images[i].node.shortcode + '/?__a=1', function (result) {
+
+                                var videoData = result.graphql.shortcode_media;
+                                console.log(videoData)
+
+                                console.log(videoData.display_url)
+                                var displayResources = videoData.display_resources;
+
+                                var videoH = videoData.dimensions.height;
+                                var videoW = videoData.dimensions.width;
+                                var videoSrc = videoData.video_url;
+                                igImages.push({
+                                    url: videoSrc,
+                                    shortcode: shortcode,
+                                    likes: likes,
+                                    caption: caption
+                                });
+                                console.log(igImages)
+                                imagesAddedCount = imagesAddedCount + 1;
+                                console.log(imagesAddedCount)
+
+                                if (imagesAddedCount == 10 || imagesAddedCount == images.length) {
+                                    console.log("HEY RESOLVE VID")
+                                    linksDeferred.resolve();
+                                }
+                            });
+                        } else {*/
                 }
                 else {
                     // Add the link to the contact details listing
