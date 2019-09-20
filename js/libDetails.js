@@ -118,13 +118,15 @@ function asyncFetchServiceNamesInOppositeLang() {
     }
     setTimeout(function() {
         // Disable caching: https://stackoverflow.com/questions/13391563/how-to-set-cache-false-for-getjson-in-jquery
-        $.getJSON("https://api.kirjastot.fi/v4/library/" + library + "?lang=" + oppositeLang + "&with=services", {_: new Date().getTime()}, function (data) {
-            var data = data.data.services;
-            for (var i = 0; i < data.length; i++) {
-                var name = data[i].standardName.toLowerCase();
+        $.getJSON("https://api.kirjastot.fi/v4/library/" + library + "?lang=" + oppositeLang + "&with=services,departments",
+            {_: new Date().getTime()}, function (data) {
+            var services = data.data.services;
+            var departments = data.data.departments;
+            for (var i = 0; i < services.length; i++) {
+                var name = services[i].standardName.toLowerCase();
                 var customName = "";
-                if(data[i].name !== null) {
-                    customName = data[i].name.toLowerCase();
+                if(services[i].name !== null) {
+                    customName = services[i].name.toLowerCase();
                     customName = customName.replace(/,/g, "");
                     customName = customName.replace(/ä/g, "a");
                     customName = customName.replace(/ö/g, "o");
@@ -134,6 +136,19 @@ function asyncFetchServiceNamesInOppositeLang() {
                     customName = customName.replace(/-/g, " ");
                 }
                 arrayOfServiceNamesInOppositeLang.push({name: name, customName: customName});
+            }
+            for (var i = 0; i < departments.length; i++) {
+                var name = departments[i].name.toLowerCase();
+                if(departments[i].name !== null) {
+                    name = name.replace(/,/g, "");
+                    name = name.replace(/ä/g, "a");
+                    name = name.replace(/ö/g, "o");
+                    name = name.replace(/\(/g, "");
+                    name = name.replace(/\)/g, "");
+                    name = name.replace(/_/g, " ");
+                    name = name.replace(/-/g, " ");
+                }
+                arrayOfServiceNamesInOppositeLang.push({name: name, customName: name});
             }
             serviceNamesDeferred.resolve();
         });
@@ -242,7 +257,7 @@ function hideModal() {
     isInfoBoxVisible = false;
     $('#myModal').modal('hide');
     adjustParentHeight(50);
-    adjustParentUrl('', 'service');
+    adjustParentUrl('', 'cleanupUrl');
 }
 
 var openOnLoad = false;
@@ -284,7 +299,7 @@ function toggleModal(elementPosY) {
                             // calling hideModal here would result in a loop.
                             isInfoBoxVisible = false;
                             adjustParentHeight(50);
-                            adjustParentUrl('', 'service');
+                            adjustParentUrl('', 'cleanupUrl');
                         });
                         isModalCloseBinded = true;
                     }
@@ -681,6 +696,7 @@ function asyncFetchDepartments() {
             for (var i = 0; i < departments.length; i++) {
                 // Collections
                 roomCount = roomCount +1;
+                arrayOfServiceNames.push({name: departments[i].name, customName: departments[i].name});
                 addItem(departments[i], '#roomsAndCollectionsItems');
             }
             departmentsDeferred.resolve();
