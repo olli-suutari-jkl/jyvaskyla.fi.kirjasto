@@ -68,7 +68,7 @@ var length = 1;
             setTimeout(function() {
               console.log("Failed to set video length, retry...");
               $(vidEnd).text('');
-              setVideoLength(vidEnd)
+              setVideoLength($('.rslides1_on .video-end')[0]);
             }, 1000 );
           }
           else {

@@ -1331,7 +1331,6 @@ function asyncFetchLinks() {
                                 var videoSrc = videoData.video_url;
                                 var poster = videoData.thumbnail_src;
                                 timeStamp = new Date(videoData.taken_at_timestamp*1000);
-                                console.log(videoData)
                                 likes = videoData.edge_media_preview_like.count;
                                 igImages.push({
                                     url: videoSrc,
