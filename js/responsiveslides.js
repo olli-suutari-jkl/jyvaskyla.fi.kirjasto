@@ -433,7 +433,13 @@ var length = 1;
         if (secs < 10) {
           secs = '0' + String(secs);
         }
-        $(timeStamp).text(mins + ':' + secs);
+        if (secs === NaN || mins === NaN) {
+          $(timeStamp).text('00:00');
+          return
+        }
+        else {
+          $(timeStamp).text(mins + ':' + secs);
+        }
         if(vid.duration === vid.currentTime) {
           var playBtn = $('.rslides1_on .play-stop-icon')[0];
           $(playBtn).addClass('fa-redo-alt');
