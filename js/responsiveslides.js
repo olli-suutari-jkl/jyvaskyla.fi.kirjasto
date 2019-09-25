@@ -43,6 +43,7 @@ var length = 1;
         startCycle,
         stopAuto,
         startAuto,
+        setVideoLength,
         // Helpers
         $slide = $this.children(),
         fadeTime = parseFloat(settings.speed),
@@ -56,6 +57,24 @@ var length = 1;
         // Styles for visible and hidden slides
         visible = {'float': 'left', 'position': 'relative', 'opacity': 1, 'zIndex': 2},
         hidden = {'float': 'none', 'position': 'absolute', 'opacity': 0, 'zIndex': 1},
+        setVideoLength = function (vidEnd) {
+          var vid = $('.rslides1_on video')[0];
+          var mins = Math.floor(vid.duration / 60);
+          var secs = Math.floor(vid.duration % 60);
+          if (secs < 10) {
+            secs = '0' + String(secs);
+          }
+          if(isNaN(secs) || isNaN(mins)) {
+            setTimeout(function() {
+              console.log("Failed to set video length, retry...");
+              $(vidEnd).text('');
+              setVideoLength(vidEnd)
+            }, 1000 );
+          }
+          else {
+            $(vidEnd).text(mins + ':' + secs);
+          }
+        };
         slideToHelper = function(idx) {
           $slide
               .removeClass(visibleClass)
@@ -67,13 +86,7 @@ var length = 1;
           // Set video total time if video. This works unless the video is 1st slide of the show.
           var videoEnd = $('.rslides1_on .video-end')[0];
           if(videoEnd !== undefined) {
-            var vid = $('.rslides1_on video')[0];
-            var mins = Math.floor(vid.duration / 60);
-            var secs = Math.floor(vid.duration % 60);
-            if (secs < 10) {
-              secs = '0' + String(secs);
-            }
-            $(videoEnd).text(mins + ':' + secs);
+            setVideoLength(videoEnd);
           }
           setTimeout(function () {
             settings.after(idx);
@@ -452,13 +465,7 @@ var length = 1;
       // Set video total time if the first slide is a video.
       var videoEnd = $('.rslides1_on .video-end')[0];
       if(videoEnd !== undefined) {
-        var vid = $('.rslides1_on video')[0];
-        var mins = Math.floor(vid.duration / 60);
-        var secs = Math.floor(vid.duration % 60);
-        if (secs < 10) {
-          secs = '0' + String(secs);
-        }
-        $(videoEnd).text(mins + ':' + secs);
+        setVideoLength(videoEnd);
       }
 
     });
