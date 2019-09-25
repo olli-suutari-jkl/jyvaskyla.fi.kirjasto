@@ -748,7 +748,7 @@ function generateImages(data) {
                             sliderHasIGVideo = true;
                             vidItem = '<div class="video-container"> ' +
                                 '<div class="video-frame">' +
-                                    '<video id="sliderVid' + i + '" class="ig-img ig-vid stopped">' +
+                                    '<video id="sliderVid' + i + '" class="ig-img ig-vid stopped" poster="' + igImages[i].poster + '">' +
                                     '<source src="' + igImages[i].url + '" type="video/mp4">' +
                                     '<source src="' + igImages[i].url + '" type="video/webm">' +
                                     'Selaimesi ei tue videoita. | Your browser does not support video.' +
@@ -1329,10 +1329,13 @@ function asyncFetchLinks() {
                             $.getJSON('https://www.instagram.com/p/' + images[i].node.shortcode + '/?__a=1', function (result) {
                                 var videoData = result.graphql.shortcode_media;
                                 var videoSrc = videoData.video_url;
+                                var poster = videoData.thumbnail_src;
                                 timeStamp = new Date(videoData.taken_at_timestamp*1000);
+                                console.log(videoData)
                                 likes = videoData.edge_media_preview_like.count;
                                 igImages.push({
                                     url: videoSrc,
+                                    poster: poster,
                                     shortcode: shortcode,
                                     likes: likes,
                                     caption: caption,
