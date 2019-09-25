@@ -412,6 +412,10 @@ var length = 1;
           secs = '0' + String(secs);
         }
         var timeStamp = $('.rslides1_on .video-timestamp')[0];
+        if (secs === NaN || mins === NaN) {
+          $(timeStamp).text('00:00');
+          return
+        }
         $(timeStamp).text(mins + ':' + secs);
       });
 
