@@ -1328,10 +1328,9 @@ function asyncFetchLinks() {
                             isFetchingIGVideo = true;
                             $.getJSON('https://www.instagram.com/p/' + images[i].node.shortcode + '/?__a=1', function (result) {
                                 var videoData = result.graphql.shortcode_media;
-                                var videoH = videoData.dimensions.height;
-                                var videoW = videoData.dimensions.width;
                                 var videoSrc = videoData.video_url;
                                 timeStamp = new Date(videoData.taken_at_timestamp*1000);
+                                likes = videoData.edge_media_preview_like.count;
                                 igImages.push({
                                     url: videoSrc,
                                     shortcode: shortcode,
