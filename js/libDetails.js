@@ -725,6 +725,10 @@ function generateImages(data) {
             counter = counter +1;
             if(counter === data.length) {
                 if(igImages.length !== 0) {
+                    // Sort by date.
+                    igImages.sort(function(a,b){
+                        return new Date(b.timeStamp) - new Date(a.timeStamp);
+                    });
                     for (var i = 0; i < igImages.length; i++) {
                         var igHref = 'target="_blank" href="https://www.instagram.com/p/' + igImages[i].shortcode + '/"';
                         var igLogo = '<a title="' + i18n.get("Open in instagram") + '" data-placement="bottom" ' +
@@ -738,14 +742,35 @@ function generateImages(data) {
                             'data-toggle="navigation-tooltip" class="ig-love-btn ig-love-btn-counter no-external-icon" '
                             + igHref + '><span>&#x2764;</span><span>' + igImages[i].likes + '</span></a>';
                         var igCaption = '<figcaption class="ig-caption">' + igImages[i].caption + '</figcaption>';
-                        /*
-                        if(igImages[i].url.indexOf(".mp4") <1) {
-                            console.log(igImages[i].url)
-                        }*/
-
+                        var imgItem = "";
+                        var vidItem = "";
+                        if(igImages[i].type == "video") {
+                            sliderHasIGVideo = true;
+                            vidItem = '<div class="video-container"> ' +
+                                '<div class="video-frame">' +
+                                    '<video id="sliderVid' + i + '" class="ig-img ig-vid stopped">' +
+                                    '<source src="' + igImages[i].url + '" type="video/mp4">' +
+                                    '<source src="' + igImages[i].url + '" type="video/webm">' +
+                                    'Selaimesi ei tue videoita. | Your browser does not support video.' +
+                                    '</video>' +
+                                    '<div class="video-controls">' +
+                                        '<button type="button" class="play-pause" id="playPause">' +
+                                        '<i class="play-stop-icon fas fa-play-circle"></i></button>'+
+                                        '<input type="range" class="seek-bar" id="seekBar" value="0">'+
+                                        '<div class="video-time-display"><span class="video-timestamp">0:00</span>' +
+                                        '<span class="video-end">0:00</span></div>' +
+                                        '<button type="button" class="mute" id="mute">' +
+                                        '<i class="play-mute-icon fas fa-volume-up"></i></button>'+
+                                        '<input type="range" class="volume-bar" id="volumeBar' + [i] + '" min="0" max="1" step="0.1" value="1">'+
+                                    '</div>' +
+                                '</div>';
+                        }
+                        else {
+                            imgItem = '<img class="ig-img" src="' + igImages[i].url + '">';
+                        }
                         var igContainer = '<div class="ig-likes-logo-container">' + igHeart + igLogo + '</div>';
-                            $(".rslides").append('<li class="ig-img-container">' + igContainer  +
-                                '<figure><img class="ig-img" src="' + igImages[i].url + '">' + igCaption + '</figure></li>');
+                        $(".rslides").append('<li class="ig-img-container">' + igContainer  +
+                            '<figure>' + imgItem + vidItem + igCaption + '</figure></li>');
                         counter = counter +1;
                     }
                     imageListDeferred.resolve();
@@ -1241,18 +1266,21 @@ function asyncFetchLinks() {
                 }
                 var index = igName.lastIndexOf("/");
                 var igName = igName.substr(index+1);
+                var imagesAddedCount = 0;
+                var isFetchingIGVideo = false;
                 // Fetch ig images (+ captions & likes) via the IG api.
                 $.getJSON('https://www.instagram.com/' + igName + '/?__a=1', function (data) {
                     var images = data.graphql.user.edge_owner_to_timeline_media.edges;
-                    for (var i=0; i<images.length; i++) {
-                        // Limit to 10 latest images.
-                        if(i===10) {
-                            linksDeferred.resolve();
-                            return;
+                    for (var i=0; i<images.length; i++ && i) {
+                        if(i > 9) {
+                            return
                         }
                         var url = images[i].node.display_url;
                         var shortcode = images[i].node.shortcode;
                         var likes = images[i].node.edge_liked_by.count;
+                        // https://stackoverflow.com/questions/20943089/how-to-convert-unix-timestamp-to-calendar-date-moment-js
+                        // UNIX timestamp it is count of seconds from 1970, so you need to convert it to JS Date object:
+                        var timeStamp = new Date(images[i].node.taken_at_timestamp*1000);
                         var caption = "";
                         if(images[i].node.edge_media_to_caption.edges[0] !== undefined) {
                             caption = images[i].node.edge_media_to_caption.edges[0].node.text;
@@ -1295,9 +1323,42 @@ function asyncFetchLinks() {
                         }
                         caption = caption.replace(/%%%/g,'#');
                         caption = caption.replace(/<<><<>/g,'@');
-                        igImages.push({url: url, shortcode: shortcode, likes: likes, caption: caption});
+
+                        if (images[i].node.__typename == "GraphVideo") {
+                            isFetchingIGVideo = true;
+                            $.getJSON('https://www.instagram.com/p/' + images[i].node.shortcode + '/?__a=1', function (result) {
+                                var videoData = result.graphql.shortcode_media;
+                                var videoH = videoData.dimensions.height;
+                                var videoW = videoData.dimensions.width;
+                                var videoSrc = videoData.video_url;
+                                timeStamp = new Date(videoData.taken_at_timestamp*1000);
+                                igImages.push({
+                                    url: videoSrc,
+                                    shortcode: shortcode,
+                                    likes: likes,
+                                    caption: caption,
+                                    type: "video",
+                                    timeStamp: timeStamp
+                                });
+                                imagesAddedCount = imagesAddedCount + 1;
+                                isFetchingIGVideo = false;
+                                if (imagesAddedCount == 10 || imagesAddedCount == images.length) {
+                                    linksDeferred.resolve();
+                                }
+                            });
+                        }
+                        else {
+                            igImages.push({url: url, shortcode: shortcode, likes: likes,
+                                caption: caption, type: "image", timeStamp: timeStamp
+                            });
+                            imagesAddedCount = imagesAddedCount + 1;
+                            if (imagesAddedCount == 10 || imagesAddedCount == images.length) {
+                                if(!isFetchingIGVideo) {
+                                    linksDeferred.resolve();
+                                }
+                            }
+                        }
                     }
-                    linksDeferred.resolve();
                 }).catch(function (jqXHR, textStatus, errorThrown) {
                     console.log("Error in fetching Instagram photos.");
                     console.error(jqXHR);
@@ -1305,36 +1366,6 @@ function asyncFetchLinks() {
                     console.error(errorThrown);
                     linksDeferred.resolve();
                 });
-                        /*
-                        if (images[i].node.__typename == "GraphVideo") {
-
-                            $.getJSON('https://www.instagram.com/p/' + images[i].node.shortcode + '/?__a=1', function (result) {
-
-                                var videoData = result.graphql.shortcode_media;
-                                console.log(videoData)
-
-                                console.log(videoData.display_url)
-                                var displayResources = videoData.display_resources;
-
-                                var videoH = videoData.dimensions.height;
-                                var videoW = videoData.dimensions.width;
-                                var videoSrc = videoData.video_url;
-                                igImages.push({
-                                    url: videoSrc,
-                                    shortcode: shortcode,
-                                    likes: likes,
-                                    caption: caption
-                                });
-                                console.log(igImages)
-                                imagesAddedCount = imagesAddedCount + 1;
-                                console.log(imagesAddedCount)
-
-                                if (imagesAddedCount == 10 || imagesAddedCount == images.length) {
-                                    console.log("HEY RESOLVE VID")
-                                    linksDeferred.resolve();
-                                }
-                            });
-                        } else {*/
                 }
                 else {
                     // Add the link to the contact details listing

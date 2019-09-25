@@ -120,20 +120,20 @@ var dict = {
         en: "Self-service",
     },
     "Previous slide": {
-        fi: "Siirry edelliseen kuvaan.",
-        en: "Slide to the previous picture.",
+        fi: "Siirry edelliseen.",
+        en: "Slide to the previous.",
     },
     "Next slide": {
-        fi: "Siirry seuraavaan kuvaan.",
-        en: "Slide to the next picture.",
+        fi: "Siirry seuraavaan.",
+        en: "Slide to the next.",
     },
     "Stop automatic playback": {
-        fi: "Pysäytä kuvien automaattinen toisto.",
-        en: "Stop the automatic playback of pictures.",
+        fi: "Pysäytä automaattinen toisto.",
+        en: "Stop the automatic playback.",
     },
     "Start automatic playback": {
-        fi: "Käynnistä kuvien automaattinen toisto.",
-        en: "Start the automatic playback of pictures.",
+        fi: "Käynnistä automaattinen toisto.",
+        en: "Start the automatic playback.",
     },
     "Pictures from the library": {
         fi: "Kuvia kirjastolta",
@@ -144,16 +144,16 @@ var dict = {
         en: "Picture from the library",
     },
     "Open in instagram": {
-        fi: "Avaa kuva Instagrammissa.",
-        en: "Open the photo in Instagram.",
+        fi: "Avaa Instagrammissa.",
+        en: "Open in Instagram.",
     },
     "Likes on Instagam": {
-        fi: "tykkääjää instagrammissa. Linkki avaa kuvan Instagrammissa.",
-        en: "likes on instagram. The link opens in Instagram.",
+        fi: "tykkääjää instagrammissa. Linkki avaa sisällön Instagrammissa.",
+        en: "likes on instagram. The link opens Instagram.",
     },
     "Likes on Instagam singular": {
-        fi: "tykkääjä instagrammissa - linkki avaa kuvan Instagrammissa.",
-        en: "like on instagram. - the link opens in Instagram.",
+        fi: "tykkääjä instagrammissa - linkki avaa sisällön Instagrammissa.",
+        en: "like on instagram. - the link opens Instagram.",
     },
     "Closed": {
         fi: "Suljettu",
