@@ -1215,6 +1215,49 @@ function generateFbWidgets() {
     adjustParentHeight();
 }
 
+function generateIGCaption(caption) {
+    var tagsToReplace = [];
+    var reFindTags = new RegExp(/#\S+\s*/g);
+    var reFindTagsExec = reFindTags.exec(caption);
+    while (reFindTagsExec != null) {
+        var tagText = reFindTagsExec[0];
+        tagText = tagText.replace(" ", "");
+        var tagLink = tagText.substring(1);
+        tagLink = '<a target="_blank" class="external-link" href="https://www.instagram.com/explore/tags/' + tagLink
+            + '/">' + tagText + '</a> ';
+        tagsToReplace.push({position: reFindTagsExec[0],
+            replacement: tagLink, type: "tag"});
+        reFindTagsExec = reFindTags.exec(caption);
+    }
+    var reFindUsers = new RegExp(/@\S+\s*/g);
+    var reFindUsersExec = reFindUsers.exec(caption);
+    while (reFindUsersExec != null) {
+        var tagText = reFindUsersExec[0];
+        tagText = tagText.replace(" ", "");
+        var tagLink = tagText.substring(1);
+        tagLink = '<a target="_blank" class="external-link" href="https://www.instagram.com/' + tagLink
+            + '/">' + tagText + '</a> ';
+        tagsToReplace.push({position: reFindUsersExec[0],
+            replacement: tagLink, type: "user"});
+        reFindUsersExec = reFindUsers.exec(caption);
+    }
+    for (var t = 0; t < tagsToReplace.length; t++) {
+        // If we have tags #foobar & #foo, #foo would re-place #foobar incorrectly.
+        if(tagsToReplace[t].type == "tag") {
+            caption = caption.replace(tagsToReplace[t].position,
+                tagsToReplace[t].replacement.replace("#", "%%%"));
+        }
+        else {
+            caption = caption.replace(tagsToReplace[t].position,
+                tagsToReplace[t].replacement.replace("@", "<<><<>"));
+        }
+    }
+    caption = caption.replace(/%%%/g,'#');
+    caption = caption.replace(/<<><<>/g,'@');
+    caption = generateLinks(caption); // TO DO: GenerateLinks requires http(s):// to work.
+    return caption;
+}
+
 function asyncFetchLinks() {
     var linksDeferred = jQuery.Deferred();
     setTimeout(function() {
@@ -1275,63 +1318,20 @@ function asyncFetchLinks() {
                         if(i > 9) {
                             return
                         }
-                        var url = images[i].node.display_url;
-                        var shortcode = images[i].node.shortcode;
-                        var likes = images[i].node.edge_liked_by.count;
-                        // https://stackoverflow.com/questions/20943089/how-to-convert-unix-timestamp-to-calendar-date-moment-js
-                        // UNIX timestamp it is count of seconds from 1970, so you need to convert it to JS Date object:
-                        var timeStamp = new Date(images[i].node.taken_at_timestamp*1000);
-                        var caption = "";
-                        if(images[i].node.edge_media_to_caption.edges[0] !== undefined) {
-                            caption = images[i].node.edge_media_to_caption.edges[0].node.text;
-                        }
-                        var tagsToReplace = [];
-                        var reFindTags = new RegExp(/#\S+\s*/g);
-                        var reFindTagsExec = reFindTags.exec(caption);
-                        while (reFindTagsExec != null) {
-                            var tagText = reFindTagsExec[0];
-                            tagText = tagText.replace(" ", "");
-                            var tagLink = tagText.substring(1);
-                            tagLink = '<a target="_blank" class="external-link" href="https://www.instagram.com/explore/tags/' + tagLink
-                                + '/">' + tagText + '</a> ';
-                            tagsToReplace.push({position: reFindTagsExec[0],
-                                replacement: tagLink, type: "tag"});
-                            reFindTagsExec = reFindTags.exec(caption);
-                        }
-                        var reFindUsers = new RegExp(/@\S+\s*/g);
-                        var reFindUsersExec = reFindUsers.exec(caption);
-                        while (reFindUsersExec != null) {
-                            var tagText = reFindUsersExec[0];
-                            tagText = tagText.replace(" ", "");
-                            var tagLink = tagText.substring(1);
-                            tagLink = '<a target="_blank" class="external-link" href="https://www.instagram.com/' + tagLink
-                                + '/">' + tagText + '</a> ';
-                            tagsToReplace.push({position: reFindUsersExec[0],
-                                replacement: tagLink, type: "user"});
-                            reFindUsersExec = reFindUsers.exec(caption);
-                        }
-                        for (var t = 0; t < tagsToReplace.length; t++) {
-                            // If we have tags #foobar & #foo, #foo would re-place #foobar incorrectly.
-                            if(tagsToReplace[t].type == "tag") {
-                                caption = caption.replace(tagsToReplace[t].position,
-                                    tagsToReplace[t].replacement.replace("#", "%%%"));
-                            }
-                            else {
-                                caption = caption.replace(tagsToReplace[t].position,
-                                    tagsToReplace[t].replacement.replace("@", "<<><<>"));
-                            }
-                        }
-                        caption = caption.replace(/%%%/g,'#');
-                        caption = caption.replace(/<<><<>/g,'@');
-
                         if (images[i].node.__typename == "GraphVideo") {
                             isFetchingIGVideo = true;
                             $.getJSON('https://www.instagram.com/p/' + images[i].node.shortcode + '/?__a=1', function (result) {
                                 var videoData = result.graphql.shortcode_media;
                                 var videoSrc = videoData.video_url;
                                 var poster = videoData.thumbnail_src;
-                                timeStamp = new Date(videoData.taken_at_timestamp*1000);
-                                likes = videoData.edge_media_preview_like.count;
+                                var timeStamp = new Date(videoData.taken_at_timestamp*1000);
+                                var likes = videoData.edge_media_preview_like.count;
+                                var shortcode = videoData.shortcode;
+                                var caption = "";
+                                if(videoData.edge_media_to_caption.edges[0] !== undefined) {
+                                    caption = videoData.edge_media_to_caption.edges[0].node.text;
+                                    caption = generateIGCaption(caption)
+                                }
                                 igImages.push({
                                     url: videoSrc,
                                     poster: poster,
@@ -1349,6 +1349,17 @@ function asyncFetchLinks() {
                             });
                         }
                         else {
+                            var url = images[i].node.display_url;
+                            var shortcode = images[i].node.shortcode;
+                            var likes = images[i].node.edge_liked_by.count;
+                            // https://stackoverflow.com/questions/20943089/how-to-convert-unix-timestamp-to-calendar-date-moment-js
+                            // UNIX timestamp it is count of seconds from 1970, so you need to convert it to JS Date object:
+                            var timeStamp = new Date(images[i].node.taken_at_timestamp*1000);
+                            var caption = "";
+                            if(images[i].node.edge_media_to_caption.edges[0] !== undefined) {
+                                caption = images[i].node.edge_media_to_caption.edges[0].node.text;
+                                caption = generateIGCaption(caption)
+                            }
                             igImages.push({url: url, shortcode: shortcode, likes: likes,
                                 caption: caption, type: "image", timeStamp: timeStamp
                             });
