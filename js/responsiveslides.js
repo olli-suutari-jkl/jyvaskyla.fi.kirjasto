@@ -412,11 +412,13 @@ var length = 1;
           secs = '0' + String(secs);
         }
         var timeStamp = $('.rslides1_on .video-timestamp')[0];
-        if (secs === NaN || mins === NaN) {
-          $(timeStamp).text('00:00');
+        if (isNaN(secs) || secs == "NaN" || isNaN(mins) && mins == "NaN") {
+          $(timeStamp).text('0:00');
           return
         }
-        $(timeStamp).text(mins + ':' + secs);
+        else {
+          $(timeStamp).text(mins + ':' + secs);
+        }
       });
 
       // Update the seek bar as the video plays
@@ -433,9 +435,8 @@ var length = 1;
         if (secs < 10) {
           secs = '0' + String(secs);
         }
-        if (secs === NaN || mins === NaN) {
-          $(timeStamp).text('00:00');
-          return
+        if (isNaN(secs) || secs == "NaN" || isNaN(mins) && mins == "NaN") {
+          $(timeStamp).text('0:00');
         }
         else {
           $(timeStamp).text(mins + ':' + secs);

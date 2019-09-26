@@ -53,11 +53,15 @@ $("html").attr("lang", lang);
 
 // Check if provided value is not null, undefined or empty
 function isValue(value) {
-    if(value !== null && value !== undefined && value.length !== 0 && value !== "undefined" || $.trim(value) !== "") {
+    if (value !== null && value !== undefined && value.length !== 0 && !isNaN(value) && value !== "NaN" &&
+        value !== "undefined" || $.trim(value) !== "") {
+        if (typeof value == 'number') {
+            return true;
+        }
         var valueWithoutPTags = value.replace(/<p>/g, "");
         valueWithoutPTags = valueWithoutPTags.replace(/<\/p>/g, "");
         valueWithoutPTags = $.trim(valueWithoutPTags);
-        if(valueWithoutPTags.length < 1) {
+        if (valueWithoutPTags.length < 1) {
             return false;
         }
         else {
