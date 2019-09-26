@@ -126,6 +126,15 @@ function adjustParentHeight(delay, elementPosY) {
                     newHeight = newHeight + 3000;
                 }
             }
+            var popOverHeader = $('.popover-header');
+            if(popOverHeader.length) {
+                if(popOverHeader[0].innerText.toLowerCase().indexOf("celia") > -1) {
+                    var popOverHeight = $('.popover').height();
+                    if(newHeight < height) {
+                        newHeight = newHeight + popOverHeight;
+                    }
+                }
+            }
             if(newHeight !== height) {
                 parent.postMessage({value: newHeight, type: 'resize'}, '*');
             }
