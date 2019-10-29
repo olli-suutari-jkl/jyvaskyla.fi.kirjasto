@@ -156,12 +156,14 @@ function addItem(item, listElement) {
                 capitalize(prettyLink) + "</a></p>";
         }
         if($(".celia-services").length) {
-            var newDescription = celiaDescription + $(".celia-services").attr('data-content');
-            if(standardName.toLowerCase().indexOf("registration") > -1 ||
-                standardName.toLowerCase().indexOf("rekisteröityminen") > -1 ) {
-                newDescription = $(".celia-services").attr('data-content') + celiaDescription
+            if ($(".celia-services").attr('data-content') != celiaDescription) {
+                var newDescription = celiaDescription + $(".celia-services").attr('data-content');
+                if(standardName.toLowerCase().indexOf("registration") > -1 ||
+                    standardName.toLowerCase().indexOf("rekisteröityminen") > -1 ) {
+                    newDescription = $(".celia-services").attr('data-content') + celiaDescription
+                }
+                $(".celia-services").attr('data-content', newDescription);
             }
-            $(".celia-services").attr('data-content', newDescription);
         }
         else {
             var blockItem = '<img  class="celia-services" src="../images/accessibility/Celia.png" alt="Celia-logo" data-placement="bottom" title="' + i18n.get("Celia title") + '" data-content="' + celiaDescription + '" data-toggle="accessibility-tooltip">';
