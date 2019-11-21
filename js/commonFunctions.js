@@ -296,6 +296,12 @@ function adjustParentUrl(toAdd, type) {
     // Remove ?, = if last character.
     refUrl = refUrl.replace(/\?$/, '');
     refUrl = refUrl.replace(/=$/, '');
+    // In Finna, all things within "Content" are case-sensitive... :)
+    if(refUrl.indexOf('finna') > -1) {
+        if(refUrl.indexOf('/content/') > -1) {
+            refUrl = refUrl.replace('/content/', "/Content/");
+        }
+    }
     try {
         parent.postMessage({value: refUrl, stateTitle: stateTitle, type: 'url'}, '*');
     }
