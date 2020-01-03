@@ -40,7 +40,6 @@ function generateLinks(string) {
     var result = "";
     string = '<p>' + string + '</p>';
     $(string).filter(function () {
-        var html = $(this).html();
         // https://stackoverflow.com/questions/6038061/regular-expression-to-find-urls-within-a-string
         var linkPattern = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g;
         var matched_str = $(this).html().match(linkPattern);
