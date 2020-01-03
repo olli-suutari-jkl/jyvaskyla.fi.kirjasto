@@ -1274,7 +1274,6 @@ function generateFbWidgets() {
                 if(descriptionHeight > 1500) {
                     descriptionHeight = 1500;
                 }
-                console.log(descriptionHeight)
                 if(descriptionHeight < 370) {
                     descriptionHeight = 370;
                 }
