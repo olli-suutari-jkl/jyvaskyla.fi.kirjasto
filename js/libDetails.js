@@ -739,7 +739,7 @@ function asyncFetchServices() {
                 escapedName = escapedName.replace(/\)/g, "");
                 escapedName = escapedName.replace(/_/g, " ");
                 escapedName = escapedName.replace(/-/g, " ");
-                if(urlUnescapeSpaces.indexOf(escapedName) > -1) {
+                if(urlUnescapeSpaces.indexOf("?" + escapedName) > -1) {
                     matchFound = true;
                     toClick = serviceNamesWithLinks[i];
                     setTimeout(function(){
@@ -791,7 +791,7 @@ function asyncFetchServices() {
                 }
                 oppositeName = oppositeName.replace(/-/g, " ");
                 oppositeName = oppositeName.replace(/,/g, "");
-                if(urlUnescapeSpaces.indexOf(oppositeName) > -1) {
+                if(urlUnescapeSpaces.indexOf("?" + oppositeName) > -1) {
                     matchFound = true;
                     toClick = decodeVal(arrayOfServiceNames[i].name);
                     if(arrayOfServiceNames[i].customName !== "") {

@@ -172,8 +172,10 @@ function adjustParentUrl(toAdd, type) {
             stateTitle = "Libraries"
         }
     }
-    // Remove item from url, if it already exists.
-    refUrl = refUrl.replace(new RegExp(toAdd,"i"), "");
+    // Remove item from url, if it already exists. Library name and service names can both contain "omatoimikirjasto"
+    if(toAdd !== "omatoimikirjasto") {
+        refUrl = refUrl.replace(new RegExp(toAdd,"i"), "");
+    }
     if(type == "cleanupUrl") {
         toAdd = "";
     }

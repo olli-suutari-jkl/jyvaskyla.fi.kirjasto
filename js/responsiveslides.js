@@ -163,7 +163,6 @@ var length = 1;
               $(timeStamp).text(mins + ':' + secs);
             }
           });
-
           // Update the seek bar as the video plays
           $('.ig-vid').on("timeupdate", function() {
             var vid = $('.rslides1_on video')[0];
