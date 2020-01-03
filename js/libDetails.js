@@ -1,6 +1,6 @@
 // Variables
 var withParams = "&with=pictures,services,buildingInfo,departments,mailAddress,links,phoneNumbers,primaryContactInfo," +
-    "persons,transitInfo&limit=1500";
+    "persons,transitInfo,customData&limit=1500";
 var jsonpUrlV4 = "https://api.kirjastot.fi/v4/library/" + library + "?lang=" + lang + withParams;
 var transitIsEmpty = true;
 var descriptionIsEmpty = true;
@@ -55,6 +55,129 @@ function checkIfContactExists(array, item) {
     return false;
 }
 
+function addEventToList(event) {
+    var eventDateSyntax = '<div class="event-date-data">' +
+        '<span class="event-date"><i class="fa fa-calendar-alt"></i> ' + event.date + '</span>' +
+        '<span class="event-time"><i class="fa fa-clock"></i> ' + event.time + '</span>' +
+        '</div>';
+    var eventTitleSyntax = '<div class="event-title">' +
+        '<i class="fa fa-pen-square fa-rotate-270"></i> ' +
+        '<a target="_blank" href="' + event.link + '">' + event.title + '</a>' +
+        '</div>';
+    var eventSyntax = '<div class="single-event">' +  eventDateSyntax + eventTitleSyntax + '</div>';
+    $('#rss-events').append(eventSyntax);
+}
+
+function fetchRSS(url) {
+    // For now, this only supports events from jyvaskyla.fi ... TO DO: Add support for other feeds.
+    if(!url.indexOf('jyvaskyla.fi') < -1) {
+        return;
+    }
+    $("#rss-feeds").rss(
+        // You can either provide a single feed URL or a list of URLs (via an array)
+        url,
+        {
+            // how many entries do you want?
+            // default: 4
+            // valid values: any integer
+            limit: 25,
+            // want to offset results being displayed?
+            // default: false
+            // valid values: any integer
+            offsetStart: false, // offset start point
+            offsetEnd: false, // offset end point
+            // will request the API via https
+            // default: false
+            // valid values: false, true
+            ssl: true,
+            // which server should be requested for feed parsing
+            // the server implementation is here: https://github.com/sdepold/feedr
+            // default: feedrapp.info
+            // valid values: any string
+            host: "feedrapp.info",
+            // option to seldomly render ads
+            // ads help covering the costs for the feedrapp server hosting and future improvements
+            // default: true
+            // valid values: false, true
+            support: false,
+            // outer template for the html transformation
+            // default: "<ul>{entries}</ul>"
+            // valid values: any string
+            layoutTemplate: "",
+            // localizes the date with moment.js (optional)
+            // default: 'en'
+            dateLocale: "fi",
+            // inner template for each entry
+            // default: '<li><a href="{url}">[{author}@{date}] {title}</a><br/>{shortBodyPlain}</li>'
+            // valid values: any string
+            entryTemplate: '' +
+                '',
+            // Defined the order of the feed's entries.
+            // Default: undefined (keeps the order of the original feed)
+            // valid values: All entry properties; title, link, content, contentSnippet, publishedDate, categories, author, thumbnail
+            // Order can be reversed by prefixing a dash (-)
+            order: "-publishedDate",
+            // a callback, which gets triggered when an error occurs
+            // default: function() { throw new Error("jQuery RSS: url don't link to RSS-Feed") }
+            error: function() {},
+            // a callback, which gets triggered when everything was loaded successfully
+            // this is an alternative to the next parameter (callback function)
+            // default: function(){}
+            success: function() {},
+            // a callback, which gets triggered once data was received but before the rendering.
+            // this can be useful when you need to remove a spinner or something similar
+            onData: function() {}
+        },
+        // callback function
+        // called after feeds are successfully loaded and after animations are done
+        function callback() {
+            var rawEvents = this.entries;
+            var events = [];
+            for (var t = 0; t < rawEvents.length; t++) {
+                var reMatchDate = new RegExp(/^\s*(3[01]|[12][0-9]|0?[1-9])\.(1[012]|0?[1-9])\.((?:19|20)\d{2})*/g);
+                var reMatchDateExec = reMatchDate.exec(rawEvents[t].title);
+                var eventDate = reMatchDateExec[0];
+                // If we do not remove the date from the title, it will mess up matching the time.
+                var titleNoDate = rawEvents[t].title.replace(eventDate, '');
+                titleNoDate = titleNoDate.replace(' klo ', '');
+                var eventTime = titleNoDate.substring(0,5);
+                var eventTitle = rawEvents[t].title.substring(rawEvents[t].title.indexOf(" - ") + 3);
+                var standardTime = moment(eventDate + ' ' + eventTime, 'DD.MM.YYYY HH.mm').toDate();
+                events.push( { standardTime: standardTime, title: eventTitle, date: eventDate,
+                    time: eventTime, link: rawEvents[t].link  } )
+            }
+            if(events.length !== 0) {
+                console.log(events)
+                events.sort(function(a, b)
+                {
+                    if (a.standardTime > b.standardTime) return 1;
+                    if (a.standardTime < b.standardTime) return -1;
+                });
+                // Descriptionheight is used with side by side layout. This is increased if 2 col layout is used.
+                var descriptionHeight = 500;
+                var leftBarWidth = Math.round($('#leftBar').outerWidth());
+                if(leftBarWidth > 632) {
+                    descriptionHeight = Math.round($('.news-description').height() -50);
+                    if(descriptionHeight > 1500) {
+                        descriptionHeight = 1500;
+                    }
+                }
+                var bsCols = "col-lg-6 col-md-12";
+                if(leftBarWidth < 632) {
+                    bsCols = "";
+                }
+                $('.news-description').addClass(bsCols);
+                $('.events-section').addClass(bsCols);
+                $('.events-section').css('display', 'block');
+                $('.events-container').css('height', descriptionHeight);
+                for (var t = 0; t < events.length; t++) {
+                    addEventToList(events[t])
+                }
+            }
+        }
+    );
+}
+
 function asyncFetchV4Data() {
     var genericDeferred = jQuery.Deferred();
     setTimeout(function() {
@@ -102,6 +225,13 @@ function asyncFetchV4Data() {
                     customName = customName.replace(/-/g, " ");
                 }
                 arrayOfServiceNames.push({name: name, customName: customName});
+            }
+            for (var t = 0; t < data.customData.length; t++) {
+                if(data.customData[t].id == "events") {
+                    // To DO: Implement the RSS-feature once the event format is finalized (for keski-finna)
+                    //  || data.customData[t].id == "test"
+                    //fetchRSS(data.customData[t].value);
+                }
             }
             genericDeferred.resolve();
         }).catch(function (jqXHR, textStatus, errorThrown) {
@@ -1113,7 +1243,6 @@ function generateFbWidgets() {
     var fbHTML = "";
     var adaptWidth = "true";
     var fbWidth = 500;
-    var bsCols = "col-lg-6 col-md-12";
     // The widget has a bug in iOS where switching to events tab does not work as it just jumps back to timeline.
     var tabs = "timeline,events";
     if(isIOSMobile) {
@@ -1123,9 +1252,7 @@ function generateFbWidgets() {
     var descriptionHeight = 500;
     var leftBarWidth = Math.round($('#leftBar').outerWidth());
     // If FB widget is not atleast 316 px in width, the event dates are not visible.
-    if(leftBarWidth < 632) {
-        bsCols = "";
-    }
+
     if(leftBarWidth < 500) {
         fbWidth = Math.round($('body').width());
         adaptWidth = "false";
@@ -1139,13 +1266,17 @@ function generateFbWidgets() {
     if(fbWidth < 316) {
         fbWidth = 316;
     }
+
     if(fbPageNames.length == 1) {
         if (!isEmpty($('#introContent'))) {
-            $('.news-description').addClass(bsCols);
             if(leftBarWidth > 632) {
                 descriptionHeight = Math.round($('.news-description').height() -50);
                 if(descriptionHeight > 1500) {
                     descriptionHeight = 1500;
+                }
+                console.log(descriptionHeight)
+                if(descriptionHeight < 370) {
+                    descriptionHeight = 370;
                 }
             }
         }
@@ -1155,8 +1286,10 @@ function generateFbWidgets() {
         // If description + fb do not fit together, don't set fb height to description height.
         descriptionWidth = Math.round($('.news-description').width());
         // If we use smaller than xl, event calendar date icons are lost because the frame gets too small.
-        fbHTML =  '<div class="fb-page ' + bsCols + '" style="width: ' + fbWidth + '; margin-bottom: 2em;" data-href="https://www.facebook.com/' + fbPageNames[0] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="' + adaptWidth + '" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false"></div>';
-        $('.news-description').after(fbHTML);
+        fbHTML =  '<div class="fb-page" style="width: ' + fbWidth + '; margin-bottom: 2em;" data-href="https://www.facebook.com/' + fbPageNames[0] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="' + adaptWidth + '" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false"></div>';
+        $('.facebook-section').css('display', 'block');
+        $('.facebook-section').append(fbHTML);
+        //$('.news-description').after(fbHTML);
     }
     else {
         var feedOne = "";
@@ -1167,27 +1300,29 @@ function generateFbWidgets() {
         for (var i = 0; i < fbPageNames.length; i++) {
             // Max 2 feeds.
             if(i == 0) {
-                feedOne = '<div class="fb-page ' + bsCols + '" data-href="https://www.facebook.com/' + fbPageNames[0] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="true" data-adapt-container-width="' + adaptWidth + '" data-hide-cover="false" data-show-facepile="false"></div>';
+                feedOne = '<div class="fb-page" data-href="https://www.facebook.com/' + fbPageNames[0] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="true" data-adapt-container-width="' + adaptWidth + '" data-hide-cover="false" data-show-facepile="false"></div>';
             }
             if(i == 1) {
                 // 2nd item is for events in iOS
                 if(isIOSMobile){
                     tabs = "events"
                 }
-                feedTwo = '<div class="fb-page ' + bsCols + '" data-href="https://www.facebook.com/' + fbPageNames[1] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="true" data-adapt-container-width="' + adaptWidth + '" data-hide-cover="false" data-show-facepile="false"></div>';
+                feedTwo = '<div class="fb-page" data-href="https://www.facebook.com/' + fbPageNames[1] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="true" data-adapt-container-width="' + adaptWidth + '" data-hide-cover="false" data-show-facepile="false"></div>';
             }
             if(i == 2 && isIOSMobile) {
                 tabs = "timeline";
-                feedThree = '<div class="fb-page ' + bsCols + '" data-href="https://www.facebook.com/' + fbPageNames[2] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="true" data-adapt-container-width="' + adaptWidth + '" data-hide-cover="false" data-show-facepile="false"></div>';
+                feedThree = '<div class="fb-page" data-href="https://www.facebook.com/' + fbPageNames[2] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="true" data-adapt-container-width="' + adaptWidth + '" data-hide-cover="false" data-show-facepile="false"></div>';
             }
             if(i == 3 && isIOSMobile) {
                 tabs = "events";
-                feedFour = '<div class="fb-page ' + bsCols + '" data-href="https://www.facebook.com/' + fbPageNames[3] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="true" data-adapt-container-width="' + adaptWidth + '" data-hide-cover="false" data-show-facepile="false"></div>';
+                feedFour = '<div class="fb-page" data-href="https://www.facebook.com/' + fbPageNames[3] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="true" data-adapt-container-width="' + adaptWidth + '" data-hide-cover="false" data-show-facepile="false"></div>';
             }
         }
-        fbHTML = '<div class="row" style="width: 100vmin; margin-bottom: 2em;">' + feedOne + feedTwo +
+        fbHTML = '<div>' + feedOne + feedTwo +
             feedThree + feedFour + '</div>';
-        $('.news-description').after(fbHTML);
+        $('.facebook-section').css('display', 'block');
+        $('.facebook-section').append(fbHTML);
+        //$('.news-description').after(fbHTML);
     }
     // Load the fb script if not already loaded.
     if(!fbScriptLoaded) {

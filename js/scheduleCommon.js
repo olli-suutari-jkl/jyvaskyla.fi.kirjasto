@@ -204,6 +204,18 @@ $(document).ready(function() {
     // Detect left/right on schedules or move backwards/forwards in slider if in fullscreen mode or when hovering small slider..
     $(document).keydown(function(e) {
         switch(e.key) {
+            case " ": // Space detection for playing stopping Instagram videos within the slider.
+                // Slider hovering is not really used with schedules, but it's better? to do it here instead.
+                if(!$("#sliderBox").hasClass("small-slider") || $("#sliderBox").hasClass("hovering")
+                    || $("#sliderPrevious").is(":focus") || $("#sliderForward").is(":focus")) {
+                    if($('.rslides1_on').find('div.video-controls').length !== 0) {
+                        $("#sliderPrevious").blur();
+                        $("#sliderForward").blur();
+                        $('.play-stop-icon').focus();
+                        $('.play-stop-icon').click();
+                    }
+                }
+            break;
             case "ArrowLeft": // left
                 if($(".library-schedules").hasClass("hovering")
                     || $("#lastWeek").is(":focus") || $("#nextWeek").is(":focus")) {
@@ -227,7 +239,7 @@ $(document).ready(function() {
                         $("#navContacts").click();
                     }
                 }
-                break;
+            break;
             case "ArrowRight": // right
                 if($(".library-schedules").hasClass("hovering")
                     || $("#lastWeek").is(":focus") || $("#nextWeek").is(":focus")) {
@@ -252,7 +264,7 @@ $(document).ready(function() {
                         $("#navPalvelut").click();
                     }
                 }
-                break;
+            break;
             default: return; // exit this handler for other keys
         }
     });

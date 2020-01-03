@@ -75,8 +75,8 @@ Z-indexes:
 }
 
 .small-slider {
+    margin-top: 5em;
     margin-left: -.75em;
-    margin-right: -.75em;
 }
 
 .ig-img, .rslides img, .rslides video {
@@ -272,6 +272,14 @@ Z-indexes:
         width: auto;
         height: 100%;
     }
+
+    .full-screen-slider .video-controls  {
+        max-width: 600px;
+        margin-left: auto;
+        justify-content: space-between;
+        margin-right: auto;
+    }
+
 }
 
 @media screen and (min-width: 768px){
@@ -610,6 +618,7 @@ Z-indexes:
     flex-direction: column;
     margin-left: 5px;
     margin-right: 5px;
+    min-width: 30px;
 }
 
 .video-end {

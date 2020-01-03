@@ -134,6 +134,48 @@ header {
     }
 }
 
+/* Event styles */
+
+.events-container, .rss-events {
+    display: block;
+    overflow-y: scroll;
+}
+
+.single-event {
+    display: flex;
+    border-left: solid 2px #8496B9;
+    flex-direction: column;
+    justify-content: start;
+    padding-left: 19px;
+    padding-top: 9px;
+    padding-bottom: 9px;
+    font-size: 1.02em;
+    margin-bottom: 1.4em
+}
+
+.single-event .fa {
+    font-size: 1.15em;
+    margin-right: .23em;
+    color: #5f696e;
+}
+
+.event-date-data {
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.event-date {
+
+}
+
+.event-time {
+    margin-left: 15px;
+}
+
+.event-title {
+    font-weight: 500;
+}
+
 /* Service listings */
 .main>.row:last-child {
     flex-grow: 1
@@ -212,12 +254,12 @@ ul.cols {
     padding-left: 10px;
 }
 
-.trivia-section {
+.trivia-section, .facebook-section {
     margin-top: 2.2em;
     width: 100%;
 }
 
-#triviaTitle {
+.title-underlined-centered {
     text-align: center!important;
     border-bottom: 2px solid @primary;
     padding-bottom: .3em;
@@ -247,7 +289,7 @@ ul.cols {
 }
 
 @media screen and (max-width: 499px) {
-    .trivia-section {
+    .trivia-section, .facebook-section {
         margin-left: calc(50% - 48.33vw);
         margin-right: calc(50% - 50vw);
         width: 100vmin;

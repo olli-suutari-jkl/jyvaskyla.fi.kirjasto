@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="../style/lib/select2.css"/>
   <link rel="stylesheet" href="../style/lib/leaflet.css"/>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-rss/3.3.0/jquery.rss.min.js"></script>
   <script src="../js/lib/jquery.translate.js"></script>
   <script src="../js/translations.js"></script>
   <script src="../js/lib/less.min.js" ></script>
@@ -64,6 +65,12 @@
           <div class="news-description" id="introduction">
             <div class="details-content" id="introContent"></div>
           </div>
+          <section class="events-section" style="display: none">
+            <h3 class="col-12"><i class="fa fa-calendar" style="margin-right: 5px"></i> Tapahtumat</h3>
+            <div class="events-container">
+              <div id="rss-events"></div>
+            </div>
+          </section>
         </div>
         <section id="libraryServices">
           <!-- Rooms & collections -->
@@ -91,6 +98,10 @@
             </div>
           </div>
         </section><!-- Palvelut -->
+        <section id="sliderBox" class="small-slider">
+          <h3 class="sr-only" id="srPictures"></h3>
+          <ul class="rslides"></ul>
+        </section>
       </div><!-- col-lg-8 -->
       <div class="col-sm-12 col-md-5 col-lg-5 col-xl-4 order-2 sidebar" id="introductionSidebar">
         <!-- Scheludes -->
@@ -132,16 +143,15 @@
             </tbody>
           </table>
         </section>
-        <section id="sliderBox" class="small-slider">
-          <h3 class="sr-only" id="srPictures"></h3>
-          <ul class="rslides"></ul>
-        </section>
         <section class="trivia-section" style="display: none">
-          <h3 id="triviaTitle"></h3>
+          <h3 id="triviaTitle" class="title-underlined-centered"></h3>
           <table id="triviaTable" class="table">
             <tbody id="triviaBody">
             </tbody>
           </table>
+        </section>
+        <section class="facebook-section" style="display: none">
+          <h3 class="title-underlined-centered">Facebook</h3>
         </section>
       </div>
     </div>
