@@ -127,9 +127,14 @@ var length = 1;
           });
 
           // Event listener for the seek bar
-          $(".seek-bar").on("click", function(e){
+          $(".seek-bar").on("click touchend", function(e){
             var offset = $(this).offset();
             var left = (e.pageX - offset.left);
+            // For touch events.
+            if(e.pageX == undefined) {
+              var touch = e.originalEvent.changedTouches[0];
+              left = (touch.pageX - offset.left);
+            }
             var totalWidth = $(".seek-bar").width();
             var percentage = ( left / totalWidth );
             var vid = $('.rslides1_on video')[0];

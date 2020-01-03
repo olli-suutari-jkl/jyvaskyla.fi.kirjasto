@@ -1252,7 +1252,6 @@ function generateFbWidgets() {
     var descriptionHeight = 500;
     var leftBarWidth = Math.round($('#leftBar').outerWidth());
     // If FB widget is not atleast 316 px in width, the event dates are not visible.
-
     if(leftBarWidth < 500) {
         fbWidth = Math.round($('body').width());
         adaptWidth = "false";
@@ -1266,7 +1265,6 @@ function generateFbWidgets() {
     if(fbWidth < 316) {
         fbWidth = 316;
     }
-
     if(fbPageNames.length == 1) {
         if (!isEmpty($('#introContent'))) {
             if(leftBarWidth > 632) {
