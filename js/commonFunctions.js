@@ -40,6 +40,37 @@ function generateMailToLink(string) {
     return result;
 }
 
+
+function generateIgLinks(string) {
+    var result = "";
+    string = '<p>' + string + '</p>';
+    $(string).filter(function () {
+        var html = $(this).html();
+        // https://stackoverflow.com/questions/6038061/regular-expression-to-find-urls-within-a-string
+        var linkPattern = /(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?/g;
+        var matched_str = $(this).html().match(linkPattern);
+        if ( matched_str ) {
+            var text = $(this).html();
+            $.each(matched_str, function (index, value) {
+                console.log(value)
+                //text = text.replace(value,"<a target='_blank' href='"+value+"'>"+generatePrettyUrl (value)+"</a>");
+            });
+            $(this).html(text);
+            result = $(this).html(text)[0].innerHTML;
+            return $(this)
+        }
+    });
+    if(result == "") {
+        result = string;
+    }
+    else {
+        // If the result contains a link, the layout is weird unless we wrap it to <p>
+        result = '<p>' + result + '</p>';
+    }
+    console.log(result)
+    return result;
+}
+
 // Capitalize the 1st letter of a string.
 function capitalize(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);

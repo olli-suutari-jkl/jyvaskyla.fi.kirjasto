@@ -1386,7 +1386,7 @@ function generateIGCaption(caption) {
     }
     caption = caption.replace(/%%%/g,'#');
     caption = caption.replace(/<<><<>/g,'@');
-    caption = generateLinks(caption); // TO DO: GenerateLinks requires http(s):// to work.
+    caption = generateIgLinks(caption); // TO DO: GenerateLinks requires http(s):// to work.
     return caption;
 }
 
