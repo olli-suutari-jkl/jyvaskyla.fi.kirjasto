@@ -110,6 +110,75 @@ function isEmpty( el ){
     return !$.trim(el.html())
 }
 
+function replaceQuotesWithServiceAndLibraryLinks(string, isModal) {
+    if (string.indexOf("blockquote") !== -1) {
+        var linksToServices = [];
+        var reFindLinks = new RegExp(/<blockquote>.*?(<p>.*?<\/p>).*?<\/blockquote>/g);
+        var reFindLinksExec = reFindLinks.exec(string);
+        while (reFindLinksExec != null) {
+            var textInside = reFindLinksExec[0].replace("<blockquote>", "");
+            textInside = textInside.replace("</blockquote>","");
+            textInside = textInside.replace("<p>","");
+            textInside = textInside.replace("</p>","");
+            textInside = textInside.toLowerCase();
+            textInside = textInside.replace(/ä/g, "a");
+            textInside = textInside.replace(/ö/g, "o");
+            textInside = textInside.replace(/\(/g, "");
+            textInside = textInside.replace(/\)/g, "");
+            textInside = textInside.replace(/_/g, " ");
+            textInside = textInside.replace(/-/g, " ");
+            var matchFound = false;
+            for (var i = 0; i < serviceNamesWithLinks.length; i++) {
+                var escapedName = serviceNamesWithLinks[i].toLowerCase();
+                escapedName = escapedName.replace(/ä/g, "a");
+                escapedName = escapedName.replace(/ö/g, "o");
+                escapedName = escapedName.replace(/\(/g, "");
+                escapedName = escapedName.replace(/\)/g, "");
+                escapedName = escapedName.replace(/_/g, " ");
+                escapedName = escapedName.replace(/-/g, " ");
+                if(textInside.indexOf(escapedName) > -1) {
+                    var linkToService = reFindLinksExec[0].replace('<p>',
+                        '<a class="service-link-in-modal" data-name="' + serviceNamesWithLinks[i] + '" href="javascript:void(0);">');
+                    if(!isModal) {
+                        linkToService = reFindLinksExec[0].replace('<p>',
+                            '<a class="service-link-in-description" data-name="' + serviceNamesWithLinks[i] + '" href="javascript:void(0);">');
+                    }
+                    linkToService = linkToService.replace('</p>', '</a>');
+                    linksToServices.push({position: reFindLinksExec[0], iframe: linkToService});
+                    matchFound = true;
+                }
+            }
+            if(!matchFound) {
+                for (var i = 0; i < libListMultiLang.length; i++) {
+                    if(textInside.indexOf(libListMultiLang[i].nameFi.replace('-', ' ')) > -1
+                        || textInside.indexOf(libListMultiLang[i].nameEn) > -1) {
+                        matchFound = true;
+                        var libName = libListMultiLang[i].nameFi;
+                        if(lang == "en") {
+                            libName = libListMultiLang[i].nameEn;
+                        }
+                        var linkToService = reFindLinksExec[0].replace('<p>',
+                            '<a class="library-link-in-description" data-lib="' + libListMultiLang[i].id + '" href="javascript:void(0);">');
+                        if(isModal) {
+                            linkToService = reFindLinksExec[0].replace('<p>',
+                                '<a class="library-link-in-modal" data-lib="' + libListMultiLang[i].id + '" href="javascript:void(0);">');
+                        }
+                        linkToService = linkToService.replace('</p>', '</a>');
+                        linksToServices.push({position: reFindLinksExec[0], iframe: linkToService});
+                    }
+                }
+            }
+            // Loop all links.
+            reFindLinksExec = reFindLinks.exec(string);
+        }
+        // Loop string and replace.
+        for (var i = 0; i < linksToServices.length; i++) {
+            string = string.replace(linksToServices[i].position, linksToServices[i].iframe);
+        }
+    }
+    return string;
+}
+
 // Timer  is used to stop onresize event from firing after adjustment is done by triggering the function manually.
 var isAdjustingHeight = false;
 var clearTimer;

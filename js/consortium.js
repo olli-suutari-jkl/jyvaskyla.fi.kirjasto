@@ -240,8 +240,8 @@ $(document).ready(function() {
             $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + lang + "&city.name=" + city  +
                 withServices + "&limit=1500", function(data) {
                 for (var i=0; i<data.items.length; i++) {
-                    // Ignore mobile libraries & other consortiums.
-                    if(data.items[i].type !== "mobile" && data.items[i].consortium == consortium) {
+                    // Ignore other consortiums.
+                    if(data.items[i].consortium == consortium) {
                         libraryList.push({id: data.items[i].id, text: data.items[i].name,
                             city: data.items[i].city.toString(),
                             street: data.items[i].address.street,
@@ -259,8 +259,8 @@ $(document).ready(function() {
                 }
                 $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + oppositeLang + "&city.name=" + city + "&limit=1500", function(data) {
                     for (var i = 0; i < data.items.length; i++) {
-                        // Ignore mobile libraries & other consortiums.
-                        if (data.items[i].type !== "mobile" && data.items[i].consortium == consortium) {
+                        // Ignore other consortiums.
+                        if (data.items[i].consortium == consortium) {
                             var index = findIndexInObjectArray(libListMultiLangHelper, "id", data.items[i].id);
                             if (oppositeLang === "en") {
                                 libListMultiLang.push({nameFi: libListMultiLangHelper[index].nameFi, nameEn: encodeVal(data.items[i].name), id: data.items[i].id});
@@ -284,34 +284,28 @@ $(document).ready(function() {
         $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + lang + "&city.name=" + city +
             + withServices + "&limit=1500", function(data) {
             for (var i=0; i<data.items.length; i++) {
-                // Ignore mobile libraries
-                if(data.items[i].type !== "mobile") {
-                    libraryList.push({id: data.items[i].id, text: data.items[i].name,
-                        city: data.items[i].city.toString(),
-                        street: data.items[i].address.street,
-                        zipcode: data.items[i].address.zipcode,
-                        coordinates: data.items[i].coordinates,
-                        services: JSON.stringify(data.items[i].services)
-                    });
-                    if(lang === "fi") {
-                        libListMultiLangHelper.push({nameFi: encodeVal(data.items[i].name), id: data.items[i].id});
-                    }
-                    else {
-                        libListMultiLangHelper.push({nameEn: encodeVal(data.items[i].name), id: data.items[i].id});
-                    }
+                libraryList.push({id: data.items[i].id, text: data.items[i].name,
+                    city: data.items[i].city.toString(),
+                    street: data.items[i].address.street,
+                    zipcode: data.items[i].address.zipcode,
+                    coordinates: data.items[i].coordinates,
+                    services: JSON.stringify(data.items[i].services)
+                });
+                if(lang === "fi") {
+                    libListMultiLangHelper.push({nameFi: encodeVal(data.items[i].name), id: data.items[i].id});
+                }
+                else {
+                    libListMultiLangHelper.push({nameEn: encodeVal(data.items[i].name), id: data.items[i].id});
                 }
             }
             $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + oppositeLang + "&city.name=" + city, function(data) {
                 for (var i = 0; i < data.items.length; i++) {
-                    // Ignore mobile libraries & other consortiums.
-                    if (data.items[i].type !== "mobile") {
-                        var index = findIndexInObjectArray(libListMultiLangHelper, "id", data.items[i].id);
-                        if (oppositeLang === "en") {
-                            libListMultiLang.push({nameFi: libListMultiLangHelper[index].nameFi, nameEn: encodeVal(data.items[i].name), id: data.items[i].id});
-                        }
-                        else {
-                            libListMultiLang.push({nameEn: libListMultiLangHelper[index].nameEn, nameFi: encodeVal(data.items[i].name), id: data.items[i].id});
-                        }
+                    var index = findIndexInObjectArray(libListMultiLangHelper, "id", data.items[i].id);
+                    if (oppositeLang === "en") {
+                        libListMultiLang.push({nameFi: libListMultiLangHelper[index].nameFi, nameEn: encodeVal(data.items[i].name), id: data.items[i].id});
+                    }
+                    else {
+                        libListMultiLang.push({nameEn: libListMultiLangHelper[index].nameEn, nameFi: encodeVal(data.items[i].name), id: data.items[i].id});
                     }
                 }
                 generateSelect();

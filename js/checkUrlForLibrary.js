@@ -20,7 +20,6 @@ function asyncCheckUrlForKeskiLibrary() {
         if(!matchFound) {
             // Loop libraries and check if refUrl contains one of them and click if so.
             for (var i = 0; i < libListMultiLang.length; i++) {
-
                 if(urlUnescapeSpaces.indexOf(libListMultiLang[i].nameFi) > -1
                 || urlUnescapeSpaces.indexOf(libListMultiLang[i].nameEn) > -1) {
                     library = libListMultiLang[i].id;
