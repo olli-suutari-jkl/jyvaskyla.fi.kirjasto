@@ -321,7 +321,30 @@ function asyncGenerateGenericDetails() {
                 description = generateWebropolSurveyFrames(description);
                 // Add target="_blank" to links. Same url links would open inside Iframe, links to outside  wouldn't work.
                 description = description.replace(/(<a )+/g, '<a target="_blank" ');
-                $("#introContent").append(description);
+
+                if (description.indexOf("blockquote") !== -1) {
+                    description = replaceQuotesWithServiceAndLibraryLinks(description, false);
+                    $("#introContent").append(description);
+                    $(".service-link-in-description").on('click', function () {
+                        var name = $(this).data('name');
+                        setTimeout(function(){
+                            $("li").find('[data-name="'+ name +'"]').click();
+                        }, 50);
+                    });
+                    $(".library-link-in-description").on('click', function () {
+                        var newId = $(this).data('lib');
+                        setTimeout(function(){
+                            var librarySelector = document.getElementById("librarySelector");
+                            librarySelector.value = newId;
+                            librarySelector.dispatchEvent(new Event("change"));
+                        }, 50);
+                    });
+
+                }
+                else {
+                    $("#introContent").append(description);
+
+                }
                 descriptionIsEmpty = false;
             }
         }
@@ -463,47 +486,9 @@ function bindServiceClicks() {
         popupText = popupText.replace(/(<p>&nbsp;<\/p>)+/g, "");
         popupText = popupText.replace(/(<p><\/p>)+/g, "");
         popupText = popupText.replace(/(<p>\s<\/p>)+/g, "");
-
         if (popupText.indexOf("blockquote") !== -1) {
-            var linksToServices = [];
-            var reFindLinks = new RegExp(/<blockquote>.*?(<p>.*?<\/p>).*?<\/blockquote>/g);
-            var reFindLinksExec = reFindLinks.exec(popupText);
-            while (reFindLinksExec != null) {
-                var textInside = reFindLinksExec[0].replace("<blockquote>", "");
-                textInside = textInside.replace("</blockquote>","");
-                textInside = textInside.replace("<p>","");
-                textInside = textInside.replace("</p>","");
-                textInside = textInside.toLowerCase();
-                textInside = textInside.replace(/ä/g, "a");
-                textInside = textInside.replace(/ö/g, "o");
-                textInside = textInside.replace(/\(/g, "");
-                textInside = textInside.replace(/\)/g, "");
-                textInside = textInside.replace(/_/g, " ");
-                textInside = textInside.replace(/-/g, " ");
-                for (var i = 0; i < serviceNamesWithLinks.length; i++) {
-                    var escapedName = serviceNamesWithLinks[i].toLowerCase();
-                    escapedName = escapedName.replace(/ä/g, "a");
-                    escapedName = escapedName.replace(/ö/g, "o");
-                    escapedName = escapedName.replace(/\(/g, "");
-                    escapedName = escapedName.replace(/\)/g, "");
-                    escapedName = escapedName.replace(/_/g, " ");
-                    escapedName = escapedName.replace(/-/g, " ");
-                    if(textInside.indexOf(escapedName) > -1) {
-                        var linkToService = reFindLinksExec[0].replace('<p>',
-                            '<a class="service-link-in-modal" data-name="' + serviceNamesWithLinks[i] + '" href="javascript:void(0);">');
-                        linkToService = linkToService.replace('</p>', '</a>');
-                        linksToServices.push({position: reFindLinksExec[0], iframe: linkToService});
-                    }
-                }
-                // Loop all links.
-                reFindLinksExec = reFindLinks.exec(popupText);
-            }
-            // Loop & add iframes from embedded links.
-            for (var i = 0; i < linksToServices.length; i++) {
-                popupText = popupText.replace(linksToServices[i].position, linksToServices[i].iframe);
-            }
+            popupText = replaceQuotesWithServiceAndLibraryLinks(popupText, true);
         }
-
         // Check if large or small text/modal.
         if(popupText.length > 260) {
             $('#modal').addClass("modal-lg");
@@ -1249,7 +1234,7 @@ function generateFbWidgets() {
         tabs = "timeline";
     }
     // Descriptionheight is used with side by side layout. This is increased if 2 col layout is used.
-    var descriptionHeight = 500;
+    var descriptionHeight = 800;
     var leftBarWidth = Math.round($('#leftBar').outerWidth());
     // If FB widget is not atleast 316 px in width, the event dates are not visible.
     if(leftBarWidth < 500) {
@@ -1723,10 +1708,10 @@ function fetchInformation(language, lib) {
             if(!isReFetching) {
                 $.when( asyncFetchV4Data() && asyncFetchServiceNamesInOppositeLang() ).then(
                     function() {
-                        $.when( asyncGenerateGenericDetails(), asyncGenerateTrivia(), asyncFetchDepartments(),
+                        $.when(  asyncFetchDepartments(), asyncFetchServices(), asyncGenerateTrivia(),
                             asyncFetchLinks(), asyncFetchLocation()).then(
                             function() {
-                                $.when( asyncFetchImages(), asyncFetchServices(), asyncLoadMap(), generateContacts()  ).then(
+                                $.when( asyncGenerateGenericDetails(), asyncFetchImages(), asyncLoadMap(), generateContacts() ).then(
                                     function() {
                                         // Generate links & contacts text based on if links were found or not.
                                         if(!noLinks) {
