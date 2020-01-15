@@ -336,7 +336,17 @@ function asyncGenerateGenericDetails() {
                         setTimeout(function(){
                             var librarySelector = document.getElementById("librarySelector");
                             librarySelector.value = newId;
-                            librarySelector.dispatchEvent(new Event("change"));
+                            // IE 11 does not like dispatchEvent... :) https://stackoverflow.com/questions/27176983/dispatchevent-not-working-in-ie11
+                            if(isIE) {
+                                var event = document.createEvent("Event");
+                                event.initEvent("change", false, true);
+                                // args: string type, boolean bubbles, boolean cancelable
+                                librarySelector.dispatchEvent(event);
+                            }
+                            else {
+                                librarySelector.dispatchEvent(new Event("change"));
+
+                            }
                         }, 50);
                     });
 
