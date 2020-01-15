@@ -809,6 +809,12 @@ function asyncFetchServices() {
 function asyncFetchDepartments() {
     var departmentsDeferred = jQuery.Deferred();
     setTimeout(function() {
+        if(departments == null) {
+            console.log("Something went wrong in fetching the data.")
+            setTimeout(function() {
+                window.location.reload();
+            }, 500 );
+        }
         if (departments.length === 0) {
             departmentsDeferred.resolve();
         }
@@ -1268,7 +1274,6 @@ function generateFbWidgets() {
         descriptionWidth = Math.round($('.news-description').width());
         // If we use smaller than xl, event calendar date icons are lost because the frame gets too small.
         fbHTML =  '<div class="fb-page" style="width: ' + fbWidth + '; margin-bottom: 2em;" data-href="https://www.facebook.com/' + fbPageNames[0] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="' + adaptWidth + '" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="false"></div>';
-        $('.facebook-section').css('display', 'block');
         $('.facebook-section').append(fbHTML);
         //$('.news-description').after(fbHTML);
     }
@@ -1315,6 +1320,7 @@ function generateFbWidgets() {
         script.onload = function () {
             if (typeof FB !== 'undefined') {
                 $('.facebook-section').css('display', 'block');
+                adjustParentHeight(300);
             }
             else {
                 console.log("Facebook failed to load, possibly due to content blocking.")
@@ -1333,15 +1339,14 @@ function generateFbWidgets() {
         });
         if (typeof FB !== 'undefined') {
             $('.facebook-section').css('display', 'block');
+            adjustParentHeight(300);
         }
         else {
             console.log("Facebook failed to load, possibly due to content blocking.")
             return;
         }
     }
-
     fbWidgetSetUp = true;
-    adjustParentHeight(200);
 }
 
 function generateIGCaption(caption) {
