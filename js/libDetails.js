@@ -343,7 +343,6 @@ function asyncGenerateGenericDetails() {
                 }
                 else {
                     $("#introContent").append(description);
-
                 }
                 descriptionIsEmpty = false;
             }
@@ -1234,7 +1233,7 @@ function generateFbWidgets() {
         tabs = "timeline";
     }
     // Descriptionheight is used with side by side layout. This is increased if 2 col layout is used.
-    var descriptionHeight = 800;
+    var descriptionHeight = 500;
     var leftBarWidth = Math.round($('#leftBar').outerWidth());
     // If FB widget is not atleast 316 px in width, the event dates are not visible.
     if(leftBarWidth < 500) {
@@ -1302,7 +1301,6 @@ function generateFbWidgets() {
         }
         fbHTML = '<div>' + feedOne + feedTwo +
             feedThree + feedFour + '</div>';
-        $('.facebook-section').css('display', 'block');
         $('.facebook-section').append(fbHTML);
         //$('.news-description').after(fbHTML);
     }
@@ -1314,11 +1312,17 @@ function generateFbWidgets() {
             fbScript = "https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v4.0"
         }
         var script = document.createElement('script');
-        /*script.onload = function () {
-            console.log("D O  A F T E R  I N I T")
-        }*/
+        script.onload = function () {
+            if (typeof FB !== 'undefined') {
+                $('.facebook-section').css('display', 'block');
+            }
+            else {
+                console.log("Facebook failed to load, possibly due to content blocking.")
+                return;
+            }
+        };
         script.src = fbScript;
-        document.head.appendChild(script); //or something of the likes
+        document.head.appendChild(script);
     }
     // After lib has changed.
     else {
@@ -1327,9 +1331,17 @@ function generateFbWidgets() {
             xfbml: true,
             version: 'v4.0'
         });
+        if (typeof FB !== 'undefined') {
+            $('.facebook-section').css('display', 'block');
+        }
+        else {
+            console.log("Facebook failed to load, possibly due to content blocking.")
+            return;
+        }
     }
+
     fbWidgetSetUp = true;
-    adjustParentHeight();
+    adjustParentHeight(200);
 }
 
 function generateIGCaption(caption) {
