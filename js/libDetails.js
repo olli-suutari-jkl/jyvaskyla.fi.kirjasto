@@ -1293,6 +1293,16 @@ function generateFbWidgets() {
         // Feeds 3 & 4 are only used with iOS mobile..
         var feedThree = "";
         var feedFour = "";
+        // Sort to descending order (Show jkl main library first instead of music)
+        fbPageNames.sort(function (a, b) {
+            if (a > b) {
+                return -1;
+            }
+            if (b > a) {
+                return 1;
+            }
+            return 0;
+        });
         for (var i = 0; i < fbPageNames.length; i++) {
             // Max 2 feeds.
             if(i == 0) {
@@ -1356,6 +1366,7 @@ function generateFbWidgets() {
             return;
         }
     }
+    adjustParentHeight(800);
     fbWidgetSetUp = true;
 }
 

@@ -61,12 +61,7 @@ function isValue(value) {
         var valueWithoutPTags = value.replace(/<p>/g, "");
         valueWithoutPTags = valueWithoutPTags.replace(/<\/p>/g, "");
         valueWithoutPTags = $.trim(valueWithoutPTags);
-        if (valueWithoutPTags.length < 1) {
-            return false;
-        }
-        else {
-            return true;
-        }
+        return valueWithoutPTags.length >= 1;
     }
     else {
         return false;
