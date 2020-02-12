@@ -1133,6 +1133,9 @@ function asyncFetchLocation() {
 function asyncLoadMap() {
     var mapDeferred = jQuery.Deferred();
     setTimeout(function() {
+
+        // Add fallback layer to the default titles in case something goes wrong (err 429 etc.)
+        L.tileLayer.fallback('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         // Load wikimedia map styles instead of openstreetmap.
         //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         // https://wiki.openstreetmap.org/wiki/Tiles
