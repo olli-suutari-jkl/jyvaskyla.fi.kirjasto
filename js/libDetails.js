@@ -1140,32 +1140,9 @@ function asyncLoadMap() {
         //L.tileLayer('https://map-api.finna.fi/v1/rendered/{z}/{x}/{y}.png').addTo(map); < Blocked for non-finna.
         // Limitations: free usage for up to 75,000 mapviews per month, none-commercial services only. For bigger usage and other cases contact CARTO sales for enterprise service key.
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
-        /*
-        var wmsLayer = L.TileLayer.wmsHeader(
-            'https://maps.wikimedia.org/osm-intl/',
-            {
-                layers: '{z}/{x}/{y}',
-                format: 'image/png',
-                transparent: true,
-            },
-            [
-                { header: 'Authorization', value: 'basic ' + 'YWxhZGRpbjpvcGVuc2VzYW1l' },
-                { header: 'Accept', value: '*' },
-                { header: 'Date', value: new Date() },
-                { header: 'hpp', value: new Date() },
-
-                { header: 'Access-Control-Allow-Origin', value: '*' },
-                { header: 'Access-Control-Allow-Methods', value: 'DELETE, POST, GET, OPTIONS"' },
-                { header: 'Access-Control-Allow-Headers', value: 'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With' },
-                //{ header: 'Authorization', value: 'JWT ' + MYAUTHTOKEN },
-                //{ header: 'content-type', value: 'text/plain'}
-            ],
-            null
-        ).addTo(map);
-         */
         // Min/max zoom levels + default focus.
         map.options.minZoom = 6;
-        map.options.maxZoom = 17.9;
+        map.options.maxZoom = 18;
         // Set the contribution text.
         $('.leaflet-control-attribution').replaceWith('<div class="leaflet-control-attribution leaflet-control">© <a target="_blank" href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | <a target="_blank" href="https://carto.com/attributions">CARTO</a></div>');
         function addCoordinatesToMap() {
@@ -1230,7 +1207,7 @@ function asyncLoadMap() {
             if(activeTab === 1) {
                 // If we try to set view & open the popup in asyncLoadMap, things get messed.
                 if(lat !== undefined) {
-                    map.setView([lat, lon], 13.5);
+                    map.setView([lat, lon], 16);
                 } else {
                     map.setView(["62.750", "25.700"], 6);
                 }
