@@ -1136,27 +1136,48 @@ function asyncLoadMap() {
         // Add fallback layer to the default titles in case something goes wrong (err 429 etc.)
         L.tileLayer.fallback('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
         // Load wikimedia map styles instead of openstreetmap.
-        //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-        // https://wiki.openstreetmap.org/wiki/Tiles
-        L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png').addTo(map);
-        //L.tileLayer.provider('Wikimedia').addTo(map);
+        //L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png').addTo(map); < Wikimedia has started issuing 429 errors lately.
+        //L.tileLayer('https://map-api.finna.fi/v1/rendered/{z}/{x}/{y}.png').addTo(map); < Blocked for non-finna.
+        // Limitations: free usage for up to 75,000 mapviews per month, none-commercial services only. For bigger usage and other cases contact CARTO sales for enterprise service key.
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map);
+        /*
+        var wmsLayer = L.TileLayer.wmsHeader(
+            'https://maps.wikimedia.org/osm-intl/',
+            {
+                layers: '{z}/{x}/{y}',
+                format: 'image/png',
+                transparent: true,
+            },
+            [
+                { header: 'Authorization', value: 'basic ' + 'YWxhZGRpbjpvcGVuc2VzYW1l' },
+                { header: 'Accept', value: '*' },
+                { header: 'Date', value: new Date() },
+                { header: 'hpp', value: new Date() },
+
+                { header: 'Access-Control-Allow-Origin', value: '*' },
+                { header: 'Access-Control-Allow-Methods', value: 'DELETE, POST, GET, OPTIONS"' },
+                { header: 'Access-Control-Allow-Headers', value: 'Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With' },
+                //{ header: 'Authorization', value: 'JWT ' + MYAUTHTOKEN },
+                //{ header: 'content-type', value: 'text/plain'}
+            ],
+            null
+        ).addTo(map);
+         */
         // Min/max zoom levels + default focus.
         map.options.minZoom = 6;
         map.options.maxZoom = 17.9;
         // Set the contribution text.
-        $('.leaflet-control-attribution').replaceWith('<div class="leaflet-control-attribution leaflet-control">© <a target="_blank" href="https://www.openstreetmap.org/copyright">OpenStreetMap</a></div>');
+        $('.leaflet-control-attribution').replaceWith('<div class="leaflet-control-attribution leaflet-control">© <a target="_blank" href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> | <a target="_blank" href="https://carto.com/attributions">CARTO</a></div>');
         function addCoordinatesToMap() {
             var addCoordinatesDeferred = jQuery.Deferred();
             setTimeout(function() {
             if(libraryList.length !== 0) {
-
                 var markerIcon = L.divIcon({
                     html: '<i class="fas fa-book-reader"></i>',
                     iconSize: [24, 24],
                     popupAnchor:  [-10, -1], // point from which the popup should open relative to the iconAnchor
                     className: 'lib-marker'
                 });
-
                 var counter = 0;
                 // coordinateErrorSet is used when a library is listed twice in the listing. (Mobile library of Wiitaunion)
                 var coordinateErrorSet = false;
