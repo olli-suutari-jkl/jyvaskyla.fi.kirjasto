@@ -34,6 +34,7 @@
   <script src="../js/lib/leaflet.min.js"></script>
   <script src="../js/lib/leafletTileFallback.min.js"></script>
   <script src="../js/commonFunctions.js"></script>
+  <script src="../js/events.js"></script>
   <script src="../js/consortium.js"></script>
   <script src="../js/libDetails.js"></script>
   <script src="../js/libMain.js"></script>
@@ -67,7 +68,7 @@
             <div class="details-content" id="introContent"></div>
           </div>
           <section class="events-section" style="display: none">
-            <h3 class="col-12"><i class="fa fa-calendar" style="margin-right: 5px"></i> Tapahtumat</h3>
+            <h3 class="event-section-title col-12"><i class="fa fa-calendar" style="margin-right: 5px"></i></h3>
             <div class="events-container">
               <div id="rss-events"></div>
             </div>
@@ -144,6 +145,15 @@
             </tbody>
           </table>
         </section>
+
+        <!-- Events -->
+        <section id="events" class="lib-events">
+          <h3 id="eventsTitle" class="underlined-title" style="display: none"></h3>
+          <div class="keski-events-archive" id="keskiEvents">
+            <ul id="keskiEventsUl"></ul>
+          </div>
+        </section>
+
         <section class="trivia-section" style="display: none">
           <h3 id="triviaTitle" class="title-underlined-centered"></h3>
           <table id="triviaTable" class="table">
@@ -198,17 +208,21 @@
     </div> <!-- Contact details -->
   </main>
 </div> <!-- Main container -->
-<div id="myModal" class="modal" tabindex="-1" role="dialog">
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
   <div id="modal" class="modal-dialog modal-lg" role="document">
     <div  id="modalContentContainer" class="modal-content">
       <div class="modal-header">
-        <h1 id="modalTitle" class="modal-title underlined-title">Modal title</h1>
+        <h1 id="modalTitle" class="modal-title underlined-title"></h1>
         <button id="closeModalCorner" type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <div id="modalContent"></div>
+          <div id="eventMapRow" class="">
+            <div id="eventMapContainer" class=""></div>
+          </div>
+          <div id="eventImageContainer"></div>
       </div>
       <div class="modal-footer">
         <button id="closeModal" type="button" class="btn btn-primary" data-dismiss="modal"></button>

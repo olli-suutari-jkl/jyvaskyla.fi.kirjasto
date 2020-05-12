@@ -55,128 +55,6 @@ function checkIfContactExists(array, item) {
     return false;
 }
 
-function addEventToList(event) {
-    var eventDateSyntax = '<div class="event-date-data">' +
-        '<span class="event-date"><i class="fa fa-calendar-alt"></i> ' + event.date + '</span>' +
-        '<span class="event-time"><i class="fa fa-clock"></i> ' + event.time + '</span>' +
-        '</div>';
-    var eventTitleSyntax = '<div class="event-title">' +
-        '<i class="fa fa-pen-square fa-rotate-270"></i> ' +
-        '<a target="_blank" href="' + event.link + '">' + event.title + '</a>' +
-        '</div>';
-    var eventSyntax = '<div class="single-event">' +  eventDateSyntax + eventTitleSyntax + '</div>';
-    $('#rss-events').append(eventSyntax);
-}
-
-function fetchRSS(url) {
-    // For now, this only supports events from jyvaskyla.fi ... TO DO: Add support for other feeds.
-    if(!url.indexOf('jyvaskyla.fi') < -1) {
-        return;
-    }
-    $("#rss-feeds").rss(
-        // You can either provide a single feed URL or a list of URLs (via an array)
-        url,
-        {
-            // how many entries do you want?
-            // default: 4
-            // valid values: any integer
-            limit: 25,
-            // want to offset results being displayed?
-            // default: false
-            // valid values: any integer
-            offsetStart: false, // offset start point
-            offsetEnd: false, // offset end point
-            // will request the API via https
-            // default: false
-            // valid values: false, true
-            ssl: true,
-            // which server should be requested for feed parsing
-            // the server implementation is here: https://github.com/sdepold/feedr
-            // default: feedrapp.info
-            // valid values: any string
-            host: "feedrapp.info",
-            // option to seldomly render ads
-            // ads help covering the costs for the feedrapp server hosting and future improvements
-            // default: true
-            // valid values: false, true
-            support: false,
-            // outer template for the html transformation
-            // default: "<ul>{entries}</ul>"
-            // valid values: any string
-            layoutTemplate: "",
-            // localizes the date with moment.js (optional)
-            // default: 'en'
-            dateLocale: "fi",
-            // inner template for each entry
-            // default: '<li><a href="{url}">[{author}@{date}] {title}</a><br/>{shortBodyPlain}</li>'
-            // valid values: any string
-            entryTemplate: '' +
-                '',
-            // Defined the order of the feed's entries.
-            // Default: undefined (keeps the order of the original feed)
-            // valid values: All entry properties; title, link, content, contentSnippet, publishedDate, categories, author, thumbnail
-            // Order can be reversed by prefixing a dash (-)
-            order: "-publishedDate",
-            // a callback, which gets triggered when an error occurs
-            // default: function() { throw new Error("jQuery RSS: url don't link to RSS-Feed") }
-            error: function() {},
-            // a callback, which gets triggered when everything was loaded successfully
-            // this is an alternative to the next parameter (callback function)
-            // default: function(){}
-            success: function() {},
-            // a callback, which gets triggered once data was received but before the rendering.
-            // this can be useful when you need to remove a spinner or something similar
-            onData: function() {}
-        },
-        // callback function
-        // called after feeds are successfully loaded and after animations are done
-        function callback() {
-            var rawEvents = this.entries;
-            var events = [];
-            for (var t = 0; t < rawEvents.length; t++) {
-                var reMatchDate = new RegExp(/^\s*(3[01]|[12][0-9]|0?[1-9])\.(1[012]|0?[1-9])\.((?:19|20)\d{2})*/g);
-                var reMatchDateExec = reMatchDate.exec(rawEvents[t].title);
-                var eventDate = reMatchDateExec[0];
-                // If we do not remove the date from the title, it will mess up matching the time.
-                var titleNoDate = rawEvents[t].title.replace(eventDate, '');
-                titleNoDate = titleNoDate.replace(' klo ', '');
-                var eventTime = titleNoDate.substring(0,5);
-                var eventTitle = rawEvents[t].title.substring(rawEvents[t].title.indexOf(" - ") + 3);
-                var standardTime = moment(eventDate + ' ' + eventTime, 'DD.MM.YYYY HH.mm').toDate();
-                events.push( { standardTime: standardTime, title: eventTitle, date: eventDate,
-                    time: eventTime, link: rawEvents[t].link  } )
-            }
-            if(events.length !== 0) {
-                console.log(events)
-                events.sort(function(a, b)
-                {
-                    if (a.standardTime > b.standardTime) return 1;
-                    if (a.standardTime < b.standardTime) return -1;
-                });
-                // Descriptionheight is used with side by side layout. This is increased if 2 col layout is used.
-                var descriptionHeight = 500;
-                var leftBarWidth = Math.round($('#leftBar').outerWidth());
-                if(leftBarWidth > 632) {
-                    descriptionHeight = Math.round($('.news-description').height() -50);
-                    if(descriptionHeight > 1500) {
-                        descriptionHeight = 1500;
-                    }
-                }
-                var bsCols = "col-lg-6 col-md-12";
-                if(leftBarWidth < 632) {
-                    bsCols = "";
-                }
-                $('.news-description').addClass(bsCols);
-                $('.events-section').addClass(bsCols);
-                $('.events-section').css('display', 'block');
-                $('.events-container').css('height', descriptionHeight);
-                for (var t = 0; t < events.length; t++) {
-                    addEventToList(events[t])
-                }
-            }
-        }
-    );
-}
 
 function asyncFetchV4Data() {
     var genericDeferred = jQuery.Deferred();
@@ -225,13 +103,6 @@ function asyncFetchV4Data() {
                     customName = customName.replace(/-/g, " ");
                 }
                 arrayOfServiceNames.push({name: name, customName: customName});
-            }
-            for (var t = 0; t < data.customData.length; t++) {
-                if(data.customData[t].id == "events") {
-                    // To DO: Implement the RSS-feature once the event format is finalized (for keski-finna)
-                    //  || data.customData[t].id == "test"
-                    //fetchRSS(data.customData[t].value);
-                }
             }
             genericDeferred.resolve();
         }).catch(function (jqXHR, textStatus, errorThrown) {
@@ -296,7 +167,7 @@ function asyncFetchServiceNamesInOppositeLang() {
 
 /* Fetch things via v4 api, expect persons & building details */
 function asyncGenerateGenericDetails() {
-    var genericDeferred = jQuery.Deferred();
+    var genericGenerateDeferred = jQuery.Deferred();
     setTimeout(function() {
         if ($("#blockquote").is(':empty')) {
             if (slogan !== null && slogan.length > 1) {
@@ -410,10 +281,10 @@ function asyncGenerateGenericDetails() {
                 document.title = libName;
             }
         }
-        genericDeferred.resolve();
+        genericGenerateDeferred.resolve();
     }, 1 );
     // Return the Promise so caller can't change the Deferred
-    return genericDeferred.promise();
+    return genericGenerateDeferred.promise();
 }
 
 // CollectionCount is used with departments.
@@ -487,6 +358,8 @@ function bindServiceClicks() {
         return
     }
     $(".index-item").on('click', function (e) {
+        $('#eventMapRow').css('display', 'none');
+        $('#eventImageContainer').css('display', 'none');
         var popupText = $(this).data('message');
         // Remove multiple spaces
         popupText = popupText.replace(/^(&nbsp;)+/g, '');
@@ -823,7 +696,7 @@ function asyncFetchDepartments() {
             console.log("Something went wrong in fetching the data.")
             setTimeout(function() {
                 window.location.reload();
-            }, 500 );
+            }, 2750 );
         }
         if (departments.length === 0) {
             departmentsDeferred.resolve();
@@ -1744,22 +1617,27 @@ function fetchInformation(language, lib) {
         var fetchDeferred = jQuery.Deferred();
         setTimeout(function() {
             if(!isReFetching) {
-                $.when( asyncFetchV4Data() && asyncFetchServiceNamesInOppositeLang() ).then(
+                // If we do asyncFetchServiceNamesInOppositeLang within the first $.when, asyncFetchV4Data is not always finished.
+                $.when( asyncFetchV4Data() ).then(
                     function() {
-                        $.when(  asyncFetchDepartments(), asyncFetchServices(), asyncGenerateTrivia(),
-                            asyncFetchLinks(), asyncFetchLocation()).then(
+                        $.when( asyncFetchServiceNamesInOppositeLang() ).then(
                             function() {
-                                $.when( asyncGenerateGenericDetails(), asyncFetchImages(), asyncLoadMap(), generateContacts() ).then(
+                                $.when(  asyncFetchDepartments(), asyncFetchServices(), asyncGenerateTrivia(),
+                                    asyncFetchLinks(), asyncFetchLocation()).then(
                                     function() {
-                                        // Generate links & contacts text based on if links were found or not.
-                                        if(!noLinks) {
-                                            $('#contactsTitle').append('<span>' + i18n.get("Links and contacts") + '</span>');
-                                        } else {
-                                            $('#contactsTitle').append('<span>' + i18n.get("Contacts") + '</span>');
-                                        }
-                                        fetchDeferred.resolve();
+                                        $.when( asyncGenerateGenericDetails(), asyncFetchImages(), asyncLoadMap(), generateContacts() ).then(
+                                            function() {
+                                                // Generate links & contacts text based on if links were found or not.
+                                                if(!noLinks) {
+                                                    $('#contactsTitle').append('<span>' + i18n.get("Links and contacts") + '</span>');
+                                                } else {
+                                                    $('#contactsTitle').append('<span>' + i18n.get("Contacts") + '</span>');
+                                                }
+                                                fetchDeferred.resolve();
+                                            });
                                     });
                             });
+
                     });
             }
             else {
@@ -1774,6 +1652,18 @@ function fetchInformation(language, lib) {
     }
     $.when( triggerFetch() ).then(
         function() {
+            if (!eventListGenerated && !isReFetching) {
+                // If event list is generated, trigger the function for generating the event list for selected library.
+                var waitEventListGenerationfunction = setInterval(function(){
+                    if (eventListGenerated) {
+                        generateEventListForLib(library);
+                        clearInterval(waitEventListGenerationfunction);
+                    }
+                }, 250);
+            }
+            else if(!isReFetching) {
+                generateEventListForLib(library);
+            }
             // If lang is english, do this again with Finnish to add missing infos.
             if (language == "en") {
                 setTimeout(function () {
@@ -1790,13 +1680,11 @@ function fetchInformation(language, lib) {
                         $('#libraryServices').css('display', 'none');
                         // If no content is provided for the left column.
                         if (descriptionIsEmpty) {
+                            noLeftCol = true;
                             if(slogan !== null) {
-                                if(slogan.length <2) {
-                                    noLeftCol = true;
+                                if (!slogan.length <2) {
+                                    $("#introductionSidebar").prepend(' <blockquote class="blockquote library-slogan">' + slogan + '</blockquote>');
                                 }
-                            }
-                            else {
-                                noLeftCol = true;
                             }
                         }
                     }
@@ -1808,7 +1696,7 @@ function fetchInformation(language, lib) {
                         noSidebar = true;
                     }
                     // Facebook widget is generated after this check happens. If links include FB, don't hide.
-                    if(noLeftCol && !linksIncludeFacebook) {
+                    if(noLeftCol) {
                         // Hide the content on left, make the sidebar 100% in width.
                         if(bodyWidth < 767) {
                             if(isScheduleEmpty) {

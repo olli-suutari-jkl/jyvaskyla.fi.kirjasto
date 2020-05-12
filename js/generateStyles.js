@@ -81,6 +81,16 @@ libraryCssXml.onreadystatechange = function() {
         });
 };
 libraryCssXml.send();
+// Events
+var eventsCssXml = new XMLHttpRequest();
+eventsCssXml.open('GET', '../style/events.less');
+eventsCssXml.onreadystatechange = function() {
+    less.render(lessVariables + eventsCssXml.responseText)
+        .then(function(output) {
+            addCssToDocument(output.css);
+        });
+};
+eventsCssXml.send();
 // Slider
 var sliderCssXml = new XMLHttpRequest();
 sliderCssXml.open('GET', '../style/slider.less');

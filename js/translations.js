@@ -295,4 +295,40 @@ var dict = {
         fi: "Siirry kirjaston tietoihin",
         en: "Open the library details",
     },
+    "Events": {
+        fi: "Tapahtumat",
+        en: "Events",
+    },
+    "Event category": {
+        fi: "Tapahtuman tyyppi",
+        en: "Event category",
+    },
+    "Event location": {
+        fi: "Tapahtumapaikka",
+        en: "Event location",
+    },
+    "event locations": {
+        fi: "tapahtumapaikkaa",
+        en: "event locations",
+    },
+    "Other location": {
+        fi: "Muu tapahtumapaikka",
+        en: "Other location",
+    },
+    "Web event": {
+        fi: "Verkkotapahtuma",
+        en: "Web event",
+    },
+    "Location information": {
+        fi: "Lisätietoja tapahtumapaikasta",
+        en: "Location information",
+    },
+    "Navigation to location": {
+        fi: "Navigointiohjeet",
+        en: "Navigation to location",
+    },
+    "Show all events": {
+        fi: "Näytä kaikki tapahtumat",
+        en: "Show all events",
+    },
 };

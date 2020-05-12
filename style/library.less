@@ -55,9 +55,7 @@ header {
 
 @media (min-width:989px) {
     #mainContainer {
-        border: @primary solid 1px;
-        border-radius: 10px;
-        background: rgba(220, 221, 212, 0.15);
+        background: rgba(220, 221, 212, 0);
         padding: 2em 1em 2.5em;
         margin-top: 1.3em;
         margin-bottom: 1.3em;
@@ -96,6 +94,10 @@ header {
     border-top: 1px solid @primary;
 }
 
+#libraryServices {
+    margin-top: 2em;
+}
+
 .fb-page {
     padding-top: 20px;
     /* If FB widget is not atleast 316 px in width, the event dates are not visible. */
@@ -117,7 +119,6 @@ header {
 @media screen and (min-width: 768px) {
     #leftBar {
         padding-right: 3em;
-        border-right:  solid @primary;
         border-width: 0.0016rem;
     }
     #introductionSidebar {
@@ -132,48 +133,6 @@ header {
         width: 96vmin;
         align-content: center;
     }
-}
-
-/* Event styles */
-
-.events-container, .rss-events {
-    display: block;
-    overflow-y: scroll;
-}
-
-.single-event {
-    display: flex;
-    border-left: solid 2px #8496B9;
-    flex-direction: column;
-    justify-content: start;
-    padding-left: 19px;
-    padding-top: 9px;
-    padding-bottom: 9px;
-    font-size: 1.02em;
-    margin-bottom: 1.4em
-}
-
-.single-event .fa {
-    font-size: 1.15em;
-    margin-right: .23em;
-    color: #5f696e;
-}
-
-.event-date-data {
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.event-date {
-
-}
-
-.event-time {
-    margin-left: 15px;
-}
-
-.event-title {
-    font-weight: 500;
 }
 
 /* Service listings */
@@ -654,7 +613,7 @@ ul.cols {
     font-size: 1.3em;
 }
 
-#modalContent img {
+#modalContent .image img {
     border: 3px solid @primary;
     border-radius: 4px;
     max-width: 100%;
@@ -687,9 +646,10 @@ ul.cols {
 
 }
 
-#modalTitle {
+.modal-title {
     margin-left: 1.5em;
     margin-top: 0.8em;
+    font-size: 1.55em;
 }
 
 #modalContent {
@@ -706,7 +666,7 @@ ul.cols {
         padding-right: 1em;
     }
 
-    #modalTitle {
+    .modal-title {
         margin-left: 0.7em;
     }
 }
@@ -724,7 +684,7 @@ ul.cols {
         padding-right: 0.3em;
     }
 
-    #modalTitle {
+    .modal-title {
         margin-left: 0.2em;
     }
 

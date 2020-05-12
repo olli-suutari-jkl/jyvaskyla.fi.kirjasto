@@ -38,34 +38,34 @@
     <div id="homePageWidget" class="col-md-12">
         <!-- Scheludes -->
         <section id="schedules" class="library-schedules">
-          <h2 id="scheduleTitle" class="underlined-title"></h2>
-          <!-- Library selector is used only when city/consertium parameters are provided. -->
-          <div id="librarySelectorContainer">
-            <h3 class="sr-only" id="librarySelectorTitle"><label id="librarySelectorLabel" for="librarySelector"></label></h3>
-            <div class="select-container select-lite">
-              <select id="librarySelector" class="library-select select-lite"></select>
+            <h2 id="scheduleTitle" class="underlined-title"></h2>
+            <!-- Library selector is used only when city/consertium parameters are provided. -->
+            <div id="librarySelectorContainer">
+                <h3 class="sr-only" id="librarySelectorTitle"><label id="librarySelectorLabel" for="librarySelector"></label></h3>
+                <div class="select-container select-lite">
+                    <select id="librarySelector" class="library-select select-lite"></select>
+                </div>
             </div>
-          </div>
-          <table class="table table-sm">
-            <thead class="thead-light">
-            <tr>
-              <td colspan="3">
-                <button type="button" id="lastWeek" data-placement="bottom"
-                        class="btn btn-sm btn-light btn-back btn-arrow" aria-hidden="true" onclick="getDaySchelude(-1)">
-                  ❮
-                </button>
-                <span id="weekNumber"></span>
-                <button type="button" id="nextWeek" data-placement="bottom"
-                        class="btn btn-sm btn-light btn-next btn-arrow" aria-hidden="true" onclick="getDaySchelude(1)">
-                  ❯
-                </button>
-              </td>
-            </tr>
-            </thead>
-            <tbody id="weekSchelude" class="schedules-weekly">
-            </tbody>
-          </table>
-          <span id="dayInfo" style="display: none" class="info-text"><i class="fas fa-info-circle" > </i></span>
+            <table class="table table-sm">
+                <thead class="thead-light">
+                <tr>
+                    <td colspan="3">
+                        <button type="button" id="lastWeek" data-placement="bottom"
+                                class="btn btn-sm btn-light btn-back btn-arrow" aria-hidden="true" onclick="getDaySchelude(-1)">
+                            ❮
+                        </button>
+                        <span id="weekNumber"></span>
+                        <button type="button" id="nextWeek" data-placement="bottom"
+                                class="btn btn-sm btn-light btn-next btn-arrow" aria-hidden="true" onclick="getDaySchelude(1)">
+                            ❯
+                        </button>
+                    </td>
+                </tr>
+                </thead>
+                <tbody id="weekSchelude" class="schedules-weekly">
+                </tbody>
+            </table>
+            <span id="dayInfo" style="display: none" class="info-text"><i class="fas fa-info-circle" > </i></span>
             <span id="specialInfo" style="display: none" class="info-text"><i class="fas fa-info-circle" > </i></span>
             <span id="scheduleInfo" style="display: none" class="info-text"><i class="fas fa-info-circle" > </i></span>
         </section>
@@ -74,6 +74,6 @@
 </div> <!-- Main container -->
 </body>
 <noscript><h2 class="no-js-notification">Toimiakseen oikein, sivusto tarvitsee JavaScriptiä. Selaimesi ei tue Javascriptiä tai se on estetty.
-  <br>In order to function properly, this page requires Javascript. Your browser does not support it or it has been blocked.
+    <br>In order to function properly, this page requires Javascript. Your browser does not support it or it has been blocked.
 </h2></noscript>
 </html>

@@ -124,6 +124,53 @@ function setSelectDefault() {
     libName = $("#librarySelector option:selected").text();
 }
 
+function asyncReplaceIdWithCity() {
+    var citiesDeferred = jQuery.Deferred();
+    setTimeout(function() {
+        try {
+            // Fetch names of all cities in kirkanta.
+            $.getJSON("https://api.kirjastot.fi/v4/city?lang=fi&limit=1500", function(data) {
+                var counter = 0;
+
+                for (var i = 0; i < data.items.length; i++) {
+                    // Check if libraryList contains the ID.
+                    for (var x=0; x<libraryList.length; x++) {
+                        if (libraryList[x].city == data.items[i].id.toString()) {
+                            // Replace the id with city name.
+                            libraryList[x].city = data.items[i].name;
+                        }
+                    }
+                    counter = counter +1;
+                    if(counter === data.items.length) {
+                        // Sort or the city listing wont be in  correct order...
+                        libraryList.sort(function(a, b){
+                            if(a.city < b.city) { return -1; }
+                            if(a.city > b.city) { return 1; }
+                            return 0;
+                        });
+
+                        // Fetch events if events page.
+                        isEventsPage = $('.lib-events').length === 1;
+                        if (isEventsPage) {
+                            if (refUrl.indexOf("finna") > -1 || refUrl.indexOf("localhost") > -1) {
+                                fetchEvents();
+                            }
+                        }
+                        citiesDeferred.resolve();
+
+                    }
+                }
+            });
+        }
+        catch (e) {
+            console.log("Error in fetching cities: " + e);
+        }
+    }, 1 );
+    // Return the Promise so caller can't change the Deferred
+    return citiesDeferred.promise();
+}
+
+
 function generateSelect() {
     // Sort alphabetically. https://stackoverflow.com/questions/6712034/sort-array-by-firstname-alphabetically-in-javascript
     libraryList.sort(function(a, b){
@@ -134,44 +181,11 @@ function generateSelect() {
             return 1;
         return 0; //default return value (no sorting)
     });
+
     // If we are fetching a consortium or a city.
     if(consortium !== undefined || city !== undefined) {
         var consortiumLibraries = [];
-        function asyncReplaceIdWithCity() {
-            var citiesDeferred = jQuery.Deferred();
-            setTimeout(function() {
-                try {
-                    // Fetch names of all cities in kirkanta.
-                    $.getJSON("https://api.kirjastot.fi/v4/city?lang=fi&limit=1500", function(data) {
-                        var counter = 0;
-                        for (var i = 0; i < data.items.length; i++) {
-                            // Check if libraryList contains the ID.
-                            for (var x=0; x<libraryList.length; x++) {
-                                if (libraryList[x].city == data.items[i].id.toString()) {
-                                    // Replace the id with city name.
-                                    libraryList[x].city = data.items[i].name;
-                                }
-                            }
-                            counter = counter +1;
-                            if(counter === data.items.length) {
-                                // Sort or the city listing wont be in  correct order...
-                                libraryList.sort(function(a, b){
-                                    if(a.city < b.city) { return -1; }
-                                    if(a.city > b.city) { return 1; }
-                                    return 0;
-                                });
-                                citiesDeferred.resolve();
-                            }
-                        }
-                    });
-                }
-                catch (e) {
-                    console.log("Error in fetching cities: " + e);
-                }
-            }, 1 );
-            // Return the Promise so caller can't change the Deferred
-            return citiesDeferred.promise();
-        }
+
 
         // Replace city ID:s with names and check refurl for library names.
         $.when(asyncCheckUrlForKeskiLibrary(), asyncReplaceIdWithCity()).then(
@@ -224,15 +238,71 @@ function findIndexInObjectArray(arraytosearch, key, valuetosearch) {
     return null;
 }
 
+function fetchConsortiumLibraries(consortium) {
+    var consortiumLibListDeferred = jQuery.Deferred();
+    setTimeout(function() {
+
+    $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + lang + "&consortium=" + consortium +
+        withServices + "&limit=1500", function(data) {
+        for (var i=0; i<data.items.length; i++) {
+            // Include mobile libraries in consortium listings...
+            libraryList.push({
+                id: data.items[i].id, text: data.items[i].name,
+                city: data.items[i].city.toString(),
+                street: data.items[i].address.street,
+                zipcode: data.items[i].address.zipcode,
+                coordinates: data.items[i].coordinates,
+                services: JSON.stringify(data.items[i].services)
+            });
+            if(lang === "fi") {
+                libListMultiLangHelper.push({nameFi: encodeVal(data.items[i].name), id: data.items[i].id});
+            }
+            else {
+                libListMultiLangHelper.push({nameEn: encodeVal(data.items[i].name), id: data.items[i].id});
+            }
+            // Wiitaunion mobile library is used in both "Pihtipudas (85449)" and "Viitasaari".
+            if(data.items[i].id == 85449) {
+                libraryList.push({
+                    id: data.items[i].id, text: data.items[i].name,
+                    city: "16055",
+                    street: data.items[i].address.street,
+                    zipcode: data.items[i].address.zipcode,
+                    coordinates: data.items[i].coordinates,
+                    services: JSON.stringify(data.items[i].services)
+                });
+            }
+        }
+        $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + oppositeLang + "&consortium=" + consortium + "&limit=1500", function(data) {
+            for (var i = 0; i < data.items.length; i++) {
+                var index = findIndexInObjectArray(libListMultiLangHelper, "id", data.items[i].id);
+                if (oppositeLang === "en") {
+                    libListMultiLang.push({nameFi: libListMultiLangHelper[index].nameFi, nameEn: encodeVal(data.items[i].name), id: data.items[i].id});
+                }
+                else {
+                    libListMultiLang.push({nameEn: libListMultiLangHelper[index].nameEn, nameFi: encodeVal(data.items[i].name), id: data.items[i].id});
+                }
+            }
+            consortiumLibListDeferred.resolve();
+            generateSelect();
+        });
+    });
+
+    }, 1 );
+    // Return the Promise so caller can't change the Deferred
+    return consortiumLibListDeferred.promise();
+
+}
+
+var withServices = "&with=services";
+if(homePage) {
+    withServices = "";
+}
+var oppositeLang = "en";
+if (lang === "en") {
+    oppositeLang = "fi";
+}
 $(document).ready(function() {
-    var withServices = "&with=services";
-    if(homePage) {
-        withServices = "";
-    }
-    var oppositeLang = "en";
-    if(lang === "en") {
-        oppositeLang = "fi";
-    }
+
     // Fetch libraries of city, that belong to the same consortium
     if(consortium !== undefined && city !== undefined) {
         isLibaryList = true;
@@ -313,53 +383,10 @@ $(document).ready(function() {
         });
     }
     // Fetch libraries of consortium
-    else if(consortium !== undefined && city === undefined) {
+    else if (consortium !== undefined && city === undefined) {
         isLibaryList = true;
-        $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + lang + "&consortium=" + consortium +
-        withServices + "&limit=1500", function(data) {
-            for (var i=0; i<data.items.length; i++) {
-                // Include mobile libraries in consortium listings...
-                libraryList.push({
-                    id: data.items[i].id, text: data.items[i].name,
-                    city: data.items[i].city.toString(),
-                    street: data.items[i].address.street,
-                    zipcode: data.items[i].address.zipcode,
-                    coordinates: data.items[i].coordinates,
-                    services: JSON.stringify(data.items[i].services)
-                });
-                if(lang === "fi") {
-                    libListMultiLangHelper.push({nameFi: encodeVal(data.items[i].name), id: data.items[i].id});
-                }
-                else {
-                    libListMultiLangHelper.push({nameEn: encodeVal(data.items[i].name), id: data.items[i].id});
-                }
-                // Wiitaunion mobile library is used in both "Pihtipudas (85449)" and "Viitasaari".
-                if(data.items[i].id == 85449) {
-                    libraryList.push({
-                        id: data.items[i].id, text: data.items[i].name,
-                        city: "16055",
-                        street: data.items[i].address.street,
-                        zipcode: data.items[i].address.zipcode,
-                        coordinates: data.items[i].coordinates,
-                        services: JSON.stringify(data.items[i].services)
-                    });
-                }
-            }
-            $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + oppositeLang + "&consortium=" + consortium + "&limit=1500", function(data) {
-                for (var i = 0; i < data.items.length; i++) {
-                    var index = findIndexInObjectArray(libListMultiLangHelper, "id", data.items[i].id);
-                    if (oppositeLang === "en") {
-                        libListMultiLang.push({nameFi: libListMultiLangHelper[index].nameFi, nameEn: encodeVal(data.items[i].name), id: data.items[i].id});
-                    }
-                    else {
-                        libListMultiLang.push({nameEn: libListMultiLangHelper[index].nameEn, nameFi: encodeVal(data.items[i].name), id: data.items[i].id});
-                    }
-                }
-                generateSelect();
-            });
-        });
+        fetchConsortiumLibraries(consortium);
     }
-
     $("#librarySelector").change(function(){
         var newLib =  $(this).val();
         // Wiitaunion mobile library is used in both "Pihtipudas" and "Viitasaari".
@@ -427,6 +454,7 @@ $(document).ready(function() {
                 }
                 // Adjust parent url.
                 adjustParentUrl(libName, "library");
+
             }
             if(homePage) {
                 getDaySchelude(0, library);

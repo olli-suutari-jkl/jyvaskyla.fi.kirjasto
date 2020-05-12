@@ -78,8 +78,6 @@ function generateAccessibilityTextBlock(serviceName) {
 
 function generateWebropolSurveyFrames(description) {
     if (description.indexOf("<a href=") !== -1) {
-        // Make all links external.
-        //description = description.replace(/(<a href=")+/g, '<a class="external-link" target="_blank" href="');
         // Generate iframes from links that contain "embed"
         var linksToReplace = [];
         var reFindLinks = new RegExp(/<a\b[^>]*>(.*?)<\/a>/g);
