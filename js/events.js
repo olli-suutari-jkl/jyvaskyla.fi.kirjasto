@@ -56,6 +56,7 @@ function generateEventListForLib(library) {
         }
     }
     if (eventList.length != 0) {
+        $("#eventsTitle").text(i18n.get("Events"));
         $("#eventsTitle").css('display', 'block');
     }
     // Show up to 5 upcoming events. + toggle for more.
