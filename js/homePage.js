@@ -21,8 +21,13 @@ function adjustHomePageHeight(delay) {
     setTimeout(function(){
         try {
             var newHeight = 0;
-            if(selectIsOpen) {
-                newHeight = 650;
+            if (selectIsOpen) {
+                if (height < 650) {
+                    newHeight = 650;
+                }
+                else {
+                    newHeight = height
+                }
             }
             else {
                 newHeight = newHeight + document.getElementById("homePageWidget").scrollHeight;
@@ -42,7 +47,9 @@ function adjustHomePageHeight(delay) {
 
 var selectIsOpen = false;
 $(document).ready(function() {
-    $("#btnOpenLibryPage").append(i18n.get("Open library page"));
+    $("#btnOpenLibryPage").append(i18n.get("Open library page"))
+    //$("#btnOpenLibryPage").append('<i style="margin-left: 15px; color: white;" class="fas fa-arrow-alt-circle-right" aria-hidden="true"></i>');
+
     // Since the api is having problems with special schedules, add a notification. To be commented when fixed.
     //$('#schedules').prepend('<p style="color: red">' + i18n.get("Wrong schedules") + '</p>');
     adjustHomePageHeight(500);
@@ -360,11 +367,11 @@ function getDaySchelude(direction, lib) {
             if (isClosed) {
                 // Add info row on closed days.
                 scheludeRow = '<tr class="time ' + isTodayClass + '">' +
-                    '<td colspan="2" class="main-schedule closed">' + i18n.get("Closed") + '</td>' +
+                    '<td colspan="2" class="main-schedule day-main-schedule closed">' + i18n.get("Closed") + '</td>' +
                     '</tr>';
             } else {
                 var mainSchedule = '<tr class="time ' + isTodayClass + '">' +
-                    '<td colspan="2" class="main-schedule">' + mainScheduleText +': <time datetime="' + dayStart + '">' + dayStart.replace(/:/g, ".") + '</time> – <time datetime="' + dayEnd + '">'
+                    '<td colspan="2" class="main-schedule day-main-schedule">' + mainScheduleText +': <time datetime="' + dayStart + '">' + dayStart.replace(/:/g, ".") + '</time> – <time datetime="' + dayEnd + '">'
                     + dayEnd.replace(/:/g, ".") + '</time></td></tr>';
                 // If day has service & selfService times.
                 if(staffToday.length !== 0 && (selfServiceBefore.length !== 0 ||

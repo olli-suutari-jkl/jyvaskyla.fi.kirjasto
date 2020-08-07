@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+<body>
+<iframe id="libFrame" allowfullscreen="" scrolling="no" frameborder="0" height="1500px" src="../homePageWeek.html?lib=85713&amp;consortium=2113&amp;lang=fi&libPageUrl=consortium-example.html&amp;primary=414141&amp;btnHover=9F230C" width="100%"></iframe>
+</body>
+</html>
+<script type="text/javascript">
+  var container = document.getElementById('libFrame');
+  // Add transition style for smooth height adjustments.
+  var css = document.createElement("style");
+  css.type = "text/css";
+  css.innerHTML = '#libFrame { transition: height 800ms; }';
+  document.head.appendChild(css);
+  // https://stackoverflow.com/questions/25098021/securityerror-blocked-a-frame-with-origin-from-accessing-a-cross-origin-frame
+  window.addEventListener('message', function(event) {
+    var data = event.data;
+    if(data.type === "scroll") {
+      console.log("scroll to");
+      var rect = container.getBoundingClientRect();
+      var scrollToPos = rect.top + data.value;
+      if(data.scrollParameter === "under") {
+        // Scroll if under the scroll position
+        if(window.pageYOffset > scrollToPos) {
+          window.scrollTo({ top: scrollToPos, behavior: 'smooth' })
+        }
+      }
+      else if(data.scrollParameter === "center") {
+          // Scroll to position.
+          window.scrollTo({ top: scrollToPos, behavior: 'smooth' })
+      }
+      else {
+        // Scroll if above the scroll position.
+        if(window.pageYOffset < scrollToPos) {
+          window.scrollTo({ top: scrollToPos, behavior: 'smooth' })
+        }
+      }
+    }
+    else if(data.type === "resize") {
+      container.style.height = (data.value) + "px";
+    }
+    else if(data.type === "url") {
+      try {
+        history.replaceState("", "", data.value);
+      }
+      catch (e) {
+        console.log("Url failed to update: " + e);
+      }
+    }
+    else if(data.type === "redirect") {
+      try {
+        window.location.href = data.value;
+      }
+      catch (e) {
+        console.log("Redirect failed: " + e);
+      }
+    }
+  });
+</script>
+
+
+
+
+

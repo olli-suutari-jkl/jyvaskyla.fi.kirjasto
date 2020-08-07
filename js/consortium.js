@@ -191,7 +191,7 @@ function generateSelect() {
         $.when(asyncCheckUrlForKeskiLibrary(), asyncReplaceIdWithCity()).then(
             function(){
                 // Trigger schedule fetching.
-                if(homePage) {
+                if(homePage && $('.homepage-widget-week').length === 0) {
                     getDaySchelude(0, library);
                 }
                 else {
@@ -457,7 +457,12 @@ $(document).ready(function() {
 
             }
             if(homePage) {
-                getDaySchelude(0, library);
+                if ($('.homepage-widget-week').length === 0) {
+                    getDaySchelude(0, library);
+                }
+                else {
+                    getWeekSchelude(0, library);
+                }
                 adjustHomePageHeight(50);
             }
             else {
