@@ -524,6 +524,14 @@ function asyncGenerateEventMap(locations) {
             eventMap = L.map('eventMapContainer');
             // Add fallback layer to the default titles in case something goes wrong (err 429 etc.)
             L.tileLayer.fallback('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(eventMap);
+            /*
+            if (refUrl.indexOf('finna') > -1) {
+                // Blocked for non-finna websites.
+                L.tileLayer.fallback('https://map-api.finna.fi/v1/rendered/{z}/{x}/{y}.png').addTo(eventMap);
+            }
+            else {
+                L.tileLayer.fallback('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(eventMap);
+            }*/
             // Limitations: free usage for up to 75,000 mapviews per month, none-commercial services only. For bigger usage and other cases contact CARTO sales for enterprise service key.
             L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(eventMap);
             // Min/max zoom levels + default focus.

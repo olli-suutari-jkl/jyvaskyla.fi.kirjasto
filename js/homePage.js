@@ -73,7 +73,10 @@ $(document).ready(function() {
             $('#homePageWidget').css("min-height", $( "body" ).height() -18);
         }
         // If we do something like timeout 500, the size will go crazy!
-    }, 1000);
+    }, 1200);
+
+    // Sometimes the initial adjustHomePageHeight triggers too early.
+    adjustHomePageHeight(1700);
 
     // Add event listener for resizing the window, adjust parent when done so.
     // https://stackoverflow.com/questions/5489946/jquery-how-to-wait-for-the-end-of-resize-event-and-only-then-perform-an-ac

@@ -14,37 +14,53 @@ function addCssToDocument(css){
 
 // Generate colors for less.
 var primary = getParamValue('primary');
+var textColor = getParamValue('textColor')
 var links = getParamValue('links');
 var linksHover = getParamValue('linksHover');
 var linksExternal = getParamValue('linksExternal');
+var btnBg = getParamValue('btnBg');
 var btnHover =  getParamValue('btnHover');
-if(primary === undefined){
+if (primary === undefined){
     primary = "#026FCF";
 }
 else {
     primary = "#" + primary;
 }
-if(links === undefined){
+if (textColor === undefined){
+    textColor = "#212529";
+}
+else {
+    textColor = "#" + textColor;
+}
+if (links === undefined){
     links = "#0b62c1";
 }
 else {
     links = "#" + links;
 }
 
-if(linksHover === undefined){
+if (linksHover === undefined){
     linksHover = "#0050a8";
 }
 else {
     linksHover = "#" + linksHover;
 }
 
-if(linksExternal === undefined){
+if (linksExternal === undefined){
     linksExternal = "#026FCF";
 }
 else {
     linksExternal = "#" + linksExternal;
 }
-if(btnHover === undefined){
+
+if (btnBg === undefined){
+    btnBg = primary;
+}
+else {
+    btnBg = "#" + btnBg;
+}
+
+if (btnHover === undefined){
     btnHover = primary;
 }
 else {
@@ -53,11 +69,14 @@ else {
 
 // Generate lessVariables.
 primary = "@primary: " + primary + "; ";
+textColor = "@textColor: " + textColor + "; ";
 links = "@links: " + links + "; ";
 linksHover = "@linksHover: " + linksHover + "; ";
 linksExternal = "@linksExternal: " + linksExternal + "; ";
+btnBg = "@btnBg: " + btnBg + "; ";
+console.log(btnBg)
 btnHover = "@btnHover: " + btnHover + "; ";
-var lessVariables = primary + links + linksHover + linksExternal + btnHover;
+var lessVariables = primary + textColor + links + linksHover + linksExternal + btnBg + btnHover;
 
 // Read less stylesheet, generate .css and add it to header.
 var styleCssXml = new XMLHttpRequest();

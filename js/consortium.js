@@ -152,7 +152,7 @@ function asyncReplaceIdWithCity() {
                         // Fetch events if events page.
                         isEventsPage = $('.lib-events').length === 1;
                         if (isEventsPage) {
-                            if (refUrl.indexOf("finna") > -1 || refUrl.indexOf("localhost") > -1) {
+                            if (refUrl.indexOf("jyvaskyla") > -1 || refUrl.indexOf("keski") > -1 || refUrl.indexOf("localhost") > -1) {
                                 fetchEvents();
                             }
                         }
