@@ -74,7 +74,6 @@ links = "@links: " + links + "; ";
 linksHover = "@linksHover: " + linksHover + "; ";
 linksExternal = "@linksExternal: " + linksExternal + "; ";
 btnBg = "@btnBg: " + btnBg + "; ";
-console.log(btnBg)
 btnHover = "@btnHover: " + btnHover + "; ";
 var lessVariables = primary + textColor + links + linksHover + linksExternal + btnBg + btnHover;
 

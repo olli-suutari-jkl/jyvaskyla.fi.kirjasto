@@ -389,7 +389,7 @@ function bindServiceClicks() {
             toggleModal();
             setTimeout(function(){
                 $("li").find('[data-name="'+ name +'"]').click();
-            }, 50);
+            }, 350);
 
             try {
                 setTimeout(function(){
