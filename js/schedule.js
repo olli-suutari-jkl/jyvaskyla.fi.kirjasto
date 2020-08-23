@@ -422,11 +422,14 @@ function getWeekSchelude(direction, lib) {
                 document.title = data.name;
             }
         }
-        if(bodyWidth < 768 && !mobileSchedulesMoved && $("#blockquote").length) {
+        if (bodyWidth < 768 && !mobileSchedulesMoved && $("#blockquote").length) {
             mobileSchedulesMoved = true;
-            scheduleClone = $("#schedules").clone();
+            var scheduleClone = $("#schedules").clone();
+            var eventsClone = $("#events").clone();
             $("#schedules").html('');
+            $("#events").html('');
             $("#blockquote").after(scheduleClone);
+            $("#schedules").after(eventsClone);
             bindScheduleKeyNavigation();
             detectswipe("schedules", swipeNavigation);
         }
