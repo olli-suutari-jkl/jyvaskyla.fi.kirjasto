@@ -192,7 +192,6 @@ function asyncGenerateGenericDetails() {
                 description = generateWebropolSurveyFrames(description);
                 // Add target="_blank" to links. Same url links would open inside Iframe, links to outside  wouldn't work.
                 description = description.replace(/(<a )+/g, '<a target="_blank" ');
-
                 if (description.indexOf("blockquote") !== -1) {
                     description = replaceQuotesWithServiceAndLibraryLinks(description, false);
                     $("#introContent").append(description);

@@ -440,11 +440,19 @@ function bindActions() {
 // divClone & active tab are used with consortium.js
 var divClone = '';
 var map;
+// Create typing timer for search functionality so the url is not updated after each keystroke.
+var searchTypingTimer;
+function updateSearchTerm() {
+    var libSearchText = $('.select2-search__field').val();
+    if (libSearchText === '' || libSearchText == undefined) {
+        adjustParentUrl('', 'search');
+        return
+    }
+    adjustParentUrl(libSearchText, 'search')
+}
+
 $(document).ready(function() {
     bindActions();
-    $( "#closeInfoBtn" ).on('click', function () {
-        toggleInfoBox(200);
-    });
     map = L.map('mapContainer');
     // UI texts.
     if($('#librarySelectorTitle')) {
@@ -461,7 +469,6 @@ $(document).ready(function() {
     $('#srAddress').append(i18n.get("Address details"));
     $('#transitDetailsTitle').append(i18n.get("Instructions for transit"));
     // Services
-    $('#closeInfoBtn').append(i18n.get("Close"));
     if(isIOS) {
         $('#expandMap').css('display', 'none');
         if($(window).width() > 767) {
@@ -480,5 +487,28 @@ $(document).ready(function() {
     // Fetch details if not generating select for libraries, otherwise trigger this in consortium.js
     if(consortium === undefined && city === undefined) {
         fetchInformation(lang);
+    }
+    // Bind search  url updater
+    if (!homePage) {
+        $(document).on('keyup keydown', 'input.select2-search__field', function(e) {
+            clearTimeout(searchTypingTimer);
+            searchTypingTimer = setTimeout(updateSearchTerm, 500);
+        })
+        $('#librarySelector').on('select2:close', function (e) {
+            adjustParentUrl('', 'search');
+        });
+        if(refUrl.indexOf('?haku=') > -1) {
+            var regexFindSearchTerm = /(\?haku=(.*)\*)/g;
+            var executedRegexFindSearchTerm = regexFindSearchTerm.exec(refUrl);
+            // SearchTerm is in the capture group "2""
+            var searchTerm = executedRegexFindSearchTerm[2];
+            setTimeout(function(){
+                // Open the search dialogue, set the value and trigger the search.
+                $('#librarySelector').select2('open');
+                $('.select2-search__field').val(searchTerm);
+                $(".select2-search__field").trigger('keyup');
+            }, 700);
+        }
+
     }
 }); // OnReady
