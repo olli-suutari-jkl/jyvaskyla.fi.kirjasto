@@ -3,6 +3,10 @@ var dict = {
         fi: "Kirjaston valinta",
         en: "Library selector",
     },
+    "Search helper text": {
+        fi: "Hae etsimäsi kirjasto tai palvelu esim. omatoimikirjasto tai digitointi",
+        en: "Type the library or the service you are looking for",
+    },
     "Info": {
         fi: "Esittely",
         en: "Info",

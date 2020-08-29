@@ -494,8 +494,17 @@ $(document).ready(function() {
             clearTimeout(searchTypingTimer);
             searchTypingTimer = setTimeout(updateSearchTerm, 500);
         })
+        $('#librarySelector').on('select2:open', function (e) {
+            $('#librarySelectorLabel').text(i18n.get('Search helper text'));
+            $('.select2-container').addClass('negative-select-top-margin');
+            $('#librarySelectorLabel').addClass('search-helper-text-overlay');
+        });
         $('#librarySelector').on('select2:close', function (e) {
             adjustParentUrl('', 'search');
+            $('#librarySelectorLabel').text(i18n.get('Library selector'));
+            $('#librarySelectorLabel').removeClass('search-helper-text-overlay');
+            $('.select2-container').removeClass('negative-select-top-margin');
+            $('.search-helper-text-overlay').removeClass('activated-search-overlay');
         });
         if(refUrl.indexOf('?haku=') > -1) {
             var regexFindSearchTerm = /(\?haku=(.*)\*)/g;
@@ -509,6 +518,5 @@ $(document).ready(function() {
                 $(".select2-search__field").trigger('keyup');
             }, 700);
         }
-
     }
 }); // OnReady

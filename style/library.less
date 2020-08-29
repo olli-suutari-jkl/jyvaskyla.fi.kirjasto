@@ -184,6 +184,60 @@ ul.cols {
     }
 }
 
+@-webkit-keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+#mainContainer .select2-container {
+    //margin-top: 0;
+}
+
+.negative-select-top-margin {
+    margin-top: -26px!important;
+}
+
+#mainContainer .librarySelectorTitle, #librarySelectorLabel {
+    margin-bottom: -5px!important;
+    font-size: .85em;
+}
+//.select2-search
+.select2-search--dropdown {
+    margin-left: -5px;
+    margin-right: -5px;
+}
+
+.select2-search--dropdown input:focus {
+    border: none!important;
+}
+
+.search-helper-text-overlay {
+    position: relative;
+    bottom: -2px;
+    background: #fdfdfd; // TO DO: create and use @bg color
+    width: 100%;
+    font-size: .76em!important;
+    z-index: 1200;
+    font-weight: 600;
+    padding-bottom: 12px;
+    -webkit-animation: fadeIn 0.75s;
+    animation: fadeIn 0.75s;
+}
+
+.activated-search-overlay {
+    opacity: 1;
+    display: block;
+}
+
+.active-search-helper-text {
+    font-weight: 600;
+    font-size: 1.2em;
+}
+
 .accessibility-images img, .accessibility-text-block {
     margin-right: 2px;
     margin-bottom: 10px;
