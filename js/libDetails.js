@@ -1338,7 +1338,6 @@ function asyncFetchLinks() {
                 var igName = igName.substr(index+1);
                 var imagesAddedCount = 0;
                 var isFetchingIGVideo = false;
-                // Fetch ig images (+ captions & likes) via the IG api.
                 $.getJSON('https://www.instagram.com/' + igName + '/?__a=1', function (data) {
                     var images = data.graphql.user.edge_owner_to_timeline_media.edges;
                     for (var i=0; i<images.length; i++ && i) {

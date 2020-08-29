@@ -131,7 +131,6 @@ function asyncReplaceIdWithCity() {
             // Fetch names of all cities in kirkanta.
             $.getJSON("https://api.kirjastot.fi/v4/city?lang=fi&limit=1500", function(data) {
                 var counter = 0;
-
                 for (var i = 0; i < data.items.length; i++) {
                     // Check if libraryList contains the ID.
                     for (var x=0; x<libraryList.length; x++) {
@@ -148,7 +147,6 @@ function asyncReplaceIdWithCity() {
                             if(a.city > b.city) { return 1; }
                             return 0;
                         });
-
                         // Fetch events if events page.
                         isEventsPage = $('.lib-events').length === 1;
                         if (isEventsPage) {
@@ -157,7 +155,6 @@ function asyncReplaceIdWithCity() {
                             }
                         }
                         citiesDeferred.resolve();
-
                     }
                 }
             });
@@ -169,7 +166,6 @@ function asyncReplaceIdWithCity() {
     // Return the Promise so caller can't change the Deferred
     return citiesDeferred.promise();
 }
-
 
 function generateSelect() {
     // Sort alphabetically. https://stackoverflow.com/questions/6712034/sort-array-by-firstname-alphabetically-in-javascript
@@ -185,8 +181,7 @@ function generateSelect() {
     // If we are fetching a consortium or a city.
     if(consortium !== undefined || city !== undefined) {
         var consortiumLibraries = [];
-
-
+        var cityLibraries = [];
         // Replace city ID:s with names and check refurl for library names.
         $.when(asyncCheckUrlForKeskiLibrary(), asyncReplaceIdWithCity()).then(
             function(){
@@ -219,9 +214,17 @@ function generateSelect() {
                 }
                 // City listing
                 else {
-                    $.when( initSelect(libraryList) ).then(
+                    $.when( librariesGroupped = groupByCity(libraryList) ).then(
                         function() {
-                            setSelectDefault();
+                            for (var key in librariesGroupped) {
+                                cityLibraries.push({text: key, children: librariesGroupped[key]});
+                            }
+                            // Attach a done, fail, and progress handler for the asyncEvent
+                            $.when( initSelect(cityLibraries) ).then(
+                                function() {
+                                    setSelectDefault();
+                                }
+                            );
                         }
                     );
                 }
@@ -241,7 +244,6 @@ function findIndexInObjectArray(arraytosearch, key, valuetosearch) {
 function fetchConsortiumLibraries(consortium) {
     var consortiumLibListDeferred = jQuery.Deferred();
     setTimeout(function() {
-
     $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + lang + "&consortium=" + consortium +
         withServices + "&limit=1500", function(data) {
         for (var i=0; i<data.items.length; i++) {
@@ -317,7 +319,7 @@ $(document).ready(function() {
                             street: data.items[i].address.street,
                             zipcode: data.items[i].address.zipcode,
                             coordinates: data.items[i].coordinates,
-                            services: data.items[i].services
+                            services: JSON.stringify(data.items[i].services)
                         });
                         if(lang === "fi") {
                             libListMultiLangHelper.push({nameFi: encodeVal(data.items[i].name), id: data.items[i].id});
