@@ -73,6 +73,7 @@ function generateEventListForLib(library) {
         $(".show-all-events-btn").on('click', function () {
             $('.show-more-events').removeClass('show-more-events');
             $('.show-all-events-btn').hide();
+            adjustParentHeight(200)
         });
     }
 
