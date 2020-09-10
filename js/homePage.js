@@ -37,7 +37,6 @@ function adjustHomePageHeight(delay) {
             }
             height = newHeight;
             setAdjustingToFalse();
-
         }
         catch (e) {
             console.log("iframe size adjustment failed: " + e);
@@ -48,8 +47,6 @@ function adjustHomePageHeight(delay) {
 var selectIsOpen = false;
 $(document).ready(function() {
     $("#btnOpenLibryPage").append(i18n.get("Open library page"))
-    //$("#btnOpenLibryPage").append('<i style="margin-left: 15px; color: white;" class="fas fa-arrow-alt-circle-right" aria-hidden="true"></i>');
-
     // Since the api is having problems with special schedules, add a notification. To be commented when fixed.
     //$('#schedules').prepend('<p style="color: red">' + i18n.get("Wrong schedules") + '</p>');
     adjustHomePageHeight(500);
@@ -74,9 +71,6 @@ $(document).ready(function() {
         }
         // If we do something like timeout 500, the size will go crazy!
     }, 1200);
-
-    // Sometimes the initial adjustHomePageHeight triggers too early.
-    adjustHomePageHeight(1700);
 
     // Add event listener for resizing the window, adjust parent when done so.
     // https://stackoverflow.com/questions/5489946/jquery-how-to-wait-for-the-end-of-resize-event-and-only-then-perform-an-ac

@@ -224,7 +224,6 @@ function getWeekSchelude(direction, lib) {
                 isScheduleEmpty = false;
                 // Adjust parent size if previously failed. Check if function exists (false in standalone)
                 if (typeof adjustParentHeight === "function") {
-                    // safe to use the function
                     adjustParentHeight();
                 }
             }
@@ -460,6 +459,9 @@ function getWeekSchelude(direction, lib) {
         } else {
             $('#scheduleTitle').html(i18n.get("Opening hours"));
             $('#scheduleTitle').css('display', 'block');
+        }
+        if (homePage) {
+            adjustHomePageHeight(200);
         }
     });
 }
