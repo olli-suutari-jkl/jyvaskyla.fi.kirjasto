@@ -934,8 +934,15 @@ function asyncFetchLocation() {
             if (address != null) {
                 contactsIsEmpty = false;
                 if (isEmpty($('#streetAddress'))) {
-                    if (address.street != null && address.zipcode != null && address.city != null) {
-                        $("#streetAddress").append('<p><strong>' + i18n.get("Address") + '</strong><br>' + libName + '<br>' + address.street + '<br>' + address.zipcode + ' ' + address.city + '</p>');
+                    if (address.street != null && address.zipcode != null && (address.area != null || address.city != null)) {
+                        var cityName = address.city;
+                        // Address city != area. Eq. Tikkakoski is technically in Jyväskylä but a different area.
+                        if (address.area !== null) {
+                            // If the area is eq. "HALLI", turn it into lowercase and then capitalize it.
+                            cityName = address.area.toLowerCase()
+                            cityName = capitalize(cityName)
+                        }
+                        $("#streetAddress").append('<p><strong>' + i18n.get("Address") + '</strong><br>' + libName + '<br>' + address.street + '<br>' + address.zipcode + ' ' + cityName + '</p>');
                     }
                 }
                 if (isEmpty($('#postalAddress'))) {
