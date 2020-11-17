@@ -1116,7 +1116,7 @@ var fbWidgetSetUp = false;
 var descriptionWidth = Math.round($('.news-description').width());
 function generateFbWidgets() {
     // Do not generate the widget if we are in contacts. This will be re-triggered when moving to the description.
-    if(fbPageNames.length == 0 || activeTab == 1) {
+    if (fbPageNames.length == 0 || activeTab == 1) {
         return;
     }
     var fbHTML = "";
@@ -1124,7 +1124,7 @@ function generateFbWidgets() {
     var fbWidth = 500;
     // The widget has a bug in iOS where switching to events tab does not work as it just jumps back to timeline.
     var tabs = "timeline,events";
-    if(isIOSMobile) {
+    if (isIOSMobile) {
         tabs = "timeline";
     }
     // Descriptionheight is used with side by side layout. This is increased if 2 col layout is used.
@@ -1211,19 +1211,21 @@ function generateFbWidgets() {
     // Load the fb script if not already loaded.
     if(!fbScriptLoaded) {
         fbScriptLoaded = true;
-        var fbScript = "https://connect.facebook.net/fi_FI/sdk.js#xfbml=1&version=v4.0";
+        var fbScript = "https://connect.facebook.net/fi_FI/sdk.js#xfbml=1&version=v9.0";
+
         if(lang != "fi") {
-            fbScript = "https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v4.0"
+            fbScript = "https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v9.0"
         }
         var script = document.createElement('script');
         script.onload = function () {
+            // Since many browsers now block third party/tracking they will allow the generation of the widget but won't allow the feed content to load.
+            // As such, this detection no longer works. Testing for window.noTracking, or testing third party cookies via another website won't detect this either.
             if (typeof FB !== 'undefined') {
                 $('.facebook-section').css('display', 'block');
                 adjustParentHeight(300);
             }
             else {
                 console.log("Facebook failed to load, possibly due to content blocking.")
-                return;
             }
         };
         script.src = fbScript;
@@ -1232,9 +1234,11 @@ function generateFbWidgets() {
     // After lib has changed.
     else {
         FB.init({
-            status: true,
+            status: false,
             xfbml: true,
-            version: 'v4.0'
+            cookie: false,
+            autoLogAppEvents : false,
+            version: 'v9.0'
         });
         if (typeof FB !== 'undefined') {
             $('.facebook-section').css('display', 'block');
@@ -1686,7 +1690,7 @@ function fetchInformation(language, lib) {
                         // If no content is provided for the left column.
                         if (descriptionIsEmpty) {
                             noLeftCol = true;
-                            if(slogan !== null) {
+                            if (slogan !== null) {
                                 if (!slogan.length <2) {
                                     $("#introductionSidebar").prepend(' <blockquote class="blockquote library-slogan">' + slogan + '</blockquote>');
                                 }
@@ -1720,14 +1724,14 @@ function fetchInformation(language, lib) {
                         $("#expandSlider").css("display", "none");
                         $('.slider-play-container').css('margin-left', '-10px');
                     }
-                    if(noSidebar && !noLeftCol) {
+                    if (noSidebar && !noLeftCol) {
                         $(".introductionSidebar").css("display", "none");
                         $("#leftBar").addClass("col-md-12");
                         $("#leftBar").removeClass("col-lg-5 col-xl-4 order-2 col-sm-12 col-md-7 col-lg-7 col-xl-8 col-md-12");
                         $("#leftBar").css("border", "none");
                     }
                     // No content at all.
-                    if(noLeftCol && noSidebar) {
+                    if (noLeftCol && noSidebar) {
                         $("#introductionSidebar").append('<div id="noIntroContent"><h3>' +
                             i18n.get("No content") + ' <i class="fas fa-frown-o"></i></h3></div>');
                     }
@@ -1742,7 +1746,9 @@ function fetchInformation(language, lib) {
                         });
                     });
                     // Generate FB widget(s)
-                    generateFbWidgets();
+                    // As of 17.11.2020 facebook widgets are no longer generated since some browsers now allow the generation of the widget but not loading the widget.
+                    // TO DO: Check firefox + edge + chrome incognito and do a workaround at some point?
+                    //generateFbWidgets();
                 }
                 adjustParentHeight(200);
             }

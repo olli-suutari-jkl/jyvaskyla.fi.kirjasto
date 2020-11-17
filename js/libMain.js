@@ -349,7 +349,9 @@ function bindActions() {
                 $("#sliderBox").addClass("small-slider");
             }, 600);
             if(!fbWidgetSetUp) {
-                generateFbWidgets();
+                // See the other usage of generateFbWidgets() for why this is commented.
+                fbWidgetSetUp = true;
+                //generateFbWidgets();
             }
         }
     }
