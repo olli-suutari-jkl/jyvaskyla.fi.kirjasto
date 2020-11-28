@@ -86,6 +86,11 @@
     text-align: center;
 }
 
+.info-row td .info-span {
+    margin-left: 15%;
+    margin-right: 4%;
+}
+
 .info-span, .info-span-lg {
     margin-left: 0.3em;
     margin-bottom: 0.95em;

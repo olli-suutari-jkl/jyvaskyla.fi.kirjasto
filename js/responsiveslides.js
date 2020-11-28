@@ -70,12 +70,12 @@ var length = 1;
           // Event listener for the play/pause button
           $('.play-pause').on("click", function() {
             var playBtnIcon = $('.rslides1_on .play-stop-icon')[0];
-            if($(playBtnIcon).hasClass('fa-redo-alt')) {
+            if ($(playBtnIcon).hasClass('fa-redo-alt')) {
               $(playBtnIcon).removeClass('fa-redo-alt');
               //$(playBtnIcon).addClass('fa-play-circle');
               $('.rslides1_on video').trigger('play');
             }
-            if($(playBtnIcon).hasClass('fa-stop-circle')) {
+            if ($(playBtnIcon).hasClass('fa-stop-circle')) {
               $('.rslides1_on video').trigger('pause');
               $('.rslides1_on video').removeClass('playing');
               $(playBtnIcon).addClass('fa-play-circle');
@@ -93,12 +93,12 @@ var length = 1;
             var muteBtnIcon = $('.rslides1_on .play-mute-icon')[0];
             var volBar = $('.rslides1_on .volume-bar')[0];
             var volBarValue = volBar.value;
-            if( $('.rslides1_on video').prop('muted') ) {
+            if ( $('.rslides1_on video').prop('muted') ) {
               $('.rslides1_on video').prop('muted', false);
-              if(volBarValue == 0) {
+              if (volBarValue == 0) {
                 $(muteBtnIcon).addClass('fa-volume-off');
               }
-              else if(volBarValue < 0.5) {
+              else if (volBarValue < 0.5) {
                 $(muteBtnIcon).addClass('fa-volume-down');
               }
               else {
@@ -131,7 +131,7 @@ var length = 1;
             var offset = $(this).offset();
             var left = (e.pageX - offset.left);
             // For touch events.
-            if(e.pageX == undefined) {
+            if (e.pageX == undefined) {
               var touch = e.originalEvent.changedTouches[0];
               left = (touch.pageX - offset.left);
             }
@@ -183,7 +183,7 @@ var length = 1;
             else {
               $(timeStamp).text(mins + ':' + secs);
             }
-            if(vid.duration === vid.currentTime) {
+            if (vid.duration === vid.currentTime) {
               var playBtn = $('.rslides1_on .play-stop-icon')[0];
               $(playBtn).addClass('fa-redo-alt');
               $(playBtn).removeClass('fa-play-circle');
@@ -196,15 +196,15 @@ var length = 1;
             var vid = $('.rslides1_on video')[0];
             var volBar = $('.rslides1_on .volume-bar')[0];
             vid.volume = volBar.value;
-            if($(muteBtnIcon).hasClass('fa-volume-mute')) {
+            if ($(muteBtnIcon).hasClass('fa-volume-mute')) {
               $(muteBtnIcon).removeClass('fa-volume-mute');
             }
-            if(volBar.value == 0) {
+            if (volBar.value == 0) {
               $(muteBtnIcon).addClass('fa-volume-off');
               $(muteBtnIcon).removeClass('fa-volume-up');
               $(muteBtnIcon).removeClass('fa-volume-down');
             }
-            else if(volBar.value < 0.5) {
+            else if (volBar.value < 0.5) {
               $(muteBtnIcon).addClass('fa-volume-down');
               $(muteBtnIcon).removeClass('fa-volume-up');
               $(muteBtnIcon).removeClass('fa-volume-off');
@@ -217,7 +217,7 @@ var length = 1;
           });
           // Set video total time if the first slide is a video.
           var videoEnd = $('.rslides1_on .video-end')[0];
-          if(videoEnd !== undefined) {
+          if (videoEnd !== undefined) {
             setVideoLength(videoEnd);
           }
         };
@@ -228,7 +228,7 @@ var length = 1;
           if (secs < 10) {
             secs = '0' + String(secs);
           }
-          if(isNaN(secs) || isNaN(mins)) {
+          if (isNaN(secs) || isNaN(mins)) {
             setTimeout(function() {
               console.log("Failed to set video length, retry...");
               $(vidEnd).text('');
@@ -249,7 +249,7 @@ var length = 1;
           index = idx;
           // Set video total time if video. This works unless the video is 1st slide of the show.
           var videoEnd = $('.rslides1_on .video-end')[0];
-          if(videoEnd !== undefined) {
+          if (videoEnd !== undefined) {
             setVideoLength(videoEnd);
           }
           setTimeout(function () {
@@ -259,7 +259,7 @@ var length = 1;
 
       slideTo = function (idx) {
         // Pause any videos.
-        if(sliderHasIGVideo) {
+        if (sliderHasIGVideo) {
           $(".ig-vid").each(function(){
             $(this).get(0).pause();
           });
@@ -274,7 +274,7 @@ var length = 1;
         try {
           var imgSlide = $($($slide).find("img")[idx]);
           // Is undefined for video elements.
-          if(imgSlide[0] == undefined) {
+          if (imgSlide[0] == undefined) {
             slideToHelper(idx);
           }
           else {
@@ -326,7 +326,7 @@ var length = 1;
           rotate = setInterval(function () {
             // Clear the event queue
             $slide.stop(true, true);
-            if($(".rslides li").length < 2) {
+            if ($(".rslides li").length < 2) {
               clearInterval(rotate);
               return
             }
@@ -335,8 +335,8 @@ var length = 1;
               $("#sliderPlay").addClass('progress');
             }, 75);
               var idx = index + 1 < length ? index + 1 : 0;
-              if(!sliderHasStopped && !sliderNeedsToRestart) {
-                if(idx > length) {
+              if (!sliderHasStopped && !sliderNeedsToRestart) {
+                if (idx > length) {
                   idx = length;
                 }
                 $('.rslides1_on').off('click');
@@ -357,7 +357,7 @@ var length = 1;
         startAuto = function (playButton) {
           sliderHasStopped = false;
           $('.fa-play').addClass('fa-stop').removeClass('fa-play');
-          if(playButton) {
+          if (playButton) {
             $('.slider-play-container').tooltip('hide')
                 .attr('data-original-title', i18n.get('Stop automatic playback'))
                 .tooltip('show');
@@ -390,12 +390,12 @@ var length = 1;
             '<i class="fas fa-expand"></i></button></div></div>';
         // Inject navigation
         $('#sliderBox').append(navMarkup);
-        if(isIOS || isIE) {
+        if (isIOS || isIE) {
           $('#expandSlider').css('display', 'none');
           $('.slider-play-container').css('margin-left', '-10px');
         }
         $('#sliderPlay').click(function() {
-          if($('#sliderPlay i').hasClass('fa-play')) {
+          if ($('#sliderPlay i').hasClass('fa-play')) {
             startAuto(true);
           }
           else {
@@ -429,7 +429,7 @@ var length = 1;
           e.preventDefault();
           var $visibleClass = $('.' + visibleClass);
           // Prevent clicking if currently animated
-          if($visibleClass.queue("fx") === undefined) {
+          if ($visibleClass.queue("fx") === undefined) {
             // If slides are changed quick, sometimes things break. TO DO: Better fix.
             console.log("Something went wrong when loading the slide...");
             //slideTo(0);
@@ -456,7 +456,7 @@ var length = 1;
           if ($(this)[0] === $prev[0]) {
             $('.rslides1_on').off('click');
             slideTo(prevIdx);
-            if(prevIdx == -1) {
+            if (prevIdx == -1) {
               // If we move from 0 to previous (last slide), ui text would be -1.
               // $slide.length is the amount of slides.
               $("#currentSlide").html($slide.length);
@@ -481,7 +481,7 @@ var length = 1;
       if ($slide.length > 1) {
         startCycle();
       }
-      if(!sliderHasIGVideo) {
+      if (!sliderHasIGVideo) {
         return;
       }
       try {

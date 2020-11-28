@@ -17,7 +17,7 @@ function generatePrettyUrl (url) {
 // https://stackoverflow.com/questions/24269116/convert-plain-text-email-to-clickable-link-regex-jquery
 function generateMailToLink(string) {
     var result = "";
-    if(string.charAt(0) == '"' && string.substr(-1) == '"') {
+    if (string.charAt(0) == '"' && string.substr(-1) == '"') {
         string = string.slice(1,-1);
     }
     // Unless we wrap the address to html, we will get an error. TO DO: fix.
@@ -55,7 +55,7 @@ function generateIgLinks(string) {
             return $(this)
         }
     });
-    if(result == "") {
+    if (result == "") {
         result = string;
     }
     else {
@@ -89,7 +89,7 @@ function addMissingDot(string) {
         string = string.slice(0, -1);
         lastChar = string[string.length -1];
     }
-    if(lastChar != "." && lastChar != "!" && lastChar != "?") {
+    if (lastChar != "." && lastChar != "!" && lastChar != "?") {
         string = string + ".";
     }
     return string;
@@ -136,10 +136,10 @@ function replaceQuotesWithServiceAndLibraryLinks(string, isModal) {
                 escapedName = escapedName.replace(/\)/g, "");
                 escapedName = escapedName.replace(/_/g, " ");
                 escapedName = escapedName.replace(/-/g, " ");
-                if(textInside.indexOf(escapedName) > -1) {
+                if (textInside.indexOf(escapedName) > -1) {
                     var linkToService = reFindLinksExec[0].replace('<p>',
                         '<a class="service-link-in-modal" data-name="' + serviceNamesWithLinks[i] + '" href="javascript:void(0);">');
-                    if(!isModal) {
+                    if (!isModal) {
                         linkToService = reFindLinksExec[0].replace('<p>',
                             '<a class="service-link-in-description" data-name="' + serviceNamesWithLinks[i] + '" href="javascript:void(0);">');
                     }
@@ -148,18 +148,18 @@ function replaceQuotesWithServiceAndLibraryLinks(string, isModal) {
                     matchFound = true;
                 }
             }
-            if(!matchFound) {
+            if (!matchFound) {
                 for (var i = 0; i < libListMultiLang.length; i++) {
-                    if(textInside.indexOf(libListMultiLang[i].nameFi.replace('-', ' ')) > -1
+                    if (textInside.indexOf(libListMultiLang[i].nameFi.replace('-', ' ')) > -1
                         || textInside.indexOf(libListMultiLang[i].nameEn) > -1) {
                         matchFound = true;
                         var libName = libListMultiLang[i].nameFi;
-                        if(lang == "en") {
+                        if (lang == "en") {
                             libName = libListMultiLang[i].nameEn;
                         }
                         var linkToService = reFindLinksExec[0].replace('<p>',
                             '<a class="library-link-in-description" data-lib="' + libListMultiLang[i].id + '" href="javascript:void(0);">');
-                        if(isModal) {
+                        if (isModal) {
                             linkToService = reFindLinksExec[0].replace('<p>',
                                 '<a class="library-link-in-modal" data-lib="' + libListMultiLang[i].id + '" href="javascript:void(0);">');
                         }
@@ -197,39 +197,39 @@ function adjustParentHeight(delay, elementPosY) {
         try {
             var newHeight = 75;
             newHeight = newHeight + document.getElementById("mainContainer").scrollHeight;
-            if(isInfoBoxVisible) {
+            if (isInfoBoxVisible) {
                 var popoverHeight = document.getElementById("myModal").scrollHeight;
-                if(elementPosY !== undefined) {
+                if (elementPosY !== undefined) {
                     //console.log("newHeight: " + newHeight + " elementPosY: " + elementPosY);
                     //adjustedPos = adjustedPos - elementPosY;
                     popoverHeight = popoverHeight + elementPosY;
                     popoverHeight = popoverHeight - newHeight;
                 }
-                if(popoverHeight > 0) {
+                if (popoverHeight > 0) {
                     newHeight = newHeight + popoverHeight;
                 }
                 //console.log("newHeight: " + newHeight + " popoverHeight: " + popoverHeight);
                 /*
-                if(popoverHeight > 400) {
+                if (popoverHeight > 400) {
                     popoverHeight = popoverHeight - 375;
                     newHeight = newHeight + popoverHeight;
                 }*/
             }
             if (isIE) {
-                if(newHeight < 200) {
+                if (newHeight < 200) {
                     newHeight = newHeight + 3000;
                 }
             }
             var popOverHeader = $('.popover-header');
-            if(popOverHeader.length) {
-                if(popOverHeader[0].innerText.toLowerCase().indexOf("celia") > -1) {
+            if (popOverHeader.length) {
+                if (popOverHeader[0].innerText.toLowerCase().indexOf("celia") > -1) {
                     var popOverHeight = $('.popover').height();
-                    if(newHeight < height) {
+                    if (newHeight < height) {
                         newHeight = newHeight + popOverHeight;
                     }
                 }
             }
-            if(newHeight !== height) {
+            if (newHeight !== height) {
                 parent.postMessage({value: newHeight, type: 'resize'}, '*');
             }
             height = newHeight;
@@ -247,19 +247,19 @@ var checkedUrlForLibNamesInOppositeLang = false;
 function adjustParentUrl(toAdd, type) {
     refUrl = encodeVal(refUrl);
     // Sometimes refurl is set to github when paging back or forwards, reset in case so...
-    if(refUrl.indexOf("github") >-1) {
+    if (refUrl.indexOf("github") >-1) {
         refUrl = (window.location != window.parent.location)
             ? document.referrer
             : document.location.href;
-        if(refUrl.length === 0) {
+        if (refUrl.length === 0) {
             refUrl = window.location.href;
         }
         refUrl = decodeVal(refUrl);
     }
     toAdd = encodeVal(toAdd);
     var stateTitle = libName;
-    if(stateTitle === undefined) {
-        if(lang == "fi") {
+    if (stateTitle === undefined) {
+        if (lang == "fi") {
             stateTitle = "Kirjastot"
         }
         else {
@@ -267,27 +267,27 @@ function adjustParentUrl(toAdd, type) {
         }
     }
     // Remove item from url, if it already exists. Library name and service names can both contain "omatoimikirjasto"
-    if(toAdd !== "omatoimikirjasto") {
+    if (toAdd !== "omatoimikirjasto") {
         refUrl = refUrl.replace(new RegExp(toAdd,"i"), "");
     }
-    if(type == "cleanupUrl") {
+    if (type == "cleanupUrl") {
         toAdd = "";
     }
     // Remove contacts from url if navigating to introduction.
-    if(type === "search") {
-        if(refUrl.indexOf('?haku=') > -1) {
+    if (type === "search") {
+        if (refUrl.indexOf('?haku=') > -1) {
             refUrl = refUrl.replace(
                 new RegExp(/(\?haku=.*\*)/,"i"), "");
         }
-        if(isValue(toAdd)) {
+        if (isValue(toAdd)) {
             refUrl = refUrl + '?haku=' + toAdd + '*';
         }
     }
     // Remove lib name in opposite language, if any are present. If this is not done, it could sometimes result in infinite loop...
-    if(!checkedUrlForLibNamesInOppositeLang && type !== "search") {
+    if (!checkedUrlForLibNamesInOppositeLang && type !== "search") {
         for (var i = 0; i < libListMultiLang.length; i++) {
             var libName = libListMultiLang[i].nameEn;
-            if(lang == "en") {
+            if (lang == "en") {
                 libName = libListMultiLang[i].nameFi;
             }
             if (refUrl.indexOf("?" + libName) > -1) {
@@ -298,21 +298,21 @@ function adjustParentUrl(toAdd, type) {
     }
     // Cleanup any potential service names.
     var serviceMathchFound = false;
-    if(type !== "search") {
+    if (type !== "search") {
         for (var i = 0; i < arrayOfServiceNamesInOppositeLang.length; i++) {
-            if(arrayOfServiceNamesInOppositeLang[i].customName !== "") {
+            if (arrayOfServiceNamesInOppositeLang[i].customName !== "") {
                 var oppositeCustomName = encodeVal(arrayOfServiceNamesInOppositeLang[i].customName);
                 oppositeCustomName = oppositeCustomName.replace(/,/g, "");
-                if(refUrl.indexOf("?" + oppositeCustomName) > -1) {
+                if (refUrl.indexOf("?" + oppositeCustomName) > -1) {
                     serviceMathchFound = true;
                     refUrl = refUrl.replace("?" + decodeVal(arrayOfServiceNamesInOppositeLang[i].customName), "");
                 }
             }
-            if(!serviceMathchFound) {
-                if(arrayOfServiceNamesInOppositeLang[i].name !== "") {
+            if (!serviceMathchFound) {
+                if (arrayOfServiceNamesInOppositeLang[i].name !== "") {
                     var oppositeName = encodeVal(arrayOfServiceNamesInOppositeLang[i].name);
                     oppositeName = oppositeName.replace(/,/g, "");
-                    if(refUrl.indexOf("?" + oppositeName) > -1) {
+                    if (refUrl.indexOf("?" + oppositeName) > -1) {
                         serviceMathchFound = true;
                         refUrl = refUrl.replace("?" + decodeVal(arrayOfServiceNamesInOppositeLang[i].name), "");
                     }
@@ -321,19 +321,19 @@ function adjustParentUrl(toAdd, type) {
         }
         serviceMathchFound = false;
         for (var i = 0; i < arrayOfServiceNames.length; i++) {
-            if(arrayOfServiceNames[i].customName !== "") {
+            if (arrayOfServiceNames[i].customName !== "") {
                 var oppositeCustomName = encodeVal(arrayOfServiceNames[i].customName);
                 oppositeCustomName = oppositeCustomName.replace(/,/g, "");
-                if(refUrl.indexOf("?" + oppositeCustomName) > -1) {
+                if (refUrl.indexOf("?" + oppositeCustomName) > -1) {
                     serviceMathchFound = true;
                     refUrl = refUrl.replace("?" + decodeVal(arrayOfServiceNames[i].customName), "");
                 }
             }
-            if(!serviceMathchFound) {
-                if(arrayOfServiceNames[i].name !== "") {
+            if (!serviceMathchFound) {
+                if (arrayOfServiceNames[i].name !== "") {
                     var oppositeName = encodeVal(arrayOfServiceNames[i].name);
                     oppositeName = oppositeName.replace(/,/g, "");
-                    if(refUrl.indexOf("?" + oppositeName) > -1) {
+                    if (refUrl.indexOf("?" + oppositeName) > -1) {
                         serviceMathchFound = true;
                         refUrl = refUrl.replace("?" + decodeVal(arrayOfServiceNames[i].name), "");
                     }
@@ -341,38 +341,38 @@ function adjustParentUrl(toAdd, type) {
             }
         }
     }
-    if(lang === "fi" && toAdd == "yhteystiedot") {
+    if (lang === "fi" && toAdd == "yhteystiedot") {
         var countYhteystiedotInUrl = (refUrl.match(/yhteystiedot/g) || []).length;
-        if(countYhteystiedotInUrl !== 0) {
+        if (countYhteystiedotInUrl !== 0) {
             toAdd = "";
         }
     }
-    else if(lang === "en" && toAdd == "contacts") {
+    else if (lang === "en" && toAdd == "contacts") {
         refUrl = refUrl.replace(/yhteystiedot/g, "");
         var countContactsInUrl = (refUrl.match(/contacts/g) || []).length;
-        if(countContactsInUrl !== 0 && toAdd == "contacts") {
+        if (countContactsInUrl !== 0 && toAdd == "contacts") {
             toAdd = "";
         }
     }
-    if(lang === "fi") {
+    if (lang === "fi") {
         refUrl = refUrl.replace(/contacts/g, "");
         var countYhteystiedotInUrl = (refUrl.match(/yhteystiedot/g) || []).length;
 
     }
-    else if(lang === "en") {
+    else if (lang === "en") {
         refUrl = refUrl.replace(/yhteystiedot/g, "");
     }
     // Remove contacts from url if navigating to introduction.
-    if(type === "introduction") {
+    if (type === "introduction") {
         refUrl = refUrl.replace(/yhteystiedot/g, "");
         refUrl = refUrl.replace(/contacts/g, "");
     }
     // Loop libraries and check if refUrl contains one of them, if so remove it.
-    if(type === "library") {
+    if (type === "library") {
         for (var i = 0; i < libListMultiLang.length; i++) {
             var nameFi = libListMultiLang[i].nameFi;
             var nameEn = libListMultiLang[i].nameEn;
-            if(refUrl.indexOf(nameFi) > -1) {
+            if (refUrl.indexOf(nameFi) > -1) {
                 refUrl = refUrl.replace(
                     new RegExp(nameFi,"i"), "");
             }
@@ -382,7 +382,7 @@ function adjustParentUrl(toAdd, type) {
             }
         }
     }
-    if(toAdd !== '' && type !== "search"){
+    if (toAdd !== '' && type !== "search"){
         refUrl = refUrl + "?" + toAdd;
     }
     refUrl = refUrl.replace(/(%3f)/g, "?");
@@ -391,12 +391,12 @@ function adjustParentUrl(toAdd, type) {
     // Fix jkl redirects ?=? patterns.
     refUrl = refUrl.replace(/(\?=\?)/g, "?");
     // Always place contacts at the end of the url.
-    if(refUrl.indexOf('?yhteystiedot') > -1) {
+    if (refUrl.indexOf('?yhteystiedot') > -1) {
         refUrl = refUrl.replace('?yhteystiedot', "");
         refUrl = refUrl + '?yhteystiedot';
         stateTitle = stateTitle + " | Yhteystiedot"
     }
-    else if(refUrl.indexOf('?contacts') > -1) {
+    else if (refUrl.indexOf('?contacts') > -1) {
         refUrl = refUrl.replace('?contacts', "");
         refUrl = refUrl + '?contacts';
         stateTitle = stateTitle + " | Contacts"
@@ -405,8 +405,8 @@ function adjustParentUrl(toAdd, type) {
     refUrl = refUrl.replace(/\?$/, '');
     refUrl = refUrl.replace(/=$/, '');
     // In Finna, all things within "Content" are case-sensitive... :)
-    if(refUrl.indexOf('finna') > -1) {
-        if(refUrl.indexOf('/content/') > -1) {
+    if (refUrl.indexOf('finna') > -1) {
+        if (refUrl.indexOf('/content/') > -1) {
             refUrl = refUrl.replace('/content/', "/Content/");
         }
     }
@@ -426,21 +426,21 @@ $(document).ready(function() {
         navigator.userAgent &&
         navigator.userAgent.indexOf('CriOS') == -1 &&
         navigator.userAgent.indexOf('FxiOS') == -1;
-    if(testSafari || /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+    if (testSafari || /^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
         isIOS = true;
     }
     // https://stackoverflow.com/questions/4617638/detect-ipad-users-using-jquery
     var isIPad = navigator.userAgent.match(/iPad/i) != null;
     var isIPhone = (navigator.userAgent.match(/iPhone/i) != null) || (navigator.userAgent.match(/iPod/i) != null);
-    if(isIPad || isIPhone) {
+    if (isIPad || isIPhone) {
         isIOSMobile = true;
     }
 
-    if(navigator.appName == 'Microsoft Internet Explorer' ||  !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv:11/)) || (typeof $.browser !== "undefined" && $.browser.msie == 1)) {
+    if (navigator.appName == 'Microsoft Internet Explorer' ||  !!(navigator.userAgent.match(/Trident/) || navigator.userAgent.match(/rv:11/)) || (typeof $.browser !== "undefined" && $.browser.msie == 1)) {
         isIE = true;
     }
     // Do not bind the resizing functions for large or homepage schedules. (Homepage has their own)
-    if(homePage || largeSchedules) {
+    if (homePage || largeSchedules) {
         return;
     }
     bodyWidth = $('body').width();
@@ -461,7 +461,7 @@ $(document).ready(function() {
             setTimeout(resizeend, delta);
         } else {
             timeout = false;
-            if(!isAdjustingHeight) {
+            if (!isAdjustingHeight) {
                 adjustParentHeight(1);
             }
         }

@@ -2,13 +2,13 @@ function toggleFullScreen(target) {
     // if already full screen; exit
     // else go fullscreen
     // If slider, toggle small-slider class.
-    if(target === "#sliderBox") {
+    if (target === "#sliderBox") {
         $('#sliderBox').toggleClass("small-slider");
         $('#sliderBox').toggleClass("full-screen-slider");
         $('.fa-stop').click();
         adjustParentHeight(500)
     }
-    else if(target === "#mapContainer") {
+    else if (target === "#mapContainer") {
         $('#mapContainer').toggleClass("map-borders");
     }
     if (
@@ -124,28 +124,28 @@ function addItem(item, listElement) {
     if (item.name != null && item.name.length != 0) {
         name = item.name;
     }
-    if(listElement == "accessibilityCelia") {
+    if (listElement == "accessibilityCelia") {
         var celiaDescription = "";
-        if(isValue(item.shortDescription)) {
+        if (isValue(item.shortDescription)) {
             celiaDescription = capitalize(addMissingDot(item.shortDescription));
         }
-        if(isValue(item.description)) {
-            if(removeHtmlTags(item.description) != celiaDescription) {
+        if (isValue(item.description)) {
+            if (removeHtmlTags(item.description) != celiaDescription) {
                 celiaDescription = celiaDescription + " " + capitalize(addMissingDot(removeHtmlTags(item.description)));
             }
         }
         var standardName = item.standardName;
-        if(standardName.toLowerCase().indexOf("registeration") > -1 ||
+        if (standardName.toLowerCase().indexOf("registeration") > -1 ||
             standardName.toLowerCase().indexOf("rekisteröityminen") > -1 ) {
-            if(isValue(celiaDescription)) {
+            if (isValue(celiaDescription)) {
                 celiaDescription = standardName + ": " + celiaDescription;
             }
         }
-        if(celiaDescription == "") {
+        if (celiaDescription == "") {
             celiaDescription = i18n.get("Celia info");
         }
         celiaDescription = "<p>" + celiaDescription + '</p>';
-        if(isValue(item.website)) {
+        if (isValue(item.website)) {
             var prettyLink = generatePrettyUrl (item.website);
             celiaDescription = celiaDescription + "<p class='service-info service-website' " +
                 " aria-label='" + i18n.get("Website") + "'>" +
@@ -153,10 +153,10 @@ function addItem(item, listElement) {
                 ":</span> <a target='_blank' href='" + item.website + "'>" +
                 capitalize(prettyLink) + "</a></p>";
         }
-        if($(".celia-services").length) {
+        if ($(".celia-services").length) {
             if ($(".celia-services").attr('data-content') != celiaDescription) {
                 var newDescription = celiaDescription + $(".celia-services").attr('data-content');
-                if(standardName.toLowerCase().indexOf("registration") > -1 ||
+                if (standardName.toLowerCase().indexOf("registration") > -1 ||
                     standardName.toLowerCase().indexOf("rekisteröityminen") > -1 ) {
                     newDescription = $(".celia-services").attr('data-content') + celiaDescription
                 }
@@ -170,7 +170,7 @@ function addItem(item, listElement) {
             noServices = false;
         }
     }
-    if(listElement === "#accessibilityItems" && accessibilityIsEmpty) {
+    if (listElement === "#accessibilityItems" && accessibilityIsEmpty) {
         // List of values separated by "," in the short description.
         if (item.shortDescription !== null && isEmpty($('#accessibility-images'))) {
             accessibilityIsEmpty = false;
@@ -211,7 +211,7 @@ function addItem(item, listElement) {
             if (item.description != null && item.description.length != 0) {
                 accessibilityIsEmpty = false;
                 $(".accessibility-details").css("display", "block");
-                if(accessibilityCount !== 0) {
+                if (accessibilityCount !== 0) {
                     $("#accessibilityDetails").append('<h4>' + i18n.get("Accessibility details") + '</h4>')
                 }
                 $("#accessibilityDetails").append(item.description.replace(/(<a )+/g, '<a target="_blank" '));
@@ -240,14 +240,14 @@ function addItem(item, listElement) {
             // Add price where available.
             if (isValue(item.price)) {
                 var priceText = capitalize(item.price);
-                if(priceText == "Ilmainen" && lang == "en") {
+                if (priceText == "Ilmainen" && lang == "en") {
                     priceText = "Free"
                 }
                 description = description + '<p class="service-info service-price" aria-label="' + i18n.get("Price") + '">' +
                     '<i class="fas fa-money-bill-alt" data-toggle="tooltip" title="' + i18n.get("Price") + '" data-placement="top"></i>' + priceText + '</p>';
             }
             // Website
-            if(isValue(item.website)) {
+            if (isValue(item.website)) {
                 var prettyLink = generatePrettyUrl (item.website);
                 description = description + '<p class="service-info service-website" aria-label="' + i18n.get("Website") +
                     '"><i class="fas fa-globe" data-toggle="tooltip" title="' + i18n.get("Website") + '" ' +
@@ -255,13 +255,13 @@ function addItem(item, listElement) {
                     capitalize(prettyLink) + '</a></p>';
             }
             // Email & Phone
-            if(isValue(item.email)) {
+            if (isValue(item.email)) {
                 var mailToLink = generateMailToLink(capitalize(item.email));
                 description = description + '<p class="service-info service-email" aria-label="' + i18n.get("Email") + '">' +
                     '<i class="fas fa-envelope-square" data-toggle="tooltip" title="' + i18n.get("Email") + '" ' +
                     'data-placement="top"></i>' + mailToLink +'</p>';
             }
-            if(isValue(item.phoneNumber)) {
+            if (isValue(item.phoneNumber)) {
                 description = description + '<p class="service-info service-phone" aria-label="' + i18n.get("Phone") + '">' +
                     '<i class="fas fa-phone-square" data-toggle="tooltip" title="' + i18n.get("Phone") + '" ' +
                     'data-placement="top"></i>' + capitalize(item.phoneNumber) + '</p>';
@@ -289,7 +289,7 @@ function addItem(item, listElement) {
                         // Find url
                         var BookingUrlOfLink = new RegExp(/"(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?"/g).exec(reFindLinksExec[0]);
                         // Generate iframe if not null (Link invalid)
-                        if(BookingUrlOfLink !== null) {
+                        if (BookingUrlOfLink !== null) {
                             var iframeCode = '<iframe frameborder="0" height="1550px" scrolling="yes"  src='  + BookingUrlOfLink[0] +
                                 ' width="100%" style="border: 0"></iframe>';
                             // Push to array
@@ -336,10 +336,10 @@ function bindActions() {
         $("#navInfo").addClass( "active" );
         $("#introductionTab").show(animationTime);
         // Hide infobox if visible.
-        if(isInfoBoxVisible) {
+        if (isInfoBoxVisible) {
             toggleModal();
         }
-        if(activeTab === 1) {
+        if (activeTab === 1) {
             activeTab = 0;
             adjustParentHeight(animationTime);
             adjustParentUrl('', 'introduction');
@@ -348,7 +348,7 @@ function bindActions() {
             setTimeout(function(){
                 $("#sliderBox").addClass("small-slider");
             }, 600);
-            if(!fbWidgetSetUp) {
+            if (!fbWidgetSetUp) {
                 // See the other usage of generateFbWidgets() for why this is commented.
                 fbWidgetSetUp = true;
                 //generateFbWidgets();
@@ -364,25 +364,25 @@ function bindActions() {
         $("#navContacts").addClass( "active" );
         $("#contactsTab").show(animationTime);
         // Hide infobox if visible.
-        if(isInfoBoxVisible) {
+        if (isInfoBoxVisible) {
             toggleModal();
         }
-        if(activeTab === 0) {
+        if (activeTab === 0) {
             adjustParentHeight(animationTime);
             activeTab = 1;
             // Map zoom gets messed if the map is loaded before hiding the map div.
-            if(!mapLoaded) {
+            if (!mapLoaded) {
                 setTimeout(function(){
                     // If we try to set view & open the popup in asyncLoadMap, things get messed.
-                    if(lat !== undefined) {
+                    if (lat !== undefined) {
                         map.setView([lat, lon], 13.5);
                     } else {
                         map.setView(["62.750", "25.700"], 6);
                     }
                     // Open popup
                     map.eachLayer(function (layer) {
-                        if(layer._latlng !== undefined) {
-                            if(layer._latlng.lat == lat) {
+                        if (layer._latlng !== undefined) {
+                            if (layer._latlng.lat == lat) {
                                 layer.fire('click');
                             }
                         }
@@ -391,7 +391,7 @@ function bindActions() {
                 mapLoaded = true;
             }
         }
-        if(lang === "fi") {
+        if (lang === "fi") {
             adjustParentUrl('yhteystiedot', 'contact');
         }
         else {
@@ -426,7 +426,7 @@ function bindActions() {
     });
 
 
-    if(activeTab === 0) {
+    if (activeTab === 0) {
         $.when( navigateToDefault(0) ).then(
             function() {
                 //adjustParentHeight();
@@ -434,7 +434,7 @@ function bindActions() {
         );
     }
 
-    if(activeTab === 1) {
+    if (activeTab === 1) {
         navigateToContacts(0);
     }
 }
@@ -457,7 +457,7 @@ $(document).ready(function() {
     bindActions();
     map = L.map('mapContainer');
     // UI texts.
-    if($('#librarySelectorTitle')) {
+    if ($('#librarySelectorTitle')) {
         $('#librarySelectorLabel').append(i18n.get("Library selector"));
     }
     $('#navInfo').append(i18n.get("Info"));
@@ -471,9 +471,9 @@ $(document).ready(function() {
     $('#srAddress').append(i18n.get("Address details"));
     $('#transitDetailsTitle').append(i18n.get("Instructions for transit"));
     // Services
-    if(isIOS) {
+    if (isIOS) {
         $('#expandMap').css('display', 'none');
-        if($(window).width() > 767) {
+        if ($(window).width() > 767) {
             //$('.small-slider').css('height', '330px');
             $('#contactsFirstCol').addClass("col-md-12");
             $('#contactsFirstCol').removeClass("col-md-8");
@@ -487,7 +487,7 @@ $(document).ready(function() {
     // Clone page, to be restored if library selector is used.
     divClone = $("#pageContainer").clone();
     // Fetch details if not generating select for libraries, otherwise trigger this in consortium.js
-    if(consortium === undefined && city === undefined) {
+    if (consortium === undefined && city === undefined) {
         fetchInformation(lang);
     }
     // Bind search  url updater
@@ -508,7 +508,7 @@ $(document).ready(function() {
             $('.select2-container').removeClass('negative-select-top-margin');
             $('.search-helper-text-overlay').removeClass('activated-search-overlay');
         });
-        if(refUrl.indexOf('?haku=') > -1) {
+        if (refUrl.indexOf('?haku=') > -1) {
             var regexFindSearchTerm = /(\?haku=(.*)\*)/g;
             var executedRegexFindSearchTerm = regexFindSearchTerm.exec(refUrl);
             // SearchTerm is in the capture group "2""

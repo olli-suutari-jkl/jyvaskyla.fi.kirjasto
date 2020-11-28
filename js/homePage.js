@@ -32,7 +32,7 @@ function adjustHomePageHeight(delay) {
             else {
                 newHeight = newHeight + document.getElementById("homePageWidget").scrollHeight;
             }
-            if(newHeight !== height) {
+            if (newHeight !== height) {
                 parent.postMessage({value: newHeight, type: 'resize'}, '*');
             }
             height = newHeight;
@@ -66,7 +66,7 @@ $(document).ready(function() {
         adjustHomePageHeight(0);
     });
     setTimeout(function(){
-        if($( "body" ).height() > 200) {
+        if ($( "body" ).height() > 200) {
             $('#homePageWidget').css("min-height", $( "body" ).height() -18);
         }
         // If we do something like timeout 500, the size will go crazy!
@@ -89,7 +89,7 @@ $(document).ready(function() {
             setTimeout(resizeend, delta);
         } else {
             timeout = false;
-            if(!isAdjustingHeight) {
+            if (!isAdjustingHeight) {
                 adjustHomePageHeight(1);
             }
         }
@@ -119,8 +119,8 @@ function generateScheduleInfo(data) {
         // Collections
         if (items[i].name != null) {
             // Generic description has no valid_until (null)
-            if(items[i].description !== null && items[i].description.length !== 0) {
-                if(!items[i].isException) {
+            if (items[i].description !== null && items[i].description.length !== 0) {
+                if (!items[i].isException) {
                     genericDescription = items[i].description;
                 }
                 else {
@@ -128,7 +128,7 @@ function generateScheduleInfo(data) {
                 }
             }
         }
-        if(holidayDescription !== undefined) {
+        if (holidayDescription !== undefined) {
             holidayDescription = holidayDescription.replace(/(?:\r\n|\r|\n)/g, '<br>');
             holidayDescription = generateLinks(holidayDescription);
                 $('#specialInfo').replaceWith('<span id="specialInfo" class="info-span info-text"><i class="fas fa-info-circle" > </i> '
@@ -137,7 +137,7 @@ function generateScheduleInfo(data) {
         else {
             $('#specialInfo').replaceWith('<span id="specialInfo" style="display: none" class="info-span info-text"><i class="fas fa-info-circle" > </i></span>');
         }
-        if(genericDescription !== undefined) {
+        if (genericDescription !== undefined) {
             genericDescription = genericDescription.replace(/(?:\r\n|\r|\n)/g, '<br>');
             genericDescription = generateLinks(genericDescription);
             $('#scheduleInfo').replaceWith('<span id="scheduleInfo" class="info-span info-text"><i class="fas fa-info-circle" > </i> '
@@ -164,7 +164,7 @@ function getDaySchelude(direction, lib) {
     // Do not allow going more than 30 days to the past or 60 days to the future.
     if (weekCounter < -30) {
         weekCounter = -30;
-        if(!weekMinReached) {
+        if (!weekMinReached) {
             $('#lastWeek').attr('data-toggle', 'tooltip');
             $('#lastWeek').attr('title', i18n.get("Min schedules"));
             $("#lastWeek").tooltip("enable");
@@ -175,7 +175,7 @@ function getDaySchelude(direction, lib) {
     }
     if (weekCounter > 60) {
         weekCounter = 60;
-        if(!weekMaxReached) {
+        if (!weekMaxReached) {
             $('#nextWeek').attr('data-toggle', 'tooltip');
             $('#nextWeek').attr('title', i18n.get("Max schedules"));
             $("#nextWeek").tooltip("enable");
@@ -184,7 +184,7 @@ function getDaySchelude(direction, lib) {
         $('#nextWeek').tooltip('show');
         return;
     }
-    if(weekMinReached) {
+    if (weekMinReached) {
         // Hiding hides tooltip even if cursor is placed on it.
         $("#lastWeek").tooltip("hide");
         // Disable removes the bootstrap tooltip.
@@ -194,7 +194,7 @@ function getDaySchelude(direction, lib) {
         $("#lastWeek").removeAttr("title");
         weekMinReached = false;
     }
-    if(weekMaxReached) {
+    if (weekMaxReached) {
         $("#nextWeek").tooltip("hide");
         $("#nextWeek").tooltip("disable");
         $("#nextWeek").removeAttr("data-toggle");
@@ -301,7 +301,7 @@ function getDaySchelude(direction, lib) {
                             '</tr>';
                     }
                     // self-service
-                    else if(time.status === 2) {
+                    else if (time.status === 2) {
                         if (staffPresentStart === '') {
                             selfServiceBefore = '<tr class="time--sub time isTodayClass time--no-staff">' +
                                 '<td class="align-right"><i class="fas fa-level-up-alt fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
@@ -371,7 +371,7 @@ function getDaySchelude(direction, lib) {
                     '<td colspan="2" class="main-schedule day-main-schedule">' + mainScheduleText +': <time datetime="' + dayStart + '">' + dayStart.replace(/:/g, ".") + '</time> – <time datetime="' + dayEnd + '">'
                     + dayEnd.replace(/:/g, ".") + '</time></td></tr>';
                 // If day has service & selfService times.
-                if(staffToday.length !== 0 && (selfServiceBefore.length !== 0 ||
+                if (staffToday.length !== 0 && (selfServiceBefore.length !== 0 ||
                     selfServiceAfter.length !== 0)) {
                     mainSchedule = "";
                 }

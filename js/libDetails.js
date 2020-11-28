@@ -75,12 +75,12 @@ function asyncFetchV4Data() {
             founded = data.founded;
             buildingInfo = data.buildingInfo;
             // libName is undefined if on a standalone lib page.
-            if(libName === undefined) {
+            if (libName === undefined) {
                 libName = data.name;
             }
-            if(data.primaryContactInfo.email != null) {
+            if (data.primaryContactInfo.email != null) {
                 // Add description if available.
-                if(isValue(data.primaryContactInfo.email.description)) {
+                if (isValue(data.primaryContactInfo.email.description)) {
                     email = data.primaryContactInfo.email.email + data.primaryContactInfo.email.description;
                 }
                 else {
@@ -92,7 +92,7 @@ function asyncFetchV4Data() {
             for (var i = 0; i < arrayOfServices.length; i++) {
                 var name = arrayOfServices[i].standardName.toLowerCase();
                 var customName = "";
-                if(arrayOfServices[i].name !== null) {
+                if (arrayOfServices[i].name !== null) {
                     customName = arrayOfServices[i].name.toLowerCase();
                     customName = customName.replace(/,/g, "");
                     customName = customName.replace(/ä/g, "a");
@@ -120,7 +120,7 @@ function asyncFetchV4Data() {
 function asyncFetchServiceNamesInOppositeLang() {
     var serviceNamesDeferred = jQuery.Deferred();
     var oppositeLang = "fi";
-    if(lang == "fi") {
+    if (lang == "fi") {
         oppositeLang = "en";
     }
     setTimeout(function() {
@@ -132,7 +132,7 @@ function asyncFetchServiceNamesInOppositeLang() {
             for (var i = 0; i < services.length; i++) {
                 var name = services[i].standardName.toLowerCase();
                 var customName = "";
-                if(services[i].name !== null) {
+                if (services[i].name !== null) {
                     customName = services[i].name.toLowerCase();
                     customName = customName.replace(/,/g, "");
                     customName = customName.replace(/ä/g, "a");
@@ -146,7 +146,7 @@ function asyncFetchServiceNamesInOppositeLang() {
             }
             for (var i = 0; i < departments.length; i++) {
                 var name = departments[i].name.toLowerCase();
-                if(departments[i].name !== null) {
+                if (departments[i].name !== null) {
                     name = name.replace(/,/g, "");
                     name = name.replace(/ä/g, "a");
                     name = name.replace(/ö/g, "o");
@@ -207,7 +207,7 @@ function asyncGenerateGenericDetails() {
                             var librarySelector = document.getElementById("librarySelector");
                             librarySelector.value = newId;
                             // IE 11 does not like dispatchEvent... :) https://stackoverflow.com/questions/27176983/dispatchevent-not-working-in-ie11
-                            if(isIE) {
+                            if (isIE) {
                                 var event = document.createEvent("Event");
                                 event.initEvent("change", false, true);
                                 // args: string type, boolean bubbles, boolean cancelable
@@ -230,12 +230,12 @@ function asyncGenerateGenericDetails() {
         // Transit details
         if (transitIsEmpty) {
             // There is a bug that is hard to re-produce where the generate UI functions would be triggered even though the data is still null. It may be linked to slow networks. As a workaround, we reload the page if address details are null. TO DO: Better fix.
-            if(address == null || transitInfo == null || buildingInfo == null) {
+            if (address == null || transitInfo == null || buildingInfo == null) {
                 fetchInformation(lang, library);
                 return;
             }
             var cityName = address.city;
-            if(coordinates != null && address.street != null && cityName != null) {
+            if (coordinates != null && address.street != null && cityName != null) {
                 transitIsEmpty = false;
                 var linkToTransitInfo = address.street + ", "  + address.city +
                     "::" + coordinates.lat + ", "  + coordinates.lon ;
@@ -244,9 +244,9 @@ function asyncGenerateGenericDetails() {
                 linkToTransitInfo = "https://opas.matka.fi/reitti/POS/" + linkToTransitInfo;
                 linkToTransitInfo = encodeURI(linkToTransitInfo);
                 // Matka.fi does not support all cities for public transport details, see: https://www.traficom.fi/fi/asioi-kanssamme/reittiopas
-                if(cityName !== "Jyväskylä") {
+                if (cityName !== "Jyväskylä") {
                     linkToTransitInfo = "https://www.google.com";
-                    if(lang === "fi") {
+                    if (lang === "fi") {
                         linkToTransitInfo = "https://www.google.fi"
                     }
                     linkToTransitInfo = linkToTransitInfo + "/maps/dir//";
@@ -271,12 +271,12 @@ function asyncGenerateGenericDetails() {
                 $('#transitBody').append('<p>' + parking + '</p>')
             }
         }
-        if(!transitIsEmpty) {
+        if (!transitIsEmpty) {
             $('#transitDetails').css('display', 'block');
         }
         // Update the title to match data.name.
-        if(document.title !== libName && !isReFetching) {
-            if(libName != null) {
+        if (document.title !== libName && !isReFetching) {
+            if (libName != null) {
                 document.title = libName;
             }
         }
@@ -300,13 +300,13 @@ function hideModal() {
 
 var openOnLoad = false;
 function toggleModal(elementPosY) {
-    if(isInfoBoxVisible) {
+    if (isInfoBoxVisible) {
         hideModal();
     }
     else {
         var delay = 0;
         // If we are opening a service by navigating to it via url, delay so page can finish adjusting in peace.
-        if(openOnLoad) {
+        if (openOnLoad) {
             delay = 50;
             openOnLoad = false;
             try {
@@ -331,7 +331,7 @@ function toggleModal(elementPosY) {
                 // Add timeout. This prevents duplicated click events if we have changed library.
                 setTimeout(function() {
                     // Bind closing event. If this is done before generating content, it doesn't work.
-                    if(!isModalCloseBinded) {
+                    if (!isModalCloseBinded) {
                         // When clicking close buttons or outside that is not in .modal-backdrop
                         $('#myModal').on('hide.bs.modal', function (e) {
                             // calling hideModal here would result in a loop.
@@ -353,7 +353,7 @@ function toggleModal(elementPosY) {
 
 var isServiceClickBinded = false;
 function bindServiceClicks() {
-    if(isServiceClickBinded) {
+    if (isServiceClickBinded) {
         return
     }
     $(".index-item").on('click', function (e) {
@@ -371,7 +371,7 @@ function bindServiceClicks() {
             popupText = replaceQuotesWithServiceAndLibraryLinks(popupText, true);
         }
         // Check if large or small text/modal.
-        if(popupText.length > 260) {
+        if (popupText.length > 260) {
             $('#modal').addClass("modal-lg");
             $('#modal').removeClass("modal-small");
         }
@@ -400,7 +400,7 @@ function bindServiceClicks() {
             }
         });
         // Check if text contains headers..
-        if(popupText.indexOf("<h") !== -1) {
+        if (popupText.indexOf("<h") !== -1) {
             $("#modalTitle").replaceWith('<h1 id="modalTitle" class="modal-title underlined-title">' +
                 $(this).data('name') + '</h1>');
         }
@@ -417,7 +417,7 @@ function bindServiceClicks() {
         // Show modal.
         var offSet = e.pageY;
         // If we trigger the click programmatically, e.pageY will be undefined...
-        if(offSet === undefined) {
+        if (offSet === undefined) {
             offSet = e.target;
             // OffsetTop is always about 200 px too little...
             offSet = offSet.offsetTop + 200;
@@ -462,13 +462,13 @@ function asyncFetchServices() {
             if (arrayOfServices[i].name != null && arrayOfServices[i].name.length != 0 ||
                 arrayOfServices[i].standardName != null) {
                 var itemName;
-                if(arrayOfServices[i].name != null) {
+                if (arrayOfServices[i].name != null) {
                     itemName = arrayOfServices[i].name;
                 }
                 else {
                     itemName = arrayOfServices[i].standardName;
                 }
-                if(itemName.toLowerCase().indexOf("celia") !== -1) {
+                if (itemName.toLowerCase().indexOf("celia") !== -1) {
                     // Accessibility count is increased in the function.
                     addItem(arrayOfServices[i], 'accessibilityCelia');
                 }
@@ -496,9 +496,9 @@ function asyncFetchServices() {
                 }
                 // Services
                 else if (arrayOfServices[i].type == "service") {
-                    if(arrayOfServices[i].name === "Saavutettavuus" || arrayOfServices[i].name === "Esteettömyyspalvelut" || arrayOfServices[i].name === "Accessibility services") {
+                    if (arrayOfServices[i].name === "Saavutettavuus" || arrayOfServices[i].name === "Esteettömyyspalvelut" || arrayOfServices[i].name === "Accessibility services") {
                         // Set accessibility added to true, this is used to display "Services" tab if other tabs are missing.
-                        if(!accessibilityAdded) {
+                        if (!accessibilityAdded) {
                             accessibilityAdded = true;
                             // Accessibility count is increased in the function.
                             addItem(arrayOfServices[i], '#accessibilityItems');
@@ -529,10 +529,10 @@ function asyncFetchServices() {
         // Show titles & counts if found.
         if (roomCount != 0 || collectionCount != 0) {
             $("#roomsAndCollections").css('display', 'block');
-            if(roomCount != 0 && collectionCount != 0) {
+            if (roomCount != 0 && collectionCount != 0) {
                 $("#roomsAndCollectionsTitle").prepend(i18n.get("Rooms and collections"));
             }
-            else if(roomCount != 0) {
+            else if (roomCount != 0) {
                 $("#roomsAndCollectionsTitle").prepend(i18n.get("Rooms"));
             }
             else {
@@ -543,10 +543,10 @@ function asyncFetchServices() {
         }
         if (serviceCount != 0 || hardwareCount != 0) {
             $("#hardwareAndServices").css('display', 'block');
-            if(serviceCount != 0 && hardwareCount != 0) {
+            if (serviceCount != 0 && hardwareCount != 0) {
                 $("#hardwareAndServicesTitle").prepend(i18n.get("Hardware and services"));
             }
-            else if(hardwareCount != 0) {
+            else if (hardwareCount != 0) {
                 $("#hardwareAndServicesTitle").prepend(i18n.get("Hardware"));
             }
             else {
@@ -558,7 +558,7 @@ function asyncFetchServices() {
         if (accessibilityCount != 0 || !accessibilityIsEmpty) {
             $("#accessibility").css('display', 'block');
             $("#accessibilityTitle").prepend(i18n.get("Accessibility"));
-            if(accessibilityCount !== 0) {
+            if (accessibilityCount !== 0) {
                 $("#accessibilityBadge").append('(' + accessibilityCount + ')');
                 setTimeout(function(){
                     $('[data-toggle="accessibility-tooltip"]').popover({
@@ -605,7 +605,7 @@ function asyncFetchServices() {
                 escapedName = escapedName.replace(/\)/g, "");
                 escapedName = escapedName.replace(/_/g, " ");
                 escapedName = escapedName.replace(/-/g, " ");
-                if(urlUnescapeSpaces.indexOf("?" + escapedName) > -1) {
+                if (urlUnescapeSpaces.indexOf("?" + escapedName) > -1) {
                     matchFound = true;
                     toClick = serviceNamesWithLinks[i];
                     setTimeout(function(){
@@ -615,21 +615,21 @@ function asyncFetchServices() {
                 }
             }
             var matchingServiceLinkFound = false;
-            if(!matchFound) {
+            if (!matchFound) {
                 for (var i = 0; i < arrayOfServiceNamesInOppositeLang.length; i++) {
-                    if(arrayOfServiceNamesInOppositeLang[i].customName !== "") {
+                    if (arrayOfServiceNamesInOppositeLang[i].customName !== "") {
                     var oppositeCustomName = encodeVal(arrayOfServiceNamesInOppositeLang[i].customName);
                     oppositeCustomName = oppositeCustomName.replace(/-/g, " ");
                     oppositeCustomName = oppositeCustomName.replace(/,/g, "");
-                    if(urlUnescapeSpaces.indexOf(oppositeCustomName) > -1) {
+                    if (urlUnescapeSpaces.indexOf(oppositeCustomName) > -1) {
                         matchFound = true;
                         toClick = decodeVal(arrayOfServiceNames[i].customName);
-                        if(toClick == "") {
+                        if (toClick == "") {
                             toClick = decodeVal(arrayOfServiceNames[i].name)
                         }
                         for (var t = 0; t < serviceNamesWithLinks.length; t++) {
                             var valueInLowerCase = decodeVal(serviceNamesWithLinks[t].toLowerCase());
-                            if(valueInLowerCase.indexOf(toClick) > -1) {
+                            if (valueInLowerCase.indexOf(toClick) > -1) {
                                 matchingServiceLinkFound = true;
                                 toClick = serviceNamesWithLinks[t];
                                 setTimeout(function(){
@@ -639,7 +639,7 @@ function asyncFetchServices() {
                             }
                         }
                         // If no matching service is available to click, remove name from url.
-                        if(!matchingServiceLinkFound) {
+                        if (!matchingServiceLinkFound) {
                             var index = refUrl.lastIndexOf("?");
                             var serviceToRemove = refUrl.substr(index+1);
                             adjustParentUrl(serviceToRemove, "cleanupUrl");
@@ -648,24 +648,24 @@ function asyncFetchServices() {
                 }
             }
         }
-        if(!matchFound) {
+        if (!matchFound) {
             for (var i = 0; i < arrayOfServiceNames.length; i++) {
                 // Service names may contain "-" eg. Celia-library services
                 var oppositeName = encodeVal(arrayOfServiceNamesInOppositeLang[i].name);
-                if(arrayOfServiceNamesInOppositeLang[i].customName !== "") {
+                if (arrayOfServiceNamesInOppositeLang[i].customName !== "") {
                     oppositeName = encodeVal(arrayOfServiceNamesInOppositeLang[i].customName);
                 }
                 oppositeName = oppositeName.replace(/-/g, " ");
                 oppositeName = oppositeName.replace(/,/g, "");
-                if(urlUnescapeSpaces.indexOf("?" + oppositeName) > -1) {
+                if (urlUnescapeSpaces.indexOf("?" + oppositeName) > -1) {
                     matchFound = true;
                     toClick = decodeVal(arrayOfServiceNames[i].name);
-                    if(arrayOfServiceNames[i].customName !== "") {
+                    if (arrayOfServiceNames[i].customName !== "") {
                         toClick = decodeVal(arrayOfServiceNames[i].customName);
                     }
                     for (var t = 0; t < serviceNamesWithLinks.length; t++) {
                         var valueInLowerCase = decodeVal(serviceNamesWithLinks[t].toLowerCase());
-                        if(valueInLowerCase.indexOf(toClick) > -1) {
+                        if (valueInLowerCase.indexOf(toClick) > -1) {
                             matchingServiceLinkFound = true;
                             toClick = serviceNamesWithLinks[t];
                             setTimeout(function(){
@@ -675,7 +675,7 @@ function asyncFetchServices() {
                         }
                     }
                     // If no matching service is available to click, remove name from url.
-                    if(!matchingServiceLinkFound) {
+                    if (!matchingServiceLinkFound) {
                         adjustParentUrl();
                     }
                 }
@@ -691,7 +691,7 @@ function asyncFetchServices() {
 function asyncFetchDepartments() {
     var departmentsDeferred = jQuery.Deferred();
     setTimeout(function() {
-        if(departments == null) {
+        if (departments == null) {
             console.log("Something went wrong in fetching the data.")
             setTimeout(function() {
                 window.location.reload();
@@ -725,8 +725,8 @@ function generateImages(data) {
             var altText = i18n.get("Picture from the library") + ' (' + altCount + '/' + pictures.length + ')';
             $(".rslides").append('<li><img src="' + pictures[i].files.medium.url + '" alt="' + altText + '"></li>');
             counter = counter +1;
-            if(counter === data.length) {
-                if(igImages.length !== 0) {
+            if (counter === data.length) {
+                if (igImages.length !== 0) {
                     // Sort by date.
                     igImages.sort(function(a,b){
                         return new Date(b.timeStamp) - new Date(a.timeStamp);
@@ -737,7 +737,7 @@ function generateImages(data) {
                             'data-toggle="navigation-tooltip" class="slider-ig-logo no-external-icon"' + igHref + '>' +
                             '<i class="fab fa-instagram"></i></a>';
                         var likesAlt = igImages[i].likes + " " + i18n.get("Likes on Instagam");
-                        if(igImages[i].likes == 1) {
+                        if (igImages[i].likes == 1) {
                             likesAlt = igImages[i].likes + " " + i18n.get("Likes on Instagram singular");
                         }
                         var igHeart = '<a title="' + likesAlt + '" data-placement="bottom" ' +
@@ -746,7 +746,7 @@ function generateImages(data) {
                         var igCaption = '<figcaption class="ig-caption">' + igImages[i].caption + '</figcaption>';
                         var imgItem = "";
                         var vidItem = "";
-                        if(igImages[i].type == "video") {
+                        if (igImages[i].type == "video") {
                             sliderHasIGVideo = true;
                             vidItem = '<div class="video-container"> ' +
                                 '<div class="video-frame">' +
@@ -792,10 +792,10 @@ function asyncGenerateTrivia() {
     setTimeout(function() {
         if (isEmpty($('#buildingDetails')) && !isReFetching) {
             // If display none by default, colspan gets messed up.
-            if($('#triviaTitle').text().length === 0) {
+            if ($('#triviaTitle').text().length === 0) {
                 $('#triviaTitle').append( i18n.get("Trivia"));
             }
-            if(buildingInfo == null && founded == null) {
+            if (buildingInfo == null && founded == null) {
                 triviaIsEmpty = true;
                 $(".trivia-section").css("display", "block");
                 triviaDeferred.resolve();
@@ -851,7 +851,7 @@ function asyncFetchImages() {
                             var combinedLenght = pictures.length + igImages.length;
                             length = combinedLenght;
                             //$('.top-left').replaceWith('<i class="top-left"><span id="currentSlide"></span></i>/' + data.pictures.length);
-                            if(!sliderInitialized) {
+                            if (!sliderInitialized) {
                                 $(".rslides").responsiveSlides({});
                                 sliderInitialized = true;
                             }
@@ -906,14 +906,14 @@ function asyncFetchImages() {
 
 function expandedSliderToggler() {
     /* TO DO: Implement expanded slider for IE iOS.
-    if(isIOS || isIE) {
+    if (isIOS || isIE) {
         $('#sliderBox').toggleClass("small-slider");
         var sliderPos = $("#sliderBox").position().top -50;
         $('#sliderBox').toggleClass("expanded-slider");
         var sliderHeight = $("#sliderBox").height();
         var bodyHeight = $("body").height();
         var newBodyHeight = sliderHeight + bodyHeight - sliderPos;
-        if($('#sliderBox').hasClass("expanded-slider")) {
+        if ($('#sliderBox').hasClass("expanded-slider")) {
             $('#sliderBox').css("top", sliderPos);
             $('body').css("height", newBodyHeight);
         }
@@ -957,19 +957,19 @@ function asyncFetchLocation() {
                         }
                         // Generate postal address based on available data.
                         var postalString = '';
-                        if(libName !== null && libName.length !== 0) {
+                        if (libName !== null && libName.length !== 0) {
                             postalString += libName + '<br>';
                         }
-                        if(boxNumber != null && boxNumber.length !== 0) {
+                        if (boxNumber != null && boxNumber.length !== 0) {
                             postalString += boxNumber + '<br>';
                         }
-                        if(mailAddress.zipcode !== null && mailAddress.zipcode.length !== 0) {
+                        if (mailAddress.zipcode !== null && mailAddress.zipcode.length !== 0) {
                             postalString += mailAddress.zipcode + ' ';
                         }
-                        if(mailAddress.area !== null && mailAddress.area.length !== 0) {
+                        if (mailAddress.area !== null && mailAddress.area.length !== 0) {
                             postalString += mailAddress.area;
                         }
-                        if(postalString !== libName + '<br>') {
+                        if (postalString !== libName + '<br>') {
                             $("#postalAddress").append('<p><strong>' + i18n.get("Postal address") + '</strong><br>' + postalString + '</p>');
                         }
                     }
@@ -994,7 +994,7 @@ function asyncFetchLocation() {
             }
             if (email != null && email.length !== 0) {
                 contactsIsEmpty = false;
-                if(!checkIfContactExists(contactlist, email)) {
+                if (!checkIfContactExists(contactlist, email)) {
                     contactlist.push({name: i18n.get("Generic email"), contact: capitalizeEmail(email)});
                 }
             }
@@ -1027,7 +1027,7 @@ function asyncLoadMap() {
         function addCoordinatesToMap() {
             var addCoordinatesDeferred = jQuery.Deferred();
             setTimeout(function() {
-            if(libraryList.length !== 0) {
+            if (libraryList.length !== 0) {
                 var markerIcon = L.divIcon({
                     html: '<i class="fas fa-book-reader"></i>',
                     iconSize: [24, 24],
@@ -1042,11 +1042,11 @@ function asyncLoadMap() {
                         libraryList[i].street + ', <br>' + libraryList[i].zipcode + ', ' + libraryList[i].city +
                         '<br><button type="button" value="' + libraryList[i].id + '" class="map-library-changer btn btn-md btn-primary py-0 mb-3">' +
                         i18n.get("Fetch details") + '</button>';
-                    if(libraryList[i].id == library) {
+                    if (libraryList[i].id == library) {
                         text = '<strong>' + libraryList[i].text + '</strong><br>' +
                             libraryList[i].street + ', <br>' + libraryList[i].zipcode + ', ' + libraryList[i].city;
                         // Add a notification text about missing coordinates for map.
-                        if(libraryList[i].coordinates === null && !coordinateErrorSet) {
+                        if (libraryList[i].coordinates === null && !coordinateErrorSet) {
                             $('#mapContainer').append('<div id="noCoordinates">' + i18n.get("Note") + '! ' +
                                 libraryList[i].text.toString() + i18n.get("No coordinates") + '</div>');
                             coordinateErrorSet = true;
@@ -1058,7 +1058,7 @@ function asyncLoadMap() {
                             .openPopup();
                     }
                     counter = counter +1;
-                    if(counter === libraryList.length){
+                    if (counter === libraryList.length){
                         addCoordinatesDeferred.resolve();
                     }
                 }
@@ -1083,17 +1083,17 @@ function asyncLoadMap() {
     $.when( addCoordinatesToMap() ).then(
         function() {
             // If we are in the contacts tab, set map view.
-            if(activeTab === 1) {
+            if (activeTab === 1) {
                 // If we try to set view & open the popup in asyncLoadMap, things get messed.
-                if(lat !== undefined) {
+                if (lat !== undefined) {
                     map.setView([lat, lon], 16);
                 } else {
                     map.setView(["62.750", "25.700"], 6);
                 }
                 // Open popup
                 map.eachLayer(function (layer) {
-                    if(layer._latlng !== undefined) {
-                        if(layer._latlng.lat == lat) {
+                    if (layer._latlng !== undefined) {
+                        if (layer._latlng.lat == lat) {
                             layer.fire('click');
                         }
                     }
@@ -1131,27 +1131,27 @@ function generateFbWidgets() {
     var descriptionHeight = 500;
     var leftBarWidth = Math.round($('#leftBar').outerWidth());
     // If FB widget is not atleast 316 px in width, the event dates are not visible.
-    if(leftBarWidth < 500) {
+    if (leftBarWidth < 500) {
         fbWidth = Math.round($('body').width());
         adaptWidth = "false";
     }
-    else if(leftBarWidth < 1000 && fbPageNames.length != 1) {
+    else if (leftBarWidth < 1000 && fbPageNames.length != 1) {
         fbWidth = fbWidth/2;
     }
-    if(fbWidth > leftBarWidth) {
+    if (fbWidth > leftBarWidth) {
         fbWidth = leftBarWidth ;
     }
-    if(fbWidth < 316) {
+    if (fbWidth < 316) {
         fbWidth = 316;
     }
-    if(fbPageNames.length == 1) {
+    if (fbPageNames.length == 1) {
         if (!isEmpty($('#introContent'))) {
-            if(leftBarWidth > 632) {
+            if (leftBarWidth > 632) {
                 descriptionHeight = Math.round($('.news-description').height() -50);
-                if(descriptionHeight > 1500) {
+                if (descriptionHeight > 1500) {
                     descriptionHeight = 1500;
                 }
-                if(descriptionHeight < 370) {
+                if (descriptionHeight < 370) {
                     descriptionHeight = 370;
                 }
             }
@@ -1184,21 +1184,21 @@ function generateFbWidgets() {
         });
         for (var i = 0; i < fbPageNames.length; i++) {
             // Max 2 feeds.
-            if(i == 0) {
+            if (i == 0) {
                 feedOne = '<div class="fb-page" data-href="https://www.facebook.com/' + fbPageNames[0] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="true" data-adapt-container-width="' + adaptWidth + '" data-hide-cover="false" data-show-facepile="false"></div>';
             }
-            if(i == 1) {
+            if (i == 1) {
                 // 2nd item is for events in iOS
-                if(isIOSMobile){
+                if (isIOSMobile){
                     tabs = "events"
                 }
                 feedTwo = '<div class="fb-page" data-href="https://www.facebook.com/' + fbPageNames[1] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="true" data-adapt-container-width="' + adaptWidth + '" data-hide-cover="false" data-show-facepile="false"></div>';
             }
-            if(i == 2 && isIOSMobile) {
+            if (i == 2 && isIOSMobile) {
                 tabs = "timeline";
                 feedThree = '<div class="fb-page" data-href="https://www.facebook.com/' + fbPageNames[2] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="true" data-adapt-container-width="' + adaptWidth + '" data-hide-cover="false" data-show-facepile="false"></div>';
             }
-            if(i == 3 && isIOSMobile) {
+            if (i == 3 && isIOSMobile) {
                 tabs = "events";
                 feedFour = '<div class="fb-page" data-href="https://www.facebook.com/' + fbPageNames[3] + '" data-tabs="' + tabs + '" data-width="' + fbWidth + 'px" data-height="' + descriptionHeight + 'px" data-small-header="true" data-adapt-container-width="' + adaptWidth + '" data-hide-cover="false" data-show-facepile="false"></div>';
             }
@@ -1209,11 +1209,11 @@ function generateFbWidgets() {
         //$('.news-description').after(fbHTML);
     }
     // Load the fb script if not already loaded.
-    if(!fbScriptLoaded) {
+    if (!fbScriptLoaded) {
         fbScriptLoaded = true;
         var fbScript = "https://connect.facebook.net/fi_FI/sdk.js#xfbml=1&version=v9.0";
 
-        if(lang != "fi") {
+        if (lang != "fi") {
             fbScript = "https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v9.0"
         }
         var script = document.createElement('script');
@@ -1281,7 +1281,7 @@ function generateIGCaption(caption) {
     }
     for (var t = 0; t < tagsToReplace.length; t++) {
         // If we have tags #foobar & #foo, #foo would re-place #foobar incorrectly.
-        if(tagsToReplace[t].type == "tag") {
+        if (tagsToReplace[t].type == "tag") {
             caption = caption.replace(tagsToReplace[t].position,
                 tagsToReplace[t].replacement.replace("#", "%%%"));
         }
@@ -1304,7 +1304,7 @@ function asyncFetchLinks() {
             var linkCount = 0;
             // Loop the links of group category [0].
             var loopCounter = 0;
-            if(links.length === 0) {
+            if (links.length === 0) {
                 linksDeferred.resolve();
             }
         var igExists = false;
@@ -1315,7 +1315,7 @@ function asyncFetchLinks() {
                 return
             }
             var description = "";
-            if(element.description !== null && element.description.length > 1) {
+            if (element.description !== null && element.description.length > 1) {
                 description =  "<br>" + element.description;
             }
             if (url.indexOf("facebook") !== -1) {
@@ -1331,7 +1331,7 @@ function asyncFetchLinks() {
                 var fbName = fbName.substr(index+1);
                 fbPageNames.push(fbName);
                 // Push twice for iPhones + pads/(pods?), since the tab switching is broken...
-                if(isIOSMobile) {
+                if (isIOSMobile) {
                     fbPageNames.push(fbName);
                 }
                 linksIncludeFacebook = true;
@@ -1352,7 +1352,7 @@ function asyncFetchLinks() {
                 $.getJSON('https://www.instagram.com/' + igName + '/?__a=1', function (data) {
                     var images = data.graphql.user.edge_owner_to_timeline_media.edges;
                     for (var i=0; i<images.length; i++ && i) {
-                        if(i > 9) {
+                        if (i > 9) {
                             return
                         }
                         if (images[i].node.__typename == "GraphVideo") {
@@ -1365,7 +1365,7 @@ function asyncFetchLinks() {
                                 var likes = videoData.edge_media_preview_like.count;
                                 var shortcode = videoData.shortcode;
                                 var caption = "";
-                                if(videoData.edge_media_to_caption.edges[0] !== undefined) {
+                                if (videoData.edge_media_to_caption.edges[0] !== undefined) {
                                     caption = videoData.edge_media_to_caption.edges[0].node.text;
                                     caption = generateIGCaption(caption)
                                 }
@@ -1393,7 +1393,7 @@ function asyncFetchLinks() {
                             // UNIX timestamp it is count of seconds from 1970, so you need to convert it to JS Date object:
                             var timeStamp = new Date(images[i].node.taken_at_timestamp*1000);
                             var caption = "";
-                            if(images[i].node.edge_media_to_caption.edges[0] !== undefined) {
+                            if (images[i].node.edge_media_to_caption.edges[0] !== undefined) {
                                 caption = images[i].node.edge_media_to_caption.edges[0].node.text;
                                 caption = generateIGCaption(caption)
                             }
@@ -1402,7 +1402,7 @@ function asyncFetchLinks() {
                             });
                             imagesAddedCount = imagesAddedCount + 1;
                             if (imagesAddedCount == 10 || imagesAddedCount == images.length) {
-                                if(!isFetchingIGVideo) {
+                                if (!isFetchingIGVideo) {
                                     linksDeferred.resolve();
                                 }
                             }
@@ -1420,7 +1420,7 @@ function asyncFetchLinks() {
                     // Add the link to the contact details listing
                     // https://stackoverflow.com/questions/41942690/removing-http-or-http-and-www/41942787
                     // Check if refurl contains url, when we remove http / www & ending from it.
-                    if(refUrl.length === 0 || url.indexOf(refUrl.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0]) === -1) {
+                    if (refUrl.length === 0 || url.indexOf(refUrl.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0]) === -1) {
                         // Remove httml & www
                         var prettyUrl = url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "");
                         // Remove / and # from url if last characters
@@ -1430,7 +1430,7 @@ function asyncFetchLinks() {
                         prettyUrl = capitalize(prettyUrl);
                         // Generate the link
                         prettyUrl = '<a target="_blank" href="' + url + '">' + prettyUrl + '</a>';
-                        if(!checkIfContactExists(contactlist, prettyUrl) && !checkIfNameExists(contactlist, element.name)) {
+                        if (!checkIfContactExists(contactlist, prettyUrl) && !checkIfNameExists(contactlist, element.name)) {
                             contactlist.unshift({name: capitalize(sanitizedHTMLString(element.name)),
                                 contact: prettyUrl + description});
                             linkCount = linkCount +1;
@@ -1438,12 +1438,12 @@ function asyncFetchLinks() {
                     }
                 }
                 loopCounter = loopCounter +1;
-                if(loopCounter === links.length) {
+                if (loopCounter === links.length) {
                     // Mention links in title, if any are present.
-                    if(linkCount !== 0 ) {
+                    if (linkCount !== 0 ) {
                         noLinks = false;
                     }
-                    if(!igExists){
+                    if (!igExists){
                         linksDeferred.resolve();
                     }
                 }
@@ -1457,12 +1457,12 @@ function asyncGenerateNumbers() {
     var numbersDeferred = jQuery.Deferred();
     setTimeout(function() {
         var counter = 0;
-            if(phoneNumbers.length !== 0) {
+            if (phoneNumbers.length !== 0) {
                 for (var i = 0; i < phoneNumbers.length; i++) {
                     // Check if detail is unique.
-                    if(!checkIfContactExists(numbersList, phoneNumbers[i].number)) {
+                    if (!checkIfContactExists(numbersList, phoneNumbers[i].number)) {
                         var description = "";
-                        if(phoneNumbers[i].description !== null && phoneNumbers[i].description.length > 1) {
+                        if (phoneNumbers[i].description !== null && phoneNumbers[i].description.length > 1) {
                             description = phoneNumbers[i].description;
                         }
                         numbersList.push({name: phoneNumbers[i].name,
@@ -1471,7 +1471,7 @@ function asyncGenerateNumbers() {
                     counter = counter +1;
                 }
                 // If we have looped all, set as resolved, thus moving on.
-                if(counter === phoneNumbers.length) {
+                if (counter === phoneNumbers.length) {
                     $.when(
                         // Sort alphabetically. https://stackoverflow.com/questions/6712034/sort-array-by-firstname-alphabetically-in-javascript
                         numbersList.sort(function(a, b){
@@ -1488,7 +1488,7 @@ function asyncGenerateNumbers() {
                 }
             }
             // Resolve, if no length.
-            else if(phoneNumbers === undefined || phoneNumbers.length === 0) {
+            else if (phoneNumbers === undefined || phoneNumbers.length === 0) {
                 numbersDeferred.resolve()
             }
     }, 1 );
@@ -1500,30 +1500,30 @@ function asyncGenerateStaff() {
     var staffDeferred = jQuery.Deferred();
     setTimeout(function() {
         var counter = 0;
-        if(persons.length !== 0) {
+        if (persons.length !== 0) {
             for (var i = 0; i < persons.length; i++) {
                 var name = persons[i].firstName + ' ' + persons[i].lastName;
                 if (persons[i].jobTitle !== null) {
                     name += ' – ' + persons[i].jobTitle;
                 }
                 // Do not include contacts with null emails.
-                if(persons[i].email != null || persons[i].phone != null) {
+                if (persons[i].email != null || persons[i].phone != null) {
                     // Check if name or detail is unique.
                     var contact = "";
-                    if(persons[i].email != null) {
+                    if (persons[i].email != null) {
                         contact = contact + capitalizeEmail(persons[i].email);
-                        if(persons[i].phone != null && persons[i].phone.length !== 0) {
+                        if (persons[i].phone != null && persons[i].phone.length !== 0) {
                             contact = contact + "<br>" + persons[i].phone;
                         }
                     }
                     else {
-                        if(persons[i].phone.length !== 0) {
+                        if (persons[i].phone.length !== 0) {
                             contact = contact + persons[i].phone;
                         }
                     }
                     if (!checkIfContactExists(staffList, contact) || !checkIfNameExists(staffList, name)){
                         // Don't push if contact or name is empty.
-                        if(contact.length !== 0 && name.length !== 0) {
+                        if (contact.length !== 0 && name.length !== 0) {
                             // Note: Staff does not have description field.
                             staffList.push({name: name, contact: contact});
                         }
@@ -1532,7 +1532,7 @@ function asyncGenerateStaff() {
                 counter = counter +1;
             }
             // If we have looped all, set as resolved, thus moving on.
-            if(counter === persons.length) {
+            if (counter === persons.length) {
                 // Sort alphabetically. https://stackoverflow.com/questions/6712034/sort-array-by-firstname-alphabetically-in-javascript
                 $.when(
                     staffList.sort(function(a, b){
@@ -1563,13 +1563,13 @@ function generateContacts() {
         if (isEmpty($('#contactsTbody'))) {
             $.when( asyncGenerateNumbers(), asyncGenerateStaff() ).then  (
                 function() {
-                    if(contactlist.length === 0 && staffList.length === 0 && numbersList.length === 0) {
+                    if (contactlist.length === 0 && staffList.length === 0 && numbersList.length === 0) {
                         contactlist.push({name: i18n.get("No contacts"), contact: ""});
                     }
                     // Links & generic email.
                     for (var i = 0; i < contactlist.length; i++) {
                         var contactDetail = "";
-                        if(contactlist[i].contact != null) {
+                        if (contactlist[i].contact != null) {
                             contactDetail = contactlist[i].contact;
                         }
                         $("#contactsTbody").append('<tr>' +
@@ -1580,7 +1580,7 @@ function generateContacts() {
                     // Phones
                     for (var i = 0; i < numbersList.length; i++) {
                         var contactDetail = "";
-                        if(numbersList[i].contact != null) {
+                        if (numbersList[i].contact != null) {
                             contactDetail = numbersList[i].contact;
                         }
                         $("#contactsTbody").append('<tr>' +
@@ -1591,7 +1591,7 @@ function generateContacts() {
                     // Staff
                     for (var i = 0; i < staffList.length; i++) {
                         var contactDetail = "";
-                        if(staffList[i].contact != null) {
+                        if (staffList[i].contact != null) {
                             contactDetail = staffList[i].contact;
                         }
                         $("#contactsTbody").append('<tr>' +
@@ -1625,7 +1625,7 @@ function fetchInformation(language, lib) {
     function triggerFetch() {
         var fetchDeferred = jQuery.Deferred();
         setTimeout(function() {
-            if(!isReFetching) {
+            if (!isReFetching) {
                 // If we do asyncFetchServiceNamesInOppositeLang within the first $.when, asyncFetchV4Data is not always finished.
                 $.when( asyncFetchV4Data() ).then(
                     function() {
@@ -1637,7 +1637,7 @@ function fetchInformation(language, lib) {
                                         $.when( asyncGenerateGenericDetails(), asyncFetchImages(), asyncLoadMap(), generateContacts() ).then(
                                             function() {
                                                 // Generate links & contacts text based on if links were found or not.
-                                                if(!noLinks) {
+                                                if (!noLinks) {
                                                     $('#contactsTitle').append('<span>' + i18n.get("Links and contacts") + '</span>');
                                                 } else {
                                                     $('#contactsTitle').append('<span>' + i18n.get("Contacts") + '</span>');
@@ -1670,7 +1670,7 @@ function fetchInformation(language, lib) {
                     }
                 }, 250);
             }
-            else if(!isReFetching) {
+            else if (!isReFetching) {
                 generateEventListForLib(library);
             }
             // If lang is english, do this again with Finnish to add missing infos.
@@ -1682,10 +1682,10 @@ function fetchInformation(language, lib) {
                 }, 400);
             }
             else {
-                if(language === "fi") {
+                if (language === "fi") {
                     var noLeftCol = false;
                     var noSidebar = false;
-                    if(noServices) {
+                    if (noServices) {
                         $('#libraryServices').css('display', 'none');
                         // If no content is provided for the left column.
                         if (descriptionIsEmpty) {
@@ -1701,14 +1701,14 @@ function fetchInformation(language, lib) {
                         $("#closeModal").text(i18n.get("Close"));
                     }
                     // Right bar is empty.
-                    if(isScheduleEmpty && !schedulesAreAvailable && noImages && triviaIsEmpty) {
+                    if (isScheduleEmpty && !schedulesAreAvailable && noImages && triviaIsEmpty) {
                         noSidebar = true;
                     }
                     // Facebook widget is generated after this check happens. If links include FB, don't hide.
-                    if(noLeftCol) {
+                    if (noLeftCol) {
                         // Hide the content on left, make the sidebar 100% in width.
-                        if(bodyWidth < 767) {
-                            if(isScheduleEmpty) {
+                        if (bodyWidth < 767) {
+                            if (isScheduleEmpty) {
                                 $("#leftBar").css("display", "none");
                                 $("#introductionSidebar").removeClass("col-lg-5 col-xl-4 order-2 sidebar");
                                 $("#introductionSidebar").addClass("col-md-12");

@@ -21,7 +21,7 @@ function generateScheduleInfo(data) {
             items.push(row);
             /* If no normal schedules are not available, do not set the variable to true.
                This is used to detect special schedules within special schedules. (eq. summer schedules and mid summer special schedules. */
-            if(!row.isException) {
+            if (!row.isException) {
                 normalScheduleIsAvailable = true
             }
         }
@@ -32,22 +32,22 @@ function generateScheduleInfo(data) {
         var sundayDate = moment().add(weekCounter, 'weeks').weekday(7).format("YYYY-MM-DD");
         //console.log(items[i].validFrom + " | " + mondayDate);
         //console.log(items[i].validUntil + " | " + sundayDate);
-        if(items[i].validFrom == mondayDate && items[i].validUntil == sundayDate) {
+        if (items[i].validFrom == mondayDate && items[i].validUntil == sundayDate) {
             isSpecialWeek = true;
             totalRows = totalRows +2;
-            if(isValue(items[i].description)) {
+            if (isValue(items[i].description)) {
                 holidayDescription = items[i].description;
             }
             isHoliday = true;
         }
         if (items[i].name != null && !isSpecialWeek) {
             // Generic description has no valid_until (null)
-            if(items[i].description !== null && items[i].description.length !== 0) {
-                if(!items[i].isException) {
+            if (items[i].description !== null && items[i].description.length !== 0) {
+                if (!items[i].isException) {
                         genericDescription = items[i].description;
                 }
                 else {
-                    if(normalScheduleIsAvailable) {
+                    if (normalScheduleIsAvailable) {
                         holidayDescription = items[i].description;
                         isHoliday = true;
                     }
@@ -58,12 +58,12 @@ function generateScheduleInfo(data) {
             }
         }
     }
-    if(genericDescription != undefined && holidayDescription != undefined) {
-        if(strippedValueEquals(genericDescription, holidayDescription)) {
+    if (genericDescription != undefined && holidayDescription != undefined) {
+        if (strippedValueEquals(genericDescription, holidayDescription)) {
             genericDescription = undefined;
         }
     }
-    if(holidayDescription !== undefined) {
+    if (holidayDescription !== undefined) {
         // Add rows for infoscreen font-size calculations...
         if (holidayDescription.length < 40) {
             totalRows = totalRows +1;
@@ -72,7 +72,7 @@ function generateScheduleInfo(data) {
             holidayDescription = splitString(holidayDescription);
             totalRows = totalRows +2;
         }
-        else if(holidayDescription.length > 130 && holidayDescription.length < 170) {
+        else if (holidayDescription.length > 130 && holidayDescription.length < 170) {
             totalRows = totalRows +3;
         }
         else {
@@ -80,7 +80,7 @@ function generateScheduleInfo(data) {
         }
         isSpecialInfo = true;
     }
-    if(genericDescription !== undefined) {
+    if (genericDescription !== undefined) {
         // Add rows for infoscreen font-size calculations...
         if (genericDescription.length < 40) {
             totalRows = totalRows +1;
@@ -89,7 +89,7 @@ function generateScheduleInfo(data) {
             genericDescription = splitString(genericDescription);
             totalRows = totalRows +2;
         }
-        else if(genericDescription.length > 130 && genericDescription.length < 170) {
+        else if (genericDescription.length > 130 && genericDescription.length < 170) {
             totalRows = totalRows +3;
         }
         else {
@@ -100,16 +100,16 @@ function generateScheduleInfo(data) {
     else {
         $('#scheduleInfo').replaceWith('<span id="scheduleInfo" style="display: none" class="info-span info-text"><i class="fas fa-info-circle" > </i></span>');
     }
-    if(holidayDescription === undefined) {
+    if (holidayDescription === undefined) {
         $('#specialInfo').replaceWith('<span id="specialInfo" style="display: none" class="info-span info-text"><i class="fas fa-info-circle" > </i></span>');
     }
-    if(isWeekInfo || isSpecialInfo) {
+    if (isWeekInfo || isSpecialInfo) {
         $('#scheduleInfos').css("display", "");
     }
     else {
         $('#scheduleInfos').css("display", "none");
     }
-    if(isWeekInfo) {
+    if (isWeekInfo) {
         // Replace line breaks with br.
         genericDescription = genericDescription.replace(/(?:\r\n|\r|\n)/g, '<br>');
         genericDescription = generateLinks(genericDescription);
@@ -119,7 +119,7 @@ function generateScheduleInfo(data) {
     else {
         $('#scheduleInfoRow').css("display", "none");
     }
-    if(isSpecialInfo) {
+    if (isSpecialInfo) {
         holidayDescription = holidayDescription.replace(/(?:\r\n|\r|\n)/g, '<br>');
         holidayDescription = generateLinks(holidayDescription);
         $('#specialInfo').replaceWith('<span id="specialInfo" class="info-span-lg info-text"><i class="fas fa-info-circle" > </i>' + holidayDescription + '</span>');
@@ -154,8 +154,8 @@ function getWeekSchelude(direction, lib) {
     // Do not allow going more than 8 weeks to the past or for more than 12 weeks.
     if (weekCounter < -8) {
         weekCounter = -8;
-        if(!largeSchedules) {
-            if(!weekMinReached) {
+        if (!largeSchedules) {
+            if (!weekMinReached) {
                 $('#lastWeek').attr('data-toggle', 'tooltip');
                 $('#lastWeek').attr('title', i18n.get("Min schedules"));
                 $("#lastWeek").tooltip("enable");
@@ -168,8 +168,8 @@ function getWeekSchelude(direction, lib) {
     // Restrict to 12 weeks in to the future.
     if (weekCounter > 12) {
         weekCounter = 12;
-        if(!largeSchedules) {
-            if(!weekMaxReached) {
+        if (!largeSchedules) {
+            if (!weekMaxReached) {
                 $('#nextWeek').attr('data-toggle', 'tooltip');
                 $('#nextWeek').attr('title', i18n.get("Max schedules"));
                 $("#nextWeek").tooltip("enable");
@@ -179,8 +179,8 @@ function getWeekSchelude(direction, lib) {
         }
         return;
     }
-    if(!largeSchedules) {
-        if(weekMinReached) {
+    if (!largeSchedules) {
+        if (weekMinReached) {
             // Hiding hides tooltip even if cursor is placed on it.
             $("#lastWeek").tooltip("hide");
             // Disable removes the bootstrap tooltip.
@@ -190,7 +190,7 @@ function getWeekSchelude(direction, lib) {
             $("#lastWeek").removeAttr("title");
             weekMinReached = false;
         }
-        if(weekMaxReached) {
+        if (weekMaxReached) {
             $("#nextWeek").tooltip("hide");
             $("#nextWeek").tooltip("disable");
             $("#nextWeek").removeAttr("data-toggle");
@@ -204,7 +204,7 @@ function getWeekSchelude(direction, lib) {
         "&period.start=" + weekCounter + "w&period.end=" + weekCounter + "w&refs=period&limit=5000", {_: new Date().getTime()}, function (data) {
         if (data.items.length === 0) {
             // If we have not previously fetched the schedules succesfully and week is 0 or larger.
-            if(weekNumber <= 0) {
+            if (weekNumber <= 0) {
                 $('#schedules').css('display', 'none');
                 schedulesAreAvailable = false;
             }
@@ -219,7 +219,7 @@ function getWeekSchelude(direction, lib) {
             }
         }
         else {
-            if(!schedulesAreAvailable || isScheduleEmpty) {
+            if (!schedulesAreAvailable || isScheduleEmpty) {
                 schedulesAreAvailable = true;
                 isScheduleEmpty = false;
                 // Adjust parent size if previously failed. Check if function exists (false in standalone)
@@ -261,9 +261,9 @@ function getWeekSchelude(direction, lib) {
                 dayName = dayName[0].toUpperCase() + dayName.substr(1);
                 function increaseRowCount(isInfo) {
                     // Increase rowspanCount to be used with DD.M. for each open section.
-                    rowspanCount = rowspanCount + 1;
                     // Don't set library as open for info rows
                     if (!isInfo) {
+                        rowspanCount = rowspanCount + 1;
                         isClosed = false;
                     }
                 }
@@ -289,7 +289,7 @@ function getWeekSchelude(direction, lib) {
                             }
                         }
                         dayInfo = '<tr class="info-row time--sub isTodayClass">' +
-                            '<td colspan="2"><span class="info-span info-text"><i class="fas fa-info-circle" > </i> ' + infoText + '</span></td>' +
+                            '<td colspan="3"><span class="info-span info-text"><i class="fas fa-info-circle" > </i> ' + infoText + '</span></td>' +
                             '</tr>';
                         increaseRowCount(true);
                     }
@@ -310,10 +310,10 @@ function getWeekSchelude(direction, lib) {
                         1 means the library is open and has staff.
                         2 means the library is in self-service mode (no staff).
                         */
-                        if(time.status !== 0) {
-                            if(time.status == 1) {
+                        if (time.status !== 0) {
+                            if (time.status == 1) {
                                 // https://github.com/libraries-fi/kirkanta/issues/12 | Don't increase row count for overlapping staff presents.
-                                if(!lastStatusIsStaff) {
+                                if (!lastStatusIsStaff) {
                                     increaseRowCount();
                                     lastStatusIsStaff = true;
                                 }
@@ -333,7 +333,7 @@ function getWeekSchelude(direction, lib) {
                                 '</tr>';
                         }
                         // self-service
-                        else if(time.status === 2) {
+                        else if (time.status === 2) {
                             if (staffPresentStart === '') {
                                 selfServiceBefore = '<tr class="time--sub time isTodayClass time--no-staff">' +
                                     '<td><i class="fas fa-level-up-alt fa-rotate-90"></i> ' + i18n.get("Self-service") + '</td>' +
@@ -389,9 +389,6 @@ function getWeekSchelude(direction, lib) {
                 if (isClosed) {
                     // Add info row on closed days.
                     var closedRowSpan = 1;
-                    if (dayInfo !== "") {
-                        closedRowSpan = 2;
-                    }
                     scheludeRow = '<tr class="time ' + isTodayClass + '">' +
                         '<th class="date-container" scope="row" rowspan="' + closedRowSpan + '">' +
                         '<time datetime="' + begin.format('YYYY-MM-DD') + '">' + begin.format('D.M.') + '</time>' +
@@ -433,25 +430,25 @@ function getWeekSchelude(direction, lib) {
             detectswipe("schedules", swipeNavigation);
         }
         // Large schedules are used in iDiD info screens.
-        if(largeSchedules) {
+        if (largeSchedules) {
             $(".library-schedules").removeClass('col-lg-4 col-xl-3 schedules-widget xxl-font xl-font m-font');
             $('#schedules').addClass("large-schedules col-md-12");
             $('#scheduleInfo').addClass("large-schedules col-md-12");
             // If less than 18 rows, apply the xxl font.
             //console.log(totalRows + " rows ");
-            if(totalRows < 18) {
+            if (totalRows < 12) {
                 //console.log("Use XXL-Font");
                 $(".library-schedules").addClass('xxl-font');
                 $("#scheduleInfo").addClass('xxl-font');
             }
             // If 26 rows or less, apply the xl font.
-            else if(totalRows < 27) {
+            else if (totalRows < 27) {
                 //console.log("Use XL-Font");
                 $(".library-schedules").addClass('xl-font');
                 $("#scheduleInfo").addClass('xl-font');
             }
             // If more than 26 rows, change to 'medium' font.
-            else if(totalRows > 26) {
+            else if (totalRows > 26) {
                 //console.log("Use M-Font");
                 $(".library-schedules").addClass('m-font');
                 $("#scheduleInfo").addClass('m-font');

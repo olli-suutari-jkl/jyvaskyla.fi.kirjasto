@@ -120,7 +120,7 @@ sliderCssXml.onreadystatechange = function() {
 };
 sliderCssXml.send();
 // HomePage stylings.
-if(homePage) {
+if (homePage) {
     var homePageCssXml = new XMLHttpRequest();
     homePageCssXml.open('GET', '../style/homepage.less');
     homePageCssXml.onreadystatechange = function() {

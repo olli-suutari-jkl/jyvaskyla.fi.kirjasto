@@ -7,10 +7,10 @@ moment.locale(lang);
 var HHmmFormat = 'HH:mm';
 // Check that generic and special descriptions are not the same.
 function strippedValueEquals(valueA, valueB) {
-    /*if(valueA == null && valueB == null) {
+    /*if (valueA == null && valueB == null) {
         return true;
     }*/
-    if(valueA == null || valueB == null) {
+    if (valueA == null || valueB == null) {
         return false;
     }
     valueA = valueA.replace(/\r?\n|\r/g, "");
@@ -27,7 +27,7 @@ function strippedValueEquals(valueA, valueB) {
     valueB = valueB.replace(/-/g, "");
     valueB = valueB.replace(/–/g, "");
     valueB = valueB.toLowerCase();
-    if(valueA == valueB) {
+    if (valueA == valueB) {
         return true;
     }
     else {
@@ -53,7 +53,7 @@ function generateLinks(string) {
             return $(this)
         }
     });
-    if(result == "") {
+    if (result == "") {
         result = string;
     }
     else {
@@ -110,7 +110,7 @@ function bindScheduleKeyNavigation() {
     $("#nextWeek").blur();
     // Activate arrow navigation when hovering over the schedules.
     $("#schedules").mouseenter (function(){
-        if(!$(".library-schedules").hasClass('hovering')) {
+        if (!$(".library-schedules").hasClass('hovering')) {
             $(".library-schedules").addClass('hovering');
             // If we blur instantly, arrow navigation won't work unless something has been clicked in the document.
             setTimeout(function(){ $("#nextWeek").blur(); }, 5);
@@ -143,25 +143,25 @@ function detectswipe(el,func) {
     },false);
     ele.addEventListener('touchend',function(e){
         // Hide/inactivate any tooltips when swiping the slider.
-        if(el == "#sliderbox") {
+        if (el == "#sliderbox") {
             $('.tooltip').hide();
             document.activeElement.blur();
         }
         // horizontal detection
         if ((((swipe_det.eX - min_x > swipe_det.sX) || (swipe_det.eX + min_x < swipe_det.sX)) && ((swipe_det.eY < swipe_det.sY + max_y) && (swipe_det.sY > swipe_det.eY - max_y) && (swipe_det.eX > 0)))) {
             e.preventDefault();
-            if(swipe_det.eX > swipe_det.sX) direc = "r";
+            if (swipe_det.eX > swipe_det.sX) direc = "r";
             else direc = "l";
         }
         // vertical detection
         else if ((((swipe_det.eY - min_y > swipe_det.sY) || (swipe_det.eY + min_y < swipe_det.sY)) && ((swipe_det.eX < swipe_det.sX + max_x) && (swipe_det.sX > swipe_det.eX - max_x) && (swipe_det.eY > 0)))) {
             return;
-            //if(swipe_det.eY > swipe_det.sY) direc = "d";
+            //if (swipe_det.eY > swipe_det.sY) direc = "d";
             //else direc = "u";
         }
         // Call the swipeNavigation function with the right direction.
         if (direc != "") {
-            if(typeof func == 'function') func(el,direc);
+            if (typeof func == 'function') func(el,direc);
         }
         direc = "";
         swipe_det.sX = 0; swipe_det.sY = 0; swipe_det.eX = 0; swipe_det.eY = 0;
@@ -171,7 +171,7 @@ function detectswipe(el,func) {
 function swipeNavigation(el,d) {
     if (el === "schedules") {
         //alert("Thou swiped on element with id '"+el+"' to "+d+" direction");
-        if(d === "r") {
+        if (d === "r") {
             $("#lastWeek").focus();
             $("#lastWeek").click();
         } else if (d === "l") {
@@ -179,8 +179,8 @@ function swipeNavigation(el,d) {
             $("#nextWeek").click();
         }
     }
-    else if(el === "sliderBox") {
-        if(d === "r") {
+    else if (el === "sliderBox") {
+        if (d === "r") {
             $("#sliderPrevious").focus();
             $("#sliderPrevious").click();
         } else if (d === "l") {
@@ -192,7 +192,7 @@ function swipeNavigation(el,d) {
 
 $(document).ready(function() {
     // Trigger schedule fetching, if no library list, otherwise trigger in consortium.js
-    if(!isLibaryList && !homePage) {
+    if (!isLibaryList && !homePage) {
         setTimeout(function() {
             getWeekSchelude(0, library);
         }, 50 );
@@ -205,9 +205,9 @@ $(document).ready(function() {
         switch(e.key) {
             case " ": // Space detection for playing stopping Instagram videos within the slider.
                 // Slider hovering is not really used with schedules, but it's better? to do it here instead.
-                if(!$("#sliderBox").hasClass("small-slider") || $("#sliderBox").hasClass("hovering")
+                if (!$("#sliderBox").hasClass("small-slider") || $("#sliderBox").hasClass("hovering")
                     || $("#sliderPrevious").is(":focus") || $("#sliderForward").is(":focus")) {
-                    if($('.rslides1_on').find('div.video-controls').length !== 0) {
+                    if ($('.rslides1_on').find('div.video-controls').length !== 0) {
                         $("#sliderPrevious").blur();
                         $("#sliderForward").blur();
                         $('.play-stop-icon').focus();
@@ -216,49 +216,49 @@ $(document).ready(function() {
                 }
             break;
             case "ArrowLeft": // left
-                if($(".library-schedules").hasClass("hovering")
+                if ($(".library-schedules").hasClass("hovering")
                     || $("#lastWeek").is(":focus") || $("#nextWeek").is(":focus")) {
                     $("#lastWeek").focus();
                     $("#lastWeek").click();
                 }
                 // Slider hovering is not really used with schedules, but it's better to do it here instead of adding another $(document).keydown(function(e) {
-                else if(!$("#sliderBox").hasClass("small-slider") || $("#sliderBox").hasClass("hovering")
+                else if (!$("#sliderBox").hasClass("small-slider") || $("#sliderBox").hasClass("hovering")
                     || $("#sliderPrevious").is(":focus") || $("#sliderForward").is(":focus")) {
                     $("#sliderPrevious").focus();
                     $("#sliderPrevious").click();
                 }
-                else if($(".nav-pills").hasClass("hovering")
+                else if ($(".nav-pills").hasClass("hovering")
                     || $("#navInfo").is(":focus") || $("#navContacts").is(":focus")|| $("#navPalvelut").is(":focus")) {
-                    if(activeTab === 1) {
+                    if (activeTab === 1) {
                         $("#navInfo").focus();
                         $("#navInfo").click();
                     }
-                    else if(activeTab === 2) {
+                    else if (activeTab === 2) {
                         $("#navContacts").focus();
                         $("#navContacts").click();
                     }
                 }
             break;
             case "ArrowRight": // right
-                if($(".library-schedules").hasClass("hovering")
+                if ($(".library-schedules").hasClass("hovering")
                     || $("#lastWeek").is(":focus") || $("#nextWeek").is(":focus")) {
                     $("#nextWeek").focus();
                     $("#nextWeek").click();
                 }
                 // Slider hovering is not really used with schedules, but it's better to do it here instead of adding another $(document).keydown(function(e) {
-                else if(!$("#sliderBox").hasClass("small-slider") || $("#sliderBox").hasClass("hovering")
+                else if (!$("#sliderBox").hasClass("small-slider") || $("#sliderBox").hasClass("hovering")
                     || $("#sliderPrevious").is(":focus") || $("#sliderForward").is(":focus")) {
                     // Go to slide
                     $("#sliderForward").focus();
                     $("#sliderForward").click();
                 }
-                else if($(".nav-pills").hasClass("hovering")
+                else if ($(".nav-pills").hasClass("hovering")
                     || $("#navInfo").is(":focus") || $("#navContacts").is(":focus")|| $("#navPalvelut").is(":focus")) {
-                    if(activeTab === 0) {
+                    if (activeTab === 0) {
                         $("#navContacts").focus();
                         $("#navContacts").click();
                     }
-                    else if(activeTab === 1) {
+                    else if (activeTab === 1) {
                         $("#navPalvelut").focus();
                         $("#navPalvelut").click();
                     }
@@ -269,7 +269,7 @@ $(document).ready(function() {
     });
     // Add swiping detection for schedules & sliderbox if available.
     detectswipe("schedules", swipeNavigation);
-    if(document.getElementById("sliderBox") != null) {
+    if (document.getElementById("sliderBox") != null) {
         detectswipe("sliderBox", swipeNavigation);
     }
 }); // OnReady

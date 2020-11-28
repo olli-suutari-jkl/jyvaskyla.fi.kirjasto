@@ -14,8 +14,8 @@ function groupByCity(arr) {
         var newObj = {city: key, id: obj.id, text: obj.text, services: obj.services};
         // Wiitaunion mobile library is used in both "Pihtipudas" and "Viitasaari".
         // b identifier is added so both won't be selected by id in selector.
-        if(obj.id == 85449) {
-            if(wiitaUnionMobileAdded) {
+        if (obj.id == 85449) {
+            if (wiitaUnionMobileAdded) {
                 newObj = {city: key, id: obj.id + "b", text: obj.text};
             }
             else {
@@ -23,7 +23,7 @@ function groupByCity(arr) {
             }
         }
         // if res has a sub-array for the current key then...
-        if(res[key]) {
+        if (res[key]) {
             res[key].push(newObj); // ... push newObj into that sub-array
         }
         else {
@@ -49,7 +49,7 @@ function modelMatcher (params, data) {
         for (var c = data.children.length - 1; c >= 0; c--) {
             var child = data.children[c];
             var matches;
-            if(homePage) {
+            if (homePage) {
                 child.parentText += data.parentText + " " + data.text;
                 matches = modelMatcher(params, child);
             }
@@ -73,7 +73,7 @@ function modelMatcher (params, data) {
     // If the typed-in term matches the text of this term, or the text from any
     // parent term, then it's a match.
     var original;
-    if(homePage) {
+    if (homePage) {
         original = (data.parentText + ' ' + data.text).toUpperCase();
     }
     else {
@@ -90,12 +90,12 @@ function modelMatcher (params, data) {
 
 function initSelect(items) {
     var placeholderText = "Hae nimeä tai palvelua...";
-    if(lang === "en") {
+    if (lang === "en") {
         placeholderText = "Search by name or service...";
     }
-    if(homePage) {
+    if (homePage) {
         placeholderText = "Hae nimellä...";
-        if(lang === "en") {
+        if (lang === "en") {
             placeholderText = "Search by name...";
         }
     }
@@ -140,11 +140,11 @@ function asyncReplaceIdWithCity() {
                         }
                     }
                     counter = counter +1;
-                    if(counter === data.items.length) {
+                    if (counter === data.items.length) {
                         // Sort or the city listing wont be in  correct order...
                         libraryList.sort(function(a, b){
-                            if(a.city < b.city) { return -1; }
-                            if(a.city > b.city) { return 1; }
+                            if (a.city < b.city) { return -1; }
+                            if (a.city > b.city) { return 1; }
                             return 0;
                         });
                         // Fetch events if events page.
@@ -179,25 +179,25 @@ function generateSelect() {
     });
 
     // If we are fetching a consortium or a city.
-    if(consortium !== undefined || city !== undefined) {
+    if (consortium !== undefined || city !== undefined) {
         var consortiumLibraries = [];
         var cityLibraries = [];
         // Replace city ID:s with names and check refurl for library names.
         $.when(asyncCheckUrlForKeskiLibrary(), asyncReplaceIdWithCity()).then(
             function(){
                 // Trigger schedule fetching.
-                if(homePage && $('.homepage-widget-week').length === 0) {
+                if (homePage && $('.homepage-widget-week').length === 0) {
                     getDaySchelude(0, library);
                 }
                 else {
                     getWeekSchelude(0, library);
                 }
                 // Fetch library details, map is also generated during the process - it is important that we have already generated the list for map items.
-                if(!homePage) {
+                if (!homePage) {
                     fetchInformation(lang);
                 }
                 // Consortium listing
-                if(city === undefined) {
+                if (city === undefined) {
                     $.when( librariesGroupped = groupByCity(libraryList) ).then(
                         function() {
                             for (var key in librariesGroupped) {
@@ -256,14 +256,14 @@ function fetchConsortiumLibraries(consortium) {
                 coordinates: data.items[i].coordinates,
                 services: JSON.stringify(data.items[i].services)
             });
-            if(lang === "fi") {
+            if (lang === "fi") {
                 libListMultiLangHelper.push({nameFi: encodeVal(data.items[i].name), id: data.items[i].id});
             }
             else {
                 libListMultiLangHelper.push({nameEn: encodeVal(data.items[i].name), id: data.items[i].id});
             }
             // Wiitaunion mobile library is used in both "Pihtipudas (85449)" and "Viitasaari".
-            if(data.items[i].id == 85449) {
+            if (data.items[i].id == 85449) {
                 libraryList.push({
                     id: data.items[i].id, text: data.items[i].name,
                     city: "16055",
@@ -296,7 +296,7 @@ function fetchConsortiumLibraries(consortium) {
 }
 
 var withServices = "&with=services";
-if(homePage) {
+if (homePage) {
     withServices = "";
 }
 var oppositeLang = "en";
@@ -306,14 +306,14 @@ if (lang === "en") {
 $(document).ready(function() {
 
     // Fetch libraries of city, that belong to the same consortium
-    if(consortium !== undefined && city !== undefined) {
+    if (consortium !== undefined && city !== undefined) {
         isLibaryList = true;
         try {
             $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + lang + "&city.name=" + city  +
                 withServices + "&limit=1500", function(data) {
                 for (var i=0; i<data.items.length; i++) {
                     // Ignore other consortiums.
-                    if(data.items[i].consortium == consortium) {
+                    if (data.items[i].consortium == consortium) {
                         libraryList.push({id: data.items[i].id, text: data.items[i].name,
                             city: data.items[i].city.toString(),
                             street: data.items[i].address.street,
@@ -321,7 +321,7 @@ $(document).ready(function() {
                             coordinates: data.items[i].coordinates,
                             services: JSON.stringify(data.items[i].services)
                         });
-                        if(lang === "fi") {
+                        if (lang === "fi") {
                             libListMultiLangHelper.push({nameFi: encodeVal(data.items[i].name), id: data.items[i].id});
                         }
                         else {
@@ -351,7 +351,7 @@ $(document).ready(function() {
         }
     }
     // Fetch libraries of city
-    else if(consortium === undefined && city !== undefined) {
+    else if (consortium === undefined && city !== undefined) {
         isLibaryList = true;
         $.getJSON("https://api.kirjastot.fi/v4/library?lang=" + lang + "&city.name=" + city +
             + withServices + "&limit=1500", function(data) {
@@ -363,7 +363,7 @@ $(document).ready(function() {
                     coordinates: data.items[i].coordinates,
                     services: JSON.stringify(data.items[i].services)
                 });
-                if(lang === "fi") {
+                if (lang === "fi") {
                     libListMultiLangHelper.push({nameFi: encodeVal(data.items[i].name), id: data.items[i].id});
                 }
                 else {
@@ -393,15 +393,15 @@ $(document).ready(function() {
         var newLib =  $(this).val();
         // Wiitaunion mobile library is used in both "Pihtipudas" and "Viitasaari".
         // b identifier is added so both won't be selected by id in selector.
-        if(newLib.indexOf("b") > -1) {
+        if (newLib.indexOf("b") > -1) {
             newLib = newLib.replace("b", "");
         }
         // Don't use !== as it won't match.
-        if(newLib != library) {
+        if (newLib != library) {
             // Set the global library parameter, so schedule switching won't mess things up.
             library = newLib;
             libName = $("#librarySelector option:selected").text();
-            if(!homePage) {
+            if (!homePage) {
                 if (isInfoBoxVisible) {
                     toggleModal();
                 }
@@ -451,14 +451,14 @@ $(document).ready(function() {
                 fetchInformation(lang, library);
                 // Re-bind navigation and other stuff.
                 bindActions();
-                if(document.getElementById("sliderBox") != null) {
+                if (document.getElementById("sliderBox") != null) {
                     detectswipe("sliderBox", swipeNavigation);
                 }
                 // Adjust parent url.
                 adjustParentUrl(libName, "library");
 
             }
-            if(homePage) {
+            if (homePage) {
                 if ($('.homepage-widget-week').length === 0) {
                     getDaySchelude(0, library);
                 }
