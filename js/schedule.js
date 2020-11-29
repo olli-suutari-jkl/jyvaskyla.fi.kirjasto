@@ -266,6 +266,9 @@ function getWeekSchelude(direction, lib) {
                         rowspanCount = rowspanCount + 1;
                         isClosed = false;
                     }
+                    else {
+                        totalRows = totalRows + 1;
+                    }
                 }
                 // If schedules exists
                 if (schedules != null) {
@@ -434,9 +437,9 @@ function getWeekSchelude(direction, lib) {
             $(".library-schedules").removeClass('col-lg-4 col-xl-3 schedules-widget xxl-font xl-font m-font');
             $('#schedules').addClass("large-schedules col-md-12");
             $('#scheduleInfo').addClass("large-schedules col-md-12");
-            // If less than 18 rows, apply the xxl font.
+            // If less than 13 rows, apply the xxl font.
             //console.log(totalRows + " rows ");
-            if (totalRows < 12) {
+            if (totalRows < 13) {
                 //console.log("Use XXL-Font");
                 $(".library-schedules").addClass('xxl-font');
                 $("#scheduleInfo").addClass('xxl-font');
