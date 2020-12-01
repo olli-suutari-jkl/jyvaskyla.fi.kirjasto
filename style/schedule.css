@@ -37,12 +37,20 @@
         width: 98vmin;
         align-content: center;
     }
-
     .info-span {
         padding-left: 1em;
         padding-right: 1em;
     }
 }
+@media screen and (max-width: 350px) {
+    .time--sub .fa-level-up-alt {
+        display: none;
+    }
+    .day-name-end {
+        display: none;
+    }
+}
+
 
 @media screen and (max-width: 768px) {
     .table {

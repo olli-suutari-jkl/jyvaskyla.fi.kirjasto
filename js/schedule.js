@@ -136,6 +136,8 @@ var totalRows = 0;
 var schedulesAreAvailable = true;
 var weekMinReached = false;
 var weekMaxReached = false;
+var weekDayFormat = "dddd";
+
 function getWeekSchelude(direction, lib) {
     totalRows = 0;
     // If no library is provided, use the default option.
@@ -257,8 +259,15 @@ function getWeekSchelude(direction, lib) {
                 var staffPresentStart = '';
                 var staffPresentEnd = '';
                 // Capitalize 1st letter of dayname.
-                var dayName = begin.format("dddd");
+                var dayName = begin.format(weekDayFormat);
                 dayName = dayName[0].toUpperCase() + dayName.substr(1);
+
+                // Because we cannot detect screen width within iframes, we must separate the day name to
+                // 2 parts and hide the 2nd part via css.
+                var dayNameStart = dayName[0] + dayName[1];
+                var dayNameEnd = dayName.substr(2)
+                dayName = '<span>' + dayNameStart + '</span>' + '<span class="day-name-end">' + dayNameEnd + '</span>';
+
                 function increaseRowCount(isInfo) {
                     // Increase rowspanCount to be used with DD.M. for each open section.
                     // Don't set library as open for info rows
@@ -421,6 +430,7 @@ function getWeekSchelude(direction, lib) {
                 document.title = data.name;
             }
         }
+        // Note: bodywidth does not actually work inside iframes.
         if (bodyWidth < 768 && !mobileSchedulesMoved && $("#blockquote").length) {
             mobileSchedulesMoved = true;
             var scheduleClone = $("#schedules").clone();
