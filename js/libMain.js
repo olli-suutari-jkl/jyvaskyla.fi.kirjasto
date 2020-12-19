@@ -76,7 +76,8 @@ function generateAccessibilityTextBlock(serviceName) {
     }, 300);
 }
 
-function generateWebropolSurveyFrames(description) {
+// If webropol survey, render iframe, otherwise generate external links
+function generateDescriptionLinksAndSurveyFrames(description) {
     if (description.indexOf("<a href=") !== -1) {
         // Generate iframes from links that contain "embed"
         var linksToReplace = [];
@@ -94,8 +95,11 @@ function generateWebropolSurveyFrames(description) {
             }
             // Normal links
             else {
-                // Push to array
-                linksToReplace.push({position: reFindLinksExec[0], replacement: reFindLinksExec[0].replace(/(<a href=")+/g, '<a class="external-link" target="_blank" href="')});
+                // Do not generate emails as they will be done later. TO DO: if text contains @ link won't be generated.
+                if (reFindLinksExec[0].indexOf('@') === -1) {
+                    linksToReplace.push({position: reFindLinksExec[0],
+                        replacement: generateExternalLink(reFindLinksExec[0])});
+                }
             }
             // Loop all links.
             reFindLinksExec = reFindLinks.exec(description);

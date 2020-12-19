@@ -87,6 +87,10 @@ var dict = {
         fi: "Sosiaalinen media",
         en: "Social media",
     },
+    "Opens in new tab": {
+        fi: "avautuu uudessa välilehdessä",
+        en: "opens in a new tab",
+    },
     "Opening hours": {
         fi: "Aukioloajat",
         en: "Opening hours",

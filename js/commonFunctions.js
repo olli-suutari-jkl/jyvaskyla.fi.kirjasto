@@ -39,7 +39,16 @@ function generateMailToLink(string) {
     });
     return result;
 }
-
+// Turn link into an _blank and set class + accessibility text.
+function generateExternalLink(link) {
+    // Do not generate emails as they will be done later. TO DO: if text contains @ link won't be generated.
+    if (link.indexOf('@') !== -1) {
+        return
+    }
+    link = link.replace(/(<a href=")+/g, '<a class="external-link af" target="_blank" href="');
+    link = link.replace(/(<\/a>)+/g, '<span class="sr-only"> (' + i18n.get('Opens in new tab') + ')</span></a>');
+    return link;
+}
 
 function generateIgLinks(string) {
     var result = "";
