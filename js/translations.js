@@ -99,6 +99,14 @@ var dict = {
         fi: "Toimipisteen tietoihin ei ole syötetty aukioloaikatietoja valitulle päivälle.",
         en: "The library has not entered schedules for the selected day.",
     },
+    "Previous week": {
+        fi: "Näytä edellinen viikko",
+        en: "Show previous week",
+    },
+    "Next week": {
+        fi: "Näytä seuraava viikko",
+        en: "Show next week",
+    },
     "Week": {
         fi: "Viikko",
         en: "Week",

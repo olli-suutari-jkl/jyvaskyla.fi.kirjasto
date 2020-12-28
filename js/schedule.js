@@ -147,58 +147,59 @@ function getWeekSchelude(direction, lib) {
     // +1 or -1;
     weekCounter = weekCounter + direction;
     var weekNumber = moment().add(weekCounter, 'weeks').format('W');
+    // Kirkanta does not support going back multiple weeks. Limit going back to 8 weeks.
     // As of 4.1.2019, the API does not return the schedule periods and their infos from
     // 2018, thus limit going back to the last year, prevent going to the last year..
-    if (weekCounter < 0 && weekNumber == 52) {
-        weekCounter = weekCounter + 1;
-        return;
-    }
-    // Do not allow going more than 8 weeks to the past or for more than 12 weeks.
-    if (weekCounter < -8) {
-        weekCounter = -8;
+    if (weekCounter <= -8 || (weekCounter < 0 && weekNumber == 52)) {
         if (!largeSchedules) {
-            if (!weekMinReached) {
-                $('#lastWeek').attr('data-toggle', 'tooltip');
-                $('#lastWeek').attr('title', i18n.get("Min schedules"));
-                $("#lastWeek").tooltip("enable");
+            if (!weekMaxReached) {
+                $('lastWeek').attr('title', i18n.get("Min schedules"));
+                $("#lastWeek").attr("data-original-title", i18n.get("Min schedules"));
                 weekMinReached = true;
             }
             $('#lastWeek').tooltip('show');
         }
-        return;
+        // Return if under 8 weeks.
+        if (weekCounter < -8 || (weekCounter < 0 && weekNumber == 52)) {
+            if (weekCounter < 0 && weekNumber == 52) {
+                weekCounter = 0;
+            }
+             else {
+                weekCounter = 8;
+            }
+            return;
+        }
+    }
+    // Set default tooltip + enable for customized effect.
+    else if ($('#lastWeek').attr('data-original-title') != i18n.get("Previous week") && !largeSchedules){
+        $('#lastWeek').attr('title', i18n.get("Previous week"));
+        $("#lastWeek").attr("data-original-title", i18n.get("Previous week"));
+        $("#lastWeek").tooltip("enable");
+        weekMinReached = false;
     }
     // Restrict to 12 weeks in to the future.
-    if (weekCounter > 12) {
-        weekCounter = 12;
+    // Show tooltip when max is reached.
+    if (weekCounter >= 12) {
         if (!largeSchedules) {
             if (!weekMaxReached) {
-                $('#nextWeek').attr('data-toggle', 'tooltip');
                 $('#nextWeek').attr('title', i18n.get("Max schedules"));
-                $("#nextWeek").tooltip("enable");
+                $("#nextWeek").attr("data-original-title", i18n.get("Max schedules"));
                 weekMaxReached = true;
             }
             $('#nextWeek').tooltip('show');
         }
-        return;
+        // Return if over 13 weeks.
+        if (weekCounter > 12) {
+            weekCounter = 12;
+            return;
+        }
     }
-    if (!largeSchedules) {
-        if (weekMinReached) {
-            // Hiding hides tooltip even if cursor is placed on it.
-            $("#lastWeek").tooltip("hide");
-            // Disable removes the bootstrap tooltip.
-            $("#lastWeek").tooltip("disable");
-            // Removing attributes removes the normal tooltip.
-            $("#lastWeek").removeAttr("data-toggle");
-            $("#lastWeek").removeAttr("title");
-            weekMinReached = false;
-        }
-        if (weekMaxReached) {
-            $("#nextWeek").tooltip("hide");
-            $("#nextWeek").tooltip("disable");
-            $("#nextWeek").removeAttr("data-toggle");
-            $("#nextWeek").removeAttr("title");
-            weekMaxReached = false;
-        }
+    // Set default tooltip + enable for customized effect.
+    else if ($('#nextWeek').attr('title') !== i18n.get("Next week") && !largeSchedules){
+        $('#nextWeek').attr('title', i18n.get("Next week"));
+        $("#nextWeek").attr("data-original-title", i18n.get("Next week"));
+        $("#nextWeek").tooltip("enable");
+        weekMaxReached = false;
     }
     // Display week number.
     $("#weekNumber").html(i18n.get("Week") + ' ' + weekNumber);
