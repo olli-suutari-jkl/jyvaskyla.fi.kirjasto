@@ -740,3 +740,83 @@ input[type=range]::-ms-fill-upper {
 input[type=range]:focus::-ms-fill-upper {
     background: #367ebd;
 }
+
+.rslides1 li:not(.rslides1_on) {
+    display: none!important;
+}
+
+.rslides1 .rslides1_on {
+    display: block;
+    -webkit-animation: fadeInFromDisplayNone .8s ease-in-out;
+    -moz-animation: fadeInFromDisplayNone .8s ease-in-out;
+    -o-animation: fadeInFromDisplayNone .8s ease-in-out;
+    animation: fadeInFromDisplayNone .8s ease-in-out;
+}
+
+@-webkit-keyframes fadeInFromDisplayNone {
+    0% {
+        display: none;
+        opacity: 0;
+    }
+
+    1% {
+        display: block;
+        opacity: 0;
+    }
+
+    100% {
+        display: block;
+        opacity: 1;
+    }
+}
+
+@-moz-keyframes fadeInFromDisplayNone {
+    0% {
+        display: none;
+        opacity: 0;
+    }
+
+    1% {
+        display: block;
+        opacity: 0;
+    }
+
+    100% {
+        display: block;
+        opacity: 1;
+    }
+}
+
+@-o-keyframes fadeInFromDisplayNone {
+    0% {
+        display: none;
+        opacity: 0;
+    }
+
+    1% {
+        display: block;
+        opacity: 0;
+    }
+
+    100% {
+        display: block;
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInFromDisplayNone {
+    0% {
+        display: none;
+        opacity: 0;
+    }
+
+    1% {
+        display: block;
+        opacity: 0;
+    }
+
+    100% {
+        display: block;
+        opacity: 1;
+    }
+}

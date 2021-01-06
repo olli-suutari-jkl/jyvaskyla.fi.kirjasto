@@ -474,6 +474,21 @@ var length = 1;
           stopAuto();
         });
       }
+      $( '#sliderPrevious' ).focus(function() {
+        stopAuto();
+      });
+      $( '#expandSlider' ).focus(function() {
+        stopAuto();
+      });
+      $( '.ig-love-btn' ).focus(function() {
+        stopAuto();
+      });
+      $( '.slider-ig-logo' ).focus(function() {
+        stopAuto();
+      });
+      $( '.ig-caption' ).focus(function() {
+        stopAuto();
+      });
       $( '.ig-caption' ).mouseover(function() {
         stopAuto();
       });
