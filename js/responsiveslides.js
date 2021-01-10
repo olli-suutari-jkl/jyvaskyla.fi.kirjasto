@@ -80,12 +80,14 @@ var length = 1;
               $('.rslides1_on video').removeClass('playing');
               $(playBtnIcon).addClass('fa-play-circle');
               $(playBtnIcon).removeClass('fa-stop-circle');
+              $('#playPause').attr('aria-pressed', false);
             }
             else {
               $('.rslides1_on video').trigger('play');
               $('.rslides1_on video').addClass('playing');
               $(playBtnIcon).addClass('fa-stop-circle');
               $(playBtnIcon).removeClass('fa-play-circle');
+              $('#playPause').attr('aria-pressed', true);
             }
           });
           // Event listener for the mute button
@@ -351,22 +353,22 @@ var length = 1;
           sliderHasStopped = true;
           $('#sliderPlay').removeClass('progress');
           $('.fa-stop').addClass('fa-play').removeClass('fa-stop');
-          $('.slider-play-container').tooltip('hide')
-              .attr('data-original-title', i18n.get('Start automatic playback'))
+          $('#sliderPlay').attr('aria-pressed', false);
+          $('#sliderPlay').tooltip('hide').attr('data-original-title', i18n.get('Start automatic playback'))
         };
         startAuto = function (playButton) {
           sliderHasStopped = false;
           $('.fa-play').addClass('fa-stop').removeClass('fa-play');
           if (playButton) {
-            $('.slider-play-container').tooltip('hide')
-                .attr('data-original-title', i18n.get('Stop automatic playback'))
-                .tooltip('show');
+            $('#sliderPlay').attr('aria-pressed', true);
+            $('#sliderPlay').tooltip('hide').attr('data-original-title', i18n.get('Stop automatic playback'))
           }
           startCycle();
         };
         // Navigation
-        var progressBar = '<div data-original-title="' + i18n.get("Stop automatic playback") + '" data-placement="bottom" ' +
-            'data-toggle="navigation-tooltip" class="slider-play-container"> <button id="sliderPlay" class="slider-btn progress blue">' +
+        var progressBar = '<div class="slider-play-container"> <button title="' + i18n.get("Stop automatic playback") +
+            '" data-placement="bottom" data-toggle="navigation-tooltip" aria-pressed="true" id="sliderPlay" ' +
+            'class="slider-btn progress blue">' +
             '<span class="progress-left">' +
             '<span class="progress-bar"></span>' +
             '</span>' +
@@ -380,14 +382,14 @@ var length = 1;
             '<div class="slider-navigation slider-counter-container">' +
             '<button title="' + i18n.get("Previous slide") +  '" data-placement="bottom" ' +
             'data-toggle="navigation-tooltip" id="sliderPrevious" ' +
-            'class="slider-btn ' + navClass + ' prev"><i class="fas fa-arrow-left"></i></button>' +
+            'class="slider-btn ' + navClass + ' prev"><i aria-hidden="true" class="fas fa-arrow-left"></i></button>' +
             '<i class="slider-counter"><span id="currentSlide">1</span></i>' +
             '<button title="' + i18n.get("Next slide") + '" data-placement="right" data-toggle="navigation-tooltip" ' +
-            'id="sliderForward" class="slider-btn ' + navClass + ' next"><i class="fas fa-arrow-right"></i>' + '</button></div>' +
+            'id="sliderForward" class="slider-btn ' + navClass + ' next"><i aria-hidden="true" class="fas fa-arrow-right"></i>' + '</button></div>' +
             '<div class="slider-navigation slider-play-expand-container"> ' + progressBar +
             '<button id="expandSlider" title="' + i18n.get('Toggle full-screen') + '" data-placement="right" ' +
             ' data-toggle="navigation-tooltip" class="slider-btn"> ' +
-            '<i class="fas fa-expand"></i></button></div></div>';
+            '<i aria-hidden="true" class="fas fa-expand"></i></button></div></div>';
         // Inject navigation
         $('#sliderBox').append(navMarkup);
         if (isIOS || isIE) {

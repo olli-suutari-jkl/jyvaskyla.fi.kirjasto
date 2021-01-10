@@ -271,10 +271,12 @@
   padding: 0; }
 
 .select2-container--default .select2-results__option[aria-disabled=true] {
-  color: #999; }
+  color: #616E76; }
 
 .select2-container--default .select2-results__option[aria-selected=true] {
-  background-color: #ddd; }
+  background-color: #fdfdfd;
+  border: 3px solid #6494EF;
+}
 
 .select2-container--default .select2-results__option .select2-results__option {
   padding-left: 1em; }
@@ -297,8 +299,11 @@
             padding-left: 6em; }
 
 .select2-container--default .select2-results__option--highlighted[aria-selected] {
-  background-color: #5897fb;
-  color: white;
+  border-left: solid 5px rgba(4,157,255,1);
+  border-right: solid 5px rgba(4,157,255,1);
+  -webkit-box-shadow: 0px 0px 1px 3px rgba(4,157,255,1);
+  -moz-box-shadow: 0px 0px 1px 3px rgba(4,157,255,1);
+  box-shadow: 0px 0px 1px 3px rgba(4,157,255,1);
 }
 
 .select2-container--default .select2-results__group {
@@ -328,7 +333,7 @@
     font-weight: bold;
     margin-right: 10px; }
   .select2-container--classic .select2-selection--single .select2-selection__placeholder {
-    color: #999; }
+    color: #616E76; }
   .select2-container--classic .select2-selection--single .select2-selection__arrow {
     background-color: #ddd;
     border: none;
@@ -481,8 +486,8 @@
   color: grey; }
 
 .select2-container--classic .select2-results__option--highlighted[aria-selected] {
-  background-color: #3875d7;
-  color: white; }
+  background-color: #fdfdfd;
+}
 
 .select2-container--classic .select2-results__group {
   cursor: default;
@@ -490,7 +495,8 @@
   padding: 6px; }
 
 .select2-container--classic.select2-container--open .select2-dropdown {
-  border-color: #5897fb; }
+  border-color: #fdfdfd;
+}
 
 /* Unless we add font-weight, group titles (city names) won't be bolded in FF/IE/EDGE... */
 .select2-results__group {

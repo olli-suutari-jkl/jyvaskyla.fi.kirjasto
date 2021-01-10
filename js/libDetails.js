@@ -756,8 +756,8 @@ function generateImages(data) {
                                     'Selaimesi ei tue videoita. | Your browser does not support video.' +
                                     '</video>' +
                                     '<div class="video-controls">' +
-                                        '<button type="button" class="play-pause" id="playPause">' +
-                                        '<i class="play-stop-icon fas fa-play-circle"></i></button>'+
+                                        '<button aria-pressed="true" type="button" class="play-pause" id="playPause">' +
+                                        '<i aria-hidden="true" class="play-stop-icon fas fa-play-circle"></i></button>'+
                                         '<input type="range" class="seek-bar" id="seekBar" value="0">'+
                                         '<div class="video-time-display"><span class="video-timestamp">0:00</span>' +
                                         '<span class="video-end">0:00</span></div>' +
