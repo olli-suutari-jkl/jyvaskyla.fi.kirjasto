@@ -1,806 +1,821 @@
 /* Fix modal being clipped from the bottom */
 html {
-    overflow-y: scroll;
+	overflow-y: scroll;
 }
 /* Navigation */
 header {
-    margin-bottom: 0.5em;
+	margin-bottom: 0.5em;
 }
 
 .btn-primary {
-    background-color: @btnBg;
-    padding: .7em 1.5em;
-    font-size: 1.32em
+	background-color: @btnBg;
+	padding: 0.7em 1.5em;
+	font-size: 1.32em;
 }
 
 .btn-primary:hover {
-    background: @btnHover;
+	background: @btnHover;
 }
 
 .nav-link {
-    font-size: 1.15em;
-    margin-right: 0.5em;
-    font-weight: 700;
+	font-size: 1.15em;
+	margin-right: 0.5em;
+	font-weight: 700;
 }
 
 .nav-link.active {
-    color: black!important;
-    padding-left: 1rem;
-    padding-right: 1rem;
-    border-bottom: 2px solid @primary;
-    background: none!important;
-    border-radius: unset!important;
-    display: inline;
+	color: black !important;
+	padding-left: 1rem;
+	padding-right: 1rem;
+	border-bottom: 2px solid @primary;
+	background: none !important;
+	border-radius: unset !important;
+	display: inline;
 }
 
 .nav-link:hover {
-    background-color: rgba(0, 0, 0, .3)
+	background-color: rgba(0, 0, 0, 0.3);
 }
 
 .nav-pills .nav-link {
-    border-top-left-radius: .5rem;
-    border-top-right-radius: .5rem
+	border-top-left-radius: 0.5rem;
+	border-top-right-radius: 0.5rem;
 }
 
 .nav-pills {
-    width: 100% !important;
-    display: flex!important;
-    justify-content: center;
-    margin-bottom: 1.7em!important;
+	width: 100% !important;
+	display: flex !important;
+	justify-content: center;
+	margin-bottom: 1.7em !important;
 }
 
 /* Scale down the navigation on smaller screens to fit one row */
 @media screen and (max-width: 350px) {
-    .nav-pills {
-        zoom: 0.76;
-        -moz-transform: scale(0.76);
-        min-width: 300px;
-    }
+	.nav-pills {
+		zoom: 0.76;
+		-moz-transform: scale(0.76);
+		min-width: 300px;
+	}
 }
 // Main container.
 #mainContainer {
-    padding-top: 1rem;
-    padding-bottom: 0.5rem;
+	padding-top: 1rem;
+	padding-bottom: 0.5rem;
 }
 
-@media (min-width:989px) {
-    #mainContainer {
-        background: rgba(220, 221, 212, 0);
-        padding: 2em 1em 2.5em;
-        margin-top: 1.3em;
-        margin-bottom: 1.3em;
-    }
+@media (min-width: 989px) {
+	#mainContainer {
+		background: rgba(220, 221, 212, 0);
+		padding: 2em 1em 2.5em;
+		margin-top: 1.3em;
+		margin-bottom: 1.3em;
+	}
 }
 
 /* Container for blockquote */
-#blockquote  {
-    margin-bottom: 0.75rem;
+#blockquote {
+	margin-bottom: 0.75rem;
 }
 
 .blockquote {
-    padding: 0 2rem;
-    margin-bottom: 1.4em;
-    font-style: oblique;
-    font-weight: 600;
-    text-align: center;
-    font-size: 1.15em;
+	padding: 0 2rem;
+	margin-bottom: 1.4em;
+	font-style: oblique;
+	font-weight: 600;
+	text-align: center;
+	font-size: 1.15em;
 }
 @media screen and (max-width: 499px) {
-    .blockquote {
-        padding: 0 .5em;
-    }
+	.blockquote {
+		padding: 0 0.5em;
+	}
 }
 @media screen and (min-width: 768px) {
-    .blockquote {
-        padding: 0 3.7em;
-    }
+	.blockquote {
+		padding: 0 3.7em;
+	}
 }
 
 /* #introductionTab row contains #leftBar and #introductionSidebar */
 #introductionTab {
-    padding-top: 2em;
-    padding-left: 1.5em;
-    padding-right: 1.5em;
-    border-top: 1px solid @primary;
+	padding-top: 2em;
+	padding-left: 1.5em;
+	padding-right: 1.5em;
+	border-top: 1px solid @primary;
 }
 
 #libraryServices {
-    margin-top: 2em;
+	margin-top: 2em;
 }
 
 .fb-page {
-    padding-top: 20px;
-    /* If FB widget is not atleast 316 px in width, the event dates are not visible. */
-    min-width: 316px!important;
+	padding-top: 20px;
+	/* If FB widget is not atleast 316 px in width, the event dates are not visible. */
+	min-width: 316px !important;
 }
 
 #leftBar {
-    word-break: break-word;
+	word-break: break-word;
 }
 
 #leftBar img {
-    max-width: 100%;
+	max-width: 100%;
 }
 
 #introductionSidebar {
-    padding-left: .1em;
+	padding-left: 0.1em;
 }
 
 @media screen and (min-width: 768px) {
-    #leftBar {
-        padding-right: 3em;
-        border-width: 0.0016rem;
-    }
-    #introductionSidebar {
-        padding-left: 2.5em;
-    }
+	#leftBar {
+		padding-right: 3em;
+		border-width: 0.0016rem;
+	}
+	#introductionSidebar {
+		padding-left: 2.5em;
+	}
 }
 
 @media screen and (max-width: 499px) {
-    #leftBar {
-        margin-left: calc(50% - 45vw);
-        margin-right: calc(50% - 45vw);
-        width: 96vmin;
-        align-content: center;
-    }
+	#leftBar {
+		margin-left: calc(50% - 45vw);
+		margin-right: calc(50% - 45vw);
+		width: 96vmin;
+		align-content: center;
+	}
 }
 
 /* Service listings */
-.main>.row:last-child {
-    flex-grow: 1
+.main > .row:last-child {
+	flex-grow: 1;
 }
 
 .cols li {
-    word-break: break-word!important;
-    padding-bottom: 5px;
+	word-break: break-word !important;
+	padding-bottom: 5px;
 }
 
 .cols {
-    padding-left: 10px;
-    list-style-type: none;
+	padding-left: 10px;
+	list-style-type: none;
 }
 
 ul.cols {
-    list-style-type: none
+	list-style-type: none;
 }
 
 @media (max-width: 767px) {
-    .cols {
-        -webkit-column-count: 1;
-        column-count: 1
-    }
+	.cols {
+		-webkit-column-count: 1;
+		column-count: 1;
+	}
 }
 
 @media (min-width: 768px) {
-    .cols {
-        -webkit-column-count: 2;
-        column-count: 2
-    }
+	.cols {
+		-webkit-column-count: 2;
+		column-count: 2;
+	}
 }
 
 @media (min-width: 700px) {
-    .select2-container {
-        width: 65%!important;
-    }
+	.select2-container {
+		width: 65% !important;
+	}
 }
 
 @-webkit-keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
 }
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
 }
 
 #mainContainer .select2-container {
-    //margin-top: 0;
+	//margin-top: 0;
 }
 
 .negative-select-top-margin {
-    margin-top: -26px!important;
+	margin-top: -26px !important;
 }
 
-#mainContainer .librarySelectorTitle, #librarySelectorLabel {
-    margin-bottom: -5px!important;
-    font-size: .85em;
+#mainContainer .librarySelectorTitle,
+#librarySelectorLabel {
+	margin-bottom: -5px !important;
+	font-size: 0.85em;
 }
 //.select2-search
 .select2-search--dropdown {
-    margin-left: -5px;
-    margin-right: -5px;
+	margin-left: -5px;
+	margin-right: -5px;
 }
 
 .select2-search--dropdown input {
-    border: solid 0.05em #101010!important;
-    border-radius: 5px;
+	border: solid 0.05em #101010 !important;
+	border-radius: 5px;
 }
 
 .select2-search--dropdown input:focus {
-    border: none!important;
-    border-radius: 0!important;
+	border: none !important;
+	border-radius: 0 !important;
 }
 
 .search-helper-text-overlay {
-    position: relative;
-    bottom: -2px;
-    background: #fdfdfd; // TO DO: create and use @bg color
-    width: 100%;
-    font-size: .76em!important;
-    z-index: 1200;
-    font-weight: 600;
-    padding-bottom: 12px;
-    -webkit-animation: fadeIn 0.63s;
-    animation: fadeIn 0.63s;
+	position: relative;
+	bottom: -2px;
+	background: #fdfdfd; // TO DO: create and use @bg color
+	width: 100%;
+	font-size: 0.76em !important;
+	z-index: 1200;
+	font-weight: 600;
+	padding-bottom: 12px;
+	-webkit-animation: fadeIn 0.63s;
+	animation: fadeIn 0.63s;
 }
 
 .activated-search-overlay {
-    opacity: 1;
-    display: block;
+	opacity: 1;
+	display: block;
 }
 
 .active-search-helper-text {
-    font-weight: 600;
-    font-size: 1.2em;
+	font-weight: 600;
+	font-size: 1.2em;
 }
 
-.accessibility-images img, .accessibility-text-block {
-    margin-right: 2px;
-    margin-bottom: 10px;
+.accessibility-images img,
+.accessibility-text-block {
+	margin-right: 2px;
+	margin-bottom: 10px;
 }
 
 .accessibility-images img {
-    height: 53px;
-    width: 53px;
+	height: 53px;
+	width: 53px;
 }
 /* Important, because .celia-services is also .accessibility-images. To do: Better CSS. */
 .celia-services {
-    margin-right: 18px!important;
-    margin-top: 8px!important;
-    margin-bottom: 18px!important;
-    width: 52px!important;
-    height: 65px!important;
+	margin-right: 18px !important;
+	margin-top: 8px !important;
+	margin-bottom: 18px !important;
+	width: 52px !important;
+	height: 65px !important;
 }
 
 .accessibility-text-block {
-    max-width: 100%;
-    margin-right: 6px;
-    border: solid 2px #8496B9;
-    border-radius: 13px;
-    color: #FEFEFE;
-    background: #155196;
-    font-size: 1.13em;
-    text-shadow: 1px 1px #1b1e21;
-    font-weight: 400;
-    text-align: center;
-    display: inline-flex;
-    position: relative;
-    top: -1px;
-    padding: 8px 15px;
+	max-width: 100%;
+	margin-right: 6px;
+	border: solid 2px #8496b9;
+	border-radius: 13px;
+	color: #fefefe;
+	background: #155196;
+	font-size: 1.13em;
+	text-shadow: 1px 1px #1b1e21;
+	font-weight: 400;
+	text-align: center;
+	display: inline-flex;
+	position: relative;
+	top: -1px;
+	padding: 8px 15px;
 }
 
 .accessibility-details {
-    padding-left: 10px;
+	padding-left: 10px;
 }
 
-.trivia-section, .facebook-section {
-    margin-top: 2.2em;
-    width: 100%;
+.trivia-section,
+.facebook-section {
+	margin-top: 2.2em;
+	width: 100%;
 }
 
 .title-underlined-centered {
-    text-align: center!important;
-    border-bottom: 2px solid @primary;
-    padding-bottom: .3em;
-    margin-bottom: .5em;
+	text-align: center !important;
+	border-bottom: 2px solid @primary;
+	padding-bottom: 0.3em;
+	margin-bottom: 0.5em;
 }
 
 #triviaBody {
-    padding-top: 2.5em;
+	padding-top: 2.5em;
 }
 
 .trivia-cell-title {
-    text-align: center;
+	text-align: center;
 }
 
-#triviaTable tr, #triviaTable td {
-    border: none;
-    padding: 0.5em;
+#triviaTable tr,
+#triviaTable td {
+	border: none;
+	padding: 0.5em;
 }
 
 @media screen and (max-width: 768px) {
-    .trivia-cell-title {
-        text-align: right!important;
-    }
-    .trivia-detail {
-        text-align: left;
-    }
+	.trivia-cell-title {
+		text-align: right !important;
+	}
+	.trivia-detail {
+		text-align: left;
+	}
 }
 
 @media screen and (max-width: 499px) {
-    .trivia-section, .facebook-section {
-        margin-left: calc(50% - 48.33vw);
-        margin-right: calc(50% - 50vw);
-        width: 100vmin;
-    }
+	.trivia-section,
+	.facebook-section {
+		margin-left: calc(50% - 48.33vw);
+		margin-right: calc(50% - 50vw);
+		width: 100vmin;
+	}
 }
 
 #contactsTab .contact-details {
-    padding-left: 0.75rem;
-    align-content: center;
+	padding-left: 0.75rem;
+	align-content: center;
 }
 
 /* Styles for contact section fas */
-#contactsTab section h2 .fas, #contactsTab section th .fas {
-    margin-right: 0.35rem !important;
-    color: @primary;
+#contactsTab section h2 .fas,
+#contactsTab section th .fas {
+	margin-right: 0.35rem !important;
+	color: @primary;
 }
 
 .fa-facebook-square {
-    color: #3B5AA5;
-    font-size: 2.35rem!important;
+	color: #3b5aa5;
+	font-size: 2.35rem !important;
 }
 
 .fa-instagram {
-    padding: 5px 7px;
-    color: #ffffff;
-    background: #E64980;
-    font-size: 1.9rem!important;
+	padding: 5px 7px;
+	color: #ffffff;
+	background: #e64980;
+	font-size: 1.9rem !important;
 }
 
 /* #contactsTab contains all things in contacts tab */
 #contactsTab {
-    padding: 0;
-    margin: 0;
+	padding: 0;
+	margin: 0;
 }
 
 /* Location */
 #locationRow {
-    margin-bottom: 3em;
+	margin-bottom: 3em;
 }
 
 #contactsMapCol {
-    padding: 0;
-    height: auto;
-    border-top: 1px solid @primary;
-    min-height: 260px;
+	padding: 0;
+	height: auto;
+	border-top: 1px solid @primary;
+	min-height: 260px;
 }
 
 #expandMap {
-    position: absolute;
-    top: 1em;
-    right: 20px;
-    z-index: 9999;
-    padding: .4em .6em;
-    color: #fdfdfd;
-    /*  Fallback bg */
-    background-color: rgb(99, 99, 99);
-    /* RGBa with 0.45 opacity */
-    background-color: rgba(99, 99, 99, 0.45);
-    font-size: 1.5rem!important;
+	position: absolute;
+	top: 1em;
+	right: 20px;
+	z-index: 9999;
+	padding: 0.4em 0.6em;
+	color: #fdfdfd;
+	/*  Fallback bg */
+	background-color: rgb(99, 99, 99);
+	/* RGBa with 0.45 opacity */
+	background-color: rgba(99, 99, 99, 0.45);
+	font-size: 1.5rem !important;
 }
 
 #expandMap:hover {
-    cursor: pointer;
-    color: skyblue;
+	cursor: pointer;
+	color: skyblue;
 }
 
 @media screen and (min-width: 500px) and (max-width: 768px) {
-    #contactsMapCol {
-        margin-top: 1.5em;
-    }
+	#contactsMapCol {
+		margin-top: 1.5em;
+	}
 }
 
 @media screen and (max-width: 768px) {
-    #contactsMapCol {
-        border-top: 2px solid @primary;
-        border-bottom: 2px solid @primary;
-    }
+	#contactsMapCol {
+		border-top: 2px solid @primary;
+		border-bottom: 2px solid @primary;
+	}
 }
 
 /* Optimize map size for mobile & tablets. */
 @media screen and (min-width: 590px) and (max-width: 768px) {
-    #contactsMapCol {
-        height: 400px;
-    }
+	#contactsMapCol {
+		height: 400px;
+	}
 }
 
 @media screen and (max-width: 589px) {
-    #contactsMapCol {
-        height: 280px;
-    }
+	#contactsMapCol {
+		height: 280px;
+	}
 }
 
 @media screen and (max-width: 499px) {
-    #contactsMapCol {
-        border-top: 2px solid @primary;
-        border-bottom: 2px solid @primary;
-        margin-top: 1em;
-    }
+	#contactsMapCol {
+		border-top: 2px solid @primary;
+		border-bottom: 2px solid @primary;
+		margin-top: 1em;
+	}
 }
 
 #contactsFirstCol {
-    padding-top: 1.6rem;
-    text-align: center;
+	padding-top: 1.6rem;
+	text-align: center;
 }
 
 #locationTitle {
-    text-align: center;
-    align-content: center;
+	text-align: center;
+	align-content: center;
 }
 
 #addressDetails {
-    margin-top: 1.5em;
-    margin-bottom: 1em;
-    display: flex;
-    flex-direction: row;
+	margin-top: 1.5em;
+	margin-bottom: 1em;
+	display: flex;
+	flex-direction: row;
 }
 
-#streetAddress, #postalAddress {
-    width: 50%;
+#streetAddress,
+#postalAddress {
+	width: 50%;
 }
 
 #streetAddress {
-    padding-right: 0.75em;
+	padding-right: 0.75em;
 }
 
 #postalAddress {
-    padding-left: 0.75em;
+	padding-left: 0.75em;
 }
 
 .map-library-changer {
-    margin-top: .9em;
-    margin-bottom: -2em;
+	margin-top: 0.9em;
+	margin-bottom: -2em;
 }
 
 .lib-marker {
-    font-size: 1.5rem;
+	font-size: 1.5rem;
 }
 
 .leaflet-popup-content {
-    padding: 1em .5em .5em .5em;
+	padding: 1em 0.5em 0.5em 0.5em;
 }
 
 .leaflet-popup-close-button {
-    font-size: 1.2rem!important;
-    margin: .3em!important;
+	font-size: 1.2rem !important;
+	margin: 0.3em !important;
 }
 
-
 #mapContainer {
-    width: 100%;
-    height: 100%;
-    z-index: 99;
+	width: 100%;
+	height: 100%;
+	z-index: 99;
 }
 
 #noCoordinates {
-    z-index: 999!important;
-    position: relative;
-    display: inline-block;
-    margin-left: 3.5em;
-    margin-top: 15px;
-    width: 230px;
-    font-weight: 600;
-    font-size: .95rem;
-    color: black;
-    text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+	z-index: 999 !important;
+	position: relative;
+	display: inline-block;
+	margin-left: 3.5em;
+	margin-top: 15px;
+	width: 230px;
+	font-weight: 600;
+	font-size: 0.95rem;
+	color: black;
+	text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
 
 #contactsFirstCol {
-    border-top: 1px solid @primary;
+	border-top: 1px solid @primary;
 }
 
 @media (min-width: 769px) {
-    #contactsFirstCol {
-        padding: 1.7rem 2.7rem;
-        padding-top: 2.7rem;
-        background: #EDEDE7;
-    }
+	#contactsFirstCol {
+		padding: 1.7rem 2.7rem;
+		padding-top: 2.7rem;
+		background: #edede7;
+	}
 
-    #locationRow {
-        border: none;
-    }
+	#locationRow {
+		border: none;
+	}
 
-    #contactsMapCol {
-        border: 1px solid @primary;
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
-    }
+	#contactsMapCol {
+		border: 1px solid @primary;
+		border-top-right-radius: 3px;
+		border-bottom-right-radius: 3px;
+	}
 }
 
-
 #contactsTab section h2 i {
-    font-size: 0.85em;
+	font-size: 0.85em;
 }
 
 #staffTableContainer {
-    overflow-x: auto
+	overflow-x: auto;
 }
 
 /* Social media links */
 .some-links {
-    text-align: right;
-    align-content: center;
-    padding-right: 1em;
-    vertical-align: center;
-    display: flex;
+	text-align: right;
+	align-content: center;
+	padding-right: 1em;
+	vertical-align: center;
+	display: flex;
 }
 
-@media (max-width:979px) {
-    .some-links {
-        text-align: left;
-        align-content: flex-start;
-        float: left;
-    }
-    .container {
-        min-width: 100%!important;
-    }
+@media (max-width: 979px) {
+	.some-links {
+		text-align: left;
+		align-content: flex-start;
+		float: left;
+	}
+	.container {
+		min-width: 100% !important;
+	}
 
-    #staffTableContainer {
-        margin-left: calc(50% - 50vw);
-        margin-right: calc(50% - 50vw);
-        width: 100vmin;
-    }
+	#staffTableContainer {
+		margin-left: calc(50% - 50vw);
+		margin-right: calc(50% - 50vw);
+		width: 100vmin;
+	}
 
-    #locationRow {
-        margin-left: calc(50% - 50vw);
-        margin-right: calc(50% - 50vw);
-        width: 100vmin;
-    }
+	#locationRow {
+		margin-left: calc(50% - 50vw);
+		margin-right: calc(50% - 50vw);
+		width: 100vmin;
+	}
 
-    #locationDetails {
-        position: relative;
-
-    }
-
+	#locationDetails {
+		position: relative;
+	}
 }
 
 .some-links a {
-    margin-right: .5rem
+	margin-right: 0.5rem;
 }
 
 .some-links a:hover {
-    opacity: .75
+	opacity: 0.75;
 }
 
-@media (min-width:769px) {
-    .some-links {
-        margin-top: -.5rem
-    }
+@media (min-width: 769px) {
+	.some-links {
+		margin-top: -0.5rem;
+	}
 }
 
 /* This splits the title evenly on mobile instead of starting 2nd row at the icon */
 #contactsTitle {
-    display: flex;
-    align-items: center;
-    font-size: 1.3em;
-    font-weight: 600;
-    border: none;
+	display: flex;
+	align-items: center;
+	font-size: 1.3em;
+	font-weight: 600;
+	border: none;
 }
 
 #contactsTitle i {
-    padding-right: 0.3em!important;
+	padding-right: 0.3em !important;
 }
 
 .some-links a i {
-    margin-top: 10px; /* Using em would not add margin on mobile, where rows are split */
+	margin-top: 10px; /* Using em would not add margin on mobile, where rows are split */
 }
 
 #contactsTable th {
-    padding-left: 2.95rem;
-    padding-top: 0.7em;
-    padding-bottom: 0.5em;
+	padding-left: 2.95rem;
+	padding-top: 0.7em;
+	padding-bottom: 0.5em;
 }
 
 #contactsTable td {
-    padding: 0.85rem 2.95rem !important;
+	padding: 0.85rem 2.95rem !important;
 }
 
 /* TO DO: Links and contacts title gets wrapped pretty early... FIX */
 .thead-default {
-    background-color: #EDEDE7;
+	background-color: #edede7;
 }
 
-.table-striped>tbody>tr:nth-child(even)>td,
-.table-striped>tbody>tr:nth-child(even)>th {
-    background-color: rgba(137, 137, 101, 0.08);
+.table-striped > tbody > tr:nth-child(even) > td,
+.table-striped > tbody > tr:nth-child(even) > th {
+	background-color: rgba(137, 137, 101, 0.08);
 }
 
-.table-striped>tbody>tr:nth-child(odd)>td,
-.table-striped>tbody>tr:nth-child(odd)>th {
-    background-color: rgba(137, 137, 101, 0.05);
+.table-striped > tbody > tr:nth-child(odd) > td,
+.table-striped > tbody > tr:nth-child(odd) > th {
+	background-color: rgba(137, 137, 101, 0.05);
 }
 
 .tooltip {
-    z-index: 999999999!important;
+	z-index: 999999999 !important;
 }
 
-.popover-header, .popover {
-    background: #f6f2f0;
-    border: none;
-    font-size: 1rem;
-    margin: 0;
+.popover-header,
+.popover {
+	background: #f6f2f0;
+	border: none;
+	font-size: 1rem;
+	margin: 0;
 }
 
 .popover .arrow {
-    display: none;
+	display: none;
 }
 
 .popover {
-    padding: .9em .5em 0 0.5em;
-    -webkit-box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.75);
-    -moz-box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.75);
-    box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.75);
+	padding: 0.9em 0.5em 0 0.5em;
+	-webkit-box-shadow: 2px 2px 2px 0 rgba(0, 0, 0, 0.75);
+	-moz-box-shadow: 2px 2px 2px 0 rgba(0, 0, 0, 0.75);
+	box-shadow: 2px 2px 2px 0 rgba(0, 0, 0, 0.75);
 }
 
 /* Modal */
 /* Fix modal scrolling on Safari on iPads & iPhones: https://stackoverflow.com/questions/44082430/in-ios-iframe-in-a-bootstrap-modal-can-not-scroll TO DO: Still broken? */
 .modal-body {
-    -webkit-overflow-scrolling: touch!important;
+	-webkit-overflow-scrolling: touch !important;
 }
 
 .modal-backdrop {
-    background: rgba(0,0,0, 0)!important;
+	background: rgba(0, 0, 0, 0) !important;
 }
 
 #myModal {
-    height: auto!important;
-    max-height: 5500px!important;
-    z-index: 99999999!important;
+	height: auto !important;
+	max-height: 5500px !important;
+	z-index: 99999999 !important;
 }
 
 #closeModal {
-    font-size: 1.1em;
-    justify-content: space-between;
-    margin: -0.6em auto .6em;
+	font-size: 1.1em;
+	justify-content: space-between;
+	margin: -0.6em auto 0.6em;
 }
 
 /* Close button in the right corner of the modal */
-.close, .leaflet-popup-close-button {
-    font-size: 1.85em;
+.close,
+.leaflet-popup-close-button {
+	font-size: 1.85em;
 }
 
 .close {
-    color: #f7502e!important;
+	color: #f7502e !important;
 }
 
-.close:hover, .leaflet-popup-close-button:hover {
-    color: #d83d1e!important;
+.close:hover,
+.leaflet-popup-close-button:hover {
+	color: #d83d1e !important;
 }
 
 /* Media query for IE 10-11. */
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-    #closeModal {
-        display: block;
-        position: absolute;
-        left: 45%;
-        bottom: -25px;
-        margin-bottom: 35px;
-    }
+	#closeModal {
+		display: block;
+		position: absolute;
+		left: 45%;
+		bottom: -25px;
+		margin-bottom: 35px;
+	}
 }
 
 .modal-title-small {
-    font-size: 1.3em;
-    margin-bottom: 1em;
+	font-size: 1.3em;
+	margin-bottom: 1em;
 }
 
 #modalContent .image img {
-    border: 3px solid @primary;
-    border-radius: 4px;
-    max-width: 100%;
-    max-height: 350px;
-    margin-bottom: 5px;
+	border: 3px solid @primary;
+	border-radius: 4px;
+	max-width: 100%;
+	max-height: 350px;
+	margin-bottom: 5px;
 }
 
 .modal-body iframe {
-    margin: 0.35em 0;
+	margin: 0.35em 0;
 }
 
-.modal-header, .modal-footer {
-    border: none!important;
+.modal-header,
+.modal-footer {
+	border: none !important;
 }
 
 .modal {
-    border-radius:10px;
+	border-radius: 10px;
 }
 
 #modalContentContainer {
-    max-height: 5500px;
-    /* Stylish borders: https://gist.github.com/chemicaloliver/1234670 */
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    -webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-    -moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
-    -webkit-background-clip: padding;
-    -moz-background-clip: padding;
-    background-clip: padding-box;
-
+	max-height: 5500px;
+	/* Stylish borders: https://gist.github.com/chemicaloliver/1234670 */
+	border: 1px solid rgba(0, 0, 0, 0.3);
+	-webkit-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+	box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+	-webkit-background-clip: padding;
+	-moz-background-clip: padding;
+	background-clip: padding-box;
 }
 
 .modal-title {
-    margin-left: 1.5em;
-    margin-top: 0.8em;
-    font-size: 1.55em;
+	margin-left: 1.5em;
+	margin-top: 0.8em;
+	font-size: 1.55em;
 }
 
 #modalContent {
-    margin-top: -.3em;
-    padding-left: 5em;
-    padding-right: 5em;
-    word-break: break-word;
+	margin-top: -0.3em;
+	padding-left: 5em;
+	padding-right: 5em;
+	word-break: break-word;
 }
 
 @media screen and (min-width: 500px) and (max-width: 768px) {
-    .modal-lg #modalContent {
-        margin-top: -.3em;
-        padding-left: 1em;
-        padding-right: 1em;
-    }
+	.modal-lg #modalContent {
+		margin-top: -0.3em;
+		padding-left: 1em;
+		padding-right: 1em;
+	}
 
-    .modal-title {
-        margin-left: 0.7em;
-    }
+	.modal-title {
+		margin-left: 0.7em;
+	}
 }
 
 @media screen and (max-width: 499px) {
-    .modal, .modal-lg {
-        margin-left: calc(50% - 50vw) !important;
-        margin-right: calc(50% - 50vw) !important;
-        width: 100vmin !important;
-    }
+	.modal,
+	.modal-lg {
+		margin-left: calc(50% - 50vw) !important;
+		margin-right: calc(50% - 50vw) !important;
+		width: 100vmin !important;
+	}
 
-    #modalContent {
-        margin-top: -.1em;
-        padding-left: 0.3em;
-        padding-right: 0.3em;
-    }
+	#modalContent {
+		margin-top: -0.1em;
+		padding-left: 0.3em;
+		padding-right: 0.3em;
+	}
 
-    .modal-title {
-        margin-left: 0.2em;
-    }
+	.modal-title {
+		margin-left: 0.2em;
+	}
 
-    .modal-body iframe {
-        margin-left: calc(50% - 46vw) !important;
-        margin-right: calc(50% - 45vw) !important;
-        width: 91vmin !important;
-    }
+	.modal-body iframe {
+		margin-left: calc(50% - 46vw) !important;
+		margin-right: calc(50% - 45vw) !important;
+		width: 91vmin !important;
+	}
 }
 
 .service-info {
-    display: flex;
-    font-weight: 600;
-    font-size: 1rem;
-    margin-top: 10px;
-    word-break: break-word;
+	display: flex;
+	font-weight: 600;
+	font-size: 1rem;
+	margin-top: 10px;
+	word-break: break-word;
 }
 
 .service-info i {
-    font-size: 1.6em!important;
-    font-weight: 400;
-    margin-right: 25px;
+	font-size: 1.6em !important;
+	font-weight: 400;
+	margin-right: 25px;
 }
 // Service price goes more to the right than the other icons... why?
 .service-price i {
-    margin-right: 20px!important;
+	margin-right: 20px !important;
 }
 
 // First .service-info.
 #modalContent > .service-info {
-    padding-top: 15px;
+	padding-top: 15px;
 }
 // Infos after that.
-#modalContent >  .service-info ~ .service-info{
-    padding-top: 5px;
+#modalContent > .service-info ~ .service-info {
+	padding-top: 5px;
 }
 
 .modal-small {
-    text-align: center;
+	text-align: center;
 }
 
 .modal-small .service-info {
-    justify-content: center;
+	justify-content: center;
 }
 
 .modal-small .service-info i {
-    margin-right: 10px;
+	margin-right: 10px;
 }

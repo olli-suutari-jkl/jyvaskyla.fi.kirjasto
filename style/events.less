@@ -1,227 +1,218 @@
-body {
-}
-
 #eventsTitle {
-    text-align: center;
-    margin-bottom: 1em;
+	text-align: center;
+	margin-bottom: 1em;
 }
 
 @media screen and (min-width: 800px) {
-    .events-container {
-        display: grid;
-        grid-template-columns: auto;
-        grid-template-rows: auto auto;
-    }
-
+	.events-container {
+		display: grid;
+		grid-template-columns: auto;
+		grid-template-rows: auto auto;
+	}
 }
 
-
 @keyframes popIn {
-    from {
-        opacity: 0;
-        transform: scale(.4);
-    }
-    60% {
-        opacity: 1;
-        transform: scale(1.05);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1)
-    }
+	from {
+		opacity: 0;
+		transform: scale(0.4);
+	}
+	60% {
+		opacity: 1;
+		transform: scale(1.05);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
 }
 
 .events-page {
-    margin-left: 5%;
-    margin-top: 5%;
+	margin-left: 5%;
+	margin-top: 5%;
 }
 
 .event-li {
-    display: inline-block;
-    animation: popIn 300ms ease-in both;
+	display: inline-block;
+	animation: popIn 300ms ease-in both;
 }
 
 .event-li .fa {
-    margin-right: 8px;
-    font-size: 16px;
+	margin-right: 8px;
+	font-size: 16px;
 }
 
 .event-li .event-li-clock {
-    margin-left: 10px;
-    margin-right: 2px;
+	margin-left: 10px;
+	margin-right: 2px;
 }
 
 .event-item-link {
-    display: flex;
-    flex-direction: column;
-    /*background: #eaecef;*/
-    border-left: solid 1px black;
-    padding-top: 0;
-    padding-bottom: 0;
-    padding-left: 27px;
+	display: flex;
+	flex-direction: column;
+	/*background: #eaecef;*/
+	border-left: solid 1px black;
+	padding-top: 0;
+	padding-bottom: 0;
+	padding-left: 27px;
 }
 
 #toggleEventFilters {
-    display: block;
+	display: block;
 }
 
 .show-more-events {
-    display: none;
+	display: none;
 }
 
 .show-all-events-btn {
-    background: none;
-    color: @textColor;
-    font-weight: 600;
-    font-size: 1.03em;
-    width: 100%;
-    padding: .6em;
-    margin-top: .3em;
-    border: solid 3px @btnBg;
+	background: none;
+	color: @textColor;
+	font-weight: 600;
+	font-size: 1.03em;
+	width: 100%;
+	padding: 0.6em;
+	margin-top: 0.3em;
+	border: solid 3px @btnBg;
 }
 
 .show-all-events-btn:hover {
-    background: none;
-    color: @linksHover;
-    border-color: @btnHover;
+	background: none;
+	color: @linksHover;
+	border-color: @btnHover;
 }
 
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-    .event-item-link {
-       display: block;
-        width: 100%;
-    }
+	.event-item-link {
+		display: block;
+		width: 100%;
+	}
 }
 
 .start-end-divider {
-    margin-left: 8px;
-    margin-right: 8px;
-    width: 100%;
+	margin-left: 8px;
+	margin-right: 8px;
+	width: 100%;
 }
 
 .time-row-splitter {
-    margin-bottom: 5px!important;
-    display: block!important;
+	margin-bottom: 5px !important;
+	display: block !important;
 }
 
 .event-li {
-    margin-top: 15px;
-    margin-bottom: 15px;
+	margin-top: 15px;
+	margin-bottom: 15px;
 }
-
 
 @media screen and (max-width: 1300px) {
-    .event-li {
-        min-width: 100%;
-    }
-
+	.event-li {
+		min-width: 100%;
+	}
 }
-
 
 .event-item-link {
-    transition: all 0.35s ease-in-out; transform: rotate3d(0,0,0,0deg);
+	transition: all 0.35s ease-in-out;
+	transform: rotate3d(0, 0, 0, 0deg);
 }
 
-
-#keskiEventsUl, #keskiEventsUl li {
-    padding-left: 0;
-    padding-right: 0;
-    margin-left: 0;
-    margin-right: 0;
+#keskiEventsUl,
+#keskiEventsUl li {
+	padding-left: 0;
+	padding-right: 0;
+	margin-left: 0;
+	margin-right: 0;
 }
 
 .event-li {
-    width: 100%;
+	width: 100%;
 }
 
 .event-item-link:hover {
-    margin-left: 5px;
-    border-color: @btnHover;
+	margin-left: 5px;
+	border-color: @btnHover;
 }
 
 .event-li span {
-    width: 100%;
+	width: 100%;
 }
 
 .event-li a {
-    text-decoration: none;
+	text-decoration: none;
 }
 
 .event-li span {
-    width: auto;
-    margin-bottom: 4px;
-    margin-top: 4px;
-    font-weight: 600;
-    color: black!important;
-
+	width: auto;
+	margin-bottom: 4px;
+	margin-top: 4px;
+	font-weight: 600;
+	color: black !important;
 }
 
 .event-item-link span {
-
 }
 .event-li-title {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: .3em!important;
+	font-size: 1rem;
+	font-weight: 600;
+	margin-bottom: 0.3em !important;
 }
 
 .event-li-title img {
-    margin-right: 15px;
+	margin-right: 15px;
 }
 
 .event-li-time {
-    font-size: .9rem;
+	font-size: 0.9rem;
 }
 
 .event-li-place {
-    font-size: .9rem;
-    margin-top: .78em!important;
+	font-size: 0.9rem;
+	margin-top: 0.78em !important;
 }
 
 .event-li-img {
-    justify-content: center;
-    display: flex;
+	justify-content: center;
+	display: flex;
 }
 
 .event-li-img img {
-    max-height: 100px;
-    max-width: 150px;
-    width: auto;
-    position: relative;
+	max-height: 100px;
+	max-width: 150px;
+	width: auto;
+	position: relative;
 }
 
 .event-li-details {
-    /* padding: 2em 4em 2em  3em; */
-    vertical-align: middle;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: left;
+	/* padding: 2em 4em 2em  3em; */
+	vertical-align: middle;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	text-align: left;
 }
 
 @media screen and (min-width: 800px) and (max-width: 1000px) {
-    .event-item-link {
-        grid-template-columns: 200px auto;
-    }
+	.event-item-link {
+		grid-template-columns: 200px auto;
+	}
 
-    .event-li-img img {
-        max-width: 200px;
-    }
-
+	.event-li-img img {
+		max-width: 200px;
+	}
 }
 
 .event-li {
 }
 
-.hidden-event, .hidden-filter {
-    visibility: hidden;
-    display: none;
+.hidden-event,
+.hidden-filter {
+	visibility: hidden;
+	display: none;
 }
 
 .no-matching-events-div {
-    font-size: 1.5em;
-    margin-top: 3em;
+	font-size: 1.5em;
+	margin-top: 3em;
 }
 
 /* Event modal
@@ -237,11 +228,11 @@ body {
 }
 */
 
-@media screen and ( max-width: 600px ) {
-    .event-modal-title {
-        width: 100%;
-        margin-left: 0!important;
-    }
+@media screen and (max-width: 600px) {
+	.event-modal-title {
+		width: 100%;
+		margin-left: 0 !important;
+	}
 }
 
 /*
@@ -261,153 +252,148 @@ body {
 */
 
 .modal-body {
-    word-break: break-word;
-    word-wrap: break-word;
+	word-break: break-word;
+	word-wrap: break-word;
 }
 
 .event-content {
-    padding: 1.8em;
-    margin-left: 1em;
+	padding: 1.8em;
+	margin-left: 1em;
 }
 
 .event-modal-link {
-    margin-top: 1.7em;
-    font-size: 1.1em;
+	margin-top: 1.7em;
+	font-size: 1.1em;
 }
 
 .event-modal-link i {
-    margin-left: -4px;
-    margin-right: 8px;
-    font-size: 1.15em;
+	margin-left: -4px;
+	margin-right: 8px;
+	font-size: 1.15em;
 }
 
 .modal-body {
-    margin-top: 0;
-    padding-top: 0;
-    font-size: 1em;
+	margin-top: 0;
+	padding-top: 0;
+	font-size: 1em;
 }
 
 .event-image {
-    max-height: 65vmin;
-    max-width: 100%;
-    margin-top: 1.5em!important;
-    border: solid 1px transparent;
-    border-radius: 33px!important;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+	max-height: 65vmin;
+	max-width: 100%;
+	margin-top: 1.5em !important;
+	border: solid 1px transparent;
+	border-radius: 33px !important;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 #MyModal .modal-footer {
-    align-content: center;
-    display: flex;
-    justify-content: space-between;
-    margin-left: auto;
-    margin-right: auto;
+	align-content: center;
+	display: flex;
+	justify-content: space-between;
+	margin-left: auto;
+	margin-right: auto;
 }
-
-#MyModal .modal-footer button {
-
-}
-
-
 
 /* Event modal stylings */
 .event-details-icon {
-    height: 1.04em;
-    width: auto;
-    margin-right: .75em;
+	height: 1.04em;
+	width: auto;
+	margin-right: 0.75em;
 }
 
 .event-info-box {
-    margin-top: 2em;
-    margin-bottom: -0.5em;
-    font-weight: 600;
+	margin-top: 2em;
+	margin-bottom: -0.5em;
+	font-weight: 600;
 }
 
-.event-info-box  span {
-    font-size: 1.05rem;
-    margin-top: 23px;
+.event-info-box span {
+	font-size: 1.05rem;
+	margin-top: 23px;
 }
 
 .event-info-box .time-row-splitter {
-    margin-top: 0;
+	margin-top: 0;
 }
 
-
 .event-info-box .event-li-time {
-    font-style: oblique!important;
+	font-style: oblique !important;
 }
 
 .event-li-details .event-location {
-    margin-top: 16px;
-    font-size: .95rem;
+	margin-top: 16px;
+	font-size: 0.95rem;
 }
 
-.event-price, .event-link, .event-website, .event-location {
-    width: 100%;
-    display: block;
-    margin-top: 1.25em;
-    margin-bottom: .6em;
-    font-style: oblique!important;
+.event-price,
+.event-link,
+.event-website,
+.event-location {
+	width: 100%;
+	display: block;
+	margin-top: 1.25em;
+	margin-bottom: 0.6em;
+	font-style: oblique !important;
 }
 
 .event-info-box .event-li-clock {
-    margin-left: 2em;
+	margin-left: 2em;
 }
 
 .leaflet-popup-content-wrapper {
-    width: auto;
-    min-width: 195px;
+	width: auto;
+	min-width: 195px;
 }
 
 .leaflet-popup-content {
-    width: auto!important;
+	width: auto !important;
 }
 
 .leaflet-popup-close-button {
-    height: 18px;
-    width: 22px;
-    margin-top: 3px;
-    margin-right: 3px;
+	height: 18px;
+	width: 22px;
+	margin-top: 3px;
+	margin-right: 3px;
 }
 
 #eventMapContainer {
-    border-radius: 13px;
-    width: 99%;
-    height: 400px;
-    position: relative;
-    top: 0;
-    left: 0;
+	border-radius: 13px;
+	width: 99%;
+	height: 400px;
+	position: relative;
+	top: 0;
+	left: 0;
 }
 
 .event-map-marker {
-
 }
 
-
-@media screen and ( max-width: 600px ) {
-    .event-filters {
-        margin: 0;
-        padding: 2em;
-        background: #367ebd;
-        width: 100vmin;
-    }
+@media screen and (max-width: 600px) {
+	.event-filters {
+		margin: 0;
+		padding: 2em;
+		background: #367ebd;
+		width: 100vmin;
+	}
 }
 
 .event-detail {
-    display: flex;
-    text-align: left;
-    align-content: center;
-    word-break: break-word;
+	display: flex;
+	text-align: left;
+	align-content: center;
+	word-break: break-word;
 }
 
-.event-detail svg, .event-detail i {
-    display: inline-block;
-    vertical-align: middle;
-    margin-top: auto;
-    margin-bottom: auto;
-    min-width: 25px;
-    margin-right: .25rem;
-    font-size: .85em;
+.event-detail svg,
+.event-detail i {
+	display: inline-block;
+	vertical-align: middle;
+	margin-top: auto;
+	margin-bottom: auto;
+	min-width: 25px;
+	margin-right: 0.25rem;
+	font-size: 0.85em;
 }

@@ -1,89 +1,89 @@
-html, body {
-    height: 100%;
-    background: transparent;
+html,
+body {
+	height: 100%;
+	background: transparent;
 }
 
 #homePageWidget {
-    max-width: 768px;
-    background:rgba(0,0,0,0)!important;
-    display: flex;
-    flex-direction: column;
-    transition: min-height 400ms;
-    min-height: 320px;
-    padding-left: 0;
-    padding-right: 0;
+	max-width: 768px;
+	background: rgba(0, 0, 0, 0) !important;
+	display: flex;
+	flex-direction: column;
+	transition: min-height 400ms;
+	min-height: 320px;
+	padding-left: 0;
+	padding-right: 0;
 }
 
 /* Iframes cannot detect parent width...
 @media screen and (min-width: 767px) {
-    #homePageWidget {
+    #homePageWidget { 
         min-height: 300px;
     }
 }*/
 
 /* Homepage widget */
 #btnOpenLibryPage {
-    width: 100%;
-    padding: .65em;
-    font-size: 1.15em;
-    margin-top: auto;
-    background: @primary;
+	width: 100%;
+	padding: 0.65em;
+	font-size: 1.15em;
+	margin-top: auto;
+	background: @primary;
 }
 
 #btnOpenLibryPage:hover {
-    background: @btnHover;
+	background: @btnHover;
 }
 
-.select2-container--default .select2-results>.select2-results__options{
-    max-height: 500px!important;
+.select2-container--default .select2-results > .select2-results__options {
+	max-height: 500px !important;
 }
 
 .select-lite .select2-container {
-    width: 100%!important;
+	width: 100% !important;
 }
 
 .time--sub {
-    font-size: .95rem;
-
+	font-size: 0.95rem;
 }
 
 .align-left {
-    text-align: left;
+	text-align: left;
 }
 
-.time--sub .align-right{
-    padding-left: 30px!important;
+.time--sub .align-right {
+	padding-left: 30px !important;
 }
 
 .day-main-schedule {
-    text-align: center;
-    font-size: .95rem;
+	text-align: center;
+	font-size: 0.95rem;
 }
 
 #weekNumber {
-    font-size: 1rem;
+	font-size: 1rem;
 }
 
 #weekSchelude {
-    margin: 2em!important;
+	margin: 2em !important;
 }
 
-
-.thead-light tr td{
-    margin: 0!important;
-    padding: 0!important;
-    border-bottom: 1px solid @primary;
-    border-top: none;
+.thead-light tr td {
+	margin: 0 !important;
+	padding: 0 !important;
+	border-bottom: 1px solid @primary;
+	border-top: none;
 }
 
 tr td {
-    padding: 3px 0!important;
+	padding: 3px 0 !important;
 }
 
-tbody tr:first-child, tbody tr:first-child td {
+tbody tr:first-child,
+tbody tr:first-child td {
 }
 
-
-tbody tr:last-child, tbody tr:last-child td {
-    padding-bottom: 1em!important;
+tbody tr:last-child,
+tbody tr:last-child td {
+	padding-bottom: 1em !important;
 }

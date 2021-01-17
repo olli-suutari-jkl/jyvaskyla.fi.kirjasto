@@ -1,125 +1,127 @@
 @charset "UTF-8";
 /* Generic styling */
 @font-face {
-    font-family: Verdana;
-    /* Use ../style/ in path so iut works in libMain.js as well */
-    src: url(../style/font/Verdana.eot);
-    src: url(../style/font/Verdana.eot?#iefix) format('embedded-opentype'), url(../style/font/Verdana.woff2) format('woff2'), url(../style/font/Verdana.woff) format('woff'), url(../style/font/Verdana.ttf) format('truetype'), url(../style/font/Verdana.svg#Verdana) format('svg');
-    font-weight: 400;
-    font-style: normal;
+	font-family: Verdana;
+	/* Use ../style/ in path so iut works in libMain.js as well */
+	src: url(../style/font/Verdana.eot);
+	src: url(../style/font/Verdana.eot?#iefix) format('embedded-opentype'),
+		url(../style/font/Verdana.woff2) format('woff2'), url(../style/font/Verdana.woff) format('woff'),
+		url(../style/font/Verdana.ttf) format('truetype'), url(../style/font/Verdana.svg#Verdana) format('svg');
+	font-weight: 400;
+	font-style: normal;
 }
 
 body {
-    font-size: 1.02em;
-    background: transparent;
-    color: @textColor;
+	font-size: 1.02em;
+	background: transparent;
+	color: @textColor;
 }
 
 h1 {
-    font-size: 1.53em;
-    padding-bottom: 0.2em;
+	font-size: 1.53em;
+	padding-bottom: 0.2em;
 }
 
 h2 {
-    font-size: 1.35em;
+	font-size: 1.35em;
 }
 
 h3 {
-    font-size: 1.32em!important;
-    padding-top: 0.35em;
-    padding-bottom: 0.1em;
+	font-size: 1.32em !important;
+	padding-top: 0.35em;
+	padding-bottom: 0.1em;
 }
 
 h4 {
-    font-size: 1.2em!important;
-    padding-top: 0.35em;
-    padding-bottom: 0.1em;
+	font-size: 1.2em !important;
+	padding-top: 0.35em;
+	padding-bottom: 0.1em;
 }
 
 i {
-    font-size: 1em;
+	font-size: 1em;
 }
 
 a {
-    color: @links;
+	color: @links;
 }
 
 a:hover {
-    color: @linksHover;
+	color: @linksHover;
 }
 
-a[target=_blank]:not([title*="Instagram"]):not([title*="Facebook"]):after{
-    font-family: "Font Awesome 5 Free";  /* updated font-family */
-    font-weight: 400; /* regular style/weight */
-    content: "\f35d";
-    font-size: 0.7em;
-    color: @linksExternal;
-    padding-left: 3px;
+a[target='_blank']:not([title*='Instagram']):not([title*='Facebook']):after {
+	font-family: 'Font Awesome 5 Free'; /* updated font-family */
+	font-weight: 400; /* regular style/weight */
+	content: '\f35d';
+	font-size: 0.7em;
+	color: @linksExternal;
+	padding-left: 3px;
 }
 
 .hidden {
-    display: none
+	display: none;
 }
 
 .always-visible {
-    display: block!important;
+	display: block !important;
 }
 
 /* Screenreader only */
 .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	border: 0;
 }
 
 /* Library selector */
 @media screen and (max-width: 740px) {
-    .select2-container {
-        width: 100%!important;
-    }
+	.select2-container {
+		width: 100% !important;
+	}
 }
 
 .select-lite .select2-container {
-    width: 100%!important;
+	width: 100% !important;
 }
 
-.select2-container--default .select2-results>.select2-results__options{
-    max-height: 50vh!important;
+.select2-container--default .select2-results > .select2-results__options {
+	max-height: 50vh !important;
 }
 
 #librarySelectorTitle {
-    text-align: center;
+	text-align: center;
 }
 
 #librarySelectorContainer {
-    margin-bottom: 0.8em;
-    display: flex;
-    align-items: center!important;
-    justify-content: center!important;
+	margin-bottom: 0.8em;
+	display: flex;
+	align-items: center !important;
+	justify-content: center !important;
 }
 
 .select-container {
-    margin: auto!important;
-    text-align: center!important;
+	margin: auto !important;
+	text-align: center !important;
 }
 
 .select2-container {
-    text-align: center!important;
-    align-content: center!important;
+	text-align: center !important;
+	align-content: center !important;
 }
 
 .underlined-title {
-    padding-left: 1.2rem;
-    padding-right: 1.2rem;
-    border-bottom: 2px solid @primary;
-    display: inline;
+	padding-left: 1.2rem;
+	padding-right: 1.2rem;
+	border-bottom: 2px solid @primary;
+	display: inline;
 }
 
 .no-js-notification {
-    color: red;
+	color: red;
 }
