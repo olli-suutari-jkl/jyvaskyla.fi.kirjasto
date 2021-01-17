@@ -1,0 +1,7 @@
+**/js/lib/
+**/style/font/
+**/style/lib/
+**.ps1
+**/.MD/
+**/LICENSE
+**/node_modules
