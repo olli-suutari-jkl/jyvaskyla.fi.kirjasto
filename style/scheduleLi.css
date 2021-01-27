@@ -122,7 +122,8 @@
 }
 
 .week-container li {
-	padding: 0.58em 1em;
+	padding-top: 0.3em;
+	padding-bottom: 0.3em;
 	width: 100%;
 }
 
@@ -230,10 +231,6 @@
 
 	.week-container p span:last-child {
 		align-content: flex-end;
-	}
-
-	#scheduleInfos {
-		margin-left: 0 !important;
 	}
 }
 

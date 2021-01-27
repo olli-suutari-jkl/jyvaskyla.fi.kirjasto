@@ -27,10 +27,10 @@ function adjustHomePageHeight(delay) {
 					newHeight = height;
 				}
 			} else {
-				newHeight = newHeight + document.getElementById('homePageWidget').scrollHeight;
+				newHeight = newHeight + document.getElementById('homePageWidget').offsetHeight;
 			}
 			if (newHeight !== height) {
-				parent.postMessage({ value: newHeight + 100, type: 'resize' }, '*');
+				parent.postMessage({ value: newHeight + 150, type: 'resize' }, '*');
 			}
 			height = newHeight;
 			setAdjustingToFalse();
