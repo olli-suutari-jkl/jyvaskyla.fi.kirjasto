@@ -1,0 +1,256 @@
+/* Use target page background */
+.schedules-container,
+.schedules-widget {
+	background: rgba(0, 0, 0, 0) !important;
+}
+
+#weekNumber,
+.btn-arrow,
+.day-name,
+.main-schedule,
+.date-container {
+	font-weight: 600;
+}
+
+.normal-schedules .date-container,
+.schedules-widget .date-container {
+	width: auto;
+	padding-right: 0.64em;
+}
+
+.main-schedule {
+	margin-left: auto;
+	justify-content: flex-end;
+}
+
+.info-row {
+	margin-top: 0.25em !important;
+	margin-bottom: 0;
+}
+
+.fa-level-up-alt,
+.fa-info-circle {
+	margin-right: 0.3em;
+}
+
+.day-name {
+	display: flex;
+	justify-content: center;
+	align-content: center;
+}
+
+/* Navigation */
+#scheduleTitle {
+	text-align: center;
+	padding-bottom: 0.25em;
+	margin-bottom: 0.75em;
+}
+
+#lastWeek:focus,
+#nextWeek:focus {
+	border: solid 2px #025ba9;
+}
+
+.thead-light {
+	font-size: 1.2rem;
+	background: #edf1f5;
+	text-align: center;
+	margin-bottom: 1em;
+}
+
+.btn-back {
+	float: left;
+	width: 30px;
+}
+
+.btn-next {
+	float: right;
+	width: 30px;
+}
+
+.info-text {
+	font-weight: 400;
+	display: flex;
+	white-space: normal;
+	text-align: left;
+	word-break: break-word;
+	align-content: flex-start;
+	justify-content: flex-start;
+	margin-left: 0 !important;
+}
+
+.week-info-icon-container {
+	display: flex;
+	vertical-align: middle;
+	justify-content: center;
+	align-content: center;
+	align-items: center;
+	margin-right: 0.5em;
+	margin-top: 3px;
+}
+
+.week-info-icon-container i {
+	margin-top: 5px;
+	margin-right: 0.7em;
+	margin-left: 1.2em;
+}
+
+.week-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.pretty-weekday-container {
+	margin-bottom: 0.35em;
+	display: flex;
+	justify-content: center;
+	align-content: center;
+}
+
+.week-container ul {
+	width: 100%;
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	margin-right: auto;
+	margin-left: auto;
+	justify-content: space-between;
+	padding: 0 2em;
+}
+
+.week-container li {
+	padding: 0.58em 1em;
+	width: 100%;
+}
+
+.week-container p {
+	margin-top: 0.2em;
+	margin-bottom: 0.2em;
+}
+
+#scheduleInfos {
+	width: 100%;
+	margin-left: 2em;
+}
+
+.info-span {
+	margin-left: 0.3em;
+	margin-bottom: 0.95em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.info-span i {
+	font-size: 1.25em !important;
+	margin-top: 3px;
+}
+
+.time--sub {
+	font-size: 0.93em;
+	display: flex;
+	padding-top: 0.35em;
+	padding-bottom: 0.35em;
+}
+
+.time--sub span:first-child {
+	margin-right: 0.43em;
+}
+
+.time--sub span:last-child {
+	justify-content: flex-end;
+	align-content: flex-end;
+	margin-left: auto;
+}
+
+/* Colors for openings. .today is overwritten if not closed. */
+.today {
+	background: #fcf8e3;
+}
+
+.is-open {
+	background: #d7f5cd;
+}
+
+.is-closed {
+	background: #f5dbd6;
+}
+
+.is-self-service {
+	background: #e1f7fa;
+}
+/* Media queries */
+@media screen and (max-width: 350px) {
+	.time--sub .fa-level-up-alt {
+		display: none;
+	}
+	.day-name-end {
+		display: none;
+	}
+	.fa-info-circle {
+	}
+	#scheduleInfos {
+		padding-left: 4%;
+		padding-right: 2%;
+	}
+}
+
+@media screen and (max-width: 499px) {
+	.info-span {
+		padding-left: 1em;
+		padding-right: 1em;
+	}
+}
+
+@media screen and (max-width: 550px) {
+	#scheduleInfos {
+		margin-left: -10px;
+		padding-left: 0;
+	}
+
+	.week-container {
+		width: 100%;
+	}
+	.week-container ul {
+		padding: 0 !important;
+	}
+
+	.week-container li {
+		padding-left: 5% !important;
+		padding-right: 5% !important;
+	}
+
+	.week-container p span {
+		align-content: flex-start;
+		text-align: left;
+	}
+
+	.week-container p span:last-child {
+		align-content: flex-end;
+	}
+
+	#scheduleInfos {
+		margin-left: 0 !important;
+	}
+}
+
+@media screen and (min-width: 500px) and (max-width: 768px) {
+	.normal-schedules {
+		margin-left: -25px;
+		margin-right: -25px;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.table {
+		text-align: center;
+	}
+	.day-name,
+	.time--sub,
+	.main-schedule {
+		text-align: left;
+	}
+}
