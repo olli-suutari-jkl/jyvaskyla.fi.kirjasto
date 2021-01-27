@@ -1,90 +1,89 @@
-
 <!DOCTYPE html>
 <!-- This template is to be used with iframe, eq: <iframe allowfullscreen="" frameborder="0" height="1500px" src="https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/homePage.html?lib=85159&lang=fi" width="100%"></iframe>
  Homepage is a small variant with schedules and library selector. -->
-<html lang="fi">
+<html lang='fi'>
 <head>
     <title></title> <!-- Validators trigger error if no title is set !-->
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
     <!-- Prevent Edge from formatting schedule times as phone numbers. -->
-    <meta name="format-detection" content="telephone=no">
-    <link href="../style/font/fontawesome-free-5.9.0/css/fontawesome.min.css" rel="stylesheet">
-    <link href="../style/font/fontawesome-free-5.9.0/css/solid.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="../style/schedule.css">
-    <link rel="stylesheet" href="../style/lib/select2.css"/>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-    <script src="../js/lib/jquery.translate.js"></script>
-    <script src="../js/translations.js"></script>
-    <script src="../js/lib/less.min.js" ></script>
-    <script src="../js/getParameters.js"></script>
-    <script src="../js/generateStyles.js"></script>
-    <script src="../js/checkUrlForLibrary.js"></script>
-    <script src="../js/lib/moment.min.js"></script>
-    <script src="../js/lib/moment-fi.js"></script>
-    <script src="../js/lib/select2.min.js"></script>
-    <script src="../js/lib/select2Fi.js"></script>
-    <script src="../js/lib/select2SearchPlaceholder.js"></script>
-    <script src="../js/commonFunctions.js"></script>
-    <script src="../js/consortium.js"></script>
-    <script src="../js/scheduleCommon.js"></script>
-    <script src="../js/homePage.js"></script>
-    <script src="../js/schedule.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <meta name='format-detection' content='telephone=no'>
+    <link href='../style/font/fontawesome-free-5.9.0/css/fontawesome.min.css' rel='stylesheet'>
+    <link href='../style/font/fontawesome-free-5.9.0/css/solid.min.css' rel='stylesheet'>
+    <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'
+          integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>
+    <link rel='stylesheet' href='../style/scheduleLi.css'>
+    <link rel='stylesheet' href='../style/lib/select2.css' />
+    <script src='https://code.jquery.com/jquery-3.4.1.min.js'
+            integrity='sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=' crossorigin='anonymous'></script>
+    <script src='../js/lib/jquery.translate.js'></script>
+    <script src='../js/translations.js'></script>
+    <script src='../js/lib/less.min.js'></script>
+    <script src='../js/getParameters.js'></script>
+    <script src='../js/generateStyles.js'></script>
+    <script src='../js/checkUrlForLibrary.js'></script>
+    <script src='../js/lib/moment.min.js'></script>
+    <script src='../js/lib/moment-fi.js'></script>
+    <script src='../js/lib/select2.min.js'></script>
+    <script src='../js/lib/select2Fi.js'></script>
+    <script src='../js/lib/select2SearchPlaceholder.js'></script>
+    <script src='../js/commonFunctions.js'></script>
+    <script src='../js/consortium.js'></script>
+    <script src='../js/scheduleCommon.js'></script>
+    <script src='../js/homePage.js'></script>
+    <script src='../js/scheduleLi.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js'
+            integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1'
+            crossorigin='anonymous'></script>
+    <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js'
+            integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM'
+            crossorigin='anonymous'></script>
 </head>
 <body>
-    <div id="homePageWidget" class="homepage-widget-week col-md-12">
-        <!-- Scheludes -->
-        <section id="schedules" class="library-schedules schedules-widget">
-            <!-- Library selector is used only when city/consertium parameters are provided. -->
-            <div id="librarySelectorContainer">
-                <h3 class="sr-only" id="librarySelectorTitle"><label id="librarySelectorLabel" for="librarySelector"></label></h3>
-                <div class="select-container select-lite">
-                    <select id="librarySelector" class="library-select select-lite"></select>
-                </div>
+<div id='homePageWidget' class='homepage-widget-week col-md-12'>
+    <!-- Scheludes -->
+    <section id='schedules' class='library-schedules schedules-widget'>
+        <!-- Library selector is used only when city/consertium parameters are provided. -->
+        <div id='librarySelectorContainer'>
+            <h3 class='sr-only' id='librarySelectorTitle'><label id='librarySelectorLabel' for='librarySelector'></label></h3>
+            <div class='select-container select-lite'>
+                <select id='librarySelector' class='library-select select-lite'></select>
             </div>
-            <table class="table table-sm">
-                <thead class="thead-light">
-                <td colspan="3">
-                    <button type="button" id="lastWeek" data-placement="bottom"
-                            class="btn btn-sm btn-light btn-back btn-arrow" aria-hidden="true" onclick="getWeekSchelude(-1)">
-                        <span aria-hidden="true">❮</span>
-                    </button>
-                    <span id="weekNumber"></span>
-                    <button type="button" id="nextWeek" data-placement="bottom"
-                            class="btn btn-sm btn-light btn-next btn-arrow" aria-hidden="true" onclick="getWeekSchelude(1)">
-                        <span aria-hidden="true">❯</span>
-                    </button>
-                </td>
-                </thead>
-                <tbody id="scheduleInfos" class="schedule-infos" style="display: none">
-                <tr id="scheduleInfoRow" style="display: none">
-                    <td colspan="3">
-                <span id="scheduleInfo" class="">
-                  <i class="fas fa-info-circle" > </i>
-                </span>
-                    </td>
-                </tr>
-                <tr id="specialInfoRow" style="display: none">
-                    <td colspan="3">
-                <span id="specialInfo" class="info-span info-text">
-                  <i class="fas fa-info-circle" > </i>
-                </span>
-                    </td>
-                </tr>
-                </tbody>
-                <tbody id="weekSchelude" class="schedules-weekly">
-                </tbody>
-            </table>
-        </section>
-        <button id="btnOpenLibryPage" class="btn btn-secondary">
+        </div>
+        <div class='thead-light'>
+            <span>
+                <button type='button' id='lastWeek' data-placement='bottom'
+                        class='btn btn-sm btn-light btn-back btn-arrow' aria-hidden='true'
+                        onclick='getWeekSchelude(-1)'>
+                    <span aria-hidden='true'>❮</span>
+                </button>
+                <span id='weekNumber'></span>
+                <button type='button' id='nextWeek' data-placement='bottom'
+                        class='btn btn-sm btn-light btn-next btn-arrow' aria-hidden='true' onclick='getWeekSchelude(1)'>
+                    <span aria-hidden='true'>❯</span>
+                </button>
+            </span>
+        </div>
+        <div class='week-container'>
+            <div id='scheduleInfos' class='schedule-infos' style='display: none'>
+                <p id='scheduleInfo' style='display: none' class=''>
+                    <i class='fas fa-info-circle'> </i>
+                </p>
+                <p id='specialInfo' style='display: none' class='info-span info-text'>
+                    <i class='fas fa-info-circle'> </i>
+                </p>
+            </div>
+            <ul id='weekSchelude' class='table table-sm schedules-weekly'>
+            </ul>
+        </div>
+        <button id='btnOpenLibryPage' class='btn btn-secondary'>
         </button>
-    </div>
+    </section>
+</div>
 </body>
-<noscript><h2 class="no-js-notification">Toimiakseen oikein, sivusto tarvitsee JavaScriptiä. Selaimesi ei tue Javascriptiä tai se on estetty.
-    <br>In order to function properly, this page requires Javascript. Your browser does not support it or it has been blocked.
+<noscript><h2 class='no-js-notification'>Toimiakseen oikein, sivusto tarvitsee JavaScriptiä. Selaimesi ei tue
+    Javascriptiä tai se on estetty.
+    <br>In order to function properly, this page requires Javascript. Your browser does not support it or it has been
+    blocked.
 </h2></noscript>
 </html>
