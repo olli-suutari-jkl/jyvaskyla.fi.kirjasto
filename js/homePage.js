@@ -30,7 +30,7 @@ function adjustHomePageHeight(delay) {
 				newHeight = newHeight + document.getElementById('homePageWidget').scrollHeight;
 			}
 			if (newHeight !== height) {
-				parent.postMessage({ value: newHeight, type: 'resize' }, '*');
+				parent.postMessage({ value: newHeight + 100, type: 'resize' }, '*');
 			}
 			height = newHeight;
 			setAdjustingToFalse();
