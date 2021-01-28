@@ -24,7 +24,7 @@ function adjustHomePageHeight(delay) {
 			var itemWidth = document.getElementById('homePageWidget').offsetWidth;
 			var heightOffset = 50;
 			if (itemWidth < 370) {
-				heightOffset = 220;
+				heightOffset = 240;
 			} else if (itemWidth < 470) {
 				heightOffset = 200;
 			} else if (itemWidth < 611) {

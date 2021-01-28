@@ -119,6 +119,7 @@
 	margin-left: auto;
 	justify-content: space-between;
 	padding: 0 2em;
+	margin-bottom: 0;
 }
 
 .week-container li {
@@ -252,5 +253,12 @@
 	.time--sub,
 	.main-schedule {
 		text-align: left;
+	}
+}
+
+/* IE 11: fix text overflow */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+	.main-schedule {
+		margin-right: auto;
 	}
 }
