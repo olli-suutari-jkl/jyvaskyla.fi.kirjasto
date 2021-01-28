@@ -124,7 +124,13 @@
 .week-container li {
 	padding-top: 0.3em;
 	padding-bottom: 0.3em;
+	padding-left: 5% !important;
+	padding-right: 5% !important;
 	width: 100%;
+}
+
+.week-container li i {
+	margin-left: 0.45em;
 }
 
 .week-container p {
@@ -135,6 +141,8 @@
 #scheduleInfos {
 	width: 100%;
 	margin-left: 2em;
+	margin-right: 1em;
+	margin-bottom: 0.4em;
 }
 
 .info-span {
@@ -217,11 +225,6 @@
 	}
 	.week-container ul {
 		padding: 0 !important;
-	}
-
-	.week-container li {
-		padding-left: 5% !important;
-		padding-right: 5% !important;
 	}
 
 	.week-container p span {

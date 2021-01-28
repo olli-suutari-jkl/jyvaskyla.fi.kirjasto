@@ -20,6 +20,21 @@ function adjustHomePageHeight(delay) {
 	setTimeout(function () {
 		try {
 			var newHeight = 0;
+			// For some reason, item height is reported incorrectly based on resolution... TO DO: Less hacky fix.
+			var itemWidth = document.getElementById('homePageWidget').offsetWidth;
+			var heightOffset = 50;
+			if (itemWidth < 370) {
+				heightOffset = 220;
+			} else if (itemWidth < 470) {
+				heightOffset = 200;
+			} else if (itemWidth < 611) {
+				heightOffset = 180;
+			} else if (itemWidth < 768) {
+				heightOffset = 170;
+			} else if (itemWidth < 1340) {
+				heightOffset = 190;
+			}
+			console.log('scheduleWidth: ' + itemWidth);
 			if (selectIsOpen) {
 				if (height < 650) {
 					newHeight = 650;
@@ -30,7 +45,7 @@ function adjustHomePageHeight(delay) {
 				newHeight = newHeight + document.getElementById('homePageWidget').offsetHeight;
 			}
 			if (newHeight !== height) {
-				parent.postMessage({ value: newHeight + 150, type: 'resize' }, '*');
+				parent.postMessage({ value: newHeight + heightOffset, type: 'resize' }, '*');
 			}
 			height = newHeight;
 			setAdjustingToFalse();
