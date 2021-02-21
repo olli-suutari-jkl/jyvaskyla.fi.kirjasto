@@ -95,17 +95,21 @@ function initSelect(items) {
 			placeholderText = 'Search by name...';
 		}
 	}
+	// Unless we add the data first the screen readers will read the search term instead of the focused result.
+	// The init must be done "twice" or it wont work properly.
+	$('#librarySelector').select2({
+		data: items
+	});
 	// If we use placeholder in IE, select always has focus and opens automatically.
 	// https://stackoverflow.com/questions/29293452/ie-select2-always-gets-the-focus
+	// TODO: Placeholder is not announced to screen readers with this fix.
 	if (isIE) {
-		$('.library-select').select2({
-			data: items,
+		$('#librarySelector').select2({
 			language: lang, // Global parameter from getParameters.js
 			matcher: modelMatcher
 		});
 	} else {
-		$('.library-select').select2({
-			data: items,
+		$('#librarySelector').select2({
 			language: lang, // Global parameter from getParameters.js
 			searchInputPlaceholder: placeholderText,
 			matcher: modelMatcher

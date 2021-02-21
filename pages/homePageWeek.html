@@ -47,7 +47,9 @@
         <div id='librarySelectorContainer'>
             <h3 class='sr-only' id='librarySelectorTitle'><label id='librarySelectorLabel' for='librarySelector'></label></h3>
             <div class='select-container select-lite'>
-                <select id='librarySelector' class='library-select select-lite'></select>
+                <select id="librarySelector" class="library-select select-lite js-states form-control select2-hidden-accessible">
+                    <option></option>
+                </select>
             </div>
         </div>
         <div class='thead-light'>
@@ -76,8 +78,7 @@
             <ul id='weekSchelude' class='table table-sm schedules-weekly'>
             </ul>
         </div>
-        <button id='btnOpenLibryPage' class='btn btn-secondary'>
-        </button>
+        <button id='btnOpenLibryPage' class='btn btn-secondary'></button>
     </section>
 </div>
 </body>
