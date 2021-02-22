@@ -379,7 +379,7 @@ var length = 1;
 					'</button></div>' +
 					'<div class="slider-navigation slider-play-expand-container"> ' +
 					progressBar +
-					'<button id="expandSlider" title="' +
+					'<button aria-hidden="true" id="expandSlider" title="' +
 					i18n.get('Toggle full-screen') +
 					'" data-placement="right" ' +
 					' data-toggle="navigation-tooltip" class="slider-btn"> ' +

@@ -346,7 +346,7 @@ function getWeekSchelude(direction, lib) {
 								staffPresentEnd = to;
 								// Store the row as a variable.
 								staffToday =
-									'<p class="aaat time--sub time isTodayClass time--with-staff">' +
+									'<p class="time--sub time isTodayClass time--with-staff">' +
 									'<span><i class="fas fa-level-up-alt fa-rotate-90"></i></span><span> ' +
 									' ' +
 									i18n.get('Service time') +
