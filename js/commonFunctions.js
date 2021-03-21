@@ -45,7 +45,7 @@ function generateExternalLink(link) {
 	if (link.indexOf('@') !== -1) {
 		return;
 	}
-	link = link.replace(/(<a href=")+/g, '<a class="external-link af" target="_blank" href="');
+	link = link.replace(/(<a href=")+/g, '<a class="external-link" target="_blank" href="');
 	link = link.replace(/(<\/a>)+/g, '<span class="sr-only"> (' + i18n.get('Opens in new tab') + ')</span></a>');
 	return link;
 }

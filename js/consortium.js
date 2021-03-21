@@ -105,11 +105,13 @@ function initSelect(items) {
 	// TODO: Placeholder is not announced to screen readers with this fix.
 	if (isIE) {
 		$('#librarySelector').select2({
+			data: items,
 			language: lang, // Global parameter from getParameters.js
 			matcher: modelMatcher
 		});
 	} else {
 		$('#librarySelector').select2({
+			data: items, // Unless we include the date here as well, the service search won't work.
 			language: lang, // Global parameter from getParameters.js
 			searchInputPlaceholder: placeholderText,
 			matcher: modelMatcher
