@@ -4,6 +4,11 @@
 	background: rgba(0, 0, 0, 0) !important;
 }
 
+:not(#homePageWidget) #schedules {
+	margin-bottom: 2.5rem;
+	margin-top: 2.5rem;
+}
+
 #weekNumber,
 .btn-arrow,
 .day-name,
