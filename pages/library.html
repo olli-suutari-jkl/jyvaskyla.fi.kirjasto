@@ -47,18 +47,18 @@
 <div id="mainContainer" class="container">
   <!-- Library selector is used only when city/consertium parameters are provided. -->
   <div id="librarySelectorContainer" style="display: none">
-    <h1 id="librarySelectorTitle"><label id="librarySelectorLabel" for="librarySelector"></label></h1>
-    <div class="select-container">
-      <select id="librarySelector" class="library-select"></select>
-    </div>
+    <label aria-hidden='true' class='librarySelectorTitle' id="librarySelectorLabel"></label>
+    <nav aria-labelledby='librarySelectorLabel'>
+      <div class="select-container">
+        <select id="librarySelector" class="library-select"></select>
+      </div>
+    </nav>
   </div>
+  <nav id='libraryTabNavigation' class="nav nav-pills nav-library-page">
+    <a id="navInfo" class="nav-item nav-link active" style="display: none" aria-selected='true' href="javascript:void(0);"></a>
+    <a id="navContacts" class="nav-item nav-link" style="display: none" aria-selected='false' href="javascript:void(0);"></a>
+  </nav>
   <main id="pageContainer" class="container main content">
-    <header>
-      <nav class="nav nav-pills nav-library-page">
-        <a id="navInfo" class="nav-item nav-link active" style="display: none" href="javascript:void(0);"></a>
-        <a id="navContacts" class="nav-item nav-link" style="display: none" href="javascript:void(0);"></a>
-      </nav>
-    </header>
     <div id="introductionTab" class="row">
       <div id="leftBar" class="col-sm-12 col-md-6 col-lg-6 col-xl-7">
         <div id="blockquote"></div>
@@ -133,7 +133,6 @@
             </ul>
           </div>
         </section>
-
         <!-- Events -->
         <section id="events" class="lib-events">
           <h3 id="eventsTitle" class="underlined-title" style="display: none"></h3>

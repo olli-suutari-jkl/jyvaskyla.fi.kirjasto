@@ -7,6 +7,10 @@ var dict = {
 		fi: 'Hae etsimäsi kirjasto tai palvelu esim. omatoimikirjasto tai digitointi',
 		en: 'Type the library or the service you are looking for'
 	},
+	Tab: {
+		fi: 'Välilehti',
+		en: 'Tab'
+	},
 	Info: {
 		fi: 'Esittely',
 		en: 'Info'

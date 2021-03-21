@@ -418,9 +418,11 @@ function bindActions() {
 	function navigateToDefault(animationTime) {
 		// Hide other sections & active nav styles.
 		$('#navContacts').removeClass('active');
+		$('#navContacts').attr('aria-selected', false);
 		$('#contactsTab').hide(animationTime);
 		// Show selected section + add active to nav
 		$('#navInfo').addClass('active');
+		$('#navInfo').attr('aria-selected', true);
 		$('#introductionTab').show(animationTime);
 		// Hide infobox if visible.
 		if (isInfoBoxVisible) {
@@ -444,11 +446,14 @@ function bindActions() {
 	}
 
 	function navigateToContacts(animationTime) {
+		console.log('DOOO');
 		// Hide other sections & active nav styles.
 		$('#navInfo').removeClass('active');
+		$('#navInfo').attr('aria-selected', false);
 		$('#introductionTab').hide(animationTime);
 		// Show selected section + add active to nav.
 		$('#navContacts').addClass('active');
+		$('#navContacts').attr('aria-selected', true);
 		$('#contactsTab').show(animationTime);
 		// Hide infobox if visible.
 		if (isInfoBoxVisible) {
@@ -540,9 +545,10 @@ $(document).ready(function () {
 	bindActions();
 	map = L.map('mapContainer');
 	// UI texts.
-	if ($('#librarySelectorTitle')) {
+	if ($('#librarySelectorLabel')) {
 		$('#librarySelectorLabel').append(i18n.get('Library selector'));
 	}
+	$('#libraryTabNavigation').attr('aria-label', i18n.get('Tab'));
 	$('#navInfo').append(i18n.get('Info'));
 	$('#navContacts').append(i18n.get('Contact details'));
 	$('#transitTitle').append(i18n.get('Transit details'));
