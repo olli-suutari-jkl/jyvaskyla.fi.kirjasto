@@ -24,8 +24,14 @@
 }
 
 .info-row {
-	margin-top: 0.25em !important;
 	margin-bottom: 0;
+	display: flex;
+	align-items: center;
+}
+
+/* Fixes the vertical alignment... TODO: Why is this required */
+.info-row span:not(.info-span) {
+	margin-top: -12px;
 }
 
 .fa-level-up-alt,

@@ -325,10 +325,10 @@ function getWeekSchelude(direction, lib) {
 								dayEnd = to;
 							}
 							/* https://api.kirjastot.fi/: Each entry in times contains a status field:
-                        0 means the library is temporarily closed during the day.
-                        1 means the library is open and has staff.
-                        2 means the library is in self-service mode (no staff).
-                        */
+							 *         0 means the library is temporarily closed during the day.
+							 *         1 means the library is open and has staff.
+							 *         2 means the library is in self-service mode (no staff).
+							 */
 							if (time.status !== 0) {
 								if (time.status == 1) {
 									// https://github.com/libraries-fi/kirkanta/issues/12 | Don't increase row count for overlapping staff presents.

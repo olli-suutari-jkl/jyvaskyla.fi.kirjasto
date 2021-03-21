@@ -14,11 +14,10 @@
   <link href="../style/font/fontawesome-free-5.9.0/css/solid.min.css" rel="stylesheet">
   <link href="../style/font/fontawesome-free-5.9.0/css/brands.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <link rel="stylesheet" href="../style/schedule.css">
+  <link rel="stylesheet" href="../style/scheduleLi.css">
   <link rel="stylesheet" href="../style/lib/select2.css"/>
   <link rel="stylesheet" href="../style/lib/leaflet.css"/>
   <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-rss/3.3.0/jquery.rss.min.js"></script>
   <script src="../js/lib/jquery.translate.js"></script>
   <script src="../js/translations.js"></script>
   <script src="../js/lib/less.min.js" ></script>
@@ -39,7 +38,7 @@
   <script src="../js/libDetails.js"></script>
   <script src="../js/libMain.js"></script>
   <script src="../js/scheduleCommon.js"></script>
-  <script src="../js/schedule.js"></script>
+  <script src='../js/scheduleLi.js'></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </head>
@@ -61,7 +60,7 @@
       </nav>
     </header>
     <div id="introductionTab" class="row">
-      <div id="leftBar" class="col-sm-12 col-md-7 col-lg-7 col-xl-8">
+      <div id="leftBar" class="col-sm-12 col-md-6 col-lg-6 col-xl-7">
         <div id="blockquote"></div>
         <div class="row">
           <div class="news-description" id="introduction">
@@ -105,45 +104,35 @@
           <ul class="rslides"></ul>
         </section>
       </div><!-- col-lg-8 -->
-      <div class="col-sm-12 col-md-5 col-lg-5 col-xl-4 order-2 sidebar" id="introductionSidebar">
+      <div class="col-sm-12 col-md-6 col-lg-6 col-xl-5 order-2 sidebar" id="introductionSidebar">
         <!-- Scheludes -->
         <section id="schedules" class="library-schedules normal-schedules">
-          <h3 id="scheduleTitle" class="underlined-title" style="display: none"></h3>
-          <table class="table table-sm">
-            <thead class="thead-light">
-            <tr>
-              <td colspan="3">
-                <button type="button" id="lastWeek" data-placement="bottom"
-                        class="btn btn-sm btn-light btn-back btn-arrow" aria-hidden="true" onclick="getWeekSchelude(-1)">
-                  <span aria-hidden="true">❮</span>
+          <div class='thead-light'>
+            <span>
+                <button type='button' id='lastWeek' data-placement='bottom'
+                        class='btn btn-sm btn-light btn-back btn-arrow'
+                        onclick='getWeekSchelude(-1)'>
+                    <span aria-hidden='true'>❮</span>
                 </button>
-                <span id="weekNumber"></span>
-                <button type="button" id="nextWeek" data-placement="bottom"
-                        class="btn btn-sm btn-light btn-next btn-arrow" aria-hidden="true" onclick="getWeekSchelude(1)">
-                  <span aria-hidden="true">❯</span>
+                <span id='weekNumber'></span>
+                <button type='button' id='nextWeek' data-placement='bottom'
+                        class='btn btn-sm btn-light btn-next btn-arrow' onclick='getWeekSchelude(1)'>
+                    <span aria-hidden='true'>❯</span>
                 </button>
-              </td>
-            </tr>
-            </thead>
-            <tbody id="scheduleInfos" class="schedule-infos" style="display: none">
-            <tr id="scheduleInfoRow" style="display: none">
-              <td colspan="3">
-                <span id="scheduleInfo" class="">
-                  <i class="fas fa-info-circle" > </i>
-                </span>
-              </td>
-            </tr>
-            <tr id="specialInfoRow" style="display: none">
-              <td colspan="3">
-                <span id="specialInfo" class="info-span info-text">
-                  <i class="fas fa-info-circle" > </i>
-                </span>
-              </td>
-            </tr>
-            </tbody>
-            <tbody id="weekSchelude" class="schedules-weekly">
-            </tbody>
-          </table>
+            </span>
+          </div>
+          <div class='week-container'>
+            <div id='scheduleInfos' class='schedule-infos' style='display: none'>
+              <p id='scheduleInfo' style='display: none' class=''>
+                <i class='fas fa-info-circle'> </i>
+              </p>
+              <p id='specialInfo' style='display: none' class='info-span info-text'>
+                <i class='fas fa-info-circle'> </i>
+              </p>
+            </div>
+            <ul id='weekSchelude' class='table table-sm schedules-weekly'>
+            </ul>
+          </div>
         </section>
 
         <!-- Events -->
