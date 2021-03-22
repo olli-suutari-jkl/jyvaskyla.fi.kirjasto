@@ -446,7 +446,6 @@ function bindActions() {
 	}
 
 	function navigateToContacts(animationTime) {
-		console.log('DOOO');
 		// Hide other sections & active nav styles.
 		$('#navInfo').removeClass('active');
 		$('#navInfo').attr('aria-selected', false);
@@ -550,6 +549,9 @@ $(document).ready(function () {
 	}
 	$('#libraryTabNavigation').attr('aria-label', i18n.get('Tab'));
 	$('#navInfo').append(i18n.get('Info'));
+	$('#introduction').attr('aria-label', i18n.get('Introduction'));
+	$('#libraryServices').attr('aria-label', i18n.get('Services'));
+	$('#schedules').attr('aria-label', i18n.get('Opening hours'));
 	$('#navContacts').append(i18n.get('Contact details'));
 	$('#transitTitle').append(i18n.get('Transit details'));
 	$('#socialMediaSr').append(i18n.get('Social media'));

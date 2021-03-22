@@ -15,6 +15,10 @@ var dict = {
 		fi: 'Esittely',
 		en: 'Info'
 	},
+	Introduction: {
+		fi: 'Kirjaston kuvaus',
+		en: 'Introduction'
+	},
 	Services: {
 		fi: 'Palvelut',
 		en: 'Services'

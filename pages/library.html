@@ -61,44 +61,40 @@
   <main id="pageContainer" class="container main content">
     <div id="introductionTab" class="row">
       <div id="leftBar" class="col-sm-12 col-md-6 col-lg-6 col-xl-7">
+        <section id='introduction'>
         <div id="blockquote"></div>
-        <div class="row">
-          <div class="news-description" id="introduction">
-            <div class="details-content" id="introContent"></div>
-          </div>
-          <section class="events-section" style="display: none">
-            <h3 class="event-section-title col-12"><i class="fa fa-calendar" style="margin-right: 5px"></i></h3>
-            <div class="events-container">
+            <div class="news-description">
+              <div class="details-content" id="introContent"></div>
             </div>
-          </section>
-        </div>
+        </section>
+        <!-- Services -->
         <section id="libraryServices">
           <!-- Rooms & collections -->
           <div class="group" id="roomsAndCollections" style="display: none">
-            <h3 id="roomsAndCollectionsTitle">
+            <h3 id="roomsAndCollectionsTitle" aria-hidden='true'>
               <span class="badge" id="roomsAndCollectionsBadge"></span>
             </h3>
-            <ul class="cols" id="roomsAndCollectionsItems"></ul>
+            <ul class="cols" id="roomsAndCollectionsItems" aria-labelledby='roomsAndCollectionsTitle'></ul>
           </div>
           <!-- Hardware &  Services-->
           <div class="group" id="hardwareAndServices" style="display: none">
-            <h3 id="hardwareAndServicesTitle">
+            <h3 id="hardwareAndServicesTitle" aria-hidden='true'>
               <span class="badge" id="hardwareAndServicesBadge"></span>
             </h3>
-            <ul class="cols" id="hardwareAndServicesItems"></ul>
+            <ul class="cols" id="hardwareAndServicesItems" aria-labelledby='hardwareAndServicesTitle'></ul>
           </div>
-          <!-- Accessibility -->
-          <div class="group" id="accessibility" style="display: none">
-            <h3 id="accessibilityTitle">
+        </section>
+        <!-- Accessibility -->
+        <div class="group" id="accessibility" style="display: none">
+          <section aria-labelledby='accessibilityTitle' class="accessibility-details">
+            <h3 aria-hidden='true' id="accessibilityTitle">
               <span class="badge" id="accessibilityBadge"></span>
             </h3>
-            <div class="accessibility-details">
-              <div style="margin: 10px 0 10px 0" class="accessibility-images"></div>
-              <div style="margin: 10px 0 10px 0" id="accessibilityDetails"></div>
-            </div>
-          </div>
-        </section><!-- Palvelut -->
-        <section id="sliderBox" class="small-slider">
+            <div style="margin: 10px 0 10px 0" class="accessibility-images"></div>
+            <div style="margin: 10px 0 10px 0" id="accessibilityDetails"></div>
+          </section>
+        </div>
+        <section aria-hidden='true' id="sliderBox" class="small-slider">
           <h3 class="sr-only" id="srPictures"></h3>
           <ul class="rslides"></ul>
         </section>
@@ -134,21 +130,19 @@
           </div>
         </section>
         <!-- Events -->
-        <section id="events" class="lib-events">
-          <h3 id="eventsTitle" class="underlined-title" style="display: none"></h3>
+        <section id="events" class="lib-events" aria-labelledby='eventsTitle'>
+          <h3 aria-hidden='true' id="eventsTitle" class="underlined-title" style="display: none"></h3>
           <div class="keski-events-archive" id="keskiEvents">
             <ul id="keskiEventsUl"></ul>
           </div>
         </section>
-
-        <section class="trivia-section" style="display: none">
-          <h3 id="triviaTitle" class="title-underlined-centered"></h3>
+        <section class="trivia-section" style="display: none" aria-labelledby='triviaTitle'>
+          <h3 aria-hidden='true' id="triviaTitle" class="title-underlined-centered"></h3>
           <table id="triviaTable" class="table">
             <tbody id="triviaBody">
             </tbody>
           </table>
         </section>
-
       </div>
     </div>
     <!-- Contact details -->
@@ -163,7 +157,7 @@
                 <div id="postalAddress"></div>
               </div>
               <div id="transitDetails" class="transit-details" style="display: none;">
-                <h4 id="transitDetailsTitle"></h4>
+                <h3 id="transitDetailsTitle"></h3>
                 <div id="transitBody"></div>
               </div><!-- Transit -->
             </div>
