@@ -50,19 +50,23 @@ function modelMatcher(params, data) {
 	// `data.children` contains the actual option that we are matching against.
 	$.each(data.children, function (idx, child) {
 		// Find the matching item
-		var libraryDetails = libraryList.find((o) => o.id.toString() === child.id);
+		// Breaks ie ...
+
 		// Wiitaunionin kirjastoauto has b at the end
-		if (libraryDetails === undefined) {
-			libraryDetails = libraryList.find((o) => o.id === 85449);
+		if (child.id === '85449b') {
+			child.id = 85449;
 		}
+		// Would break IE: var libraryDetails = libraryList.find((o) => o.id.toString() === child.id);
+		// Use JQ for finding matching library.
+		var libraryDetails = $.grep(libraryList, function (obj) {
+			return obj.id.toString() == child.id;
+		})[0];
 		// Match by library name
 		if (libraryDetails.text.toLowerCase().indexOf(params.term) == 0) {
 			filteredChildren.push(child);
-			console.log('push');
 		}
 		// Match by city
 		else if (libraryDetails.city.toLowerCase().indexOf(params.term) == 0) {
-			console.log('cityyy');
 			filteredChildren.push(child);
 		}
 		// Match by services
