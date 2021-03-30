@@ -1575,9 +1575,11 @@ function asyncFetchLinks() {
 					}
 				}).catch(function (jqXHR, textStatus, errorThrown) {
 					console.log('Error in fetching Instagram photos.');
+					/*
 					console.error(jqXHR);
 					console.error(textStatus);
 					console.error(errorThrown);
+					 */
 					linksDeferred.resolve();
 				});
 			} else {

@@ -10,8 +10,11 @@ function groupByCity(arr) {
 	// for each object obj in the array arr
 	return arr.reduce(function (res, obj) {
 		var key = obj.city;
-		// create a new object based on the object
-		var newObj = { city: key, id: obj.id, text: obj.text, services: obj.services };
+		var newObj = {
+			city: key,
+			id: obj.id,
+			text: obj.text
+		};
 		// Wiitaunion mobile library is used in both "Pihtipudas" and "Viitasaari".
 		// b identifier is added so both won't be selected by id in selector.
 		if (obj.id == 85449) {
@@ -33,54 +36,50 @@ function groupByCity(arr) {
 }
 
 function modelMatcher(params, data) {
-	data.parentText = data.parentText || '';
-	// Always return the object if there is nothing to compare
+	// If there are no search terms, return all of the data
 	if ($.trim(params.term) === '') {
 		return data;
 	}
-	// Do a recursive check for options with children
-	if (data.children && data.children.length > 0) {
-		// Clone the data object if there are children
-		// This is required as we modify the object to remove any non-matches
-		var match = $.extend(true, {}, data);
-		// Check each child of the option
-		for (var c = data.children.length - 1; c >= 0; c--) {
-			var child = data.children[c];
-			var matches;
-			if (homePage) {
-				child.parentText += data.parentText + ' ' + data.text;
-				matches = modelMatcher(params, child);
-			} else {
-				var services = child.services;
-				child.parentText += data.parentText + ' ' + data.text + ' ' + services;
-				matches = modelMatcher(params, child, services);
-			}
-			// If there wasn't a match, remove the object in the array
-			if (matches == null) {
-				match.children.splice(c, 1);
+	// Skip if there is no 'children' property
+	if (typeof data.children === 'undefined') {
+		return null;
+	}
+	// Search term in lowercase
+	params.term = params.term.toLowerCase();
+	var filteredChildren = [];
+	// `data.children` contains the actual option that we are matching against.
+	$.each(data.children, function (idx, child) {
+		// Find the matching item
+		var libraryDetails = libraryList.find((o) => o.id.toString() === child.id);
+		// Wiitaunionin kirjastoauto has b at the end
+		if (libraryDetails === undefined) {
+			libraryDetails = libraryList.find((o) => o.id === 85449);
+		}
+		// Match by library name
+		if (libraryDetails.text.toLowerCase().indexOf(params.term) == 0) {
+			filteredChildren.push(child);
+			console.log('push');
+		}
+		// Match by city
+		else if (libraryDetails.city.toLowerCase().indexOf(params.term) == 0) {
+			console.log('cityyy');
+			filteredChildren.push(child);
+		}
+		// Match by services
+		else if (!homePage) {
+			if (libraryDetails.services.toLowerCase().indexOf(params.term) > -1) {
+				filteredChildren.push(child);
 			}
 		}
-		// If any children matched, return the new object
-		if (match.children.length > 0) {
-			return match;
-		}
-		// If there were no matching children, check just the plain object
-		return modelMatcher(params, match);
+	});
+	if (filteredChildren.length) {
+		var modifiedData = $.extend({}, data, true);
+		modifiedData.children = filteredChildren;
+		// You can return modified objects from here
+		// This includes matching the `children` how you want in nested data sets
+		return modifiedData;
 	}
-	// If the typed-in term matches the text of this term, or the text from any
-	// parent term, then it's a match.
-	var original;
-	if (homePage) {
-		original = (data.parentText + ' ' + data.text).toUpperCase();
-	} else {
-		original = (data.parentText + ' ' + data.text + ' ' + data.services).toUpperCase();
-	}
-	var term = params.term.toUpperCase();
-	// Check if the text contains the term
-	if (original.indexOf(term) > -1) {
-		return data;
-	}
-	// If it doesn't contain the term, don't return anything
+	// Return `null` if the term should not be displayed
 	return null;
 }
 
@@ -105,13 +104,11 @@ function initSelect(items) {
 	// TODO: Placeholder is not announced to screen readers with this fix.
 	if (isIE) {
 		$('#librarySelector').select2({
-			data: items,
 			language: lang, // Global parameter from getParameters.js
 			matcher: modelMatcher
 		});
 	} else {
 		$('#librarySelector').select2({
-			data: items, // Unless we include the date here as well, the service search won't work.
 			language: lang, // Global parameter from getParameters.js
 			searchInputPlaceholder: placeholderText,
 			matcher: modelMatcher
