@@ -46,6 +46,15 @@ $(document).ready(function () {
 	// Since the api is having problems with special schedules, add a notification. To be commented when fixed.
 	//$('#schedules').prepend('<p style="color: red">' + i18n.get("Wrong schedules") + '</p>');
 	adjustHomePageHeight(500);
+
+	$('#lastWeek').on('click', function () {
+		getWeekSchelude(-1)
+	});
+
+	$('#nextWeek').on('click', function () {
+		getWeekSchelude(1)
+	});
+
 	$('#btnOpenLibryPage').on('click', function () {
 		moveParentToLibraryUrl(libName);
 	});

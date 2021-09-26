@@ -12,7 +12,7 @@ This implementation is currently used in [Keski-libraries,](https://www.keskikir
 - [Opening times of a library](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/examples/schedule-example.html) | [Large schedules for info screens](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/schedule.html?lib=85160&lang=fi&large=true) (1080x1920, "smart" font sizing)
 - [Libraries of a consortium](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/examples/consortium-example.html)
 - [Libraries of a city](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/examples/city-example.html?jyvaskylan-paakirjasto) (Mobile libraries are ignored, because in JKL, they have their own page)
-- [Single day schedules with a library selector](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/examples/home-example.html)
+- [Week schedules with a library selector](https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/pages/examples/homeWeek-example.html)
 
 ### **Features**
 
