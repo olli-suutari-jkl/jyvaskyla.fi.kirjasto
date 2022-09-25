@@ -74,7 +74,7 @@ var lessVariables = primary + textColor + links + linksHover + linksExternal + b
 
 // Read less stylesheet, generate .css and add it to header.
 var styleCssXml = new XMLHttpRequest();
-styleCssXml.open('GET', '../style/style.less');
+styleCssXml.open('GET', 'https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/style/style.less');
 styleCssXml.onreadystatechange = function () {
 	less.render(lessVariables + styleCssXml.responseText).then(function (output) {
 		addCssToDocument(output.css);
@@ -83,7 +83,7 @@ styleCssXml.onreadystatechange = function () {
 styleCssXml.send();
 
 var libraryCssXml = new XMLHttpRequest();
-libraryCssXml.open('GET', '../style/library.less');
+libraryCssXml.open('GET', 'https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/style/library.less');
 libraryCssXml.onreadystatechange = function () {
 	//console.log(libraryCssXml.responseText);
 	less.render(lessVariables + libraryCssXml.responseText).then(function (output) {
@@ -94,7 +94,7 @@ libraryCssXml.onreadystatechange = function () {
 libraryCssXml.send();
 // Events
 var eventsCssXml = new XMLHttpRequest();
-eventsCssXml.open('GET', '../style/events.less');
+eventsCssXml.open('GET', 'https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/style/events.less');
 eventsCssXml.onreadystatechange = function () {
 	less.render(lessVariables + eventsCssXml.responseText).then(function (output) {
 		addCssToDocument(output.css);
@@ -103,7 +103,7 @@ eventsCssXml.onreadystatechange = function () {
 eventsCssXml.send();
 // Slider
 var sliderCssXml = new XMLHttpRequest();
-sliderCssXml.open('GET', '../style/slider.less');
+sliderCssXml.open('GET', 'https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/style/slider.less');
 sliderCssXml.onreadystatechange = function () {
 	less.render(lessVariables + sliderCssXml.responseText).then(function (output) {
 		addCssToDocument(output.css);
@@ -113,7 +113,7 @@ sliderCssXml.send();
 // HomePage stylings.
 if (homePage) {
 	var homePageCssXml = new XMLHttpRequest();
-	homePageCssXml.open('GET', '../style/homepage.less');
+	homePageCssXml.open('GET', 'https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/style/homepage.less');
 	homePageCssXml.onreadystatechange = function () {
 		//console.log(homePageCssXml.responseText);
 		less.render(lessVariables + homePageCssXml.responseText).then(function (output) {
