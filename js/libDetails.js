@@ -1822,7 +1822,7 @@ function fetchInformation(language, lib) {
 							return $(this).html().match(regEx);
 						})
 						.each(function () {
-							$(this).html($(this).html().replace(regEx, '<a href="mailto:$1">$1</a>'));
+							$(this).html($(this).html().replace(regEx, '<a target="_blank" href="mailto:$1">$1</a>'));
 						});
 				});
 				// Generate FB widget(s)

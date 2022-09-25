@@ -88,7 +88,7 @@ function generateMailToLink(string) {
         if ( matched_str ) {
             var text = $(this).html();
             $.each(matched_str, function (index, value) {
-                text = text.replace(value,"<a class='no-external-icon' href='mailto:"+value+"'>"+value+"</a>");
+                text = text.replace(value,"<a class='no-external-icon' target='_blank' href='mailto:"+value+"'>"+value+"</a>");
             });
             $(this).html(text);
             result = $(this).html(text)[0].innerHTML;
