@@ -1171,7 +1171,7 @@ function asyncLoadMap() {
 					// Use larger icon for a single library pages.
 					var markerIcon = L.icon({
 						// https://material.io/tools/icons/?style=baseline
-						iconUrl: '../images/icons/local_library.svg',
+						iconUrl: 'https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/images/icons/local_library.svg',
 						popupAnchor: [-11, -5], // point from which the popup should open relative to the iconAnchor
 						iconSize: [42, 42] // size of the icon
 					});

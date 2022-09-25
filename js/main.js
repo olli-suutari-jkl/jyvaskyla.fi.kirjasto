@@ -139,7 +139,7 @@ function capitalize(string) {
 
 function generateAccessibilityImg(translationName, iconPath) {
     translationName = i18n.get(translationName);
-    iconPath = "../images/accessibility/" + iconPath;
+    iconPath = "https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/images/accessibility/" + iconPath;
     $(".accessibility-images").append(' <img alt="' + translationName + '" ' +
         'src="' + iconPath + '" data-placement="bottom" title="' + translationName + '" data-toggle="accessibility-tooltip"  /> ');
 }

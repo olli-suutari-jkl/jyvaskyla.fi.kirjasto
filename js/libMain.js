@@ -60,7 +60,7 @@ function exitHandler() {
 
 function generateAccessibilityImg(translationName, iconPath) {
 	translationName = i18n.get(translationName);
-	iconPath = '../images/accessibility/' + iconPath;
+	iconPath = 'https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/images/accessibility/' + iconPath;
 	// Celia block should be generated 1st.
 	setTimeout(function () {
 		$('.accessibility-images').append(
@@ -193,7 +193,7 @@ function addItem(item, listElement) {
 			}
 		} else {
 			var blockItem =
-				'<img  class="celia-services" src="../images/accessibility/Celia.png" alt="Celia-logo" data-placement="bottom" title="' +
+				'<img  class="celia-services" src="https://olli-suutari-jkl.github.io/jyvaskyla.fi.kirjasto/images/accessibility/Celia.png" alt="Celia-logo" data-placement="bottom" title="' +
 				i18n.get('Celia title') +
 				'" data-content="' +
 				celiaDescription +
